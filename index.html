@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Agent Memory Study</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <button class="icon-button mobile-only" id="open-index" type="button" aria-label="打开材料目录" aria-controls="paper-drawer" aria-expanded="false">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <h1>Agent Memory Study</h1>
+        <label class="search-field">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
+          <span class="sr-only">搜索材料</span>
+          <input id="search" type="search" autocomplete="off" placeholder="搜索题目、作者或问题" />
+        </label>
+      </header>
+
+      <button class="mobile-index-trigger mobile-only" id="mobile-index-trigger" type="button" aria-controls="paper-drawer" aria-expanded="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12" /><circle cx="4" cy="6" r=".8" /><circle cx="4" cy="12" r=".8" /><circle cx="4" cy="18" r=".8" /></svg>
+        <span data-material-count>材料</span>
+        <svg class="chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m7 9 5 5 5-5" /></svg>
+      </button>
+
+      <nav class="topic-nav" aria-label="按主题筛选">
+        <div class="topic-scroll" id="topic-filters"></div>
+      </nav>
+
+      <main class="workspace">
+        <aside class="paper-index desktop-only" aria-label="材料目录">
+          <div class="paper-list" id="paper-list"></div>
+          <p class="empty-list" id="empty-list" hidden>没有匹配的材料</p>
+        </aside>
+
+        <article class="reading-pane" id="reading-pane" aria-live="polite">
+          <header class="paper-heading">
+            <div class="paper-heading-copy">
+              <h2 id="paper-title"></h2>
+              <p class="paper-meta" id="paper-meta"></p>
+              <p class="note-kind">skim reading · 阅读导航，不是全文批注</p>
+              <p class="source-note" id="source-note" hidden></p>
+            </div>
+            <div class="paper-actions">
+              <a class="action-link" id="open-source" href="#" target="_blank" rel="noopener noreferrer">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9" /><path d="M18 13v7H4V6h7" /></svg>
+                <span>查看原文</span>
+              </a>
+              <a class="action-link" id="download-zotero" href="agent-memory-study.rdf" download>
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0-4-4m4 4 4-4" /><path d="M5 17v3h14v-3" /></svg>
+                <span>下载 Zotero RDF</span>
+              </a>
+            </div>
+          </header>
+
+          <section class="note-section">
+            <h3>这篇在解决什么</h3>
+            <p id="paper-intro"></p>
+          </section>
+
+          <section class="note-section">
+            <h3>留下来的东西</h3>
+            <ul class="key-points" id="paper-points"></ul>
+          </section>
+
+          <section class="note-section open-question">
+            <h3>编者问题（人机共读）</h3>
+            <p id="paper-question"></p>
+          </section>
+
+          <footer class="paper-footer">
+            <p id="reading-scope"></p>
+            <p class="source-line"><a id="source-link" href="#" target="_blank" rel="noopener noreferrer">回到原始来源</a><span id="doi-line"></span></p>
+          </footer>
+        </article>
+
+        <section class="reading-empty" id="reading-empty" hidden>
+          <h2>没有匹配的材料</h2>
+          <p>试着清空搜索，或者换一个主题。</p>
+        </section>
+      </main>
+    </div>
+
+    <div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+    <aside class="paper-drawer" id="paper-drawer" aria-label="材料目录" aria-hidden="true" inert>
+      <header>
+        <h2 data-material-count>材料</h2>
+        <button class="icon-button" id="close-index" type="button" aria-label="关闭论文目录">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
+      </header>
+      <div class="paper-list" id="drawer-paper-list"></div>
+      <p class="empty-list" id="drawer-empty-list" hidden>没有匹配的论文</p>
+    </aside>
+
+    <footer class="global-footer">
+      <span>札记基于 skim reading，不替代原文</span>
+      <a href="https://github.com/IndelibleVivi/agent-memory-study">GitHub · 数据与贡献</a>
+    </footer>
+
+    <script src="assets/materials-data.js"></script>
+    <script src="assets/app.js"></script>
+  </body>
+</html>
