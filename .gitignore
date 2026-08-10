@@ -13,5 +13,6 @@ papers/*
 !papers/09-luo-2026-storage-to-experience.pdf
 !papers/10-hu-2026-continual-learning-to-memory.pdf
 !papers/11-yu-2026-agentic-memory.pdf
+!papers/16-chung-2026-insightemb.pdf
 *.zip
 dist/

@@ -1,7 +1,7 @@
 {
   "title": "Agent Memory Study",
   "intro": "这组材料不按排行榜排列，而是沿着状态、写入、检索、行动、抽象、元认知与信念修订等故障面来读。",
-  "editorialNote": "以下内容来自对指定章节与主要图表的 skim notes，是阅读导航，不是论文摘要的替代；未通读或未复核的实验、附录与实现不应被当作已验证。具体主张、数字和限定请回到随附 PDF。",
+  "editorialNote": "以下内容来自逐篇明确标注阅读范围与 noteDepth 的 reading notes，是阅读导航，不是论文摘要的替代；未读或未复核的实验、附录与实现不应被当作已验证。具体主张、数字和限定请回到随附 PDF。",
   "filters": [
     "记忆架构",
     "可靠性",
@@ -618,6 +618,48 @@
       },
       "editorialQuestion": "cross-domain core schema 的阈值在特定 held-out split 上调整、主要收益也集中于同一 benchmark；它是在稳定追踪变化，还是在生成适配 benchmark 的高层推断？",
       "sourceNote": ""
+    },
+    {
+      "number": 16,
+      "id": "insightemb-action-intent-retrieval",
+      "kind": "paper",
+      "title": "InsightEmb: Learning Action-Intent Embeddings for Agentic Insight Retrieval",
+      "authors": [
+        "Tsz Ting Chung",
+        "Jiangnan Li",
+        "Jie Zhou",
+        "Mo Yu"
+      ],
+      "shortAuthor": "Chung 等",
+      "year": 2026,
+      "doi": "10.48550/arXiv.2608.04761",
+      "noteDepth": "read",
+      "readingScope": "arXiv v2 的 §1–§7、Limitations、Appendix A–E 及主要表图；references 未逐项读，也未复现代码。",
+      "intro": "把 agentic retrieval 从主题相似改写为 action-intent matching：结合当前目标、最近动作与 observation，寻找真正能解除下一步 bottleneck 的 insight。",
+      "keyPoints": [
+        "retrieval situation 由 goal、action history 与 current observation 组成；训练把原问题、完整 CoT 和 partial CoT 都作为 anchors，并用是否提高同题求解结果构造 contrastive labels。（§3.1、§3.3–§3.4）",
+        "动态 top-1 检索中，InsightEmb 在 ALFWorld、WebShop、ScienceWorld 的 bundle 结果为 60.71、31.74、8.00；普通 embedding 在 WebShop bundle 降到 18.42，说明一次语义相关但行动不合时宜的注入会伤害 agent。（Table 1）",
+        "MedCalcBench 上 Base 的 Recall@1 为 92.73，InsightEmb 只有 63.27；BM25 top-50 后再用 InsightEmb rerank 可提高到 70.91，但仍未超过 Base，支持保留 lexical candidate lane 的 hybrid routing。（Appendix E，Table 17）"
+      ],
+      "keywords": [
+        "action-intent retrieval",
+        "agentic insight",
+        "hybrid retrieval"
+      ],
+      "categories": [
+        "可靠性",
+        "持续学习"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2608.04761v2",
+      "pdf": {
+        "delivery": "bundled",
+        "url": "papers/16-chung-2026-insightemb.pdf",
+        "originalUrl": "https://arxiv.org/pdf/2608.04761v2",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "editorialQuestion": "最有用的 partial-trajectory anchors 仍继承 problem-level label，而且每个 insight–problem pair 只验证一次；如果当前 goal 或 state label 本身不可靠，action-intent retrieval 会不会只是更有方向地注入错误？",
+      "sourceNote": "arXiv v2；PDF 共 29 页。"
     }
   ]
 }

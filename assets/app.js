@@ -24,6 +24,7 @@
     drawerEmpty: document.querySelector("#drawer-empty-list"),
     title: document.querySelector("#paper-title"),
     meta: document.querySelector("#paper-meta"),
+    noteDepth: document.querySelector("#note-depth"),
     sourceNote: document.querySelector("#source-note"),
     intro: document.querySelector("#paper-intro"),
     points: document.querySelector("#paper-points"),
@@ -52,7 +53,7 @@
   const bundledPdfCount = data.materials.filter((material) => material.pdf.delivery === "bundled").length;
   const packageSummary = `${data.materials.length} 条目 · ${bundledPdfCount} 份随包 PDF`;
   refs.zoteroPackageNote.textContent = packageSummary;
-  refs.zoteroAction.setAttribute("aria-label", `下载 Zotero 包，包含 ${packageSummary}`);
+  refs.zoteroAction.setAttribute("aria-label", `下载当前 main 源包，包含 ${packageSummary}`);
 
   function normalize(value) {
     return String(value || "").toLocaleLowerCase("zh-CN").normalize("NFKC");
@@ -156,6 +157,7 @@
     const paper = data.materials.find((candidate) => candidate.id === state.selectedId) || matches[0];
     refs.title.textContent = paper.title;
     refs.meta.textContent = `${paper.authors.join(", ")} · ${paper.year}`;
+    refs.noteDepth.textContent = `depth: ${paper.noteDepth} · 阅读导航，不是全文批注`;
     refs.sourceNote.textContent = paper.sourceNote || "";
     refs.sourceNote.hidden = !paper.sourceNote;
     refs.intro.textContent = paper.intro;

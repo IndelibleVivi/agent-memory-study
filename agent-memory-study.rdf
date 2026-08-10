@@ -785,6 +785,47 @@
         <dc:identifier>DOI 10.48550/arXiv.2606.09483</dc:identifier>
         <link:link rdf:resource="#attachment_15_memory-beyond-recall" />
     </rdf:Description>
+    <rdf:Description rdf:about="https://arxiv.org/abs/2608.04761v2">
+        <z:itemType>document</z:itemType>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Chung</foaf:surname>
+                        <foaf:givenName>Tsz Ting</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Li</foaf:surname>
+                        <foaf:givenName>Jiangnan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Zhou</foaf:surname>
+                        <foaf:givenName>Jie</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Yu</foaf:surname>
+                        <foaf:givenName>Mo</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>InsightEmb: Learning Action-Intent Embeddings for Agentic Insight Retrieval</dc:title>
+        <dc:date>2026</dc:date>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/abs/2608.04761v2</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dc:description>arXiv: 2608.04761 [cs.CL]</dc:description>
+        <dc:identifier>DOI 10.48550/arXiv.2608.04761</dc:identifier>
+        <link:link rdf:resource="#attachment_16_insightemb-action-intent-retrieval" />
+    </rdf:Description>
     <z:Attachment rdf:about="#attachment_01_a-tma-state-aware-memory">
         <z:itemType>attachment</z:itemType>
         <dc:title>Full Text PDF</dc:title>
@@ -909,5 +950,11 @@
             </dcterms:URI>
         </dc:identifier>
         <z:linkMode>3</z:linkMode>
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_16_insightemb-action-intent-retrieval">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <z:path rdf:resource="papers/16-chung-2026-insightemb.pdf" />
     </z:Attachment>
 </rdf:RDF>
