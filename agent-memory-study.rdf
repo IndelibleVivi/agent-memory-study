@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rdf:RDF xmlns:bib="http://purl.org/net/biblio#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:prism="http://prismstandard.org/namespaces/1.2/basic/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vcard="http://nwalsh.com/rdf/vCard#" xmlns:z="http://www.zotero.org/namespaces/export#">
+<rdf:RDF xmlns:bib="http://purl.org/net/biblio#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:link="http://purl.org/rss/1.0/modules/link/" xmlns:prism="http://prismstandard.org/namespaces/1.2/basic/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:vcard="http://nwalsh.com/rdf/vCard#" xmlns:z="http://www.zotero.org/namespaces/export#">
     <rdf:Description rdf:about="https://arxiv.org/abs/2607.01935">
         <z:itemType>document</z:itemType>
         <bib:authors>
@@ -32,6 +32,7 @@
             </dcterms:URI>
         </dc:identifier>
         <dc:description>arXiv: 2607.01935 [cs.AI]</dc:description>
+        <link:link rdf:resource="#attachment_01_a-tma-state-aware-memory" />
     </rdf:Description>
     <rdf:Description rdf:about="https://arxiv.org/abs/2606.25161">
         <z:itemType>document</z:itemType>
@@ -77,6 +78,7 @@
             </dcterms:URI>
         </dc:identifier>
         <dc:description>arXiv: 2606.25161 [cs.AI]</dc:description>
+        <link:link rdf:resource="#attachment_02_trustmem-consolidation" />
     </rdf:Description>
     <rdf:Description rdf:about="https://arxiv.org/abs/2608.03137">
         <z:itemType>document</z:itemType>
@@ -116,6 +118,7 @@
             </dcterms:URI>
         </dc:identifier>
         <dc:description>arXiv: 2608.03137 [cs.AI]</dc:description>
+        <link:link rdf:resource="#attachment_03_verifiable-memory" />
     </rdf:Description>
     <rdf:Description rdf:about="https://arxiv.org/abs/2607.16211">
         <z:itemType>document</z:itemType>
@@ -167,6 +170,7 @@
             </dcterms:URI>
         </dc:identifier>
         <dc:description>arXiv: 2607.16211 [cs.AI]</dc:description>
+        <link:link rdf:resource="#attachment_04_mosaic-long-term-memory" />
     </rdf:Description>
     <rdf:Description rdf:about="https://arxiv.org/abs/2605.30152">
         <z:itemType>document</z:itemType>
@@ -230,6 +234,7 @@
             </dcterms:URI>
         </dc:identifier>
         <dc:description>arXiv: 2605.30152 [cs.CL]</dc:description>
+        <link:link rdf:resource="#attachment_05_proactive-wake-anchor" />
     </rdf:Description>
     <rdf:Description rdf:about="https://arxiv.org/abs/2607.12385">
         <z:itemType>document</z:itemType>
@@ -257,6 +262,7 @@
             </dcterms:URI>
         </dc:identifier>
         <dc:description>arXiv: 2607.12385 [cs.AI]</dc:description>
+        <link:link rdf:resource="#attachment_06_pm-bench" />
     </rdf:Description>
     <rdf:Description rdf:about="urn:isbn:979-8-89176-395-1">
         <z:itemType>conferencePaper</z:itemType>
@@ -347,6 +353,7 @@
             </dcterms:URI>
         </dc:identifier>
         <bib:pages>14629–14645</bib:pages>
+        <link:link rdf:resource="#attachment_07_mistake-notebook-learning" />
     </rdf:Description>
     <rdf:Description rdf:about="https://arxiv.org/abs/2309.02427">
         <z:itemType>document</z:itemType>
@@ -386,6 +393,7 @@
             </dcterms:URI>
         </dc:identifier>
         <dc:description>arXiv: 2309.02427 [cs.AI]</dc:description>
+        <link:link rdf:resource="#attachment_08_coala-cognitive-architecture" />
     </rdf:Description>
     <rdf:Description rdf:about="https://aclanthology.org/2026.findings-acl.2069/">
         <z:itemType>conferencePaper</z:itemType>
@@ -500,6 +508,7 @@
             </dcterms:URI>
         </dc:identifier>
         <bib:pages>41622–41652</bib:pages>
+        <link:link rdf:resource="#attachment_09_storage-to-experience" />
     </rdf:Description>
     <rdf:Description rdf:about="https://arxiv.org/abs/2604.27003">
         <z:itemType>document</z:itemType>
@@ -533,6 +542,7 @@
             </dcterms:URI>
         </dc:identifier>
         <dc:description>arXiv: 2604.27003 [cs.LG]</dc:description>
+        <link:link rdf:resource="#attachment_10_continual-learning-experience-reuse" />
     </rdf:Description>
     <rdf:Description rdf:about="https://aclanthology.org/2026.acl-long.981/">
         <z:itemType>conferencePaper</z:itemType>
@@ -601,6 +611,7 @@
             </dcterms:URI>
         </dc:identifier>
         <bib:pages>21457–21483</bib:pages>
+        <link:link rdf:resource="#attachment_11_agentic-memory" />
     </rdf:Description>
     <bib:Article rdf:about="https://ojs.aaai.org/index.php/AAAI/article/view/9886">
         <z:itemType>journalArticle</z:itemType>
@@ -659,6 +670,7 @@
                 <rdf:value>https://ojs.aaai.org/index.php/AAAI/article/view/9886</rdf:value>
             </dcterms:URI>
         </dc:identifier>
+        <link:link rdf:resource="#attachment_12_midca-dual-cycle" />
     </bib:Article>
     <bib:Article rdf:about="https://www.sciencedirect.com/science/article/abs/pii/0004370279900080">
         <z:itemType>journalArticle</z:itemType>
@@ -688,6 +700,7 @@
             </dcterms:URI>
         </dc:identifier>
         <bib:pages>231–272</bib:pages>
+        <link:link rdf:resource="#attachment_13_truth-maintenance-system" />
     </bib:Article>
     <bib:Article rdf:about="https://www.cambridge.org/core/journals/journal-of-symbolic-logic/article/on-the-logic-of-theory-change-partial-meet-contraction-and-revision-functions/7ED837BAD5FB6D9A7C77906D73527F9C">
         <z:itemType>journalArticle</z:itemType>
@@ -729,6 +742,7 @@
             </dcterms:URI>
         </dc:identifier>
         <bib:pages>510–530</bib:pages>
+        <link:link rdf:resource="#attachment_14_agm-theory-change" />
     </bib:Article>
     <rdf:Description rdf:about="https://arxiv.org/abs/2606.09483">
         <z:itemType>document</z:itemType>
@@ -769,5 +783,131 @@
         </dc:identifier>
         <dc:description>arXiv: 2606.09483 [cs.CL]</dc:description>
         <dc:identifier>DOI 10.48550/arXiv.2606.09483</dc:identifier>
+        <link:link rdf:resource="#attachment_15_memory-beyond-recall" />
     </rdf:Description>
+    <z:Attachment rdf:about="#attachment_01_a-tma-state-aware-memory">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/pdf/2607.01935v2</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <z:linkMode>3</z:linkMode>
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_02_trustmem-consolidation">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <z:path rdf:resource="papers/02-yang-2026-trustmem.pdf" />
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_03_verifiable-memory">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/pdf/2608.03137v1</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <z:linkMode>3</z:linkMode>
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_04_mosaic-long-term-memory">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/pdf/2607.16211v1</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <z:linkMode>3</z:linkMode>
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_05_proactive-wake-anchor">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <z:path rdf:resource="papers/05-liu-2026-proactive-agents.pdf" />
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_06_pm-bench">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <z:path rdf:resource="papers/06-liu-2026-pm-bench.pdf" />
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_07_mistake-notebook-learning">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <z:path rdf:resource="papers/07-su-2026-mistake-notebook-learning.pdf" />
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_08_coala-cognitive-architecture">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <z:path rdf:resource="papers/08-sumers-2024-cognitive-architectures.pdf" />
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_09_storage-to-experience">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <z:path rdf:resource="papers/09-luo-2026-storage-to-experience.pdf" />
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_10_continual-learning-experience-reuse">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <z:path rdf:resource="papers/10-hu-2026-continual-learning-to-memory.pdf" />
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_11_agentic-memory">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <z:path rdf:resource="papers/11-yu-2026-agentic-memory.pdf" />
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_12_midca-dual-cycle">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://ojs.aaai.org/index.php/AAAI/article/view/9886/9745</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <z:linkMode>3</z:linkMode>
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_13_truth-maintenance-system">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://dspace.mit.edu/server/api/core/bitstreams/4fdf6aa2-170b-45e6-ae88-8f10d61e1c6d/content</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <z:linkMode>3</z:linkMode>
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_14_agm-theory-change">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.cambridge.org/core/services/aop-cambridge-core/content/view/7ED837BAD5FB6D9A7C77906D73527F9C/S0022481200032849a.pdf/div-class-title-on-the-logic-of-theory-change-partial-meet-contraction-and-revision-functions-div.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <z:linkMode>3</z:linkMode>
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_15_memory-beyond-recall">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/pdf/2606.09483v1</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <z:linkMode>3</z:linkMode>
+    </z:Attachment>
 </rdf:RDF>

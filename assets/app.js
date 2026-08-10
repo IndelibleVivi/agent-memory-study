@@ -31,7 +31,10 @@
     scope: document.querySelector("#reading-scope"),
     source: document.querySelector("#source-link"),
     doi: document.querySelector("#doi-line"),
-    sourceAction: document.querySelector("#open-source"),
+    pdfAction: document.querySelector("#open-pdf"),
+    pdfAccessNote: document.querySelector("#pdf-access-note"),
+    zoteroAction: document.querySelector("#download-zotero"),
+    zoteroPackageNote: document.querySelector("#zotero-package-note"),
     readingPane: document.querySelector("#reading-pane"),
     readingEmpty: document.querySelector("#reading-empty"),
     openIndex: document.querySelector("#open-index"),
@@ -46,6 +49,10 @@
   document.querySelectorAll("[data-material-count]").forEach((node) => {
     node.textContent = `${data.materials.length} 份材料`;
   });
+  const bundledPdfCount = data.materials.filter((material) => material.pdf.delivery === "bundled").length;
+  const packageSummary = `${data.materials.length} 条目 · ${bundledPdfCount} 份随包 PDF`;
+  refs.zoteroPackageNote.textContent = packageSummary;
+  refs.zoteroAction.setAttribute("aria-label", `下载 Zotero 包，包含 ${packageSummary}`);
 
   function normalize(value) {
     return String(value || "").toLocaleLowerCase("zh-CN").normalize("NFKC");
@@ -161,7 +168,12 @@
     refs.scope.textContent = `阅读范围：${paper.readingScope}`;
     refs.source.href = paper.sourceUrl;
     refs.doi.textContent = paper.doi ? `DOI ${paper.doi}` : "";
-    refs.sourceAction.href = paper.sourceUrl;
+    const pdfAccess = paper.pdf.delivery === "bundled"
+      ? ["随站副本", paper.pdf.license].filter(Boolean).join(" · ")
+      : ["官方来源", paper.pdf.accessNote].filter(Boolean).join(" · ");
+    refs.pdfAction.href = paper.pdf.url;
+    refs.pdfAction.setAttribute("aria-label", `阅读 PDF：${paper.title}（${pdfAccess}）`);
+    refs.pdfAccessNote.textContent = pdfAccess;
     document.title = `${paper.title} · Agent Memory Study`;
   }
 

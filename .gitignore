@@ -3,6 +3,15 @@
 __pycache__/
 *.pyc
 *.pdf
+!papers/
+papers/*
+!papers/02-yang-2026-trustmem.pdf
+!papers/05-liu-2026-proactive-agents.pdf
+!papers/06-liu-2026-pm-bench.pdf
+!papers/07-su-2026-mistake-notebook-learning.pdf
+!papers/08-sumers-2024-cognitive-architectures.pdf
+!papers/09-luo-2026-storage-to-experience.pdf
+!papers/10-hu-2026-continual-learning-to-memory.pdf
+!papers/11-yu-2026-agentic-memory.pdf
 *.zip
-papers/
 dist/

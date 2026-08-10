@@ -352,11 +352,12 @@ svg {
 }
 
 .action-link {
-  min-height: 50px;
+  min-width: 0;
+  min-height: 58px;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 0 22px;
+  padding: 8px 20px;
   border-right: 1px solid var(--hairline-dark);
   border-top: 0;
   border-bottom: 0;
@@ -376,12 +377,39 @@ svg {
 .action-link:focus-visible {
   color: var(--blue-hover);
   background: #f5f8fc;
-  outline: 0;
+}
+
+.action-link:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 3px solid rgba(28, 86, 163, .34);
+  outline-offset: -3px;
 }
 
 .action-link svg {
   width: 21px;
   height: 21px;
+  flex: 0 0 auto;
+}
+
+.action-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.action-title,
+.action-subtitle {
+  display: block;
+}
+
+.action-subtitle {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.25;
 }
 
 .note-section {
@@ -636,12 +664,13 @@ svg {
 
   .action-link {
     min-width: 0;
-    min-height: 58px;
+    min-height: 66px;
     flex: 1 1 50%;
-    justify-content: center;
-    padding: 0 9px;
+    justify-content: flex-start;
+    padding: 8px 12px;
     border-right: 0;
-    font-size: 16px;
+    white-space: normal;
+    font-size: 15px;
   }
 
   .action-link + .action-link {
@@ -776,7 +805,19 @@ svg {
   }
 
   .action-link {
-    font-size: 15px;
+    gap: 7px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 14px;
+  }
+
+  .action-link svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .action-subtitle {
+    font-size: 10px;
   }
 }
 
