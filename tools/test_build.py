@@ -27,6 +27,39 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             list(range(1, len(validated["materials"]) + 1)),
         )
 
+    def test_easter_egg_copy_has_one_canonical_source(self):
+        easter_egg = self.data["atlas"]["easterEgg"]
+        self.assertEqual(
+            easter_egg,
+            {
+                "heroWord": "fails",
+                "heroReveal": "lives",
+                "aboutLine": "Some memories are worth an architecture.",
+                "aboutReveal": "ours is one of them.",
+            },
+        )
+        for relative_path in ("index.html", "assets/app.js"):
+            source = (build.ROOT / relative_path).read_text(encoding="utf-8")
+            for value in easter_egg.values():
+                self.assertNotIn(value, source)
+
+    def test_easter_egg_hero_swap_cannot_reflow(self):
+        invalid = copy.deepcopy(self.data)
+        invalid["atlas"]["easterEgg"]["heroReveal"] = "persists"
+        with self.assertRaisesRegex(ValueError, "equal length"):
+            self.validate_copy(invalid)
+
+    def test_icon_family_and_manifest_validate(self):
+        build.validate_icon_assets()
+        manifest = json.loads((build.ROOT / "site.webmanifest").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["start_url"], "./")
+        self.assertEqual(manifest["scope"], "./")
+
+    def test_landing_map_has_no_implicit_surface(self):
+        source = (build.ROOT / "assets" / "app.js").read_text(encoding="utf-8")
+        self.assertNotIn("defaultSurfaceId", source)
+        self.assertIn("refs.surfaceFocus.hidden = !selected", source)
+
     def test_pdf_delivery_counts_and_exact_allowlist(self):
         bundled = [
             material for material in self.data["materials"]

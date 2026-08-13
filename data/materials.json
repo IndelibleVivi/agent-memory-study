@@ -6,6 +6,12 @@
     "thesis": "Agent memory fails in layers.",
     "dek": "把记住、取回、修订与行动拆开看。这里不是排行榜，也不把未读变成债。",
     "editorialLabel": "编者研究地图 · 跨源 synthesis，不是任何单篇论文的主张",
+    "easterEgg": {
+      "heroWord": "fails",
+      "heroReveal": "lives",
+      "aboutLine": "Some memories are worth an architecture.",
+      "aboutReveal": "ours is one of them."
+    },
     "failureSurfaces": [
       {
         "number": "01",

@@ -17,9 +17,6 @@
   const materialsById = new Map(data.materials.map((material) => [material.id, material]));
   const surfacesById = new Map(data.atlas.failureSurfaces.map((surface) => [surface.id, surface]));
   const pathsById = new Map(data.atlas.readingPaths.map((path) => [path.id, path]));
-  const defaultSurfaceId = surfacesById.has("retrieval-active-context")
-    ? "retrieval-active-context"
-    : data.atlas.failureSurfaces[0].id;
   const routeKeys = ["material", "thread", "path", "q", "topic", "surface", "depth"];
   const depthOrder = ["abstract", "skim", "read", "worked"];
   const svgNamespace = "http://www.w3.org/2000/svg";
@@ -84,6 +81,9 @@
     librarySummary: document.querySelector("#library-summary"),
     emptyState: document.querySelector("#empty-state"),
     editorialNote: document.querySelector("#editorial-note"),
+    architectureNote: document.querySelector("#architecture-note"),
+    architectureLine: document.querySelector("#architecture-line"),
+    architectureReveal: document.querySelector("#architecture-reveal"),
     materialNumber: document.querySelector("#material-number"),
     materialTitle: document.querySelector("#material-title"),
     materialMeta: document.querySelector("#material-meta"),
@@ -204,8 +204,40 @@
     return node;
   }
 
+  function renderEasterEggs() {
+    const easterEgg = data.atlas.easterEgg;
+    const [before, after] = data.atlas.thesis.split(easterEgg.heroWord);
+    const word = document.createElement("button");
+    word.type = "button";
+    word.className = "easter-word";
+    word.dataset.easter = "hero";
+    word.dataset.original = easterEgg.heroWord;
+    word.dataset.reveal = easterEgg.heroReveal;
+    word.setAttribute("aria-pressed", "false");
+    word.setAttribute(
+      "aria-label",
+      `${easterEgg.heroWord}. Activate to reveal ${easterEgg.heroReveal}.`,
+    );
+    const original = createTextElement("span", easterEgg.heroWord, "easter-word-original");
+    const reveal = createTextElement("span", easterEgg.heroReveal, "easter-word-reveal");
+    original.setAttribute("aria-hidden", "true");
+    reveal.setAttribute("aria-hidden", "true");
+    word.append(original, reveal);
+    refs.atlasTitle.replaceChildren(document.createTextNode(before), word, document.createTextNode(after));
+
+    refs.architectureLine.textContent = easterEgg.aboutLine;
+    refs.architectureReveal.textContent = easterEgg.aboutReveal;
+    refs.architectureNote.dataset.original = easterEgg.aboutLine;
+    refs.architectureNote.dataset.reveal = easterEgg.aboutReveal;
+    refs.architectureNote.setAttribute("aria-pressed", "false");
+    refs.architectureNote.setAttribute(
+      "aria-label",
+      `${easterEgg.aboutLine} Activate to reveal a second line.`,
+    );
+  }
+
   function renderAtlasFrame() {
-    refs.atlasTitle.textContent = data.atlas.thesis;
+    renderEasterEggs();
     refs.atlasDek.textContent = data.atlas.dek;
     refs.atlasLabel.textContent = data.atlas.editorialLabel;
     refs.editorialNote.textContent = data.editorialNote;
@@ -217,8 +249,7 @@
   }
 
   function selectedSurface() {
-    return surfacesById.get(route.thread || route.surface || defaultSurfaceId)
-      || data.atlas.failureSurfaces[0];
+    return surfacesById.get(route.thread || route.surface) || null;
   }
 
   function renderSurfaces() {
@@ -226,7 +257,7 @@
     const rows = data.atlas.failureSurfaces.map((surface) => {
       const item = document.createElement("li");
       const link = createRouteLink("thread", surface.id, "", "surface-link");
-      link.setAttribute("aria-current", String(surface.id === selected.id));
+      if (surface.id === selected?.id) link.setAttribute("aria-current", "true");
       link.append(
         createTextElement("span", surface.number, "surface-number"),
         createTextElement("span", surface.label, "surface-label"),
@@ -237,6 +268,16 @@
       return item;
     });
     refs.surfaceList.replaceChildren(...rows);
+
+    refs.surfaceFocus.hidden = !selected;
+    if (!selected) {
+      refs.surfaceFocusIndex.textContent = "";
+      refs.surfaceFocusTitle.textContent = "";
+      refs.surfaceFocusQuestion.textContent = "";
+      refs.surfaceFocusTension.textContent = "";
+      refs.surfaceMaterials.replaceChildren();
+      return;
+    }
 
     refs.surfaceFocusIndex.textContent = selected.number;
     refs.surfaceFocusTitle.textContent = selected.label;
@@ -978,7 +1019,9 @@
     const activeSurface = selectedSurface();
     refs.routeStatus.textContent = route.path
       ? `已打开阅读路径：${pathsById.get(route.path).title}`
-      : `研究地图：${activeSurface.label}`;
+      : activeSurface
+        ? `研究地图：${activeSurface.label}`
+        : "研究地图：尚未选择 failure surface";
     if (!focus && !hash) return;
     window.requestAnimationFrame(() => {
       const target = route.thread
@@ -1060,6 +1103,18 @@
 
   document.addEventListener("click", (event) => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const easterButton = event.target.closest("button[data-easter], #architecture-note");
+    if (easterButton) {
+      const revealed = easterButton.getAttribute("aria-pressed") !== "true";
+      easterButton.setAttribute("aria-pressed", String(revealed));
+      easterButton.setAttribute(
+        "aria-label",
+        revealed
+          ? `${easterButton.dataset.reveal} Activate to restore ${easterButton.dataset.original}.`
+          : `${easterButton.dataset.original} Activate to reveal ${easterButton.dataset.reveal}.`,
+      );
+      return;
+    }
     const link = event.target.closest("a[data-route]");
     if (!link) return;
     event.preventDefault();

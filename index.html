@@ -7,8 +7,12 @@
     <meta name="theme-color" content="#f6f7f4" />
     <meta name="description" content="一个沿 agent memory failure surfaces 组织的公开研究地图与 annotated reading room。" />
     <title>Agent Memory Study</title>
-    <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="assets/styles.css?v=20260813-doyle-read-2" />
+    <link rel="icon" type="image/png" sizes="48x48" href="assets/icons/favicon-48.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="stylesheet" href="assets/styles.css?v=20260813-easter-1" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -136,11 +140,15 @@
 
         <section class="about" id="about" aria-labelledby="about-title">
           <p class="content-kind">About this room</p>
-          <h2 id="about-title">读源，不把导航冒充结论。</h2>
+          <h2 id="about-title">读源，<span class="mobile-keep">不把导航冒充结论。</span></h2>
           <div class="about-grid">
             <p id="editorial-note"></p>
             <p>这个页面是 static、no-backend、no-analytics、no-tracking。PDF 采用 hybrid delivery：只有逐文件确认 public redistribution license 的文件随站提供，其余材料回到 official source。</p>
           </div>
+          <button class="architecture-note" id="architecture-note" type="button" aria-pressed="false">
+            <span class="architecture-line" id="architecture-line"></span>
+            <span class="architecture-reveal" id="architecture-reveal" aria-hidden="true"></span>
+          </button>
         </section>
       </div>
 
@@ -248,7 +256,7 @@
 
     <p class="sr-only" id="route-status" aria-live="polite"></p>
     <noscript>这个 reading room 需要 JavaScript 来读取同 repo 的 public canonical data。材料与许可说明仍可在 GitHub repository 中查看。</noscript>
-    <script src="assets/materials-data.js?v=20260813-doyle-read-2"></script>
-    <script src="assets/app.js?v=20260813-doyle-read-2"></script>
+    <script src="assets/materials-data.js?v=20260813-easter-1"></script>
+    <script src="assets/app.js?v=20260813-easter-1"></script>
   </body>
 </html>

@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import struct
 import unicodedata
 import xml.etree.ElementTree as ET
 import zipfile
@@ -36,6 +37,7 @@ TRACKING_PATTERNS = (
 )
 PUBLIC_COPY_PATHS = (
     "index.html",
+    "site.webmanifest",
     "assets/app.js",
     "assets/styles.css",
     "assets/materials-data.js",
@@ -48,6 +50,18 @@ PUBLIC_COPY_PATHS = (
     "ZOTERO-IMPORT.md",
     "agent-memory-study.rdf",
 )
+ICON_SIZES = {
+    "assets/icons/ams-icon-512.png": 512,
+    "assets/icons/ams-icon-192.png": 192,
+    "assets/icons/apple-touch-icon.png": 180,
+    "assets/icons/favicon-48.png": 48,
+    "assets/icons/favicon-32.png": 32,
+    "assets/icons/favicon-16.png": 16,
+}
+MANIFEST_ICONS = {
+    "assets/icons/ams-icon-192.png": "192x192",
+    "assets/icons/ams-icon-512.png": "512x512",
+}
 PUBLIC_RESEARCH_SUFFIXES = {".csv", ".json", ".md", ".py", ".txt"}
 NS = {
     "bib": "http://purl.org/net/biblio#",
@@ -150,6 +164,37 @@ def validate_public_copy_files() -> None:
         )
 
 
+def validate_icon_assets() -> None:
+    for relative_path, expected_size in ICON_SIZES.items():
+        path = ROOT / relative_path
+        if not path.is_file():
+            raise ValueError(f"icon asset is missing: {relative_path}")
+        header = path.read_bytes()[:24]
+        if header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
+            raise ValueError(f"icon asset is not a valid PNG: {relative_path}")
+        width, height = struct.unpack(">II", header[16:24])
+        if (width, height) != (expected_size, expected_size):
+            raise ValueError(
+                f"icon asset has size {width}x{height}; expected {expected_size}x{expected_size}: "
+                f"{relative_path}"
+            )
+
+    manifest = json.loads((ROOT / "site.webmanifest").read_text(encoding="utf-8"))
+    manifest_icons = {
+        icon.get("src"): icon.get("sizes")
+        for icon in manifest.get("icons", [])
+        if isinstance(icon, dict)
+    }
+    if manifest_icons != MANIFEST_ICONS:
+        raise ValueError("site.webmanifest icons differ from the public app-icon contract")
+
+    index_text = (ROOT / "index.html").read_text(encoding="utf-8")
+    browser_icons = set(ICON_SIZES) - set(MANIFEST_ICONS)
+    missing_links = sorted(path for path in browser_icons if f'href="{path}"' not in index_text)
+    if missing_links:
+        raise ValueError(f"index.html does not link browser icons: {missing_links}")
+
+
 def is_https_url(value: Any) -> bool:
     return isinstance(value, str) and value.startswith("https://")
 
@@ -199,13 +244,26 @@ def load_and_validate(path: Path) -> dict[str, Any]:
     atlas = data.get("atlas")
     if not isinstance(atlas, dict):
         raise ValueError("data.atlas must be an object")
-    atlas_required = {"thesis", "dek", "editorialLabel", "failureSurfaces", "readingPaths"}
+    atlas_required = {
+        "thesis", "dek", "editorialLabel", "easterEgg", "failureSurfaces", "readingPaths"
+    }
     atlas_missing = atlas_required.difference(atlas)
     if atlas_missing:
         raise ValueError(f"data.atlas missing fields: {sorted(atlas_missing)}")
     for field in ("thesis", "dek", "editorialLabel"):
         if not isinstance(atlas[field], str) or not atlas[field].strip():
             raise ValueError(f"data.atlas.{field} must be non-empty text")
+
+    easter_egg = atlas["easterEgg"]
+    assert_exact_text_object(
+        easter_egg,
+        {"heroWord", "heroReveal", "aboutLine", "aboutReveal"},
+        "data.atlas.easterEgg",
+    )
+    if atlas["thesis"].count(easter_egg["heroWord"]) != 1:
+        raise ValueError("data.atlas.thesis must contain easterEgg.heroWord exactly once")
+    if len(easter_egg["heroWord"]) != len(easter_egg["heroReveal"]):
+        raise ValueError("easterEgg hero words must have equal length to prevent title reflow")
 
     failure_surfaces = atlas["failureSurfaces"]
     if not isinstance(failure_surfaces, list) or not failure_surfaces:
@@ -690,6 +748,7 @@ def main() -> int:
         write_hybrid_rdf(args.rdf_source, args.rdf_output, data)
     validate_hybrid_rdf(args.rdf_output, data)
     validate_public_copy_files()
+    validate_icon_assets()
     if args.package_output:
         write_zotero_package(args.package_output, args.rdf_output, data)
     bundled_count = len(bundled_pdf_paths(data))

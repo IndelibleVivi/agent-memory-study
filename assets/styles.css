@@ -9,6 +9,7 @@
   --hairline: #aebdc0;
   --hairline-soft: #d5dfe0;
   --sunrise: #a9550f;
+  --daylight: #b97b22;
   --tide: #4f6973;
   --sage: #5f7168;
   --serif: Georgia, "Times New Roman", "Songti SC", "STSong", "Noto Serif CJK SC", serif;
@@ -207,6 +208,16 @@ a:focus-visible {
   min-height: calc(100vh - var(--header-height));
 }
 
+#research-map,
+#constellation,
+#reading-paths,
+#library,
+#about,
+.surface-focus,
+.path-focus {
+  scroll-margin-top: calc(var(--header-height) + 8px);
+}
+
 .atlas-hero {
   max-width: var(--content-max);
   min-height: 525px;
@@ -235,6 +246,65 @@ a:focus-visible {
 
 .atlas-intro h1::first-line {
   color: var(--ink);
+}
+
+.easter-word {
+  position: relative;
+  display: inline-grid;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+  cursor: default;
+}
+
+.easter-word::after {
+  content: "";
+  position: absolute;
+  right: 0.02em;
+  bottom: 0.02em;
+  left: 0.02em;
+  height: 1px;
+  background: var(--tide);
+  opacity: 0;
+}
+
+.easter-word > span {
+  grid-area: 1 / 1;
+  transition: color 210ms ease, opacity 210ms ease, transform 210ms ease;
+}
+
+.easter-word-reveal {
+  color: var(--daylight);
+  opacity: 0;
+  transform: translateY(0.045em);
+}
+
+.easter-word:hover .easter-word-original,
+.easter-word:focus-visible .easter-word-original,
+.easter-word[aria-pressed="true"] .easter-word-original {
+  opacity: 0;
+  transform: translateY(-0.035em);
+}
+
+.easter-word:hover .easter-word-reveal,
+.easter-word:focus-visible .easter-word-reveal,
+.easter-word[aria-pressed="true"] .easter-word-reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.easter-word:focus-visible {
+  outline: none;
+}
+
+.easter-word:focus-visible::after {
+  opacity: 0.82;
 }
 
 .atlas-dek {
@@ -343,8 +413,9 @@ a:focus-visible {
   background: var(--paper);
 }
 
-.surface-link:hover {
-  color: var(--sunrise);
+.surface-link:hover,
+.surface-link:focus-visible {
+  color: var(--tide);
 }
 
 .surface-link[aria-current="true"] {
@@ -1053,6 +1124,57 @@ a:focus-visible {
   font-family: var(--ui);
   font-size: 14px;
   line-height: 1.8;
+}
+
+.architecture-note {
+  width: min(100%, 30ch);
+  min-height: 44px;
+  align-self: end;
+  justify-self: end;
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+  margin: 0;
+  padding: 8px 0 0;
+  border: 0;
+  color: color-mix(in srgb, var(--ink) 52%, var(--mist));
+  background: transparent;
+  font-family: var(--ui);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: right;
+  cursor: default;
+}
+
+.architecture-line,
+.architecture-reveal {
+  transition: color 180ms ease, opacity 180ms ease, transform 180ms ease;
+}
+
+.architecture-reveal {
+  color: color-mix(in srgb, var(--ink) 62%, var(--mist));
+  font-size: 12px;
+  opacity: 0;
+  transform: translateY(3px);
+}
+
+.architecture-note:hover,
+.architecture-note:focus-visible,
+.architecture-note[aria-pressed="true"] {
+  color: color-mix(in srgb, var(--ink) 78%, var(--mist));
+}
+
+.architecture-note:hover .architecture-reveal,
+.architecture-note:focus-visible .architecture-reveal,
+.architecture-note[aria-pressed="true"] .architecture-reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.architecture-note:focus-visible {
+  outline: none;
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--tide) 68%, transparent);
 }
 
 .material-view {
@@ -1833,33 +1955,44 @@ noscript {
   }
 
   .site-mark {
-    font-size: 23px;
+    font-size: 21px;
+    font-weight: 400;
   }
 
   .menu-button {
-    min-width: 90px;
+    min-width: 82px;
     justify-content: center;
+    font-size: 14px;
+  }
+
+  .menu-button svg {
+    width: 21px;
+    height: 21px;
   }
 
   .atlas-hero {
-    gap: 44px;
-    padding-top: 42px;
-    padding-bottom: 34px;
+    gap: 36px;
+    padding-top: 36px;
+    padding-bottom: 30px;
   }
 
   .atlas-intro h1 {
-    font-size: clamp(45px, 13vw, 62px);
-    line-height: 0.98;
+    font-size: clamp(42px, 11.8vw, 50px);
+    letter-spacing: -0.035em;
+    line-height: 1.04;
   }
 
   .atlas-dek {
-    margin-top: 25px;
-    font-size: 19px;
-    line-height: 1.6;
+    margin-top: 22px;
+    font-size: 17px;
+    line-height: 1.62;
   }
 
   .atlas-instruction {
-    margin-top: 28px;
+    margin-top: 24px;
+    padding-top: 14px;
+    font-size: 13px;
+    line-height: 1.65;
   }
 
   .compact-heading {
@@ -1868,7 +2001,7 @@ noscript {
 
   .compact-heading h2 {
     max-width: none;
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .compact-heading p {
@@ -1883,32 +2016,39 @@ noscript {
   }
 
   .surface-link {
-    min-height: 61px;
-    grid-template-columns: 42px minmax(0, 1fr) 22px;
-    gap: 12px;
+    min-height: 55px;
+    grid-template-columns: 38px minmax(0, 1fr) 18px;
+    gap: 10px;
   }
 
   .surface-number {
-    font-size: 17px;
+    font-size: 14px;
   }
 
   .surface-label {
     padding-left: 0;
-    font-size: 17px;
+    font-size: 16px;
+    line-height: 1.28;
   }
 
   .surface-summary {
     display: none;
     grid-column: 2 / -1;
-    padding: 0 0 17px;
-    font-size: 13px;
+    padding: 0 0 14px;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .surface-link:hover .surface-summary,
+  .surface-link:focus-visible .surface-summary {
+    display: block;
   }
 
   .surface-link[aria-current="true"] {
     grid-template-rows: auto auto;
-    padding-top: 8px;
+    padding-top: 6px;
     border-left: 2px solid var(--sunrise);
-    padding-left: 13px;
+    padding-left: 11px;
   }
 
   .surface-link[aria-current="true"] .surface-summary {
@@ -1918,6 +2058,8 @@ noscript {
   .surface-arrow {
     grid-column: 3;
     grid-row: 1;
+    color: var(--muted);
+    font-size: 15px;
   }
 
   .surface-focus {
@@ -1938,6 +2080,19 @@ noscript {
   .constellation {
     padding-top: 44px;
     padding-bottom: 48px;
+  }
+
+  .section-heading:not(.compact-heading) h2,
+  .library-heading h2,
+  .about h2 {
+    font-size: 31px;
+    letter-spacing: -0.02em;
+    line-height: 1.13;
+    text-wrap: balance;
+  }
+
+  .mobile-keep {
+    white-space: nowrap;
   }
 
   .constellation-heading {
@@ -2077,8 +2232,8 @@ noscript {
   }
 
   .reading-paths {
-    padding-top: 42px;
-    padding-bottom: 48px;
+    padding-top: 38px;
+    padding-bottom: 42px;
   }
 
   .section-heading,
@@ -2099,7 +2254,7 @@ noscript {
   .path-item,
   .path-item + .path-item {
     min-height: 0;
-    padding: 24px 0 26px;
+    padding: 22px 0 24px;
     border-left: 0;
   }
 
@@ -2108,7 +2263,14 @@ noscript {
   }
 
   .path-item h3 {
-    font-size: 24px;
+    font-size: 22px;
+    line-height: 1.32;
+  }
+
+  .path-item > p {
+    margin-top: 17px;
+    margin-bottom: 21px;
+    line-height: 1.65;
   }
 
   .path-materials li {
@@ -2122,18 +2284,18 @@ noscript {
   }
 
   .library {
-    padding-top: 48px;
-    padding-bottom: 68px;
+    padding-top: 42px;
+    padding-bottom: 60px;
   }
 
   .library-controls {
     grid-template-columns: 1fr 1fr;
-    gap: 9px;
+    gap: 7px 9px;
   }
 
   .library-controls select,
   .text-button {
-    min-height: 48px;
+    min-height: 44px;
     font-size: 12px;
   }
 
@@ -2171,14 +2333,18 @@ noscript {
 
   .about {
     grid-template-columns: 1fr;
-    gap: 30px;
-    padding-top: 54px;
-    padding-bottom: 62px;
+    gap: 24px;
+    padding-top: 48px;
+    padding-bottom: 52px;
   }
 
   .about-grid {
     grid-template-columns: 1fr;
     gap: 22px;
+  }
+
+  .architecture-note {
+    margin-top: 2px;
   }
 
   .material-view {
