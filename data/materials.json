@@ -159,26 +159,136 @@
       "noteDepth": "read",
       "readingScope": "arXiv v2（2026-07-08）§1–§6、Appendix A.1–A.11、Tables 1–5、Figures 1–3 与 Algorithm 1；references 只用于 lineage 定位，未逐篇 close-read；未复现代码或数据。",
       "intro": "A-TMA 把 ghost memory 重新定义为跨层的 state-coordination failure：旧值、现值与 transition evidence 可以同时正确地留在 bank，错误则可能发生在 bank role、按 query view 组织 retrieval evidence，或 QA 选择状态的任一层。（§1；§3；Figure 1，PDF pp. 1–2、5）",
+      "whyRead": "它最值得读的地方不是又提出一个 memory overlay，而是给 terminal answer 之前的失败建立了可追踪的层次：recorded、historically recoverable、retrieved for this view 与 used correctly by QA 不再被压成同一个“记住了”。这套 decomposition 也让新的风险变得可见——谁给 state 定角色、谁选择 query view、谁把 label 写进 prompt，谁就在 read side 获得了实际的 evidence authority。",
       "keyPoints": [
         "Bank：每条 record 包含 content、time/source position、state status、typed links 与 host metadata；status 包括 active、superseded、transition、unknown，links 可表达 supersession、evolution、scoped exception 与 coexistence。（§4.1–§4.3，PDF pp. 5–7）",
         "Retrieval：rule-based query profiler 先选择 current、historical、transition 或 neutral view，再把 host seed、relation hops 与 bounded controller 组成 evidence packet；controller 只能重排已有候选，不能找回 missing record。（§4.4；Appendix A.8，PDF pp. 8–9、18）",
         "QA：serializer 把 evidence trace 标成 current、historical、transition 或 generic retrieved memory，再交给 generator；因此 bank 中 recorded、retrieval 中 available 与 answer 中 used correctly 是可分开的事实。（§4.5–§4.6；Algorithm 1，PDF pp. 9–10、19）"
       ],
+      "argumentMap": [
+        {
+          "step": "01 · 先改写错误对象",
+          "claim": "旧记录存在本身不是 ghost memory。旧值、现值与 transition evidence 可以同时为真；错误在于它们没有被赋予或读取为 query 所需的 state role。",
+          "locator": "§1；§3；Figure 1，PDF pp. 1–2、5"
+        },
+        {
+          "step": "02 · 再把状态写进可检查的 record",
+          "claim": "每条 record 除 content 与时间外，还携带 active、superseded、transition、unknown 等 status，以及 supersession、evolution、scoped exception、coexistence 等 typed links；目标不是删除旧值，而是保留可追踪的关系。",
+          "locator": "§4.1–§4.3，PDF pp. 5–7"
+        },
+        {
+          "step": "03 · 让 retrieval 对 query view 负责",
+          "claim": "query profiler 先把问题分成 current、historical、transition 或 neutral view，retrieval 再从 host seed、state links 与 controller 组成 evidence packet；缺失记录、错误排序与错误 view 因而可以分开观察。",
+          "locator": "§4.4；Appendix A.8，PDF pp. 8–9、18"
+        },
+        {
+          "step": "04 · 最后把 answer-side selection 单独暴露",
+          "claim": "serializer 把 state role 明示给 generator，使“证据已经在 packet 中但 QA 仍选错状态”不再被误判为 retrieval miss。terminal answer 正确也不能反向证明前面的 bank 与 retrieval 正确。",
+          "locator": "§4.5–§4.6；Algorithm 1，PDF pp. 9–10、19"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "LTP construct",
+          "text": "LTP 以 10 个 LoCoMo-anchored profiles 为骨架，每个 profile 建 40 个 mutable slots；每个 slot 插入较早 old-state cue 与较晚 current/conflicting cue，再各生成 historical 与 current probe。完整规模是 400 state units、800 cue events 与 800 probes。它是受控生成的 state-change benchmark，不是 400 次自然对话中的真实状态变化。",
+          "locator": "Appendix A.1–A.3，PDF pp. 15–16"
+        },
+        {
+          "label": "Bank supervision",
+          "text": "Sentry 用 topic / logic 双 projection head 筛出 risky pairs；Qwen2.5-3B audit Judge 再决定 conflict、fusion action、clarification need 与 suggested links。Judge 先在 700 个 English items 上 QLoRA SFT，再以规则奖励做 GRPO，并在 151-item held-out set 上报告 87.4% accuracy 与 0.8774 F1。",
+          "locator": "§4.3；Appendix A.8，PDF pp. 6–7、17–18"
+        },
+        {
+          "label": "Retrieval control",
+          "text": "rule-based profiler 根据 temporal/change lexical hints 选 view；host seeds 加入 relation hops 与较弱 semantic hops 后稳定预排。optional 3B controller 只能在给定 candidate pool 内选择，parse 或 ID validation 失败则回退，因此它无法修复 candidate miss。",
+          "locator": "§4.4；Appendix A.8，PDF pp. 8–9、18"
+        },
+        {
+          "label": "Answer measurement",
+          "text": "QA 固定 top-5 evidence budget，使用 qwen2.5:3b 生成答案，llama3.3:70b 只作 offline answer judge。对 100 个 outputs 的 human audit 中，三分类 agreement 在 LTP 为 88.0% / κ 0.820，在 LoCoMo 仅 72.0% / κ 0.578；合并 correct 与 partially correct 后 overall binary agreement 才升至 93.0% / κ 0.847。",
+          "locator": "§5.1；Appendix A.5、A.8，PDF pp. 10、16–18"
+        }
+      ],
       "reportedFindings": [
         "Full LTP 上，A-Mem+A-TMA 的 aggregate QA accuracy 为 0.818、conflict 为 0.860，相对 A-Mem 分别提高 0.031 与 0.048；但 70B judge score 从 0.700 微降到 0.698。Graphiti/Zep+A-TMA 的 QA accuracy 从 0.524 到 0.635、conflict 从 0.480 到 0.720，同时 fact accuracy 从 0.568 降到 0.550。（Table 2，PDF p. 11）",
-        "Full LoCoMo 的结果同样依赖 host、category 与 metric：Graphiti/Zep+A-TMA 的 temporal F1 从 0.0295 到 0.1705，但 temporal judged QA 从 0.3707 降到 0.3178；A-Mem+A-TMA 的 average 指标小幅上升，multi-hop F1、BLEU 与 judge 则下降。（Tables 3–4；§5.3，PDF pp. 11–12）"
+        "InsideOut+A-TMA 在 LTP 的 QA accuracy 从 0.117 升到 0.662，是最大的同-host delta；同一 row 的 displayed bank score 仍为 0.000，与正文所说 bank、retrieval、QA 三层都修复并不相容。（§5.2；Table 2，PDF p. 11）",
+        "Full LoCoMo 含 10 个 samples、1,986 个 QA pairs。AriadneMem 仍有最高 average F1 0.2240；Graphiti/Zep+A-TMA 的 temporal F1 从 0.0295 到 0.1705，但 temporal judged QA 从 0.3707 降到 0.3178，open-domain 与 adversarial 指标也下降。（Tables 3–4，PDF pp. 11–12）",
+        "A-Mem+A-TMA 在 LoCoMo 的 average F1、BLEU 与 judged QA 小幅上升，但 multi-hop 三项都下降；效果随 host、question category 与 metric 改变，不能收缩成 uniform improvement。（Table 4；§5.3，PDF p. 12）"
       ],
       "evidenceLimits": [
         "它是尚未经过同行评审的 arXiv preprint；正文没有给出可定位的 code 或 LTP dataset release，因此这些是 paper-reported point estimates，不是复现结果。",
         "论文没有报告 repeated seeds、confidence intervals、bootstrap、significance test 或 per-profile variance；800 probes 嵌套在 10 个 shared replay banks 与 400 个 paired state units 中，不能直接当作 800 个独立实验单位。",
         "LTP 是从 10 个 LoCoMo-anchored profiles 构造的 controlled synthetic benchmark；后续 LoCoMo evaluation 也使用 10 个 LoCoMo samples，论文没有证明 conversation/profile lineage 独立。transition view 没有直接 change-QA target，neutral view 也没有独立结果。（Appendix A.1–A.4，PDF pp. 15–16）",
-        "Table 5 与 Appendix A.10 在 full/no-Sentry baseline、controller ablation、QA-label direction 与 bank column 上互相冲突；§4.4、Appendix A.8 与 Algorithm 1 对 controller 能看到的 candidate boundary 也不一致；§5.2 称 InsideOut+A-TMA 在 bank、retrieval、QA 三层修复了 failure chain，但 Table 2 的 bank accuracy 仍为 0.500。在 raw results 或作者 correction 出现前，不能据此隔离单个组件的 causal contribution。"
+        "LTP 的 cue1 / cue2 被放在分离的 time quantiles，old/current probes 也可能与 lexical profiler 的 hand-written hints 对齐；没有 chronology-only、reversed-quantile、oracle-view 或 shuffled-label controls，无法分离受控 temporal geometry 与 learned overlay 的贡献。",
+        "Sentry 的 logic=0 同时容纳 same-slot conflict 与 irrelevant negative；论文未给 per-class confusion matrix、true-predecessor candidate recall、false-negative supersession rate 或 similar-slot stress test。正确 prior state 若未进入候选，Sentry 与 Judge 都无法补回。",
+        "Bank role 与 Evidence support 是 pipeline diagnostics，不是独立、统一的 effect size。前者按 host-native status/link 个性化，后者没有公开 matching algorithm、threshold、paraphrase handling 或 reliability audit；Average Rank 还重复混合 aggregate QA 及其 conflict/fact partitions。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "Full row 与 no-Sentry 叙述对不上",
+          "observation": "Table 5 的 Full row 在 QA / preferred / judge 上均高于 -Sentry；Appendix A.10 却说 no-Sentry 最好，并引用表中不存在的数值。controller ablation 的起点也取自另一条 no-Sentry row。",
+          "implication": "在 raw results 或作者 correction 出现前，不能从 Table 5 与 Appendix A.10 中挑一套数字来做 component attribution。",
+          "locators": [
+            "Table 5，PDF p. 12",
+            "Appendix A.10，PDF p. 19"
+          ]
+        },
+        {
+          "label": "QA-label ablation 的方向相反",
+          "observation": "Appendix A.10 声称 removing QA labels 令 conflict 升到 0.858；Table 5 中 Full 已是 0.858，no-label row 是 0.850。A.10 还描述一个所有 variants 为 0.500 的 internal bank diagnostic，而表中 Bank coexist 全为 1.000。",
+          "implication": "serializer label 与 bank component 的单独贡献都没有稳定、可读的公开数值依据。",
+          "locators": [
+            "Table 5，PDF p. 12",
+            "Appendix A.10，PDF p. 19"
+          ]
+        },
+        {
+          "label": "Controller 到底看哪些 candidates",
+          "observation": "§4.4 把 controller 写成对完整 candidate set 操作，Appendix A.8 说最多看 10 条 shortlist，Algorithm 1 则在 TopK 之后才调用 controller；reported k=5 时，最后一种读法只给它 5 条。",
+          "implication": "这决定 controller 能否救回 rank 6–10 的 target，也决定 no-controller ablation 实际移除了什么。",
+          "locators": [
+            "§4.4，PDF pp. 8–9",
+            "Appendix A.8，PDF p. 18",
+            "Algorithm 1，PDF p. 19"
+          ]
+        },
+        {
+          "label": "InsideOut 的三层修复缺一层",
+          "observation": "§5.2 说 InsideOut+A-TMA 在 bank、retrieval 与 QA 三层修复 failure chain；Table 2 的同一 row 却显示 Bank role 为 0.000。",
+          "implication": "现有文本无法判断 sidecar role 是否被 scorer 排除、gain 是否主要来自 retrieval / QA，或 narrative / displayed value 是否过期。",
+          "locators": [
+            "§5.2，PDF p. 11",
+            "Table 2，PDF p. 11"
+          ]
+        }
       ],
       "editorialInferences": [
         {
           "label": "Read-side label amplification",
           "text": "显式 state label 即使不改写 bank，也会在 answer time 前景化某条证据；如果 classifier 或 bank Judge 判错，它可能让错误比 raw chronology 更有说服力。",
           "boundary": "这是根据论文 architecture 作出的编者 inference，不是 paper-tested result；论文没有报告 corrupted-label、false-supersession 或 wrong-role negative control。"
+        },
+        {
+          "label": "Diagnosability is instrumentation, not causality",
+          "text": "把 bank、retrieval 与 QA 分层记录，会让 failure localization 更可检查；但一个 trace 字段能指出哪层看起来异常，不等于它已经证明该层是 causal source，更不等于该层的 learned judge 判定正确。",
+          "boundary": "这是对 measurement contract 的编者 synthesis。Table 5 的表文冲突与缺少 layer-wise error-transition matrix，使 causal attribution 仍未成立。"
+        },
+        {
+          "label": "Role metadata is an authority surface",
+          "text": "active、superseded、transition 与 coexistence 不是无害的检索标签：它们决定某条记忆何时被前景化、何时只作为历史、何时被压低。即使 canonical store 不被覆盖，read path 仍在执行事实角色分配。",
+          "boundary": "这是由 architecture 产生的 editorial consequence，不是论文声称或验证的 governance result；时间顺序与 LLM conflict verdict 都不能单独取得这种 authority。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "State-label corruption stress test",
+          "status": "proposed-not-run",
+          "question": "显式 state labels 在正确时帮助 QA，在错误时会不会比 raw chronology 更强地放大 wrong-state intrusion？",
+          "method": "对同一组 synthetic multi-state records 固定内容、时间与 retrieval candidates，只改变 serialized state role；比较 raw chronology、correct labels、swapped labels 与 partially missing labels 四条 read paths。",
+          "fixtures": "公开 synthetic fixtures 覆盖 current、historical、transition、coexistence、scoped exception、correction 与 target-absent；不使用任何 private memory、人物或运行时实现。",
+          "controls": "加入 false-supersession、wrong-view、target-absent、label-shuffle 与 no-label controls；generation model、prompt budget、candidate order 与 decoding 固定。",
+          "measures": "逐题公开 candidate support、wrong-state intrusion、answer correctness、abstention 与 confidence；raw outputs 与 derived aggregates 分开保存。",
+          "limitations": "这是尚未执行的 paper-facing protocol，只能检验 label sensitivity；不能证明某个未公开实现的 production safety，也不能替代作者 code / dataset reproduction。"
         }
       ],
       "keywords": [
@@ -839,11 +949,129 @@
       "doi": "10.48550/arXiv.2608.04761",
       "noteDepth": "read",
       "readingScope": "arXiv v2 的 §1–§7、Limitations、Appendix A–E 及主要表图；references 未逐项读，也未复现代码。",
-      "intro": "把 agentic retrieval 从主题相似改写为 action-intent matching：结合当前目标、最近动作与 observation，寻找真正能解除下一步 bottleneck 的 insight。",
+      "intro": "InsightEmb 把 agentic retrieval 从主题相似改写为 action-intent matching：query 不只是当前一句话，而是 goal、recent actions 与 observation 组成的 situation；相关性取决于一条 insight 能否解除当前 bottleneck、提高预期任务进展。（§3.1，PDF pp. 3–4）",
+      "whyRead": "这篇真正推进的不是“换一个 embedding model”，而是把 retrieval relevance 从 aboutness 推向 action consequence：两段文字谈同一个主题，不代表那条 memory 此刻应该进入 context。它同时给出了自己的反例——intent geometry 在结构化 bottleneck 上有效，却会在专名、术语、剂量和精确事实检索上输给 literal similarity。因而最有研究价值的结论是 retrieval lanes 必须按失败代价分工，而不是由一个统一分数吞掉所有 query。",
       "keyPoints": [
-        "retrieval situation 由 goal、action history 与 current observation 组成；训练把原问题、完整 CoT 和 partial CoT 都作为 anchors，并用是否提高同题求解结果构造 contrastive labels。（§3.1、§3.3–§3.4）",
-        "动态 top-1 检索中，InsightEmb 在 ALFWorld、WebShop、ScienceWorld 的 bundle 结果为 60.71、31.74、8.00；普通 embedding 在 WebShop bundle 降到 18.42，说明一次语义相关但行动不合时宜的注入会伤害 agent。（Table 1）",
-        "MedCalcBench 上 Base 的 Recall@1 为 92.73，InsightEmb 只有 63.27；BM25 top-50 后再用 InsightEmb rerank 可提高到 70.91，但仍未超过 Base，支持保留 lexical candidate lane 的 hybrid routing。（Appendix E，Table 17）"
+        "Situation query：retrieval situation 由 goal、action history 与 current observation 组成；memory 是否 relevant 取决于它是否能解除当前 action bottleneck，而不只是主题相似。（§3.1，PDF pp. 3–4）",
+        "Outcome-derived labels：训练把原问题、完整 CoT 与 partial CoT 都作为 anchors；candidate insight 若让同题的一次验证求解优于 no-insight baseline，就被标为 positive，否则为 negative。（§3.3–§3.4；Appendix A–B，PDF pp. 4、13–17）",
+        "Cross-domain evaluation：embedding supervision 只来自 MATH，但 ALFWorld、WebShop 与 ScienceWorld 的 insight pools 仍由各目标环境 trajectory 蒸馏，因此 paper 评估的是 supervision transfer，不是 domain-free memory generation。（§4.1–§4.2；Appendix A，PDF pp. 5、13–16）",
+        "Counterexample：MedCalcBench 上 literal similarity 明显更强；BM25 candidate generation 加 intent rerank 能部分修复，却仍未超过 Base top-1。这要求 hybrid routing，而不是让 intent embedding 取代 lexical lane。（Appendix E，Table 17，PDF p. 29）"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 先区分 topic 与 action relevance",
+          "claim": "普通 embedding 更接近判断两段文字是否在说同一件事；agent memory 需要判断一条经验是否能改变当前下一步。论文因此把检索对象从文本相似度改成 situation 与 insight 的 action-intent compatibility。",
+          "locator": "§1；§3.1，PDF pp. 1–4"
+        },
+        {
+          "step": "02 · 用 downstream improvement 产生监督",
+          "claim": "作者不直接人工标 action intent，而是把候选 insight 注入同题求解；优于 no-insight baseline 的 pair 作为 positive，其余作为 negative，再用 InfoNCE 训练 4B Qwen3 embedding model。",
+          "locator": "§3.3–§3.4；Appendix A–B，PDF pp. 4、13–17"
+        },
+        {
+          "step": "03 · 把 trajectory 变成更接近当下的 query",
+          "claim": "原问题、完整 CoT 与 partial CoT 共同作为 anchors，使同一 task 在不同阶段可以召回不同 insight；动态 retrieval 的目标不只是一次取到 gold，而是随 bottleneck 变化更新 support。",
+          "locator": "§3.3；Appendix B–D，PDF pp. 4、16–27"
+        },
+        {
+          "step": "04 · 用 transfer 与反例限定结论",
+          "claim": "math-only supervision 在三个 agent environments 上产生收益，说明 action-intent geometry 可以迁移；MedCalcBench 的显著退化又说明精确实体与事实检索仍依赖 literal candidate lane。",
+          "locator": "§4；Appendix E，Tables 1、17，PDF pp. 5–8、29"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Two-stage contrastive data",
+          "text": "Stage 1 的 situation→insight 数据含 11,950 个 contrastive pairs，Stage 2 的 situation→experience 数据含 2,896 个 pairs；两阶段都只来自 MATH 的 counting/probability、number theory 与 geometry，并混合 bundle 与 atomic memory。",
+          "locator": "§3.3–§3.4；Appendix A–B，PDF pp. 4、13–17"
+        },
+        {
+          "label": "Label construction",
+          "text": "同一道题上的 candidate insight 只进行一次验证求解；相对 no-insight baseline 的 outcome 决定 positive / negative。partial trajectory 直接继承 problem-level label，没有 turn-specific usefulness annotation。",
+          "locator": "§3.3；Limitations，PDF pp. 4、9–10"
+        },
+        {
+          "label": "Target-environment memory",
+          "text": "ALFWorld、WebShop 与 ScienceWorld 的 insight pools 由各自环境 trajectory 蒸馏。没有在这些环境上训练的是 retriever supervision，而不是完整 evaluation pipeline；因此 cross-domain claim 需要限定为 retrieval geometry transfer。",
+          "locator": "§4.1–§4.2；Appendix A，PDF pp. 5、13–16"
+        },
+        {
+          "label": "Dynamic top-1 use",
+          "text": "agent 在执行过程中按当前 situation 反复取一条 insight。论文同时报告 task outcome、失败次数、步数与 distinct insights，用来观察动态 retrieval 是否只重复同一条支持。",
+          "locator": "§4.2；Appendix C–D，PDF pp. 5–6、18–27"
+        }
+      ],
+      "reportedFindings": [
+        "动态 top-1 retrieval 中，no-insight baseline 在 ALFWorld、WebShop、ScienceWorld 分别为 52.86、31.03、2.40；InsightEmb bundle 为 60.71、31.74、8.00，atomic 为 59.29、32.05、10.20。（Table 1，PDF p. 6）",
+        "普通 embedding 的 bundle retrieval 在 WebShop 降到 18.42，显著低于 no-insight 31.03；InsightEmb 恢复到 31.74，却只比 no-insight 高 0.71。检索到一条主题相关 memory 本身可以伤害 action，避免伤害与产生增益也不是同一件事。（Table 1，PDF p. 6）",
+        "SRA-Bench 含 636 个 gold situations 与 26,262 个 distractors；macro Recall@1 从 30.33 升到 31.37，Recall@10 从 54.13 升到 63.03，较明显的收益出现在更大的 candidate budget。（§4.3；Tables 2–3，PDF pp. 7–8）",
+        "MedCalcBench 上 Base Recall@1 为 92.73，InsightEmb 为 63.27；两者 Recall@10 均为 98.18。BM25 top-50 后让 InsightEmb rerank，Recall@1 回到 70.91、Recall@5/10 达到 100，但仍未超过 Base top-1。（Appendix E，Table 17，PDF p. 29）",
+        "去掉 partial-trajectory anchors 后，按各自最佳 k 计算，ALFWorld 的 Base→InsightEmb gain 约损失 83%，WebShop 约损失 49%。动态检索时 distinct insights 从约 1.8 增至约 5.8–6.0；ScienceWorld 失败数下降，但平均步数从 40.96 增到 43.59。（Appendix C–D，Tables 7、10–11，PDF pp. 18、20）"
+      ],
+      "evidenceLimits": [
+        "它是尚未经过同行评审的 arXiv preprint；论文与 arXiv 条目未给出可定位的 code link，因此这些是 paper-reported results，不是独立 reproduction。",
+        "math-only training 准确描述 embedding supervision，不描述整条 evaluation pipeline；三个 agent environments 的 insight pools 都由目标环境 trajectory 蒸馏，论文没有证明脱离 domain-specific experience 的 universal retriever。",
+        "partial trajectory 是最接近真实 agent state、也最关键的训练面，却继承 problem-level label，没有 state-specific usefulness supervision；每个 candidate pair 只验证一次，随机 solver outcome 会制造 false positive / negative。（Limitations，PDF pp. 9–10）",
+        "SRA-Bench 的 Recall@1 只增加 1.04 points，主要改善出现在较大的 k；candidate retrieval improvement 不能自动推出 top-1 injection 对 downstream policy 有帮助。",
+        "MedCalcBench 暴露了 query-type dependence：精确术语与事实检索上 intent model 的 top-1 明显低于 Base。论文没有提供一个经过验证的 router，说明何时使用 lexical、semantic、intent 或 hybrid lane。",
+        "同一条 insight 是否有用由特定 solver、单次 rollout、特定 task state 与 outcome 定义；这些 labels 不能直接当成跨模型、跨时刻或跨环境的 intrinsic memory quality。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "Cross-domain 不等于 domain-free",
+          "observation": "retriever 的 contrastive supervision 只来自数学任务，但 ALFWorld、WebShop 与 ScienceWorld 的 candidate insight pools 仍由各目标环境 trajectory 构造。",
+          "implication": "最稳的 claim 是 action-intent supervision geometry 可以迁移，不是一个无需目标环境经验的 universal memory system。",
+          "locators": [
+            "§3.3–§4.2，PDF pp. 4–6",
+            "Appendix A，PDF pp. 13–16"
+          ]
+        },
+        {
+          "label": "最有用的 anchor 拿到最粗的 label",
+          "observation": "partial trajectories 贡献了大部分 agent-environment gain，却直接继承 whole-problem positive / negative label；论文明确承认没有 state-specific supervision。",
+          "implication": "一个 insight 在整局中曾有帮助，不能推出它在当前 turn 应被注入；trajectory detail 与 label resolution 在这里反向变化。",
+          "locators": [
+            "Appendix C，Table 7，PDF p. 18",
+            "Limitations，PDF pp. 9–10"
+          ]
+        },
+        {
+          "label": "Action-intent 的胜利被 literal task 反驳",
+          "observation": "InsightEmb 在 MedCalcBench Recall@1 从 Base 的 92.73 降到 63.27；BM25→InsightEmb rerank 只恢复到 70.91。",
+          "implication": "论文自己的 counterexample 排除了“用 intent embedding 统一替代 lexical / semantic retrieval”的架构结论。",
+          "locators": [
+            "Appendix E，Table 17，PDF p. 29"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "Retrieval is a staged decision",
+          "text": "candidate generation、intent judgement、context admission 与 downstream outcome 是四个不同问题。一个 intent score 可以帮助 rerank，却不能证明该 memory 应当被注入，更不能用一次成功反向改写 source 的长期价值。",
+          "boundary": "这是基于论文 evaluation design 与 harmful-retrieval counterexample 的 editorial synthesis，不是论文已经实现或验证的四阶段 architecture。"
+        },
+        {
+          "label": "Hybrid routing is a permanent boundary",
+          "text": "literal lane 不是 intent model 尚未成熟时的临时 fallback。专名、剂量、identifier、精确事实与近似语义 bottleneck 的 failure cost 不同；MedCalcBench 表明统一 score 会系统性牺牲一类 query。",
+          "boundary": "这是从 Appendix E 反例推导出的设计判断。论文展示 BM25→InsightEmb rerank，但没有训练或验证一个完整 query router。"
+        },
+        {
+          "label": "State-rich queries amplify goal assumptions",
+          "text": "把 goal、recent actions 与 observation 写进 query 会提升方向性；若 goal 本身只是未经验证的推断，同一机制也会把这个假设传播到整条 recall path。query 变得更具体，不等于它变得更真实。",
+          "boundary": "这是 architecture-level inference，不是 paper-tested failure；论文没有系统测量 wrong-goal、ambiguous-goal 或 goal-shift perturbation。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "Intent-versus-literal routing matrix",
+          "status": "proposed-not-run",
+          "question": "哪些 query 应由 intent rerank 获益，哪些 query 必须保留 literal recall，错误路由的伤害如何被直接观察？",
+          "method": "构造一组公开 synthetic situations，分别要求 operational next-step support、paraphrastic concept match、exact entity / identifier recall 与 harmful near-match rejection；比较 query-only lexical、situation semantic、intent rerank 与 hybrid router。",
+          "fixtures": "公开 fixture 为每条 query 提供 gold support、plausible distractor、harmful near-match 与 abstain case；不使用 private memory、内部项目或不可公开的 runtime trace。",
+          "controls": "固定 candidate corpus 与 k，分别移除 goal、history、observation，并加入 wrong-goal、stale-observation 与 exact-token ablation。",
+          "measures": "公开 support@k、harmful@k、exact recall、route decision、abstention 与 downstream synthetic task outcome；raw rankings 与 derived aggregates 分开。",
+          "limitations": "这是尚未执行的通用 protocol，不是 InsightEmb reproduction，也不能证明任何 private 或 production retriever 的效果。"
+        }
       ],
       "keywords": [
         "action-intent retrieval",

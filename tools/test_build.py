@@ -42,7 +42,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             },
         )
 
-    def test_atma_is_the_only_new_richer_read_pilot(self):
+    def test_only_close_read_entries_use_richer_read_schema(self):
         by_id = {material["id"]: material for material in self.data["materials"]}
         atma = by_id["a-tma-state-aware-memory"]
         insightemb = by_id["insightemb-action-intent-retrieval"]
@@ -52,11 +52,18 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             [material["id"] for material in self.data["materials"] if material["noteDepth"] == "skim"],
             [material["id"] for material in self.data["materials"] if material["id"] not in {atma["id"], insightemb["id"]}],
         )
-        self.assertTrue(atma["reportedFindings"])
-        self.assertTrue(atma["evidenceLimits"])
+        for material in (atma, insightemb):
+            for field in (
+                "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
+                "sourceTensions", "editorialInferences", "openProtocols",
+            ):
+                self.assertTrue(material[field])
+            self.assertTrue(all(
+                protocol["status"] == "proposed-not-run"
+                for protocol in material["openProtocols"]
+            ))
         self.assertEqual(atma["editorialInferences"][0]["label"], "Read-side label amplification")
-        self.assertNotIn("reportedFindings", insightemb)
-        self.assertNotIn("evidenceLimits", insightemb)
+        self.assertEqual(insightemb["editorialInferences"][0]["label"], "Retrieval is a staged decision")
 
     def test_sparse_records_remain_valid_without_invented_richer_fields(self):
         validated = self.validate_copy(copy.deepcopy(self.data))
@@ -80,6 +87,12 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "private token"):
             self.validate_copy(invalid)
 
+    def test_private_project_mapping_names_are_rejected(self):
+        invalid = copy.deepcopy(self.data)
+        invalid["materials"][0]["editorialQuestion"] = "Could Tilia use this architecture?"
+        with self.assertRaisesRegex(ValueError, "private token"):
+            self.validate_copy(invalid)
+
     def test_private_engineering_fields_are_rejected(self):
         invalid = copy.deepcopy(self.data)
         invalid["materials"][0]["projectMapping"] = {"status": "internal"}
@@ -92,6 +105,59 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             self.assertTrue(set(surface["materialIds"]).issubset(material_ids))
         for reading_path in self.data["atlas"]["readingPaths"]:
             self.assertTrue(set(reading_path["materialIds"]).issubset(material_ids))
+
+    def test_read_depth_cannot_drop_required_evidence_layers(self):
+        invalid = copy.deepcopy(self.data)
+        del invalid["materials"][0]["argumentMap"]
+        with self.assertRaisesRegex(ValueError, "read/worked entry missing rich fields"):
+            self.validate_copy(invalid)
+
+    def test_public_test_contribution_requires_reproducible_fields(self):
+        valid = copy.deepcopy(self.data)
+        valid["materials"][0]["contributions"] = [{
+            "type": "public-test",
+            "title": "Synthetic label perturbation",
+            "byline": "Example contributor",
+            "date": "2026-08-13",
+            "basis": "A paper-facing stress test of serialized state roles.",
+            "boundary": "This does not reproduce the paper or validate a production system.",
+            "method": "Hold candidates fixed and permute state labels.",
+            "environment": "Static public fixture and a documented local model.",
+            "fixture": "Synthetic current, historical, and transition records.",
+            "controls": "A no-label baseline and a shuffled-label condition.",
+            "rawResult": "Public per-case outputs.",
+            "derivedResult": "Aggregate wrong-state intrusion rate.",
+            "limitations": "Synthetic scope only.",
+            "links": [{"label": "artifact", "url": "https://example.org/artifact"}],
+        }]
+        self.validate_copy(valid)
+
+        invalid = copy.deepcopy(valid)
+        del invalid["materials"][0]["contributions"][0]["rawResult"]
+        with self.assertRaisesRegex(ValueError, "invalid fields"):
+            self.validate_copy(invalid)
+
+        no_artifact = copy.deepcopy(valid)
+        no_artifact["materials"][0]["contributions"][0]["links"] = []
+        with self.assertRaisesRegex(ValueError, "non-empty list"):
+            self.validate_copy(no_artifact)
+
+    def test_contributor_perspective_keeps_byline_and_boundary(self):
+        valid = copy.deepcopy(self.data)
+        valid["materials"][0]["contributions"] = [{
+            "type": "perspective",
+            "title": "A distinct reading",
+            "byline": "Example contributor",
+            "date": "2026-08-13",
+            "text": "This critique remains separate from the paper and site editorial voice.",
+            "basis": "Table 2 and the public source.",
+            "boundary": "An editorial perspective, not a paper result.",
+            "links": [],
+        }]
+        validated = self.validate_copy(valid)
+        contribution = validated["materials"][0]["contributions"][0]
+        self.assertEqual(contribution["byline"], "Example contributor")
+        self.assertIn("not a paper result", contribution["boundary"])
 
 
 if __name__ == "__main__":

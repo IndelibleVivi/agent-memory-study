@@ -1,21 +1,71 @@
 # Contributing
 
-Contributions that improve source locators, bibliographic accuracy, accessibility, or the reader itself are welcome.
+Agent Memory Study 是一间公开 study room，不是未读材料仓库，也不是论文排行榜。贡献应当让一条研究判断更可定位、更可反驳或更可复核。本站不提供 browser-side annotation editor；没有账号、持久化与 provenance 的输入框刷新即失效，也无法支持可靠审阅。请通过 pull request 提交 durable contribution。
 
-For a new material entry:
+## 可以贡献什么
 
-- link to the canonical or official source over a mirror;
-- use `pdf.delivery: official` by default and link the official full text;
-- add a PDF to `papers/` only when its public redistribution license has been checked, then record its exact author/title/source/license attribution in `THIRD_PARTY_NOTICES.md` and whitelist the exact filename;
-- do not add OCR derivatives, screenshots of full texts, private exports, Zotero keys/tags, chat locators, or local filesystem paths;
-- keep quotation distinct from paraphrase and attach a precise source locator to any quotation;
-- set `noteDepth` honestly: `skim`, `abstract`, `read`, or `worked`;
-- map the entry to one or more existing `failureSurfaces`; add or change the atlas taxonomy only when the cross-source editorial frame itself needs revision;
-- keep `reportedFindings`, `evidenceLimits`, and `editorialInferences` distinct. An inference item must say that it is editorial and name the paper-facing evidence gap that makes it untested;
-- leave uncertainty visible rather than completing a citation, page number, or claim by guesswork;
-- preserve disagreement instead of rewriting it into a consensus;
-- put human-machine editorial judgment in `editorialQuestion`, never in the source author's voice.
+### 1. Source correction / version watch
 
-Do not add private project architecture, internal source-inspection or probe results, commit/revision identifiers, prompts, sessions, routing evidence, private names, or private continuity to any public copy. A publishable test artifact must instead be system-agnostic, use public or synthetic fixtures, and state method, environment, raw versus derived result, and limitations.
+修正书目、source locator、作者勘误、正式发表信息、公开 code / data release 或论文版本变化。说明你检查的版本与日期，并把“外部资源现在存在”同“本站已复现其结果”分开。
 
-Run `python3 tools/build.py` before opening a pull request. The command validates the public schema and publication boundary, no-tracking/static contract, GitHub Pages subpath asset URLs, RDF attachment modes, and exact set of bundled PDFs, then rebuilds the generated browser payload from `data/materials.json`.
+### 2. 新材料与 reading note
+
+- 优先链接 canonical / official source，不使用 mirror 代替来源身份；
+- `pdf.delivery` 默认使用 `official`。只有 public redistribution license 已逐文件确认时，才能把原始 PDF 加入 `papers/`，并同步更新 `THIRD_PARTY_NOTICES.md` 与 exact allowlist；
+- 如实填写 `noteDepth`: `abstract`、`skim`、`read` 或 `worked`。不要因为 note 写得流畅就提高 depth；
+- `read` / `worked` entry 必须有 reading scope、`whyRead`、source-backed `argumentMap`、`evidenceLimits` 与明确标注的 `editorialInferences`。只有论文与实际阅读支持时才增加 `methodNotes`、`reportedFindings` 或 `sourceTensions`；不要为了 schema 发明不存在的方法、结果或矛盾；
+- 如果提出未来测试，放入 `openProtocols` 并标成 `proposed-not-run`；没有真正值得运行的 protocol 就不加，不把阅读室变成实验待办；
+- `worked` 只用于已经存在公开、可复核 artifact 的工作，不用于 private experiment、实现印象或尚未发布的测试；
+- 映射到一个或多个现有 `failureSurfaces`。只有跨材料问题结构本身改变时，才修改 atlas taxonomy；
+- leave holes visible。拿不准的 locator、数字或结论不要靠推测补齐。
+
+### 3. 对已有 entry 的 perspective / critique
+
+不要覆盖站方原有判断，也不要把分歧改写成共识。通过 material 的 `contributions` 增加 `type: perspective` item，保留：
+
+- contributor 明确选择的 public `byline` 与日期；
+- `text`：贡献者自己的观点；
+- `basis`：它依赖的论文段落、公开 artifact 或推理前提；
+- `boundary`：它没有证明什么、哪些部分是 inference；
+- 可选的 HTTPS source / artifact links。
+
+Project-specific 评价可以进入，但被评价的 project、版本与证据必须公开、可链接、可独立理解；它只说明该公开 project 的行为，不能自动泛化成论文 reproduction 或所有系统的结论。private / proprietary implementation 不能作为 public research result 的隐藏证据。
+
+### 4. Public test artifact
+
+使用 `type: public-test`。artifact 必须是 paper-facing、system-agnostic、可独立复核的公开研究材料，并明确记录：
+
+- method 与 environment；
+- public / synthetic fixture；
+- raw result 与 derived result 的区别；
+- controls、limitations 与可访问 artifact link；
+- tested implementation / model / source 的公开 identity。
+
+不提交以 private runtime、private data、内部 project 或不可检查实现为被测对象的结果。只提交“我们本地试过、看起来有效”不构成 public test artifact。
+
+## 声音与证据怎样分开
+
+- quotation、source-backed paraphrase、paper-reported result、source audit 与 editorial inference 必须可区分；逐字引用必须有精确 locator；
+- `sourceTensions.observation` 记录原文内部可定位的差异，`implication` 才是编者解释；
+- `editorialInferences` 必须说明它是 editorial，并在 `boundary` 写清论文缺失了哪项验证；
+- contributor voice 只存在于带 `byline` 的 `contributions`，不混入论文作者或本站既有 editorial voice；
+- 保留合理分歧，不要求一条 entry 收束成唯一结论。
+
+## Public / privacy boundary
+
+不要提交 private project architecture、非公开实现检查或运行证据、内部版本标识、prompt、session、routing evidence、private names、private continuity、local filesystem path、private export、Zotero key / tag 或 chat locator。不要用化名包装 private project finding。
+
+不要提交 OCR derivative、论文全文截图或未确认再分发权利的 PDF。贡献者应只提交自己有权公开的文字、fixture 与 artifact，并在 pull request template 中明确希望采用的 public byline。仓库当前没有给 reader code 或 editorial notes 授予 open-source / Creative Commons license；maintainer 会在 merge 前确认 attribution 与 publication permission，不把一次 pull request 默认为权利转让。
+
+## Canonical source 与验证
+
+`data/materials.json` 是唯一 canonical public content source；`assets/materials-data.js` 由 builder 生成，不能手工维护。网页贡献也必须保持 static、no-backend、no-analytics、no-tracking，不引入需要登录却没有 durable authority 的 annotation state。
+
+运行：
+
+```bash
+python3 tools/build.py
+python3 -m unittest tools.test_build
+```
+
+builder 会检查 schema、publication boundary、no-tracking contract、GitHub Pages subpath asset URLs、RDF attachment modes 与 bundled PDF exact allowlist，再从 canonical JSON 重建 browser payload。

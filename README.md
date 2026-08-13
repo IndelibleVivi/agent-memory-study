@@ -9,7 +9,7 @@
 - 16 份 source-linked materials；
 - 一张先于材料目录出现的 failure-surface 研究地图，以及三条可自由进入和离开的 reading paths；
 - 可按主题、failure surface、depth、标题或作者进入材料；
-- 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
+- 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；当前两份 `read` entry 进一步展示 argument map、方法与监督、原文内部张力、为什么值得读，以及明确标成 `proposed-not-run` 的公开 protocol；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 一个没有 backend、CDN、analytics 或 tracking 的静态 reader；
 - 9 份按原许可随站提供的 PDF，另 7 份从 reader 直达 official full text；
 - `main` 中的 RDF 可以一次导入 16 条书目、9 份 stored PDF 与 7 个 official PDF link。
@@ -42,9 +42,15 @@ python3 -m http.server 8080
 
 然后访问 `http://localhost:8080/`。
 
-## 加一份新材料
+## 通过 pull request 贡献
 
-1. 在唯一 canonical public source `data/materials.json` 增加一条连续编号的记录，并明确 `noteDepth`、`readingScope`、`failureSurfaces` 与 `editorialQuestion`；
+这个 repo 接受 source correction / version watch、新材料 + reading note、对已有 entry 的署名 perspective / critique，以及使用 public / synthetic fixtures 的可复核 test artifact。完整 evidence、attribution、privacy 与 schema contract 见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+
+本站刻意不提供 browser-side annotate 功能：在没有登录、durable storage、review 与 provenance 的前提下，刷新即消失的输入状态不构成研究贡献。Agent Memory Study 是 study，不按藏书量、待读数或进度组织；GitHub `main` 只表示已经选择公开的同步状态，不能反向推断任何人的阅读或实验进度。
+
+### 加一份新材料
+
+1. 在唯一 canonical public source `data/materials.json` 增加一条连续编号的记录，并明确 `noteDepth`、`readingScope`、`failureSurfaces` 与 `editorialQuestion`；`read` / `worked` 还必须满足 richer evidence schema；
 2. 给 `pdf.delivery` 选择 `bundled` 或 `official`。只有存在明确 public redistribution license、逐文件 attribution 与 canonical source 时才能使用 `bundled`；
 3. 如需更新 Zotero metadata，可从自己的 Zotero 导出 native RDF，但不要把 local-only notes、keys、tags 或路径带进 public data；
 4. 运行：

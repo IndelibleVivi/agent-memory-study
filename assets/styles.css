@@ -947,6 +947,10 @@ svg {
   color: var(--sunrise);
 }
 
+.contribution-kind {
+  color: var(--tide);
+}
+
 .mechanism-list {
   margin: 0;
   padding: 0;
@@ -999,6 +1003,102 @@ svg {
   border-left: 2px solid var(--sage);
 }
 
+.research-note,
+.tension-block,
+.protocol-block,
+.contribution-block {
+  padding: 24px 0;
+  border-top: 1px solid var(--hairline-soft);
+}
+
+.research-note:first-child,
+.tension-block:first-child,
+.protocol-block:first-child,
+.contribution-block:first-child {
+  border-top-color: var(--hairline);
+}
+
+.research-note-label,
+.research-note-locator,
+.protocol-status,
+.contribution-meta,
+.contribution-basis,
+.contribution-boundary,
+.contribution-links {
+  font-family: var(--ui);
+}
+
+.research-note-label,
+.protocol-status {
+  margin: 0 0 10px;
+  color: var(--tide);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.research-note h3,
+.tension-block h3,
+.protocol-block h3,
+.contribution-block h3,
+.why-read h3 {
+  margin: 0 0 13px;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.research-note-text,
+.tension-observation,
+.tension-implication,
+.protocol-question,
+.contribution-text {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+.research-note-locator {
+  margin: 11px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.argument-step {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.32fr) minmax(0, 1fr);
+  column-gap: 28px;
+}
+
+.argument-step .research-note-label {
+  grid-row: 1 / span 2;
+}
+
+.argument-step .research-note-locator {
+  grid-column: 2;
+}
+
+.method-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 34px;
+}
+
+.method-note:nth-child(2) {
+  border-top-color: var(--hairline);
+}
+
+.tension-block h3 {
+  color: var(--sage);
+}
+
+.tension-implication {
+  margin-top: 15px;
+  padding-left: 19px;
+  border-left: 2px solid var(--sage);
+  color: var(--ink-soft);
+}
+
 .sparse-disclosure {
   margin: 0;
   padding: 22px 25px;
@@ -1013,6 +1113,23 @@ svg {
   padding: 24px 26px;
   border-top: 1px solid var(--sunrise);
   border-bottom: 1px solid var(--sunrise);
+}
+
+.why-read {
+  margin-bottom: 30px;
+  padding: 0 0 27px 24px;
+  border-left: 2px solid var(--sunrise);
+  border-bottom: 1px solid var(--hairline-soft);
+}
+
+.why-read h3 {
+  color: var(--sunrise);
+}
+
+.why-read p {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.75;
 }
 
 .inference-block + .inference-block {
@@ -1063,6 +1180,60 @@ svg {
   margin: 0;
   font-size: 18px;
   line-height: 1.7;
+}
+
+.protocol-block h3 {
+  font-size: 25px;
+}
+
+.protocol-question {
+  margin-bottom: 22px;
+  font-size: 19px;
+}
+
+.protocol-block dl,
+.contribution-block dl {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.25fr) minmax(0, 1fr);
+  margin: 0;
+  border-top: 1px solid var(--hairline-soft);
+}
+
+.protocol-block dt,
+.protocol-block dd,
+.contribution-block dt,
+.contribution-block dd {
+  margin: 0;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--hairline-soft);
+  font-family: var(--ui);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.protocol-block dt,
+.contribution-block dt {
+  padding-right: 22px;
+  color: var(--muted);
+}
+
+.contribution-meta {
+  margin: 0 0 11px;
+  color: var(--tide);
+  font-size: 12px;
+}
+
+.contribution-basis,
+.contribution-boundary,
+.contribution-links {
+  margin: 13px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.contribution-links a {
+  color: var(--tide);
 }
 
 .source-rail {
@@ -1637,6 +1808,21 @@ noscript {
     font-size: 23px;
   }
 
+  .argument-step,
+  .method-notes {
+    display: block;
+  }
+
+  .argument-step .research-note-label,
+  .argument-step .research-note-locator {
+    grid-row: auto;
+    grid-column: auto;
+  }
+
+  .method-note:nth-child(2) {
+    border-top-color: var(--hairline-soft);
+  }
+
   .finding-list li,
   .evidence-limits li {
     font-size: 15px;
@@ -1644,6 +1830,21 @@ noscript {
 
   .inference-block {
     padding-inline: 18px;
+  }
+
+  .why-read {
+    padding-left: 18px;
+  }
+
+  .protocol-block dl,
+  .contribution-block dl {
+    display: block;
+  }
+
+  .protocol-block dt,
+  .contribution-block dt {
+    padding-bottom: 0;
+    border-bottom: 0;
   }
 
   .source-delivery-mobile {

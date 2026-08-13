@@ -29,6 +29,7 @@ PRIVATE_PATTERNS = (
         r"\b(?:commit|sha|revision|rev)\s*[@:=#-]\s*[0-9a-f]{7,40}\b",
         re.IGNORECASE,
     ),
+    re.compile(r"\b(?:Tilia|Atria|LMC-5)\b"),
 )
 TRACKING_PATTERNS = (
     re.compile(r"google-analytics|googletagmanager", re.IGNORECASE),
@@ -44,6 +45,7 @@ PUBLIC_COPY_PATHS = (
     "NOTICE.md",
     "THIRD_PARTY_NOTICES.md",
     "CONTRIBUTING.md",
+    ".github/PULL_REQUEST_TEMPLATE.md",
     "ZOTERO-IMPORT.md",
     "agent-memory-study.rdf",
 )
@@ -94,6 +96,25 @@ def assert_string_list(value: Any, where: str, *, allow_empty: bool = False) -> 
         raise ValueError(f"{where} must be a {'possibly empty ' if allow_empty else 'non-empty '}list")
     if any(not isinstance(item, str) or not item.strip() for item in value):
         raise ValueError(f"{where} must contain non-empty text values")
+
+
+def assert_exact_text_object(value: Any, fields: set[str], where: str) -> None:
+    if not isinstance(value, dict) or set(value) != fields:
+        raise ValueError(f"{where} fields must be exactly {sorted(fields)}")
+    if any(not isinstance(value[field], str) or not value[field].strip() for field in fields):
+        raise ValueError(f"{where} must contain non-empty text")
+
+
+def assert_links(value: Any, where: str, *, allow_empty: bool = True) -> None:
+    if not isinstance(value, list) or (not allow_empty and not value):
+        raise ValueError(f"{where} must be a {'possibly empty' if allow_empty else 'non-empty'} list")
+    for index, link in enumerate(value):
+        if not isinstance(link, dict) or set(link) != {"label", "url"}:
+            raise ValueError(f"{where}[{index}] must contain label and url")
+        if not isinstance(link["label"], str) or not link["label"].strip():
+            raise ValueError(f"{where}[{index}].label must be non-empty text")
+        if not is_https_url(link["url"]):
+            raise ValueError(f"{where}[{index}].url must use HTTPS")
 
 
 def validate_public_copy_files() -> None:
@@ -271,6 +292,41 @@ def load_and_validate(path: Path) -> dict[str, Any]:
         for optional_list in ("reportedFindings", "evidenceLimits"):
             if optional_list in paper:
                 assert_string_list(paper[optional_list], f"{paper['id']}.{optional_list}")
+
+        rich_object_lists = {
+            "argumentMap": {"step", "claim", "locator"},
+            "methodNotes": {"label", "text", "locator"},
+        }
+        for field, item_fields in rich_object_lists.items():
+            if field not in paper:
+                continue
+            items = paper[field]
+            if not isinstance(items, list) or not items:
+                raise ValueError(f"{paper['id']}.{field} must be a non-empty list")
+            for index, item in enumerate(items):
+                assert_exact_text_object(item, item_fields, f"{paper['id']}.{field}[{index}]")
+
+        if "sourceTensions" in paper:
+            tensions = paper["sourceTensions"]
+            if not isinstance(tensions, list) or not tensions:
+                raise ValueError(f"{paper['id']}.sourceTensions must be a non-empty list")
+            for index, tension in enumerate(tensions):
+                if not isinstance(tension, dict) or set(tension) != {
+                    "label", "observation", "implication", "locators"
+                }:
+                    raise ValueError(
+                        f"{paper['id']}.sourceTensions[{index}] must contain label, observation, "
+                        "implication, and locators"
+                    )
+                for field in ("label", "observation", "implication"):
+                    if not isinstance(tension[field], str) or not tension[field].strip():
+                        raise ValueError(
+                            f"{paper['id']}.sourceTensions[{index}].{field} must be non-empty text"
+                        )
+                assert_string_list(
+                    tension["locators"], f"{paper['id']}.sourceTensions[{index}].locators"
+                )
+
         if "editorialInferences" in paper:
             inferences = paper["editorialInferences"]
             if not isinstance(inferences, list) or not inferences:
@@ -283,6 +339,72 @@ def load_and_validate(path: Path) -> dict[str, Any]:
                 if any(not isinstance(inference[field], str) or not inference[field].strip()
                        for field in ("label", "text", "boundary")):
                     raise ValueError(f"{paper['id']}.editorialInferences must contain non-empty text")
+
+        if "openProtocols" in paper:
+            protocols = paper["openProtocols"]
+            if not isinstance(protocols, list) or not protocols:
+                raise ValueError(f"{paper['id']}.openProtocols must be a non-empty list")
+            protocol_fields = {
+                "title", "status", "question", "method", "fixtures", "controls", "measures",
+                "limitations",
+            }
+            for index, protocol in enumerate(protocols):
+                assert_exact_text_object(
+                    protocol, protocol_fields, f"{paper['id']}.openProtocols[{index}]"
+                )
+                if protocol["status"] != "proposed-not-run":
+                    raise ValueError(
+                        f"{paper['id']}.openProtocols[{index}].status must be proposed-not-run"
+                    )
+
+        if "contributions" in paper:
+            contributions = paper["contributions"]
+            if not isinstance(contributions, list) or not contributions:
+                raise ValueError(f"{paper['id']}.contributions must be a non-empty list")
+            common = {"type", "title", "byline", "date", "basis", "boundary", "links"}
+            type_fields = {
+                "perspective": common | {"text"},
+                "public-test": common | {
+                    "method", "environment", "fixture", "controls", "rawResult", "derivedResult",
+                    "limitations",
+                },
+            }
+            for index, contribution in enumerate(contributions):
+                if not isinstance(contribution, dict):
+                    raise ValueError(f"{paper['id']}.contributions[{index}] must be an object")
+                contribution_type = contribution.get("type")
+                expected = type_fields.get(contribution_type)
+                if expected is None or set(contribution) != expected:
+                    raise ValueError(
+                        f"{paper['id']}.contributions[{index}] has invalid fields for "
+                        f"type {contribution_type!r}"
+                    )
+                for field in expected - {"links"}:
+                    if not isinstance(contribution[field], str) or not contribution[field].strip():
+                        raise ValueError(
+                            f"{paper['id']}.contributions[{index}].{field} must be non-empty text"
+                        )
+                if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", contribution["date"]):
+                    raise ValueError(
+                        f"{paper['id']}.contributions[{index}].date must be YYYY-MM-DD"
+                    )
+                assert_links(
+                    contribution["links"],
+                    f"{paper['id']}.contributions[{index}].links",
+                    allow_empty=contribution_type != "public-test",
+                )
+
+        if paper["noteDepth"] in {"read", "worked"}:
+            rich_required = {
+                "whyRead", "argumentMap", "evidenceLimits", "editorialInferences",
+            }
+            rich_missing = rich_required.difference(paper)
+            if rich_missing:
+                raise ValueError(
+                    f"{paper['id']} read/worked entry missing rich fields: {sorted(rich_missing)}"
+                )
+            if not isinstance(paper["whyRead"], str) or not paper["whyRead"].strip():
+                raise ValueError(f"{paper['id']}.whyRead must be non-empty text")
 
         pdf = paper["pdf"]
         if not isinstance(pdf, dict):

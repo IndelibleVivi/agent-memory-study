@@ -56,12 +56,24 @@
     materialSurfaceLinks: document.querySelector("#material-surface-links"),
     materialIntro: document.querySelector("#material-intro"),
     materialPoints: document.querySelector("#material-points"),
+    argumentSection: document.querySelector("#paper-argument"),
+    materialArgumentMap: document.querySelector("#material-argument-map"),
+    methodSection: document.querySelector("#paper-method"),
+    materialMethodNotes: document.querySelector("#material-method-notes"),
     findingsSection: document.querySelector("#paper-findings"),
     materialFindings: document.querySelector("#material-findings"),
     materialLimits: document.querySelector("#material-limits"),
     limitsFallback: document.querySelector("#limits-fallback"),
+    tensionsSection: document.querySelector("#paper-tensions"),
+    materialTensions: document.querySelector("#material-tensions"),
+    whyReadBlock: document.querySelector("#why-read-block"),
+    materialWhyRead: document.querySelector("#material-why-read"),
     materialInferences: document.querySelector("#material-inferences"),
     materialQuestion: document.querySelector("#material-question"),
+    protocolsSection: document.querySelector("#paper-protocols"),
+    materialProtocols: document.querySelector("#material-protocols"),
+    contributionsSection: document.querySelector("#paper-contributions"),
+    materialContributions: document.querySelector("#material-contributions"),
     articleToc: document.querySelector("#article-toc"),
     sourceRail: document.querySelector("#source-rail"),
     sourceMobile: document.querySelector("#paper-source-mobile"),
@@ -280,21 +292,12 @@
       if (route.surface && !material.failureSurfaces.includes(route.surface)) return false;
       if (route.depth && material.noteDepth !== route.depth) return false;
       if (!query) return true;
-      const inferenceText = (material.editorialInferences || [])
-        .map((inference) => `${inference.label} ${inference.text} ${inference.boundary}`)
-        .join(" ");
       const haystack = normalize([
         material.title,
         material.authors.join(" "),
         material.shortAuthor,
         material.year,
-        material.intro,
-        material.editorialQuestion,
-        material.keyPoints.join(" "),
-        (material.reportedFindings || []).join(" "),
-        (material.evidenceLimits || []).join(" "),
-        material.keywords.join(" "),
-        inferenceText,
+        JSON.stringify(material),
       ].join(" "));
       return haystack.includes(query);
     });
@@ -345,6 +348,32 @@
     refs.materialIntro.textContent = material.intro;
     refs.materialPoints.replaceChildren(...material.keyPoints.map((point) => createTextElement("li", point)));
 
+    const argumentMap = material.argumentMap || [];
+    refs.argumentSection.hidden = argumentMap.length === 0;
+    refs.materialArgumentMap.replaceChildren(...argumentMap.map((item) => {
+      const block = document.createElement("section");
+      block.className = "research-note argument-step";
+      block.append(
+        createTextElement("p", item.step, "research-note-label"),
+        createTextElement("p", item.claim, "research-note-text"),
+        createTextElement("p", item.locator, "research-note-locator"),
+      );
+      return block;
+    }));
+
+    const methodNotes = material.methodNotes || [];
+    refs.methodSection.hidden = methodNotes.length === 0;
+    refs.materialMethodNotes.replaceChildren(...methodNotes.map((item) => {
+      const block = document.createElement("section");
+      block.className = "research-note method-note";
+      block.append(
+        createTextElement("h3", item.label),
+        createTextElement("p", item.text, "research-note-text"),
+        createTextElement("p", item.locator, "research-note-locator"),
+      );
+      return block;
+    }));
+
     const findings = material.reportedFindings || [];
     refs.findingsSection.hidden = findings.length === 0;
     refs.materialFindings.replaceChildren(...findings.map((finding) => createTextElement("li", finding)));
@@ -354,7 +383,23 @@
     refs.materialLimits.hidden = limits.length === 0;
     refs.limitsFallback.hidden = limits.length !== 0;
 
+    const tensions = material.sourceTensions || [];
+    refs.tensionsSection.hidden = tensions.length === 0;
+    refs.materialTensions.replaceChildren(...tensions.map((tension) => {
+      const block = document.createElement("section");
+      block.className = "tension-block";
+      block.append(
+        createTextElement("h3", tension.label),
+        createTextElement("p", tension.observation, "tension-observation"),
+        createTextElement("p", `定位：${tension.locators.join(" · ")}`, "research-note-locator"),
+        createTextElement("p", `编者 consequence：${tension.implication}`, "tension-implication"),
+      );
+      return block;
+    }));
+
     const inferences = material.editorialInferences || [];
+    refs.whyReadBlock.hidden = !material.whyRead;
+    refs.materialWhyRead.textContent = material.whyRead || "";
     refs.materialInferences.replaceChildren(...inferences.map((inference) => {
       const block = document.createElement("section");
       block.className = "inference-block";
@@ -366,6 +411,76 @@
       return block;
     }));
     refs.materialQuestion.textContent = material.editorialQuestion;
+
+    const protocols = material.openProtocols || [];
+    refs.protocolsSection.hidden = protocols.length === 0;
+    refs.materialProtocols.replaceChildren(...protocols.map((protocol) => {
+      const block = document.createElement("section");
+      block.className = "protocol-block";
+      block.append(
+        createTextElement("p", "Proposed · not run", "protocol-status"),
+        createTextElement("h3", protocol.title),
+        createTextElement("p", protocol.question, "protocol-question"),
+      );
+      const details = document.createElement("dl");
+      [
+        ["Method", protocol.method],
+        ["Public / synthetic fixtures", protocol.fixtures],
+        ["Controls", protocol.controls],
+        ["Measures", protocol.measures],
+        ["Limitations", protocol.limitations],
+      ].forEach(([label, value]) => {
+        details.append(createTextElement("dt", label), createTextElement("dd", value));
+      });
+      block.append(details);
+      return block;
+    }));
+
+    const contributions = material.contributions || [];
+    refs.contributionsSection.hidden = contributions.length === 0;
+    refs.materialContributions.replaceChildren(...contributions.map((contribution) => {
+      const block = document.createElement("section");
+      block.className = "contribution-block";
+      block.append(
+        createTextElement(
+          "p",
+          `${contribution.type === "public-test" ? "Public test" : "Editorial perspective"} · ${contribution.byline} · ${contribution.date}`,
+          "contribution-meta",
+        ),
+        createTextElement("h3", contribution.title),
+      );
+      if (contribution.type === "perspective") {
+        block.append(createTextElement("p", contribution.text, "contribution-text"));
+      } else {
+        const details = document.createElement("dl");
+        [
+          ["Method", contribution.method],
+          ["Environment", contribution.environment],
+          ["Fixture", contribution.fixture],
+          ["Controls", contribution.controls],
+          ["Raw result", contribution.rawResult],
+          ["Derived result", contribution.derivedResult],
+          ["Limitations", contribution.limitations],
+        ].forEach(([label, value]) => {
+          details.append(createTextElement("dt", label), createTextElement("dd", value));
+        });
+        block.append(details);
+      }
+      block.append(
+        createTextElement("p", `Evidence basis：${contribution.basis}`, "contribution-basis"),
+        createTextElement("p", `Boundary：${contribution.boundary}`, "contribution-boundary"),
+      );
+      if (contribution.links.length) {
+        const links = document.createElement("p");
+        links.className = "contribution-links";
+        contribution.links.forEach((link, index) => {
+          if (index) links.append(document.createTextNode(" · "));
+          links.append(createExternalLink(link.url, `${link.label} ↗`));
+        });
+        block.append(links);
+      }
+      return block;
+    }));
 
     const sourceContent = buildSourceContent(material);
     const mobileSourceContent = sourceContent.cloneNode(true);
@@ -416,7 +531,8 @@
   }
 
   function renderArticleToc() {
-    const sections = [...document.querySelectorAll(".article-main > .article-section:not([hidden])")];
+    const sections = [...document.querySelectorAll(".article-main > .article-section:not([hidden])")]
+      .filter((section) => section.offsetParent !== null);
     refs.articleToc.replaceChildren(...sections.map((section, index) => {
       const link = document.createElement("a");
       link.href = `#${section.id}`;
@@ -439,9 +555,11 @@
         link.setAttribute("aria-current", String(active));
       });
     }, { rootMargin: "-18% 0px -66% 0px", threshold: 0 });
-    document.querySelectorAll(".article-main > .article-section:not([hidden])").forEach((section) => {
-      articleObserver.observe(section);
-    });
+    [...document.querySelectorAll(".article-main > .article-section:not([hidden])")]
+      .filter((section) => section.offsetParent !== null)
+      .forEach((section) => {
+        articleObserver.observe(section);
+      });
   }
 
   function render(options = {}) {
