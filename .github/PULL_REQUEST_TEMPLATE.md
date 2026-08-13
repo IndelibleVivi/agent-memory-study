@@ -19,6 +19,17 @@
 - What is editorial inference:
 - What remains unverified:
 
+## Constellation / atlas placement, if applicable
+
+- Material ID and stable deep link:
+- Failure surfaces added or removed:
+- Evidence for each membership:
+- Expected cross-surface bridge, if any, and why it is semantically warranted:
+- [ ] I updated both the material's `failureSurfaces` and each surface's `materialIds`.
+- [ ] I did not add coordinates, rank, importance, star size, manual edges, or a fixed corpus count.
+- [ ] The visual depth ring remains derived from the truthful `noteDepth`; I did not add a separate progress or achievement state.
+- [ ] If I changed the atlas taxonomy, I explained why the existing failure surfaces could not represent the new boundary.
+
 ## Attribution and publication boundary
 
 - Requested public byline:

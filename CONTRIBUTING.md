@@ -19,6 +19,20 @@ Agent Memory Study 是一间公开 study room，不是未读材料仓库，也�
 - 映射到一个或多个现有 `failureSurfaces`，并同步更新对应 surface 的 `materialIds`。builder 会要求双向 membership 完全一致；constellation 由这组关系自动生成，不需要另交逐篇坐标。只有跨材料问题结构本身改变时，才修改 atlas taxonomy；
 - leave holes visible。拿不准的 locator、数字或结论不要靠推测补齐。
 
+## 星图与 atlas membership
+
+星图是 canonical research relationships 的 projection，不是另一套由视觉位置决定的分类系统。提交新材料或修改 failure-surface mapping 时：
+
+- 保持 material `id` 稳定。它同时是 material deep link 与 deterministic layout 的输入；除非修复尚未发布的明显错误，不要在已有 entry 发布后换 ID；
+- 在 pull request 中逐项解释为什么论文触及所选 failure surface。共同出现某个关键词、作者自称属于某类系统，或“连到这里画面更完整”都不是 membership 依据；
+- material 属于多个 surfaces 时会成为 cross-surface bridge。bridge 只描述当前研究关系，不表示论文更重要、更完整或更值得推荐；不要为了制造连接而增加 surface；
+- 不提交 `x` / `y`、importance、rank、cluster、star size 或手工 edge。位置、连线、bridge count 与 material count 都从 canonical membership 生成；
+- 星环只由真实 `noteDepth` 派生。不要单独设置视觉状态，也不要把 `read` / `worked` 当成 achievement badge；
+- 新增 failure surface 是 atlas taxonomy change，不是普通材料录入。它需要独立说明现有 surfaces 为什么无法容纳该 failure boundary，并完整提供稳定 ID、label、question、tension 与双向 material membership；
+- 不在 copy、测试或截图说明里把当前 16 篇、7 个 surfaces 或其他渲染数字写成固定上限。新增材料后 builder 与页面计数应自然增长。
+
+贡献者不需要让星图“看起来均匀”。孤星、空隙、局部密集与暂时没有 bridge 的 surface 都是当前 corpus 的诚实形状。
+
 ### 3. 对已有 entry 的 perspective / critique
 
 不要覆盖站方原有判断，也不要把分歧改写成共识。通过 material 的 `contributions` 增加 `type: perspective` item，保留：
