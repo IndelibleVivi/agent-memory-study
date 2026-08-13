@@ -95,8 +95,16 @@ svg {
 }
 
 :focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--sunrise) 78%, white);
+  outline: 1px solid color-mix(in srgb, var(--tide) 72%, transparent);
   outline-offset: 4px;
+}
+
+a:focus-visible {
+  outline: none;
+  color: var(--tide);
+  text-decoration-line: underline;
+  text-decoration-color: var(--tide);
+  text-decoration-thickness: 1px;
 }
 
 .sr-only {
@@ -186,6 +194,13 @@ svg {
 .menu-button svg {
   width: 23px;
   height: 23px;
+}
+
+.menu-button:focus-visible {
+  outline: none;
+  border-bottom-color: var(--tide);
+  background: color-mix(in srgb, var(--mist) 24%, transparent);
+  box-shadow: inset 0 -1px 0 var(--tide);
 }
 
 #main-content {

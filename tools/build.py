@@ -15,7 +15,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PRIVATE_PATTERNS = (
-    re.compile(r"(?:^|[\"'])/Users/"),
+    re.compile(r"/Users/"),
     re.compile(r"file://", re.IGNORECASE),
     re.compile(r"@chatroom", re.IGNORECASE),
     re.compile(r"\bwxid_", re.IGNORECASE),
@@ -29,7 +29,6 @@ PRIVATE_PATTERNS = (
         r"\b(?:commit|sha|revision|rev)\s*[@:=#-]\s*[0-9a-f]{7,40}\b",
         re.IGNORECASE,
     ),
-    re.compile(r"\b(?:Tilia|Atria|LMC-5)\b"),
 )
 TRACKING_PATTERNS = (
     re.compile(r"google-analytics|googletagmanager", re.IGNORECASE),
@@ -49,6 +48,7 @@ PUBLIC_COPY_PATHS = (
     "ZOTERO-IMPORT.md",
     "agent-memory-study.rdf",
 )
+PUBLIC_RESEARCH_SUFFIXES = {".csv", ".json", ".md", ".py", ".txt"}
 NS = {
     "bib": "http://purl.org/net/biblio#",
     "dc": "http://purl.org/dc/elements/1.1/",
@@ -117,9 +117,21 @@ def assert_links(value: Any, where: str, *, allow_empty: bool = True) -> None:
             raise ValueError(f"{where}[{index}].url must use HTTPS")
 
 
+def public_copy_paths() -> list[Path]:
+    paths = [ROOT / relative_path for relative_path in PUBLIC_COPY_PATHS]
+    research_root = ROOT / "research"
+    if research_root.is_dir():
+        paths.extend(
+            path
+            for path in sorted(research_root.rglob("*"))
+            if path.is_file() and path.suffix.lower() in PUBLIC_RESEARCH_SUFFIXES
+        )
+    return paths
+
+
 def validate_public_copy_files() -> None:
-    for relative_path in PUBLIC_COPY_PATHS:
-        path = ROOT / relative_path
+    for path in public_copy_paths():
+        relative_path = path.relative_to(ROOT).as_posix()
         if not path.is_file():
             raise ValueError(f"public copy file is missing: {relative_path}")
         text = path.read_text(encoding="utf-8")

@@ -1,0 +1,20 @@
+Environment: macOS 26.5.2 arm64; Python 3.13.3; Python standard library only
+Command: python3 research/doyle-tms-static-oracle/oracle.py
+
+01 static default: [('W',)]
+02 static default overridden: [('NOT_W',)]
+03 static closure with foundation: [('A', 'B', 'C')]
+04 static graph after foundation removal: [()]
+05 positive cycle without foundation: [()]
+06 positive cycle with foundation: [('F', 'G')]
+07 two admissible negative-loop assignments: [('G',), ('F',)]
+08 unsatisfiable self-negation: NO STATIC ADMISSIBLE MODEL
+09 backtracking precondition: [('TIME10', 'ROOM813', 'CONTRADICTION')]
+10 externally supplied room denial: [('TIME10', 'ROOM801')]
+11 materialized abstraction initially agrees: [('D', 'E', 'INTERNAL', 'RAW', 'SUMMARY')]
+12 retained abstraction under persist-derived-SL policy: [('D', 'E', 'X', 'SUMMARY')]
+13 recompute policy retires materialized abstraction: [('D', 'E', 'X')]
+14 scoped actor schema: [('U:RAIN', 'U:UMBRELLA')]
+15 raw SL evaluator propagates misindexed actor edge: [('U:RAIN', 'U:UMBRELLA', 'V:UMBRELLA')]
+15b actor schema rejects misindexed edge: REJECTED (undeclared cross-actor dependency: U:RAIN -> V:UMBRELLA)
+16 graph schema rejects undeclared reference: REJECTED (undeclared node reference(s): MISSING)

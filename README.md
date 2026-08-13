@@ -9,7 +9,7 @@
 - 一组从唯一 canonical public data 生长的 source-linked materials；
 - 一张 failure-surface 研究地图、一幅 data-driven research constellation，以及三条可自由进入和离开的 reading paths；
 - 可按主题、failure surface、depth、标题或作者进入材料；
-- 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；当前两份 `read` entry 进一步展示 argument map、方法与监督、原文内部张力、为什么值得读，以及明确标成 `proposed-not-run` 的公开 protocol；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
+- 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；达到 `read` 的 entry 进一步展示 argument map、方法与监督、原文内部张力、为什么值得读，以及明确标成 `proposed-not-run` 的公开 protocol；已经执行的 public / synthetic test 则保留署名、method、environment、raw / derived result、controls、limitations 与可复核 artifact links；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 一个没有 backend、CDN、analytics 或 tracking 的静态 reader；
 - 9 份按原许可随站提供的 PDF，另 7 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
@@ -46,6 +46,14 @@ python3 -m http.server 8080
 ```
 
 然后访问 `http://localhost:8080/`。
+
+Doyle 1979 close-read 所附的 public / synthetic static oracle 可直接复跑：
+
+```bash
+python3 research/doyle-tms-static-oracle/oracle.py
+```
+
+方法、解释边界与 checked-in raw stdout 见 [`research/doyle-tms-static-oracle/`](./research/doyle-tms-static-oracle/)；它不是 original TMS reproduction。
 
 ## 通过 pull request 贡献
 

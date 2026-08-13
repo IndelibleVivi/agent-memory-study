@@ -70,6 +70,7 @@
           "coala-cognitive-architecture",
           "storage-to-experience",
           "continual-learning-experience-reuse",
+          "truth-maintenance-system",
           "memory-beyond-recall",
           "insightemb-action-intent-retrieval"
         ]
@@ -821,13 +822,157 @@
       "shortAuthor": "Doyle",
       "year": 1979,
       "doi": "10.1016/0004-3702(79)90008-0",
-      "noteDepth": "skim",
-      "readingScope": "MIT DSpace AIM-521 版本 §1–§4、§8–§10；§5–§7 仅按目录确认主题。定位均指该版本内部页码。",
-      "intro": "维护的不是命题本身的真伪，而是一个 node 当前是否有有效 justification，并在支持变化后传播影响与回退依赖。",
+      "noteDepth": "read",
+      "readingScope": "完整读了 MIT DSpace 的 AIM-521 official scan：扉页、abstract、§§1–10、References 与 Figures 1–3，共 45 个 PDF pages；下列定位指 memo 内部页码。References 只用于 lineage 定位，未逐篇 close-read；另核对 journal metadata，但未取得期刊 full text 做逐行版本比较，也未复现原 Lisp implementation 或追读后来的 JTMS / ATMS。",
+      "intro": "Doyle 维护的不是命题在世界中的真伪，而是 program 当前是否拥有可接受的理由。node 的 in/out 是 support status；当前 explanation 还依赖被选中的 well-founded SL justification、失效 witness 与 change 后真正扫描到的 repercussions。（§§1–3，AIM-521 pp. 3–18）",
+      "whyRead": "这篇值得深读，不是因为 1979 年已经解决了现代 agent memory，而是因为它把“记住”改写成 maintain reasons under change：保存 source、展示 provenance、传播失效、处理 contradiction 与选择 revision 是五种不同能力。论文也没有掩饰自己的裂缝——positive cycle 不能自举、negative loop 可能多解或无解、blind backtracking 缺少选择依据、summary 与 control 都会把额外 policy 带进 belief revision。",
       "keyPoints": [
-        "node 至少有一个有效 reason 时为 in，否则为 out；P 与 ¬P 使用不同 node，因此可以表达 neither、only P、only ¬P、both 四种支持状态。（§1.1；§2.1）",
-        "Support-list justification 由 inlist/outlist 条件决定是否有效；带非空 outlist 的支持构成 defeasible assumption。（§2.2–§2.5）",
-        "新增 justification 触发 affected consequences 与 repercussions 的局部重建；dependency-directed backtracking 从 contradiction 的 foundations 生成 nogood，再拒绝一个 culprit assumption。（§3.2；§4）"
+        "Doyle 对 support status 的局部定义是：至少一条 justification 当前有效则 node 为 in，否则为 out；实现又从有效 SL 中选一条 well-founded supporting justification。P 与 ¬P 是两个 binary-status nodes，neither / only P / only ¬P / both 是联合状态，不是单个 node 的 four-valued truth。（§§2.1、2.4，AIM-521 pp. 9–12）",
+        "SL 由 inlist 全部 in、outlist 全部 out 决定 validity；CP 则表达一个 hypothetical situation 下 consequent 应为 in。原实现只在当前 statuses 恰好允许时 opportunistically 识别 CP，再由 FIS 生成 creation-time dependency-equivalent 的 SL。（§§2.3–2.5；§9，AIM-521 pp. 11–14、36）",
+        "change propagation 使用 supporting-nodes、antecedents、foundations、consequences 与 repercussions 区分 current reason、失效 witness 与 affected region。Step 5 暂把 nil 当 out、只检查 SL，并可能从多个 admissible assignments 中装入一个。（§§2.4、3.2，AIM-521 pp. 12–13、16–18）",
+        "contradiction 必须由 problem solver 标记；backtracker 找 maximal assumptions、创建 nogood，再选择 culprit 与一个 outlist node。原版本随机选择，Doyle 明说这种 blind search 除最简单问题外不够。（§4，AIM-521 pp. 20–22）"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 先把 belief 与 truth 分开",
+          "claim": "TMS 记录的是 program 当前有无 acceptable reason，而不是独立真值。out 只表示没有当前支持，不是反证；相互否定的 statements 也必须分别建 node。",
+          "locator": "§1.1；§2.1，AIM-521 pp. 3–6、9–10"
+        },
+        {
+          "step": "02 · 再把 current reason 变成可追踪 dependency",
+          "claim": "每个 in node 选择一条 well-founded SL 作为 current support；OUT node 则从每条 invalid justification 取一个 falsifying witness。向下的 foundations 与向上的 repercussions 让 support change 可以定向传播。",
+          "locator": "§§2.3–2.4，AIM-521 pp. 11–13"
+        },
+        {
+          "step": "03 · 用 revision 暴露 circularity 与 choice",
+          "claim": "affected region 会被临时清空并重新求 support；positive cycle 没有外部 foundation 时不能自举，non-monotonic cycles 却可能有多个 assignments 或根本无解。形式依赖能列出 revision candidates，却不能替 problem solver 决定牺牲谁。",
+          "locator": "§§3.1–3.2；§4，AIM-521 pp. 14–22"
+        },
+        {
+          "step": "04 · 最后把 explanation、dialectic 与 control 接回 reasoning",
+          "claim": "CP/FIS 与提议的 SUM 可以把 argument 分层或 generalize；§6 让 argument steps 本身可被挑战，§7 镜像别人的 belief space，§8 则明确把 alternative ordering 与 selector 写进 belief revision 的 control surface。",
+          "locator": "§§5–8，AIM-521 pp. 23–35"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "SL validity 与 current support",
+          "text": "一个 node 可以有多条 justifications，但 current explanation 使用一条被选中的 well-founded SL。对 in node，所选 SL 的 inlist / outlist 是 antecedents；对 out node，supporting-nodes 从每条 invalid justification 中各取一个 falsifying witness，而 out node 没有 antecedents。",
+          "locator": "§§2.3–2.4，AIM-521 pp. 11–13"
+        },
+        {
+          "label": "CP / FIS approximation",
+          "text": "CP 的定义针对 hypothetical statuses；一般验证可能递归触发更多 truth maintenance，因此实现采用 opportunistic approximation：在 CP 当前可见为 valid 时，从 consequent 的 well-founded argument 中减去 hypotheses 及其 repercussions，生成易检查的 SL。",
+          "locator": "§2.5；§3.3；§9，AIM-521 pp. 13–14、19–20、36"
+        },
+        {
+          "label": "Incremental revision procedure",
+          "text": "新增有效 justification 后，系统收集 changed node 与 repercussions、标成 nil，再先恢复外部 well-founded support、后处理 circular region。Step 5 把尚未分配的 nil 暂当 out，只检查 SL；Step 6 才重新检查 CP 与 contradictions。",
+          "locator": "§3.2，AIM-521 pp. 16–19"
+        },
+        {
+          "label": "Dependency-directed backtracking",
+          "text": "problem solver 先标记 contradiction；TMS 从其 foundations 选 maximal assumptions、创建 nogood，再让一个 selected outlist node 得到支持以使 culprit assumption 失效。outlist node 只在某些解释中是 denial，不由 graph structure 保证为 literal negation。",
+          "locator": "§4，AIM-521 pp. 20–22"
+        }
+      ],
+      "reportedFindings": [
+        "纯 positive circular argument 没有外部 foundation 时不应让 nodes 自举为 in；加入一个 premise 后，同一 positive cycle 才可获得 well-founded support。（§§3.1–3.2，AIM-521 pp. 14–18）",
+        "non-monotonic circularity 可能有多个 satisfiable support assignments，也可能出现 F ← not F 这类 unsatisfiable case；原版本为 normal-case efficiency 移除了昂贵检查，后者可能使 procedure loop。（§3.2，AIM-521 pp. 17–18）",
+        "dependency-directed backtracker 能定位 maximal assumptions，却随机选择 culprit 与 outlist node；作者将其称为 blind search，并判断除最简单问题外需要 domain / control knowledge。（§4，AIM-521 pp. 20–22）",
+        "§9 报告 TMS 被用于 circuit analysis / synthesis、constraint language、symbolic algebra、program understanding 等系统，也列出 CP complexity、multiple support 与 incrementality 等待改进处；论文没有 controlled quantitative evaluation。（§9，AIM-521 pp. 35–36）"
+      ],
+      "evidenceLimits": [
+        "公开来源是 MIT AIM-521 official scan。journal article 的 metadata 与 scope 已核对，但本站没有取得期刊 full text 做 memo↔journal 逐行比较；定位不冒充 journal pagination。",
+        "原 Lisp implementation、incremental execution order、justification retraction 与 performance 没有被复现。本站的 static oracle 只重建一个有界的 SL model boundary，不能代替作者系统。",
+        "论文有 worked examples 与 qualitative failure analysis，但没有 controlled experiment、systematic quantitative error analysis、runtime baseline、repeated runs 或 user study；不能据此声称它优于现代 revision mechanisms。",
+        "核心 TMS 处理已编码的 nodes 与 dependency forms，不独立验证 truth、source reliability、authority、consent、actor、time 或 provenance。enclosing problem solver 可以另行表示或检查这些性质，但它们不能从 in/out status 自动推出。",
+        "§5 的 generalization 证明的是 represented CP 下的 argument-level independence，不是任何压缩或 abstraction boundary 都保持 external semantic validity 的一般结论。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "Incremental boundary 会越过自己的 affected region",
+          "observation": "主流程通过只检查 changed node 的 repercussions 来避免全库重算；§3.2 与 §9 又明确给出某些 satisfiable circularities 必须改变 repercussions list 外的 node，proper truth maintenance 在这些情形不能保持 incremental。",
+          "implication": "affected-set optimization 不能被当成 complete revision semantics；实现需要显式暴露 fallback、重建范围与结果是否依赖局部 approximation。",
+          "locators": [
+            "§3.2，AIM-521 p. 18",
+            "§9，AIM-521 p. 36"
+          ]
+        },
+        {
+          "label": "CP 的 hypothetical meaning 与 operational recognition 不相同",
+          "observation": "§2.5 把 CP 定义为 hypotheses 状态成立时 consequent 为 in；实现却不一般地切换状态验证，只在 consequent / hypotheses 的 current statuses 恰好满足时识别，再生成创建当下等价的 SL。",
+          "implication": "CP/FIS 提供的是明确承认的 opportunistic approximation。后续 derived SL 的 retain、recompute、retire 或 version policy 仍需由 system 另行定义。",
+          "locators": [
+            "§2.5，AIM-521 pp. 13–14",
+            "§9，AIM-521 p. 36"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "Supported is not true or authorized",
+          "text": "dependency graph 能说明在给定 nodes 与 rules 下当前为什么支持一句话；它不能独立证明 source 为真、某个 actor 有权让它生效，或这条支持仍满足时间、consent 与 provenance 条件。外围 admission checks 不是可选装饰，而是不同 authority layer。",
+          "boundary": "这是由论文明确区分 support 与 truth、并把 external forms 留给 problem solver 推出的 editorial synthesis；论文没有提出现代 provenance / consent governance system。"
+        },
+        {
+          "label": "Abstraction lifecycle is a separate contract",
+          "text": "一条 summary 在创建时与 raw argument dependency-equivalent，并不能决定以后 source change 时它应继续存在还是重新计算。lossless projection、recomputable abstraction 与 durable generalization 必须使用不同 lifecycle；最后一种还需要独立 warrant。",
+          "boundary": "论文展示 summarization / generalization 并称 derived SL 在创建时等价，但没有运行本站的 retain-versus-recompute fixture，也没有给出通用 future-invalidation contract。"
+        },
+        {
+          "label": "Control belongs to operational revision semantics",
+          "text": "alternative ordering、justification creation order、hidden selector 与 explicit choice rule 会从 admissible states 中选出 current belief set，并改变后续 contradiction 与 action path；可解释 dependency 并不使 control 中立。",
+          "boundary": "这是对 §8 control patterns 的 architecture-level consequence。它不要求声称 control 改变抽象 admissible model set，也不证明某种 selector 更正确。"
+        },
+        {
+          "label": "Actor scope must be admitted outside raw support evaluation",
+          "text": "§7 的 mirroring 会忠实传播系统已经提供的 actor indices 与 inference rules；若一条 rule 被错接到另一个 actor，raw support evaluator 没有 external meaning 可用于发现错误。enclosing schema 可以并且应当拒绝 undeclared cross-actor bridge。",
+          "boundary": "这是依据 core / problem-solver boundary 的 editorial test interpretation，不是论文声称已经解决身份隔离，也不表示外围系统无法表达 actor checks。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "Revision × support lifecycle protocol",
+          "status": "proposed-not-run",
+          "question": "一个 revision-pinned support graph 能否在 correction、coexistence、suppression、cycles、summary lifecycle 与 actor scope 下保持可重建、可回滚且不静默扩权？",
+          "method": "用 typed public / synthetic events 构造 fixed-support、floating-head、supersession、coexistence、correction 与 suppression histories；分别运行 clean rebuild、incremental update 与 rollback replay，并由第二个独立 enumerator 比较 model set。",
+          "fixtures": "至少覆盖两条独立 supports、positive cycle、negative loop、self-negation、retain / recompute / durable-generalization 三类 abstraction、undeclared actor bridge 与 authorized bridge；不使用真实人物、私有数据或 production runtime。",
+          "controls": "加入 shuffled lifecycle labels、missing target、corrupted actor index、suppressed source resurfacing、reversed event order、feature-off baseline 与 injected faulty propagation。",
+          "measures": "报告 support-status agreement、affected-set precision / recall、stale-support survival、false reactivation、cross-actor leakage、suppression resurfacing、trace completeness 与 rebuild / incremental / rollback equality。",
+          "limitations": "这是尚未执行的 successor protocol，不是 Doyle reproduction。只有 public artifact、fault injection、zero hard failures、independent enumeration 与 clean-checkout reproduction 都成立后，才可能把 depth 提升为 worked。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "Static SL model and abstraction-lifecycle oracle",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-08-13",
+          "basis": "Paper-facing reconstruction of SL validity, finite positive foundation, the circularity boundary, and the core-versus-enclosing-schema distinction described in AIM-521 §§2–4 and §7.",
+          "boundary": "This is not Doyle's Lisp implementation or an incremental trace. It does not execute CP/FIS, model OUT-node witness propagation, perform nogood / culprit choice, establish original summary lifecycle behavior, or validate any production system.",
+          "method": "Enumerate every IN/OUT assignment for fifteen 1–6 node synthetic graphs; retain support-complete assignments; require every IN node to have a finite positive proof; assert exact model sets; then compare explicit persist-derived-SL and recompute policies and apply separate graph / actor-schema validators.",
+          "environment": "macOS 26.5.2 arm64；Python 3.13.3；Python standard library only；no network or model calls.",
+          "fixture": "Fifteen labelled small graphs cover default override, static closure, positive / negative cycles, self-negation, a backtracking precondition, paired abstraction lifecycle policies and an actor-scope error; two additional checks reject an undeclared actor bridge and undeclared node reference.",
+          "controls": "The abstraction pair holds D / E / X and the raw path fixed while changing only whether the materialized summary SL is retained or retired. Actor scope is tested once with raw evaluation and once with an external declared-bridge validator. Every expected result is an assertion.",
+          "rawResult": "All fifteen model assertions and two schema-rejection assertions passed. With X present, the retained-policy graph produced {D,E,X,SUMMARY}; the recompute graph produced {D,E,X}. A misindexed U→V rule derived V:UMBRELLA in the raw evaluator, while the actor schema rejected the same edge. Full stdout is linked.",
+          "derivedResult": "The static oracle matches the selected SL / finite-foundation boundaries, but future summary behavior is policy-dependent rather than a demonstrated FIS property. Actor separation likewise belongs to enclosing admission validation rather than raw support semantics.",
+          "limitations": "History-free exhaustive enumeration is practical only for tiny graphs. The two negative-loop models are admissible assignments, not observed runs; the meeting fixtures do not implement backtracking; no performance, incremental equivalence or independent second enumerator was tested.",
+          "links": [
+            {
+              "label": "method and limitations",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/doyle-tms-static-oracle/README.md"
+            },
+            {
+              "label": "runner",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/doyle-tms-static-oracle/oracle.py"
+            },
+            {
+              "label": "raw stdout",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/doyle-tms-static-oracle/RESULTS.txt"
+            }
+          ]
+        }
       ],
       "keywords": [
         "truth maintenance",
@@ -838,14 +983,15 @@
         "信念修正"
       ],
       "failureSurfaces": [
-        "justification-revision"
+        "justification-revision",
+        "abstraction-experience"
       ],
       "sourceUrl": "https://hdl.handle.net/1721.1/5733",
       "pdf": {
         "delivery": "official",
         "url": "https://dspace.mit.edu/server/api/core/bitstreams/4fdf6aa2-170b-45e6-ae88-8f10d61e1c6d/content"
       },
-      "editorialQuestion": "justification graph 能说明当前为什么支持一句话，却不能证明来源为真；后来的系统怎样才能持续记住 in/out 并不等于 true/false？",
+      "editorialQuestion": "如果 support graph 只能维护“给定 reasons 下当前成立”，谁来声明 derived summary 的 retain / recompute / retire policy，又怎样让 source authority、actor scope 与 authorized revision 不被一次形式上有效的 edge 静默替代？",
       "sourceNote": "本站只链接 MIT DSpace 的官方扫描；本地生成的 OCR 衍生版不公开分发。"
     },
     {

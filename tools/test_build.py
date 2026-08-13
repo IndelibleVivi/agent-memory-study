@@ -79,17 +79,19 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         by_id = {material["id"]: material for material in self.data["materials"]}
         atma = by_id["a-tma-state-aware-memory"]
         insightemb = by_id["insightemb-action-intent-retrieval"]
+        doyle = by_id["truth-maintenance-system"]
         self.assertEqual(atma["noteDepth"], "read")
         self.assertEqual(insightemb["noteDepth"], "read")
+        self.assertEqual(doyle["noteDepth"], "read")
         current_skim_ids = {
             "trustmem-consolidation", "verifiable-memory", "mosaic-long-term-memory",
             "proactive-wake-anchor", "pm-bench", "mistake-notebook-learning",
             "coala-cognitive-architecture", "storage-to-experience",
             "continual-learning-experience-reuse", "agentic-memory", "midca-dual-cycle",
-            "truth-maintenance-system", "agm-theory-change", "memory-beyond-recall",
+            "agm-theory-change", "memory-beyond-recall",
         }
         self.assertTrue(all(by_id[material_id]["noteDepth"] == "skim" for material_id in current_skim_ids))
-        for material in (atma, insightemb):
+        for material in (atma, insightemb, doyle):
             for field in (
                 "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
                 "sourceTensions", "editorialInferences", "openProtocols",
@@ -101,16 +103,37 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             ))
         self.assertEqual(atma["editorialInferences"][0]["label"], "Read-side label amplification")
         self.assertEqual(insightemb["editorialInferences"][0]["label"], "Retrieval is a staged decision")
+        self.assertEqual(doyle["editorialInferences"][1]["label"], "Abstraction lifecycle is a separate contract")
 
     def test_sparse_records_remain_valid_without_invented_richer_fields(self):
         validated = self.validate_copy(copy.deepcopy(self.data))
-        truth_maintenance = next(
+        agm = next(
             material for material in validated["materials"]
+            if material["id"] == "agm-theory-change"
+        )
+        self.assertNotIn("reportedFindings", agm)
+        self.assertNotIn("evidenceLimits", agm)
+        self.assertNotIn("editorialInferences", agm)
+
+    def test_doyle_public_test_links_checked_in_artifacts(self):
+        doyle = next(
+            material for material in self.data["materials"]
             if material["id"] == "truth-maintenance-system"
         )
-        self.assertNotIn("reportedFindings", truth_maintenance)
-        self.assertNotIn("evidenceLimits", truth_maintenance)
-        self.assertNotIn("editorialInferences", truth_maintenance)
+        contribution = doyle["contributions"][0]
+        self.assertEqual(contribution["type"], "public-test")
+        self.assertEqual(contribution["byline"], "Agent Memory Study editors")
+        linked_names = {link["url"].rsplit("/", 1)[-1] for link in contribution["links"]}
+        self.assertEqual(linked_names, {"README.md", "oracle.py", "RESULTS.txt"})
+        artifact_root = build.ROOT / "research" / "doyle-tms-static-oracle"
+        self.assertTrue(all((artifact_root / name).is_file() for name in linked_names))
+
+    def test_public_research_artifacts_are_in_boundary_scan(self):
+        relative_paths = {path.relative_to(build.ROOT).as_posix() for path in build.public_copy_paths()}
+        self.assertIn("research/doyle-tms-static-oracle/oracle.py", relative_paths)
+        self.assertIn("research/doyle-tms-static-oracle/RESULTS.txt", relative_paths)
+        self.assertIn("research/doyle-tms-static-oracle/README.md", relative_paths)
+        build.validate_public_copy_files()
 
     def test_unknown_failure_surface_is_rejected(self):
         invalid = copy.deepcopy(self.data)
@@ -137,11 +160,22 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "private token"):
             self.validate_copy(invalid)
 
-    def test_private_project_mapping_names_are_rejected(self):
+    def test_private_project_mapping_copy_is_rejected(self):
         invalid = copy.deepcopy(self.data)
-        invalid["materials"][0]["editorialQuestion"] = "Could Tilia use this architecture?"
+        invalid["materials"][0]["editorialQuestion"] = (
+            "Private project mapping from internal source inspection"
+        )
         with self.assertRaisesRegex(ValueError, "private token"):
             self.validate_copy(invalid)
+
+    def test_public_test_local_path_is_rejected(self):
+        doyle = next(
+            material for material in copy.deepcopy(self.data["materials"])
+            if material["id"] == "truth-maintenance-system"
+        )
+        doyle["contributions"][0]["environment"] = "Ran at /Users/private/research"
+        with self.assertRaisesRegex(ValueError, "private token"):
+            build.assert_public_text(doyle)
 
     def test_private_engineering_fields_are_rejected(self):
         invalid = copy.deepcopy(self.data)
