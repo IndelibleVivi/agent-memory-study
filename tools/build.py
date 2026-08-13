@@ -455,6 +455,18 @@ def load_and_validate(path: Path) -> dict[str, Any]:
             raise ValueError(
                 f"failure surface {surface['id']} references unknown materials: {sorted(unknown_materials)}"
             )
+        listed_materials = set(surface["materialIds"])
+        claimed_materials = {
+            paper["id"]
+            for paper in materials
+            if surface["id"] in paper["failureSurfaces"]
+        }
+        if listed_materials != claimed_materials:
+            raise ValueError(
+                f"failure surface membership mismatch for {surface['id']} "
+                f"(surface-only={sorted(listed_materials - claimed_materials)}, "
+                f"material-only={sorted(claimed_materials - listed_materials)})"
+            )
     for reading_path in reading_paths:
         unknown_materials = set(reading_path["materialIds"]) - ids
         if unknown_materials:

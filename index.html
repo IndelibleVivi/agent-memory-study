@@ -21,6 +21,7 @@
       </button>
       <nav class="site-nav" id="site-nav" aria-label="主要导航">
         <a href="./#research-map" data-route="home" data-scroll-target="research-map">研究地图</a>
+        <a href="./#constellation" data-route="home" data-scroll-target="constellation">研究星图</a>
         <a href="./#reading-paths" data-route="home" data-scroll-target="reading-paths">阅读路径</a>
         <a href="./#library" data-route="home" data-scroll-target="library">全部材料</a>
         <a href="./#about" data-route="home" data-scroll-target="about">About</a>
@@ -59,6 +60,34 @@
           </div>
         </section>
 
+        <section class="constellation" id="constellation" aria-labelledby="constellation-title">
+          <div class="section-heading constellation-heading">
+            <div>
+              <h2 id="constellation-title">研究星图 <span>Constellation</span></h2>
+              <p id="constellation-caption">每颗星是一份材料，连线只表示它被编入哪些 failure surfaces；位置不是排名，星环只标示 reading depth。</p>
+            </div>
+            <p class="constellation-stats" id="constellation-stats"></p>
+          </div>
+
+          <div class="constellation-frame">
+            <div class="constellation-figure">
+              <div class="constellation-plot" id="constellation-plot"></div>
+              <p class="constellation-mobile-note">横向滑动查看全部 failure surfaces；标题进入 material，列号进入 surface。</p>
+              <div class="constellation-matrix" id="constellation-matrix"></div>
+              <p class="constellation-key"><span aria-hidden="true">○</span> read / worked scope <span aria-hidden="true">·</span> <span aria-hidden="true">●</span> material <span aria-hidden="true">·</span> amber = current route or filter match</p>
+            </div>
+
+            <aside class="constellation-reading" id="constellation-reading" aria-labelledby="constellation-reading-title">
+              <p class="content-kind">How to read this field</p>
+              <p class="constellation-reading-index" id="constellation-reading-index"></p>
+              <h3 id="constellation-reading-title"></h3>
+              <p class="constellation-reading-meta" id="constellation-reading-meta"></p>
+              <p class="constellation-reading-copy" id="constellation-reading-copy"></p>
+              <div class="constellation-reading-links" id="constellation-reading-links"></div>
+            </aside>
+          </div>
+        </section>
+
         <section class="reading-paths" id="reading-paths" aria-labelledby="paths-title">
           <div class="section-heading">
             <h2 id="paths-title">三条阅读路径</h2>
@@ -72,7 +101,7 @@
           <div class="library-heading">
             <div>
               <h2 id="library-title">全部材料</h2>
-              <p>16 条 public allowlisted records；按阅读范围理解，不按“完成度”排名。</p>
+              <p id="library-summary"></p>
             </div>
             <p class="result-count" id="result-count" aria-live="polite"></p>
           </div>

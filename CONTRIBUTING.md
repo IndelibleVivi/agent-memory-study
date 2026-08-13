@@ -16,7 +16,7 @@ Agent Memory Study 是一间公开 study room，不是未读材料仓库，也�
 - `read` / `worked` entry 必须有 reading scope、`whyRead`、source-backed `argumentMap`、`evidenceLimits` 与明确标注的 `editorialInferences`。只有论文与实际阅读支持时才增加 `methodNotes`、`reportedFindings` 或 `sourceTensions`；不要为了 schema 发明不存在的方法、结果或矛盾；
 - 如果提出未来测试，放入 `openProtocols` 并标成 `proposed-not-run`；没有真正值得运行的 protocol 就不加，不把阅读室变成实验待办；
 - `worked` 只用于已经存在公开、可复核 artifact 的工作，不用于 private experiment、实现印象或尚未发布的测试；
-- 映射到一个或多个现有 `failureSurfaces`。只有跨材料问题结构本身改变时，才修改 atlas taxonomy；
+- 映射到一个或多个现有 `failureSurfaces`，并同步更新对应 surface 的 `materialIds`。builder 会要求双向 membership 完全一致；constellation 由这组关系自动生成，不需要另交逐篇坐标。只有跨材料问题结构本身改变时，才修改 atlas taxonomy；
 - leave holes visible。拿不准的 locator、数字或结论不要靠推测补齐。
 
 ### 3. 对已有 entry 的 perspective / critique

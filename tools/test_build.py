@@ -21,7 +21,11 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
 
     def test_current_public_data_validates(self):
         validated = build.load_and_validate(self.data_path)
-        self.assertEqual(len(validated["materials"]), 16)
+        self.assertGreater(len(validated["materials"]), 0)
+        self.assertEqual(
+            [material["number"] for material in validated["materials"]],
+            list(range(1, len(validated["materials"]) + 1)),
+        )
 
     def test_pdf_delivery_counts_and_exact_allowlist(self):
         bundled = [
@@ -32,8 +36,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             material for material in self.data["materials"]
             if material["pdf"]["delivery"] == "official"
         ]
-        self.assertEqual(len(bundled), 9)
-        self.assertEqual(len(official), 7)
+        self.assertEqual(len(bundled) + len(official), len(self.data["materials"]))
         self.assertEqual(
             {material["pdf"]["url"] for material in bundled},
             {
@@ -42,16 +45,50 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             },
         )
 
-    def test_only_close_read_entries_use_richer_read_schema(self):
+    def test_collection_can_grow_without_fixed_material_count(self):
+        grown = copy.deepcopy(self.data)
+        material = copy.deepcopy(grown["materials"][-1])
+        material.update({
+            "number": len(grown["materials"]) + 1,
+            "id": "future-public-material",
+            "title": "A future public material",
+            "authors": ["Example Author"],
+            "shortAuthor": "Example",
+            "noteDepth": "skim",
+            "readingScope": "Public abstract and introduction.",
+            "intro": "A public fixture proving that corpus size is not fixed by the schema.",
+            "keyPoints": ["The new material remains source-linked and independently understandable."],
+            "editorialQuestion": "What would change this failure-surface mapping?",
+            "categories": [grown["filters"][0]],
+            "failureSurfaces": ["state-representation"],
+            "sourceUrl": "https://example.org/future-material",
+            "pdf": {"delivery": "official", "url": "https://example.org/future-material.pdf"},
+        })
+        for optional_field in (
+            "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
+            "sourceTensions", "editorialInferences", "openProtocols", "contributions",
+        ):
+            material.pop(optional_field, None)
+        grown["materials"].append(material)
+        grown["atlas"]["failureSurfaces"][0]["materialIds"].append(material["id"])
+
+        validated = self.validate_copy(grown)
+        self.assertEqual(len(validated["materials"]), len(self.data["materials"]) + 1)
+
+    def test_existing_close_read_entries_keep_richer_read_schema(self):
         by_id = {material["id"]: material for material in self.data["materials"]}
         atma = by_id["a-tma-state-aware-memory"]
         insightemb = by_id["insightemb-action-intent-retrieval"]
         self.assertEqual(atma["noteDepth"], "read")
         self.assertEqual(insightemb["noteDepth"], "read")
-        self.assertEqual(
-            [material["id"] for material in self.data["materials"] if material["noteDepth"] == "skim"],
-            [material["id"] for material in self.data["materials"] if material["id"] not in {atma["id"], insightemb["id"]}],
-        )
+        current_skim_ids = {
+            "trustmem-consolidation", "verifiable-memory", "mosaic-long-term-memory",
+            "proactive-wake-anchor", "pm-bench", "mistake-notebook-learning",
+            "coala-cognitive-architecture", "storage-to-experience",
+            "continual-learning-experience-reuse", "agentic-memory", "midca-dual-cycle",
+            "truth-maintenance-system", "agm-theory-change", "memory-beyond-recall",
+        }
+        self.assertTrue(all(by_id[material_id]["noteDepth"] == "skim" for material_id in current_skim_ids))
         for material in (atma, insightemb):
             for field in (
                 "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
@@ -80,6 +117,19 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         invalid["materials"][0]["failureSurfaces"] = ["not-a-public-surface"]
         with self.assertRaisesRegex(ValueError, "unknown failure surfaces"):
             self.validate_copy(invalid)
+
+    def test_failure_surface_membership_must_match_both_directions(self):
+        material_only = copy.deepcopy(self.data)
+        material_only["atlas"]["failureSurfaces"][0]["materialIds"].remove(
+            "a-tma-state-aware-memory"
+        )
+        with self.assertRaisesRegex(ValueError, "failure surface membership mismatch"):
+            self.validate_copy(material_only)
+
+        surface_only = copy.deepcopy(self.data)
+        surface_only["materials"][0]["failureSurfaces"].remove("state-representation")
+        with self.assertRaisesRegex(ValueError, "failure surface membership mismatch"):
+            self.validate_copy(surface_only)
 
     def test_private_runtime_copy_is_rejected(self):
         invalid = copy.deepcopy(self.data)

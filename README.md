@@ -6,13 +6,13 @@
 
 ## 这里有什么
 
-- 16 份 source-linked materials；
-- 一张先于材料目录出现的 failure-surface 研究地图，以及三条可自由进入和离开的 reading paths；
+- 一组从唯一 canonical public data 生长的 source-linked materials；
+- 一张 failure-surface 研究地图、一幅 data-driven research constellation，以及三条可自由进入和离开的 reading paths；
 - 可按主题、failure surface、depth、标题或作者进入材料；
 - 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；当前两份 `read` entry 进一步展示 argument map、方法与监督、原文内部张力、为什么值得读，以及明确标成 `proposed-not-run` 的公开 protocol；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 一个没有 backend、CDN、analytics 或 tracking 的静态 reader；
 - 9 份按原许可随站提供的 PDF，另 7 份从 reader 直达 official full text；
-- `main` 中的 RDF 可以一次导入 16 条书目、9 份 stored PDF 与 7 个 official PDF link。
+- `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
 
 这些札记是阅读导航，不是逐篇全文批注，也不代替原文。转述、问题和编辑判断不能冒充作者主张；需要引用时，请回到每条记录链接的 official source。
 
@@ -25,6 +25,11 @@ GitHub Pages 没有 SPA rewrite，所以 reader 使用 query URL，而不是伪�
 - reading path：`?path=from-revision`
 
 搜索与筛选也写入 query parameters；material、thread、path 使用 browser history，back / forward 可以恢复对应视图。
+
+Constellation 是同一 canonical data 的 semantic projection：failure surfaces 使用固定语义 anchors，material
+位置由它的 `failureSurfaces` membership 与 stable ID 派生；没有逐篇维护的第二份 layout truth。新增 material
+会自动成为一颗星，跨 surface material 会成为 bridge。Desktop 使用可键盘进入的 SVG，mobile 使用同源 matrix；
+坐标、连线、星环与亮度都不表示论文质量、重要性或阅读进度。
 
 ## PDF 怎样分发
 
@@ -50,7 +55,7 @@ python3 -m http.server 8080
 
 ### 加一份新材料
 
-1. 在唯一 canonical public source `data/materials.json` 增加一条连续编号的记录，并明确 `noteDepth`、`readingScope`、`failureSurfaces` 与 `editorialQuestion`；`read` / `worked` 还必须满足 richer evidence schema；
+1. 在唯一 canonical public source `data/materials.json` 增加一条连续编号的记录，并明确 `noteDepth`、`readingScope`、`failureSurfaces` 与 `editorialQuestion`；同时更新对应 `failureSurfaces[].materialIds`，让 atlas、filters 与 constellation 使用同一组双向 membership；`read` / `worked` 还必须满足 richer evidence schema；
 2. 给 `pdf.delivery` 选择 `bundled` 或 `official`。只有存在明确 public redistribution license、逐文件 attribution 与 canonical source 时才能使用 `bundled`；
 3. 如需更新 Zotero metadata，可从自己的 Zotero 导出 native RDF，但不要把 local-only notes、keys、tags 或路径带进 public data；
 4. 运行：
