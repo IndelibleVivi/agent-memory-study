@@ -20,6 +20,32 @@ PRIVATE_PATTERNS = (
     re.compile(r"@chatroom", re.IGNORECASE),
     re.compile(r"\bwxid_", re.IGNORECASE),
     re.compile(r"Zotero/storage", re.IGNORECASE),
+    re.compile(
+        r"\b(?:repo-inspected|source-only-offline-probe|internal source inspection|"
+        r"network-denied|temp-store|private runtime probe|offline probe)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:commit|sha|revision|rev)\s*[@:=#-]\s*[0-9a-f]{7,40}\b",
+        re.IGNORECASE,
+    ),
+)
+TRACKING_PATTERNS = (
+    re.compile(r"google-analytics|googletagmanager", re.IGNORECASE),
+    re.compile(r"plausible\.io|posthog|mixpanel|hotjar|segment\.com", re.IGNORECASE),
+)
+PUBLIC_COPY_PATHS = (
+    "index.html",
+    "assets/app.js",
+    "assets/styles.css",
+    "assets/materials-data.js",
+    "data/materials.json",
+    "README.md",
+    "NOTICE.md",
+    "THIRD_PARTY_NOTICES.md",
+    "CONTRIBUTING.md",
+    "ZOTERO-IMPORT.md",
+    "agent-memory-study.rdf",
 )
 NS = {
     "bib": "http://purl.org/net/biblio#",
@@ -63,6 +89,34 @@ def assert_public_text(value: Any) -> None:
                 raise ValueError(f"private token at {where}: {match.group(0)!r}")
 
 
+def assert_string_list(value: Any, where: str, *, allow_empty: bool = False) -> None:
+    if not isinstance(value, list) or (not value and not allow_empty):
+        raise ValueError(f"{where} must be a {'possibly empty ' if allow_empty else 'non-empty '}list")
+    if any(not isinstance(item, str) or not item.strip() for item in value):
+        raise ValueError(f"{where} must contain non-empty text values")
+
+
+def validate_public_copy_files() -> None:
+    for relative_path in PUBLIC_COPY_PATHS:
+        path = ROOT / relative_path
+        if not path.is_file():
+            raise ValueError(f"public copy file is missing: {relative_path}")
+        text = path.read_text(encoding="utf-8")
+        assert_public_text({relative_path: text})
+        for pattern in TRACKING_PATTERNS:
+            match = pattern.search(text)
+            if match:
+                raise ValueError(f"tracking token in {relative_path}: {match.group(0)!r}")
+
+    index_text = (ROOT / "index.html").read_text(encoding="utf-8")
+    root_relative_asset = re.search(r"(?:src|href)=[\"']/[^/\"']", index_text)
+    if root_relative_asset:
+        raise ValueError(
+            "index.html uses a root-relative asset URL that will break on the GitHub Pages subpath: "
+            f"{root_relative_asset.group(0)!r}"
+        )
+
+
 def is_https_url(value: Any) -> bool:
     return isinstance(value, str) and value.startswith("https://")
 
@@ -104,10 +158,83 @@ def load_and_validate(path: Path) -> dict[str, Any]:
     if "attachmentCount" in data:
         raise ValueError("the public projection must not advertise attachments")
 
+    filters = data.get("filters")
+    assert_string_list(filters, "data.filters")
+    if len(set(filters)) != len(filters):
+        raise ValueError("data.filters must be unique")
+
+    atlas = data.get("atlas")
+    if not isinstance(atlas, dict):
+        raise ValueError("data.atlas must be an object")
+    atlas_required = {"thesis", "dek", "editorialLabel", "failureSurfaces", "readingPaths"}
+    atlas_missing = atlas_required.difference(atlas)
+    if atlas_missing:
+        raise ValueError(f"data.atlas missing fields: {sorted(atlas_missing)}")
+    for field in ("thesis", "dek", "editorialLabel"):
+        if not isinstance(atlas[field], str) or not atlas[field].strip():
+            raise ValueError(f"data.atlas.{field} must be non-empty text")
+
+    failure_surfaces = atlas["failureSurfaces"]
+    if not isinstance(failure_surfaces, list) or not failure_surfaces:
+        raise ValueError("data.atlas.failureSurfaces must be a non-empty list")
+    surface_ids: set[str] = set()
+    surface_numbers: set[str] = set()
+    for surface in failure_surfaces:
+        if not isinstance(surface, dict):
+            raise ValueError("each failure surface must be an object")
+        required = {"number", "id", "label", "question", "tension", "materialIds"}
+        missing = required.difference(surface)
+        if missing:
+            raise ValueError(f"failure surface missing fields: {sorted(missing)}")
+        if surface["id"] in surface_ids or surface["number"] in surface_numbers:
+            raise ValueError(f"duplicate failure surface id or number: {surface['id']}")
+        surface_ids.add(surface["id"])
+        surface_numbers.add(surface["number"])
+        for field in ("number", "id", "label", "question", "tension"):
+            if not isinstance(surface[field], str) or not surface[field].strip():
+                raise ValueError(f"failure surface {surface['id']}.{field} must be non-empty text")
+        assert_string_list(surface["materialIds"], f"failure surface {surface['id']}.materialIds")
+
+    reading_paths = atlas["readingPaths"]
+    if not isinstance(reading_paths, list) or not reading_paths:
+        raise ValueError("data.atlas.readingPaths must be a non-empty list")
+    path_ids: set[str] = set()
+    path_numbers: set[str] = set()
+    for reading_path in reading_paths:
+        if not isinstance(reading_path, dict):
+            raise ValueError("each reading path must be an object")
+        required = {"number", "id", "title", "description", "materialIds"}
+        missing = required.difference(reading_path)
+        if missing:
+            raise ValueError(f"reading path missing fields: {sorted(missing)}")
+        if reading_path["id"] in path_ids or reading_path["number"] in path_numbers:
+            raise ValueError(f"duplicate reading path id or number: {reading_path['id']}")
+        path_ids.add(reading_path["id"])
+        path_numbers.add(reading_path["number"])
+        for field in ("number", "id", "title", "description"):
+            if not isinstance(reading_path[field], str) or not reading_path[field].strip():
+                raise ValueError(f"reading path {reading_path['id']}.{field} must be non-empty text")
+        assert_string_list(reading_path["materialIds"], f"reading path {reading_path['id']}.materialIds")
+
     ids: set[str] = set()
     numbers: set[int] = set()
     delivery_counts = {"bundled": 0, "official": 0}
-    forbidden_fields = {"pdfBytes", "pdf_path", "assetNote", "zoteroKey", "citationKey"}
+    forbidden_fields = {
+        "pdfBytes",
+        "pdf_path",
+        "assetNote",
+        "zoteroKey",
+        "citationKey",
+        "projectMapping",
+        "sourceInspection",
+        "runtimeProbe",
+        "offlineProbe",
+        "internalRevision",
+        "promptEvidence",
+        "sessionEvidence",
+        "routingEvidence",
+        "privateContinuity",
+    }
     for paper in materials:
         if not isinstance(paper, dict):
             raise ValueError("each material must be an object")
@@ -116,7 +243,8 @@ def load_and_validate(path: Path) -> dict[str, Any]:
             raise ValueError(f"{paper.get('id', '[unknown]')} has private fields: {sorted(overlap)}")
         required = {
             "number", "id", "title", "authors", "year", "sourceUrl", "noteDepth",
-            "readingScope", "intro", "keyPoints", "editorialQuestion", "categories", "pdf",
+            "readingScope", "intro", "keyPoints", "editorialQuestion", "categories",
+            "failureSurfaces", "pdf",
         }
         missing = required.difference(paper)
         if missing:
@@ -129,6 +257,32 @@ def load_and_validate(path: Path) -> dict[str, Any]:
             raise ValueError(f"source URL must use HTTPS: {paper['sourceUrl']}")
         if paper["noteDepth"] not in {"skim", "abstract", "read", "worked"}:
             raise ValueError(f"invalid noteDepth for {paper['id']}: {paper['noteDepth']}")
+        assert_string_list(paper["authors"], f"{paper['id']}.authors")
+        assert_string_list(paper["keyPoints"], f"{paper['id']}.keyPoints")
+        assert_string_list(paper["categories"], f"{paper['id']}.categories")
+        assert_string_list(paper["failureSurfaces"], f"{paper['id']}.failureSurfaces")
+        unknown_topics = set(paper["categories"]) - set(filters)
+        if unknown_topics:
+            raise ValueError(f"{paper['id']} has unknown topics: {sorted(unknown_topics)}")
+        unknown_surfaces = set(paper["failureSurfaces"]) - surface_ids
+        if unknown_surfaces:
+            raise ValueError(f"{paper['id']} has unknown failure surfaces: {sorted(unknown_surfaces)}")
+
+        for optional_list in ("reportedFindings", "evidenceLimits"):
+            if optional_list in paper:
+                assert_string_list(paper[optional_list], f"{paper['id']}.{optional_list}")
+        if "editorialInferences" in paper:
+            inferences = paper["editorialInferences"]
+            if not isinstance(inferences, list) or not inferences:
+                raise ValueError(f"{paper['id']}.editorialInferences must be a non-empty list")
+            for inference in inferences:
+                if not isinstance(inference, dict) or set(inference) != {"label", "text", "boundary"}:
+                    raise ValueError(
+                        f"{paper['id']}.editorialInferences items must contain label, text, and boundary"
+                    )
+                if any(not isinstance(inference[field], str) or not inference[field].strip()
+                       for field in ("label", "text", "boundary")):
+                    raise ValueError(f"{paper['id']}.editorialInferences must contain non-empty text")
 
         pdf = paper["pdf"]
         if not isinstance(pdf, dict):
@@ -173,6 +327,18 @@ def load_and_validate(path: Path) -> dict[str, Any]:
 
     if numbers != set(range(1, len(materials) + 1)):
         raise ValueError("material numbers must be contiguous from 1")
+    for surface in failure_surfaces:
+        unknown_materials = set(surface["materialIds"]) - ids
+        if unknown_materials:
+            raise ValueError(
+                f"failure surface {surface['id']} references unknown materials: {sorted(unknown_materials)}"
+            )
+    for reading_path in reading_paths:
+        unknown_materials = set(reading_path["materialIds"]) - ids
+        if unknown_materials:
+            raise ValueError(
+                f"reading path {reading_path['id']} references unknown materials: {sorted(unknown_materials)}"
+            )
     bundled_paths = bundled_pdf_paths(data)
     if len(set(bundled_paths)) != delivery_counts["bundled"]:
         raise ValueError("each bundled material must use a distinct PDF path")
@@ -377,6 +543,7 @@ def main() -> int:
     if args.rdf_source:
         write_hybrid_rdf(args.rdf_source, args.rdf_output, data)
     validate_hybrid_rdf(args.rdf_output, data)
+    validate_public_copy_files()
     if args.package_output:
         write_zotero_package(args.package_output, args.rdf_output, data)
     bundled_count = len(bundled_pdf_paths(data))

@@ -2,6 +2,139 @@
   "title": "Agent Memory Study",
   "intro": "这组材料不按排行榜排列，而是沿着状态、写入、检索、行动、抽象、元认知与信念修订等故障面来读。",
   "editorialNote": "以下内容来自逐篇明确标注阅读范围与 noteDepth 的 reading notes，是阅读导航，不是论文摘要的替代；未读或未复核的实验、附录与实现不应被当作已验证。具体主张、数字和限定请回到随附 PDF。",
+  "atlas": {
+    "thesis": "Agent memory fails in layers.",
+    "dek": "把记住、取回、修订与行动拆开看。这里不是排行榜，也不把未读变成债。",
+    "editorialLabel": "编者研究地图 · 跨源 synthesis，不是任何单篇论文的主张",
+    "failureSurfaces": [
+      {
+        "number": "01",
+        "id": "state-representation",
+        "label": "State / representation",
+        "question": "记录里的状态怎样被表示，并在变化后保留角色？",
+        "tension": "旧记录仍在，不等于它应被当作当前事实；时间顺序也不能独自说明 change、correction 或 coexistence。",
+        "materialIds": [
+          "a-tma-state-aware-memory",
+          "mosaic-long-term-memory",
+          "memory-beyond-recall"
+        ]
+      },
+      {
+        "number": "02",
+        "id": "write-consolidation",
+        "label": "Write / consolidation",
+        "question": "什么被写入、合并、修订或拒绝，谁来校验？",
+        "tension": "一个 mutation 可以通过 schema 与 policy 检查，却仍可能在语义上遗漏、破坏或无依据新增。",
+        "materialIds": [
+          "trustmem-consolidation",
+          "verifiable-memory",
+          "mistake-notebook-learning",
+          "agentic-memory"
+        ]
+      },
+      {
+        "number": "03",
+        "id": "retrieval-active-context",
+        "label": "Active context / retrieval",
+        "question": "所需证据是否进入候选、排序和 active context？",
+        "tension": "东西留在 store 里仍可能因为 candidate miss、ordering、dilution 或不合时宜的注入而不可用。",
+        "materialIds": [
+          "a-tma-state-aware-memory",
+          "verifiable-memory",
+          "coala-cognitive-architecture",
+          "continual-learning-experience-reuse",
+          "agentic-memory",
+          "insightemb-action-intent-retrieval"
+        ]
+      },
+      {
+        "number": "04",
+        "id": "wake-prospective-action",
+        "label": "Wake / prospective action",
+        "question": "记住的意图能否在合适时机触发，又避免重复或误触？",
+        "tension": "recall 正确不等于 action timing 正确；cue、取消、完成与 monitoring cost 是另一组责任。",
+        "materialIds": [
+          "proactive-wake-anchor",
+          "pm-bench"
+        ]
+      },
+      {
+        "number": "05",
+        "id": "abstraction-experience",
+        "label": "Abstraction / experience reuse",
+        "question": "经验怎样压缩成可复用抽象，又怎样随来源失效？",
+        "tension": "更可复用的 insight 或 schema 也更容易脱离 source；抽象层级不会自动增加 authority。",
+        "materialIds": [
+          "mistake-notebook-learning",
+          "coala-cognitive-architecture",
+          "storage-to-experience",
+          "continual-learning-experience-reuse",
+          "memory-beyond-recall",
+          "insightemb-action-intent-retrieval"
+        ]
+      },
+      {
+        "number": "06",
+        "id": "metacognitive-control",
+        "label": "Metacognitive control",
+        "question": "系统何时监控自己的过程，并把 discrepancy 升级为行动？",
+        "tension": "发现异常不等于获准继续；监控、解释、生成 goal 与执行需要保持可区分。",
+        "materialIds": [
+          "midca-dual-cycle"
+        ]
+      },
+      {
+        "number": "07",
+        "id": "justification-revision",
+        "label": "Justification / revision",
+        "question": "一句 belief 受什么支持，支持变化时怎样修订？",
+        "tension": "当前有 justification 不等于来源为真；形式 revision 也不能授权覆盖 raw source。",
+        "materialIds": [
+          "truth-maintenance-system",
+          "agm-theory-change"
+        ]
+      }
+    ],
+    "readingPaths": [
+      {
+        "number": "01",
+        "id": "from-answer-failure",
+        "title": "从一次答错开始",
+        "description": "从 terminal error 倒推 bank、retrieval 与 QA 各自可能失效的位置。",
+        "materialIds": [
+          "a-tma-state-aware-memory",
+          "verifiable-memory",
+          "insightemb-action-intent-retrieval",
+          "continual-learning-experience-reuse"
+        ]
+      },
+      {
+        "number": "02",
+        "id": "from-revision",
+        "title": "从 revision 开始",
+        "description": "先区分支持、修订与状态变化，再回到 learned write policy 的 authority 问题。",
+        "materialIds": [
+          "truth-maintenance-system",
+          "agm-theory-change",
+          "a-tma-state-aware-memory",
+          "trustmem-consolidation",
+          "memory-beyond-recall"
+        ]
+      },
+      {
+        "number": "03",
+        "id": "from-action-timing",
+        "title": "从行动时机开始",
+        "description": "从 cue、wake 与执行切入，理解记得一件事为什么仍可能在错误时间发生。",
+        "materialIds": [
+          "pm-bench",
+          "proactive-wake-anchor",
+          "midca-dual-cycle",
+          "insightemb-action-intent-retrieval"
+        ]
+      }
+    ]
+  },
   "filters": [
     "记忆架构",
     "可靠性",
@@ -23,13 +156,30 @@
       "shortAuthor": "Shi 等",
       "year": 2026,
       "doi": null,
-      "noteDepth": "skim",
-      "readingScope": "Abstract、§3–§6；未逐行读附录，也未复核实现。",
-      "intro": "把长期记忆里的旧值、现值和变化过程分开处理，并把最终答错继续拆成存储、候选、排序与回答层的问题。",
+      "noteDepth": "read",
+      "readingScope": "arXiv v2（2026-07-08）§1–§6、Appendix A.1–A.11、Tables 1–5、Figures 1–3 与 Algorithm 1；references 只用于 lineage 定位，未逐篇 close-read；未复现代码或数据。",
+      "intro": "A-TMA 把 ghost memory 重新定义为跨层的 state-coordination failure：旧值、现值与 transition evidence 可以同时正确地留在 bank，错误则可能发生在 bank role、按 query view 组织 retrieval evidence，或 QA 选择状态的任一层。（§1；§3；Figure 1，PDF pp. 1–2、5）",
       "keyPoints": [
-        "论文把 ghost memory 解释为跨层的状态协调失败：旧记录仍存在并不自动构成错误，关键是检索与回答是否按问题需要组织 current、historical 或 transition evidence。（§3；§5.1）",
-        "A-TMA 是附着在既有 memory host 上的 overlay，为记录增加 active、superseded、transition、unknown 等状态及演化关系，并为 query 选择相应视图。（§4.1–§4.3）",
-        "实验显示收益随 host 和 metric 而异；较弱 host 的 conflict accuracy 改善明显，但在原本较强的系统上增益较小，个别 judge metric 还略降。（§5.2–§6）"
+        "Bank：每条 record 包含 content、time/source position、state status、typed links 与 host metadata；status 包括 active、superseded、transition、unknown，links 可表达 supersession、evolution、scoped exception 与 coexistence。（§4.1–§4.3，PDF pp. 5–7）",
+        "Retrieval：rule-based query profiler 先选择 current、historical、transition 或 neutral view，再把 host seed、relation hops 与 bounded controller 组成 evidence packet；controller 只能重排已有候选，不能找回 missing record。（§4.4；Appendix A.8，PDF pp. 8–9、18）",
+        "QA：serializer 把 evidence trace 标成 current、historical、transition 或 generic retrieved memory，再交给 generator；因此 bank 中 recorded、retrieval 中 available 与 answer 中 used correctly 是可分开的事实。（§4.5–§4.6；Algorithm 1，PDF pp. 9–10、19）"
+      ],
+      "reportedFindings": [
+        "Full LTP 上，A-Mem+A-TMA 的 aggregate QA accuracy 为 0.818、conflict 为 0.860，相对 A-Mem 分别提高 0.031 与 0.048；但 70B judge score 从 0.700 微降到 0.698。Graphiti/Zep+A-TMA 的 QA accuracy 从 0.524 到 0.635、conflict 从 0.480 到 0.720，同时 fact accuracy 从 0.568 降到 0.550。（Table 2，PDF p. 11）",
+        "Full LoCoMo 的结果同样依赖 host、category 与 metric：Graphiti/Zep+A-TMA 的 temporal F1 从 0.0295 到 0.1705，但 temporal judged QA 从 0.3707 降到 0.3178；A-Mem+A-TMA 的 average 指标小幅上升，multi-hop F1、BLEU 与 judge 则下降。（Tables 3–4；§5.3，PDF pp. 11–12）"
+      ],
+      "evidenceLimits": [
+        "它是尚未经过同行评审的 arXiv preprint；正文没有给出可定位的 code 或 LTP dataset release，因此这些是 paper-reported point estimates，不是复现结果。",
+        "论文没有报告 repeated seeds、confidence intervals、bootstrap、significance test 或 per-profile variance；800 probes 嵌套在 10 个 shared replay banks 与 400 个 paired state units 中，不能直接当作 800 个独立实验单位。",
+        "LTP 是从 10 个 LoCoMo-anchored profiles 构造的 controlled synthetic benchmark；后续 LoCoMo evaluation 也使用 10 个 LoCoMo samples，论文没有证明 conversation/profile lineage 独立。transition view 没有直接 change-QA target，neutral view 也没有独立结果。（Appendix A.1–A.4，PDF pp. 15–16）",
+        "Table 5 与 Appendix A.10 在 full/no-Sentry baseline、controller ablation、QA-label direction 与 bank column 上互相冲突；§4.4、Appendix A.8 与 Algorithm 1 对 controller 能看到的 candidate boundary 也不一致；§5.2 称 InsideOut+A-TMA 在 bank、retrieval、QA 三层修复了 failure chain，但 Table 2 的 bank accuracy 仍为 0.500。在 raw results 或作者 correction 出现前，不能据此隔离单个组件的 causal contribution。"
+      ],
+      "editorialInferences": [
+        {
+          "label": "Read-side label amplification",
+          "text": "显式 state label 即使不改写 bank，也会在 answer time 前景化某条证据；如果 classifier 或 bank Judge 判错，它可能让错误比 raw chronology 更有说服力。",
+          "boundary": "这是根据论文 architecture 作出的编者 inference，不是 paper-tested result；论文没有报告 corrupted-label、false-supersession 或 wrong-role negative control。"
+        }
       ],
       "keywords": [
         "temporal state",
@@ -39,13 +189,18 @@
       "categories": [
         "可靠性"
       ],
+      "failureSurfaces": [
+        "state-representation",
+        "retrieval-active-context"
+      ],
       "sourceUrl": "https://arxiv.org/abs/2607.01935",
       "pdf": {
         "delivery": "official",
-        "url": "https://arxiv.org/pdf/2607.01935v2"
+        "url": "https://arxiv.org/pdf/2607.01935v2",
+        "accessNote": "arXiv v2 preprint"
       },
       "editorialQuestion": "transition view 本身没有被直接作为问答目标充分测试；在含糊、并存或带条件例外的状态里，query-view 与 state-role classifier 会不会只是新的错误入口？",
-      "sourceNote": ""
+      "sourceNote": "arXiv v2；本站链接官方 PDF，不在 repo 内重新分发。"
     },
     {
       "number": 2,
@@ -77,6 +232,9 @@
       ],
       "categories": [
         "可靠性"
+      ],
+      "failureSurfaces": [
+        "write-consolidation"
       ],
       "sourceUrl": "https://arxiv.org/abs/2606.25161",
       "pdf": {
@@ -119,6 +277,10 @@
       "categories": [
         "可靠性"
       ],
+      "failureSurfaces": [
+        "write-consolidation",
+        "retrieval-active-context"
+      ],
       "sourceUrl": "https://arxiv.org/abs/2608.03137",
       "pdf": {
         "delivery": "official",
@@ -158,6 +320,9 @@
       ],
       "categories": [
         "记忆架构"
+      ],
+      "failureSurfaces": [
+        "state-representation"
       ],
       "sourceUrl": "https://arxiv.org/abs/2607.16211",
       "pdf": {
@@ -201,6 +366,9 @@
       "categories": [
         "前瞻记忆"
       ],
+      "failureSurfaces": [
+        "wake-prospective-action"
+      ],
       "sourceUrl": "https://arxiv.org/abs/2605.30152",
       "pdf": {
         "delivery": "bundled",
@@ -239,6 +407,9 @@
       ],
       "categories": [
         "前瞻记忆"
+      ],
+      "failureSurfaces": [
+        "wake-prospective-action"
       ],
       "sourceUrl": "https://arxiv.org/abs/2607.12385",
       "pdf": {
@@ -283,6 +454,10 @@
         "可靠性",
         "持续学习"
       ],
+      "failureSurfaces": [
+        "write-consolidation",
+        "abstraction-experience"
+      ],
       "sourceUrl": "https://aclanthology.org/2026.findings-acl.719/",
       "pdf": {
         "delivery": "bundled",
@@ -323,6 +498,10 @@
       ],
       "categories": [
         "记忆架构"
+      ],
+      "failureSurfaces": [
+        "retrieval-active-context",
+        "abstraction-experience"
       ],
       "sourceUrl": "https://arxiv.org/abs/2309.02427",
       "pdf": {
@@ -370,6 +549,9 @@
       "categories": [
         "记忆架构"
       ],
+      "failureSurfaces": [
+        "abstraction-experience"
+      ],
       "sourceUrl": "https://aclanthology.org/2026.findings-acl.2069/",
       "pdf": {
         "delivery": "bundled",
@@ -410,6 +592,10 @@
       "categories": [
         "可靠性",
         "持续学习"
+      ],
+      "failureSurfaces": [
+        "retrieval-active-context",
+        "abstraction-experience"
       ],
       "sourceUrl": "https://arxiv.org/abs/2604.27003",
       "pdf": {
@@ -455,6 +641,10 @@
       "categories": [
         "记忆架构"
       ],
+      "failureSurfaces": [
+        "write-consolidation",
+        "retrieval-active-context"
+      ],
       "sourceUrl": "https://aclanthology.org/2026.acl-long.981/",
       "pdf": {
         "delivery": "bundled",
@@ -498,6 +688,9 @@
       "categories": [
         "记忆架构"
       ],
+      "failureSurfaces": [
+        "metacognitive-control"
+      ],
       "sourceUrl": "https://ojs.aaai.org/index.php/AAAI/article/view/9886",
       "pdf": {
         "delivery": "official",
@@ -532,6 +725,9 @@
       ],
       "categories": [
         "信念修正"
+      ],
+      "failureSurfaces": [
+        "justification-revision"
       ],
       "sourceUrl": "https://hdl.handle.net/1721.1/5733",
       "pdf": {
@@ -569,6 +765,9 @@
       ],
       "categories": [
         "信念修正"
+      ],
+      "failureSurfaces": [
+        "justification-revision"
       ],
       "sourceUrl": "https://www.cambridge.org/core/journals/journal-of-symbolic-logic/article/on-the-logic-of-theory-change-partial-meet-contraction-and-revision-functions/7ED837BAD5FB6D9A7C77906D73527F9C",
       "pdf": {
@@ -611,6 +810,11 @@
         "持续学习",
         "信念修正"
       ],
+      "failureSurfaces": [
+        "state-representation",
+        "write-consolidation",
+        "abstraction-experience"
+      ],
       "sourceUrl": "https://arxiv.org/abs/2606.09483",
       "pdf": {
         "delivery": "official",
@@ -649,6 +853,10 @@
       "categories": [
         "可靠性",
         "持续学习"
+      ],
+      "failureSurfaces": [
+        "retrieval-active-context",
+        "abstraction-experience"
       ],
       "sourceUrl": "https://arxiv.org/abs/2608.04761v2",
       "pdf": {

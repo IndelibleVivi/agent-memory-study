@@ -4,111 +4,188 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f6f7f4" />
+    <meta name="description" content="一个沿 agent memory failure surfaces 组织的公开研究地图与 annotated reading room。" />
     <title>Agent Memory Study</title>
+    <link rel="icon" href="data:," />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <header class="app-header">
-        <button class="icon-button mobile-only" id="open-index" type="button" aria-label="打开材料目录" aria-controls="paper-drawer" aria-expanded="false">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
-        </button>
-        <h1>Agent Memory Study</h1>
-        <label class="search-field">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
-          <span class="sr-only">搜索材料</span>
-          <input id="search" type="search" autocomplete="off" placeholder="搜索题目、作者或问题" />
-        </label>
-      </header>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
 
-      <button class="mobile-index-trigger mobile-only" id="mobile-index-trigger" type="button" aria-controls="paper-drawer" aria-expanded="false">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12" /><circle cx="4" cy="6" r=".8" /><circle cx="4" cy="12" r=".8" /><circle cx="4" cy="18" r=".8" /></svg>
-        <span data-material-count>材料</span>
-        <svg class="chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m7 9 5 5 5-5" /></svg>
+    <header class="site-header">
+      <a class="site-mark" href="./" data-route="home">Agent Memory Study</a>
+      <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+        <span>菜单</span>
       </button>
-
-      <nav class="topic-nav" aria-label="按主题筛选">
-        <div class="topic-scroll" id="topic-filters"></div>
+      <nav class="site-nav" id="site-nav" aria-label="主要导航">
+        <a href="./#research-map" data-route="home" data-scroll-target="research-map">研究地图</a>
+        <a href="./#reading-paths" data-route="home" data-scroll-target="reading-paths">阅读路径</a>
+        <a href="./#library" data-route="home" data-scroll-target="library">全部材料</a>
+        <a href="./#about" data-route="home" data-scroll-target="about">About</a>
       </nav>
+    </header>
 
-      <main class="workspace">
-        <aside class="paper-index desktop-only" aria-label="材料目录">
-          <div class="paper-list" id="paper-list"></div>
-          <p class="empty-list" id="empty-list" hidden>没有匹配的材料</p>
-        </aside>
+    <main id="main-content" tabindex="-1">
+      <div id="atlas-view">
+        <section class="atlas-hero" aria-labelledby="atlas-title">
+          <div class="atlas-intro">
+            <h1 id="atlas-title"></h1>
+            <p class="atlas-dek" id="atlas-dek"></p>
+            <p class="atlas-instruction">选择一个 failure surface，先看故障在哪里，再决定从哪篇读起。</p>
+          </div>
 
-        <article class="reading-pane" id="reading-pane" aria-live="polite">
-          <header class="paper-heading">
-            <div class="paper-heading-copy">
-              <h2 id="paper-title"></h2>
-              <p class="paper-meta" id="paper-meta"></p>
-              <p class="note-kind" id="note-depth"></p>
-              <p class="source-note" id="source-note" hidden></p>
+          <div class="failure-map" id="research-map">
+            <div class="section-heading compact-heading">
+              <h2>Agent memory 的七个 failure surfaces</h2>
+              <p id="atlas-label"></p>
             </div>
-            <div class="paper-actions">
-              <a class="action-link" id="open-pdf" href="#" target="_blank" rel="noopener noreferrer">
-                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z" /><path d="M14 3v5h5M9.5 13h5M9.5 16h5" /></svg>
-                <span class="action-copy">
-                  <span class="action-title">阅读 PDF</span>
-                  <span class="action-subtitle" id="pdf-access-note"></span>
-                </span>
-              </a>
-              <a class="action-link" id="download-zotero" href="https://github.com/IndelibleVivi/agent-memory-study/archive/refs/heads/main.zip" aria-label="下载当前 main 源包">
-                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0-4-4m4 4 4-4" /><path d="M5 17v3h14v-3" /></svg>
-                <span class="action-copy">
-                  <span class="action-title">下载当前源包</span>
-                  <span class="action-subtitle" id="zotero-package-note">完整书目与许可 PDF</span>
-                </span>
-              </a>
-            </div>
-          </header>
-
-          <section class="note-section">
-            <h3>这篇在解决什么</h3>
-            <p id="paper-intro"></p>
-          </section>
-
-          <section class="note-section">
-            <h3>留下来的东西</h3>
-            <ul class="key-points" id="paper-points"></ul>
-          </section>
-
-          <section class="note-section open-question">
-            <h3>编者问题（人机共读）</h3>
-            <p id="paper-question"></p>
-          </section>
-
-          <footer class="paper-footer">
-            <p id="reading-scope"></p>
-            <p class="source-line"><a id="source-link" href="#" target="_blank" rel="noopener noreferrer">回到原始来源</a><span id="doi-line"></span></p>
-          </footer>
-        </article>
-
-        <section class="reading-empty" id="reading-empty" hidden>
-          <h2>没有匹配的材料</h2>
-          <p>试着清空搜索，或者换一个主题。</p>
+            <ol class="surface-list" id="surface-list"></ol>
+          </div>
         </section>
-      </main>
-    </div>
 
-    <div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
-    <aside class="paper-drawer" id="paper-drawer" aria-label="材料目录" aria-hidden="true" inert>
-      <header>
-        <h2 data-material-count>材料</h2>
-        <button class="icon-button" id="close-index" type="button" aria-label="关闭论文目录">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
-        </button>
-      </header>
-      <div class="paper-list" id="drawer-paper-list"></div>
-      <p class="empty-list" id="drawer-empty-list" hidden>没有匹配的论文</p>
-    </aside>
+        <section class="surface-focus" id="surface-focus" tabindex="-1" aria-labelledby="surface-focus-title">
+          <div class="surface-focus-index" id="surface-focus-index"></div>
+          <div class="surface-focus-copy">
+            <p class="content-kind">Editorial synthesis</p>
+            <h2 id="surface-focus-title"></h2>
+            <p class="surface-question" id="surface-focus-question"></p>
+            <p class="surface-tension" id="surface-focus-tension"></p>
+          </div>
+          <div class="surface-reading" aria-labelledby="surface-reading-title">
+            <h3 id="surface-reading-title">从这里进入</h3>
+            <ol id="surface-materials"></ol>
+          </div>
+        </section>
 
-    <footer class="global-footer">
-      <span>札记按逐篇标注的 reading scope，不替代原文</span>
-      <a href="https://github.com/IndelibleVivi/agent-memory-study">GitHub · 数据与贡献</a>
+        <section class="reading-paths" id="reading-paths" aria-labelledby="paths-title">
+          <div class="section-heading">
+            <h2 id="paths-title">三条阅读路径</h2>
+            <p>路径是编者建议，不是进度要求；可以从任意一篇离开。</p>
+          </div>
+          <div class="path-grid" id="path-grid"></div>
+          <div class="path-focus" id="path-focus" hidden tabindex="-1"></div>
+        </section>
+
+        <section class="library" id="library" aria-labelledby="library-title">
+          <div class="library-heading">
+            <div>
+              <h2 id="library-title">全部材料</h2>
+              <p>16 条 public allowlisted records；按阅读范围理解，不按“完成度”排名。</p>
+            </div>
+            <p class="result-count" id="result-count" aria-live="polite"></p>
+          </div>
+
+          <form class="library-controls" id="library-controls" role="search">
+            <label class="search-field">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
+              <span class="sr-only">搜索标题、作者或问题</span>
+              <input id="search" type="search" autocomplete="off" placeholder="搜索标题、作者或问题" />
+            </label>
+            <label>
+              <span>主题</span>
+              <select id="topic-filter"></select>
+            </label>
+            <label>
+              <span>Failure surface</span>
+              <select id="surface-filter"></select>
+            </label>
+            <label>
+              <span>Depth</span>
+              <select id="depth-filter"></select>
+            </label>
+            <button class="text-button" id="clear-filters" type="button">清空筛选</button>
+          </form>
+
+          <div class="material-index" id="material-index" role="list"></div>
+          <div class="empty-state" id="empty-state" hidden>
+            <h3>没有匹配的材料</h3>
+            <p>清空一个筛选，或者换一种关键词。</p>
+          </div>
+        </section>
+
+        <section class="about" id="about" aria-labelledby="about-title">
+          <p class="content-kind">About this room</p>
+          <h2 id="about-title">读源，不把导航冒充结论。</h2>
+          <div class="about-grid">
+            <p id="editorial-note"></p>
+            <p>这个页面是 static、no-backend、no-analytics、no-tracking。PDF 采用 hybrid delivery：只有逐文件确认 public redistribution license 的文件随站提供，其余材料回到 official source。</p>
+          </div>
+        </section>
+      </div>
+
+      <article class="material-view" id="material-view" hidden>
+        <a class="back-link" href="./" data-route="home">← 回到研究地图</a>
+        <div class="material-layout">
+          <aside class="article-index" aria-label="本文目录">
+            <p>本文目录</p>
+            <nav id="article-toc"></nav>
+          </aside>
+
+          <div class="article-main">
+            <header class="material-heading">
+              <p class="material-number" id="material-number"></p>
+              <h1 id="material-title"></h1>
+              <p class="material-meta" id="material-meta"></p>
+              <div class="material-surface-links" id="material-surface-links"></div>
+            </header>
+
+            <section class="article-section" id="paper-problem" data-toc-label="论文在解决什么">
+              <p class="content-kind source-kind">Source-backed paraphrase</p>
+              <h2>论文在解决什么</h2>
+              <p class="article-lede" id="material-intro"></p>
+            </section>
+
+            <section class="article-section" id="paper-mechanisms" data-toc-label="关键抓手">
+              <p class="content-kind source-kind">Source-backed paraphrase</p>
+              <h2>关键抓手</h2>
+              <ol class="mechanism-list" id="material-points"></ol>
+            </section>
+
+            <section class="article-section" id="paper-findings" data-toc-label="报告了什么" hidden>
+              <p class="content-kind source-kind">Paper-reported findings</p>
+              <h2>报告了什么</h2>
+              <ul class="finding-list" id="material-findings"></ul>
+            </section>
+
+            <section class="article-section evidence-limits" id="paper-limits" data-toc-label="仍未证明什么">
+              <p class="content-kind boundary-kind">Evidence boundary</p>
+              <h2>仍未证明什么</h2>
+              <ul id="material-limits"></ul>
+              <p class="sparse-disclosure" id="limits-fallback" hidden>这条 public note 尚未单独整理 evidence limits；请以标注的 reading scope 与原文为准，不从空缺补写结论。</p>
+            </section>
+
+            <section class="article-section editorial-section" id="paper-editorial" data-toc-label="编者判断">
+              <p class="content-kind editorial-kind">Editorial synthesis / question</p>
+              <h2>编者判断</h2>
+              <div id="material-inferences"></div>
+              <div class="editorial-question">
+                <h3>继续追问</h3>
+                <p id="material-question"></p>
+              </div>
+            </section>
+
+            <section class="article-section source-delivery-mobile" id="paper-source-mobile" data-toc-label="来源与交付"></section>
+          </div>
+
+          <aside class="source-rail" id="source-rail" aria-label="来源、阅读范围与 PDF 交付"></aside>
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <p>札记按逐篇标注的 reading scope，不替代原文。</p>
+      <nav aria-label="项目链接">
+        <a href="https://github.com/IndelibleVivi/agent-memory-study">GitHub · 数据与贡献</a>
+        <a href="NOTICE.md">Notice</a>
+        <a href="THIRD_PARTY_NOTICES.md">PDF notices</a>
+      </nav>
     </footer>
 
-    <script src="assets/materials-data.js?v=20260811-insightemb"></script>
-    <script src="assets/app.js?v=20260811-insightemb"></script>
+    <p class="sr-only" id="route-status" aria-live="polite"></p>
+    <noscript>这个 reading room 需要 JavaScript 来读取同 repo 的 public canonical data。材料与许可说明仍可在 GitHub repository 中查看。</noscript>
+    <script src="assets/materials-data.js"></script>
+    <script src="assets/app.js"></script>
   </body>
 </html>

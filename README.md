@@ -1,18 +1,30 @@
 # Agent Memory Study
 
-一个关于 long-term memory、belief revision、prospective memory 与 cognitive architecture 的公开阅读空间。
+一个关于 long-term memory、belief revision、prospective memory 与 cognitive architecture 的公开 research atlas / annotated reading room。
 
 [打开 Reading Room](https://indeliblevivi.github.io/agent-memory-study/) · [下载当前 main branch](https://github.com/IndelibleVivi/agent-memory-study/archive/refs/heads/main.zip) · [下载最近一次 tagged Zotero 包](https://github.com/IndelibleVivi/agent-memory-study/releases/latest/download/agent-memory-study-zotero.zip)
 
 ## 这里有什么
 
 - 16 份 source-linked materials；
-- 每份材料都明确标注 `noteDepth` 与 reading scope：它在解决什么、留下来的东西、编者问题（人机共读）；
+- 一张先于材料目录出现的 failure-surface 研究地图，以及三条可自由进入和离开的 reading paths；
+- 可按主题、failure surface、depth、标题或作者进入材料；
+- 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 一个没有 backend、CDN、analytics 或 tracking 的静态 reader；
 - 9 份按原许可随站提供的 PDF，另 7 份从 reader 直达 official full text；
 - `main` 中的 RDF 可以一次导入 16 条书目、9 份 stored PDF 与 7 个 official PDF link。
 
 这些札记是阅读导航，不是逐篇全文批注，也不代替原文。转述、问题和编辑判断不能冒充作者主张；需要引用时，请回到每条记录链接的 official source。
+
+## 怎样链接到一页
+
+GitHub Pages 没有 SPA rewrite，所以 reader 使用 query URL，而不是伪装成目录的 client-only path：
+
+- material：`?material=a-tma-state-aware-memory`
+- failure-surface thread：`?thread=retrieval-active-context`
+- reading path：`?path=from-revision`
+
+搜索与筛选也写入 query parameters；material、thread、path 使用 browser history，back / forward 可以恢复对应视图。
 
 ## PDF 怎样分发
 
@@ -32,7 +44,7 @@ python3 -m http.server 8080
 
 ## 加一份新材料
 
-1. 在 `data/materials.json` 增加一条连续编号的记录，并明确 `noteDepth` 与 `editorialQuestion`；
+1. 在唯一 canonical public source `data/materials.json` 增加一条连续编号的记录，并明确 `noteDepth`、`readingScope`、`failureSurfaces` 与 `editorialQuestion`；
 2. 给 `pdf.delivery` 选择 `bundled` 或 `official`。只有存在明确 public redistribution license、逐文件 attribution 与 canonical source 时才能使用 `bundled`；
 3. 如需更新 Zotero metadata，可从自己的 Zotero 导出 native RDF，但不要把 local-only notes、keys、tags 或路径带进 public data；
 4. 运行：
@@ -42,10 +54,16 @@ python3 tools/build.py \
   --rdf-source /path/to/local-zotero-export.rdf
 ```
 
-builder 会验证公开数据边界、exact PDF allowlist，重建 browser payload，并生成 hybrid `agent-memory-study.rdf`。需要生成可发布 ZIP 时再加：
+builder 会验证 public schema、private/publication boundary、no-tracking contract、GitHub Pages subpath asset URLs、exact PDF allowlist，重建唯一的 generated browser payload，并生成 hybrid `agent-memory-study.rdf`。不要手工编辑 `assets/materials-data.js`。需要生成可发布 ZIP 时再加：
 
 ```bash
 python3 tools/build.py --package-output dist/agent-memory-study-zotero.zip
+```
+
+Public schema / boundary regression tests：
+
+```bash
+python3 -m unittest tools.test_build
 ```
 
 ## Content boundary
