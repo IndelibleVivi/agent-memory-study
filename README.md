@@ -64,6 +64,17 @@ PYTHONHASHSEED=0 python3 research/longmemeval-v2-boundary-audit/audit.py \
 
 fixed decision rules、runner、逐 case normalized output 与完整 built memory contexts 见 [`research/longmemeval-v2-boundary-audit/`](./research/longmemeval-v2-boundary-audit/)；它证明 source / postprocessing boundary，不是 benchmark reproduction。
 
+同一材料的 alias / observable-order successor 目前停在 model-free pre-registration audit。checked selection、renderer
+controls、runtime HOLD 与全部 public ledgers 可直接验证：
+
+```bash
+python3 research/longmemeval-v2-alias-order-preregistration/audit.py --verify-checked
+```
+
+从 exact current source 与已取得的三个 public metadata files 重建 selector / renderer evidence 的命令和 hashes 见
+[`research/longmemeval-v2-alias-order-preregistration/`](./research/longmemeval-v2-alias-order-preregistration/)。它记录
+`0/66` controller jobs，不是 controller、reader 或 benchmark result。
+
 ## 通过 pull request 贡献
 
 这个 repo 接受 source correction / version watch、新材料 + reading note、对已有 entry 的署名 perspective / critique，以及使用 public / synthetic fixtures 的可复核 test artifact。完整 evidence、attribution、privacy 与 schema contract 见 [CONTRIBUTING.md](./CONTRIBUTING.md)。

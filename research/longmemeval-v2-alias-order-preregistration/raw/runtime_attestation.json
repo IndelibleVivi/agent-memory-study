@@ -1,0 +1,15 @@
+{
+  "boundary": "This author-recorded observation is not replayed by the artifact. A revoked signing trust path is sufficient to prohibit execution under the preregistered no-bypass gate; it does not identify a specific malicious payload and is not generalized to other Codex releases.",
+  "bypass_attempted": false,
+  "candidate_binary_sha256": "89b83ea8e7a16f8ea6d35cf6015e89cc98c2ef64e84065d8a65415ebf8a53b0f",
+  "candidate_package": "@openai/codex@0.117.0-darwin-arm64",
+  "candidate_tarball_sha256": "a3bf799db50c61a80f2f5080bedb51223c460c7ea3b2528b4e1a072cd4e5d310",
+  "evidence_kind": "author_recorded_local_preflight_observation",
+  "gatekeeper_assessment": "CSSMERR_TP_CERT_REVOKED",
+  "independently_reproduced_by_artifact": false,
+  "preregistered_local_signing_trust_gate": "HOLD",
+  "signature_structure": "valid_on_disk_and_satisfies_designated_requirement",
+  "version_command_exit_code": 137,
+  "version_command_output": "",
+  "version_receipt": null
+}

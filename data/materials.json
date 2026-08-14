@@ -1271,7 +1271,7 @@
       "year": 2026,
       "doi": "10.48550/arXiv.2605.12493",
       "noteDepth": "read",
-      "readingScope": "完整读了 arXiv v1 的 §§1–6、Appendix A–E、Tables 1–11 与 Figures 1–7，共 32 个 PDF pages；references 只用于 lineage 定位。另检查 official code 的 paper-day release、2026-08-05 benchmark-metadata query-boundary fix 与 2026-08-09 current source，并执行 source-linked CPU-only boundary test；没有运行 benchmark、模型、reader、judge 或真实 trajectory。",
+      "readingScope": "完整读了 arXiv v1 的 §§1–6、Appendix A–E、Tables 1–11 与 Figures 1–7，共 32 个 PDF pages；references 只用于 lineage 定位。另检查 official code 的 paper-day release、2026-08-05 benchmark-metadata query-boundary fix 与 2026-08-09 current source，并执行 source-linked CPU-only boundary test、公开 question/tier-map exact-pair census 与 synthetic renderer feasibility audit；没有运行 benchmark、controller、模型、reader、judge 或真实 trajectory resolution。",
       "intro": "LongMemEval-V2 把 agent memory 评价写成 context gathering：memory module 先消费大规模 multimodal trajectory history，再为固定 reader 返回不超过 200K tokens 的 evidence package。它直接测的是 bounded evidence construction，不是 online learning、未来 web-task success 或端到端 agent competence。（§3.3；Appendix E，PDF pp. 5–6、26–27）",
       "whyRead": "这篇把“经验”从一句产品隐喻逼成了一个可定位的 evaluation object：25M–115M token 的历史怎样经过 memory 与 query controller 进入 bounded active context。真正值得保留的也不是 72.5% 单点，而是 paper、paper-day release、August query-boundary fix 与 current source 之间的 protocol drift，以及 current postprocessor 允许 controller prose 在没有有效支持时先进入 built memory context 的事实。它让 retrieval miss、controller assistance、evidence provenance、reader error 与 cost accounting 不再被同一个 memory score 吞掉。",
       "keyPoints": [
@@ -1321,8 +1321,8 @@
         },
         {
           "label": "Source-linked local audit",
-          "text": "公开 runner 对三个 exact Git revisions 做 AST/source-locator checks，并用 sentinel metadata 直接执行每个 revision 的 AgentRunbook-C payload builder；随后执行 current output validator / normalizer / context builder。18 个 synthetic AXTree rows 使用两个 opaque answer tokens、fresh temp workspaces 与 standard-library import shim。",
-          "locator": "research/longmemeval-v2-boundary-audit/"
+          "text": "第一组公开 runner 对三个 exact Git revisions 做 AST/source-locator checks，并用 sentinel metadata 直接执行每个 revision 的 AgentRunbook-C payload builder；随后执行 current output validator / normalizer / context builder。第二组 model-free audit 遍历 451 个公开 question/tier-map rows、生成完整 selection ledger，并用三条 synthetic trajectories 定位 renderer 的真实排序面。",
+          "locator": "research/longmemeval-v2-boundary-audit/；research/longmemeval-v2-alias-order-preregistration/"
         }
       ],
       "reportedFindings": [
@@ -1337,7 +1337,7 @@
         "paper 只评估 pre-collected browser trajectories 与 fixed-reader context gathering，不评估 live online learning、未来 website task success、sensitive enterprise history、human interruption cost 或行动安全。",
         "Small / Medium 复用同 questions 与 answer seeds，abstention/source pairs 也共享 haystacks；paired bootstrap 的 resampling unit、次数、CI、multiple-comparison 与 cluster handling 未公开。",
         "公开 questions 与 answers 使 current benchmark-metadata query-boundary regression tests 只能防 accidental backend coupling，不能把 public leaderboard 变成 held-out test；exact question text 仍可被 unrestricted custom backend 当 lookup key。",
-        "本地 contract test 证明 current postprocessor 允许 unsupported answer-like prose，不证明 controller 实际生成过这种输出、不估计频率、不解释 paper gain，也没有测 question-set fingerprint、ordering cue 或 sandbox escape。",
+        "本地 contract test 证明 current postprocessor 允许 unsupported answer-like prose，不证明 controller 实际生成过这种输出、不估计频率、不解释 paper gain，也没有测 sandbox escape。successor census 只证明三组 exact public pairs 与 intervention surface 可构造；full trajectory resolution 和 66-job controller phase 均未执行。",
         "synthetic valid-but-decoy case 使用 exact opaque-token oracle 判断 semantic support；它足以证明没有 semantic alignment enforcement，却不是一般 natural-language entailment evaluator。"
       ],
       "sourceTensions": [
@@ -1390,12 +1390,12 @@
         {
           "title": "Alias × order × prose-admission protocol",
           "status": "proposed-not-run",
-          "question": "AgentRunbook-C / Codex 的相对结果有多少来自 trajectory-set identity、ordering 与 controller prose channel，而不是被链接的 raw evidence？",
-          "method": "对公开 evaluation items 分别使用 fresh random trajectory aliases、independent haystack shuffle、prose-only、evidence-only 与 provenance-gated context；固定 reader、question order、token cap 与 retry policy。",
-          "fixtures": "公开 question/haystack data、version-pinned original methods 与 metadata-narrowed current methods；每条 output 保存 controller prose、valid/invalid spans、truncation order 与 reader answer。",
-          "controls": "保留 original IDs/order、query-text-only R/C、no-prose、no-raw-evidence、invalid-span injection 与 question-text lookup sentinel；Small / Medium 与 abstention/source pairs 成组分析。",
-          "measures": "报告 per-question answer change、valid-evidence recall、unsupported-prose admission、truncation survival、category accuracy、cluster-aware uncertainty、query/index/post-query/reader/judge 分阶段 cost。",
-          "limitations": "这是尚未执行的 successor protocol；它仍依赖公开 benchmark、stochastic controllers/readers 与 exact model availability，不能恢复缺失的 May run artifacts。"
+          "question": "current-source AgentRunbook-C controller 的 selected evidence 与 prose 会不会随 trajectory identity aliases 或 observable order 改变；这种变化在 exact-haystack answerable/abstention pairs 中是否不同？",
+          "method": "选择 locked public files 中全部三组 exact ordered-Medium answerable/abstention classes；六个 questions 各跑 Small / Medium × C00/C10/C01/C11。alias 使用 rank-preserving opaque IDs；direct order treatment 是预生成的 concise/full summary-record order，insertion/index/manifest 只同步为 consistency surfaces。另加每个 question-tier 一个 exact-input repeat 与每个 question 一个 empty-memory control。",
+          "fixtures": "三组 web-procedure Medium families、六个 question IDs、共享 web Small haystack 与待一次性解析的 locked trajectories union；预计 48 factorial + 12 repeat + 6 no-memory，共 66 query-method jobs。",
+          "controls": "pair 内共享 alias map 与 permutation；所有 Small probes 共享一组 map/permutation；hash-derived ledger 固定 aliases、permutations、repeat cells 与 66-job order；fresh workspace/process；P prose-only、E valid-evidence-only、B unchanged combined、G human provenance-gated packages。没有 replacement class。",
+          "measures": "ledger 将 state/trajectory set 固定为 de-aliased Jaccard distance，将 prose 固定为 NFKC/whitespace-normalized character Levenshtein ratio，并固定 evidence-context canonical JSON hash、completion/retry 与 invalid/empty coding；按三组 Medium family 与共享一个 haystack 的六个 Small queries 分开汇总，不给 p-value、CI 或 bootstrap。",
+          "limitations": "这是 prospectively specified 但未获 gate release 的 66-job protocol。三组 classes 全部属于 web procedure；full trajectory resolution 未运行，exact intended CLI signing-trust gate 为 HOLD，controller-tool network-isolation preflight 也未通过，controller jobs 为 0。它不能恢复 May run、测 reader/accuracy 或外推到其他 strata。"
         }
       ],
       "contributions": [
@@ -1431,6 +1431,43 @@
               "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/longmemeval-v2-boundary-audit/raw/reader_contexts.jsonl"
             }
           ]
+        },
+        {
+          "type": "public-test",
+          "title": "Alias/order pre-registration and public exact-pair census",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-08-14",
+          "basis": "Locked public questions, Small and Medium haystack maps, official current-source renderer and AgentRunbook-C/Codex boundary files, plus a bounded preflight of the exact intended Codex CLI candidate.",
+          "boundary": "This is a deterministic selection census and intervention-feasibility audit. It does not resolve the full selected trajectory union, run a controller or model, estimate behavior frequency, execute a reader or judge, score the benchmark, attribute Table 2, or reconstruct the May controller run.",
+          "method": "Hash every eligible ordered Medium haystack, select every same-domain/base-type class containing answerable and abstention members, retain a complete class ledger, inspect the current renderer contract, and execute forward/reverse filesystem materialization plus rank-preserving and order-reversing alias controls. Then pre-seed reordered official summaries and exercise the exact current ensure/sandbox-link path.",
+          "environment": "macOS 26.5.2 arm64；Python 3.13.3 standard library plus Git CLI；locked local public files and clean official source checkout；no network, model, controller, reader, judge, tokenizer or embedding call in the audit.",
+          "fixture": "All 451 public question records and both locked tier maps drive selection. Two synthetic trajectories share one renderer tie group; a third differs in start URL and goal.",
+          "controls": "Exact source/data hashes, complete eligibility and exclusion ledgers, canonical-array equality behind every shared hash, selected Small equality, forward/reverse materialization, rank-preserving and order-reversing aliases, pre-seeded summary byte preservation, exact checksum file-set verification and a no-bypass exact-runtime stop rule.",
+          "rawResult": "The census found 422 eligible text-only questions and excluded 29 image-bearing gotcha items. Exactly three pair-eligible ordered-Medium classes and six selected questions remained; all were web procedure and shared one 100-ID ordered Small array. Filesystem materialization-order reversal produced byte-identical official summaries; alias tie behavior matched the declared controls. Pre-seeded reordered summaries survived the exact ensure path with summary_rendered false and remained byte-identical through the sandbox-linked trajectories surface.",
+          "derivedResult": "The renderer's alias tie-order behavior, the need for an explicit post-sort order surface, and the current source's pre-seeded summary-order bypass are reproducibly established. The 66-job controller phase remains HOLD with zero jobs executed because full trajectory resolution and execution gates were not passed.",
+          "limitations": "The three classes are a finite census of exact public-pair support, not hidden official provenance or a representative benchmark sample. Runtime fields are an author-recorded bounded local preflight observation not independently replayed by the artifact; they are not a security finding about other releases. No controller output or reader effect exists in this artifact.",
+          "links": [
+            {
+              "label": "method, result and boundary",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/longmemeval-v2-alias-order-preregistration/README.md"
+            },
+            {
+              "label": "prospective revised protocol",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/longmemeval-v2-alias-order-preregistration/PREREGISTRATION.md"
+            },
+            {
+              "label": "raw decision",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/longmemeval-v2-alias-order-preregistration/raw/decision.json"
+            },
+            {
+              "label": "selected exact families",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/longmemeval-v2-alias-order-preregistration/raw/selection/selected_families.json"
+            },
+            {
+              "label": "randomization and analysis ledger",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/longmemeval-v2-alias-order-preregistration/raw/protocol_ledger.json"
+            }
+          ]
         }
       ],
       "keywords": [
@@ -1456,7 +1493,7 @@
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
       "editorialQuestion": "当 query controller 能读取 benchmark-derived routing hints、生成 answer-like narrative、决定 evidence order 并优先占据 token budget 时，什么 contract 才能证明 fixed reader 得到的是 trajectory-supported experience，而不是一个更会写答案的中间层？",
-      "sourceNote": "arXiv v1 work-in-progress preprint；PDF 共 32 页。paper-day release、August query-boundary fix 与 current source 分开标注；public test 停在 built memory context，不执行 fixed reader 或重现 benchmark results。"
+      "sourceNote": "arXiv v1 work-in-progress preprint；PDF 共 32 页。paper-day release、August query-boundary fix 与 current source 分开标注；两组 public tests 分别停在 built-context contract 与 model-free selection/intervention feasibility，不执行 controller、fixed reader 或 benchmark reproduction。"
     }
   ]
 }

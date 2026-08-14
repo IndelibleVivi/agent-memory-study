@@ -1,0 +1,95 @@
+{
+  "filesystem_materialization_order_reversal": {
+    "concise_equal": true,
+    "forward_order": [
+      "id-a",
+      "id-b",
+      "id-c"
+    ],
+    "full_equal": true,
+    "reverse_order": [
+      "id-a",
+      "id-b",
+      "id-c"
+    ]
+  },
+  "order_reversing_alias_diagnostic": {
+    "aliased_order": [
+      "f0000001",
+      "f0000002",
+      "f0000003"
+    ],
+    "dealiased_order": [
+      "id-b",
+      "id-a",
+      "id-c"
+    ],
+    "mapping": {
+      "id-a": "f0000002",
+      "id-b": "f0000001",
+      "id-c": "f0000003"
+    }
+  },
+  "preseeded_summary_order": {
+    "concise_byte_preserved": true,
+    "concise_sha256": "7460367a769a567c0dde1b2f9da5b3e8f85a1d013d8ba63eb408ff89719d610e",
+    "ensure_success": true,
+    "full_byte_preserved": true,
+    "full_sha256": "6480829a3a24c8bfed0ce92d88c1906297e5c9faaa581738c09813f3ba3b3277",
+    "original_order": [
+      "id-a",
+      "id-b",
+      "id-c"
+    ],
+    "preseeded_order": [
+      "id-c",
+      "id-a",
+      "id-b"
+    ],
+    "reorder_indices": [
+      2,
+      0,
+      1
+    ],
+    "sandbox_concise_byte_equal": true,
+    "sandbox_full_byte_equal": true,
+    "sandbox_trajectories_is_symlink": true,
+    "summary_rendered": false,
+    "summary_stderr_path": null,
+    "summary_stdout_path": null
+  },
+  "rank_preserving_alias": {
+    "aliased_order": [
+      "10000001",
+      "10000002",
+      "10000003"
+    ],
+    "base_order": [
+      "id-a",
+      "id-b",
+      "id-c"
+    ],
+    "dealiased_order": [
+      "id-a",
+      "id-b",
+      "id-c"
+    ],
+    "mapping": {
+      "id-a": "10000001",
+      "id-b": "10000002",
+      "id-c": "10000003"
+    }
+  },
+  "source_contract": {
+    "base_workspace_writes_manifest": true,
+    "records_sort": true,
+    "runbook_exposes_workspace_manifest_directly": false,
+    "sandbox_links_trajectories": true,
+    "sort_fields": [
+      "start_url",
+      "goal",
+      "trajectory_id"
+    ],
+    "summary_admits_outcome": true
+  }
+}

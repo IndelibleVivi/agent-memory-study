@@ -1,0 +1,30 @@
+{
+  "all_selected_small_arrays_equal": true,
+  "controller_jobs_executed": 0,
+  "controller_jobs_released_by_protocol": 0,
+  "controller_phase": "HOLD",
+  "cross_domain_trajectory_id_overlap_count": 0,
+  "eligible_question_count": 422,
+  "exact_cli_runtime_gate": "HOLD",
+  "excluded_question_count": 29,
+  "full_trajectory_resolution_gate": "not_run",
+  "non_rank_preserving_alias_can_change_tie_order": true,
+  "planned_controller_jobs": 66,
+  "preseeded_summary_order_surface_passed": true,
+  "rank_preserving_alias_preserves_tie_order": true,
+  "renderer_erases_filesystem_materialization_order_reversal": true,
+  "runtime_evidence_kind": "author_recorded_local_preflight_observation",
+  "runtime_observation_replayed_by_artifact": false,
+  "selected_base_types": [
+    "procedure"
+  ],
+  "selected_domains": [
+    "web"
+  ],
+  "selected_exact_class_count": 3,
+  "selected_question_count": 6,
+  "selected_small_length": 100,
+  "selected_small_ordered_hash": "731bba3f629000d537ddad7a1dd95af07e6810c40e39e4ba9bfa9a9ce490941a",
+  "selection_census_passed": true,
+  "strongest_claim_level": "selection_renderer_and_preseeded_summary_surface_only"
+}

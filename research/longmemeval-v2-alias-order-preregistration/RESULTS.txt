@@ -1,0 +1,13 @@
+LongMemEval-V2 alias/order pre-registration audit
+
+Eligible text-only questions: 422
+Pre-excluded image/gotcha questions: 29
+Selected exact ordered-Medium classes: 3
+Selected scope: web procedure only
+Filesystem materialization-order reversal erased by official summaries: True
+Rank-preserving alias keeps tie order: True
+Preseeded summary order survives exact ensure/sandbox path: True
+Exact CLI runtime gate: HOLD
+Full trajectory resolution: not run
+Controller jobs executed: 0
+Final decision: HOLD before controller execution

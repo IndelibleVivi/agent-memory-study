@@ -62,7 +62,7 @@ MANIFEST_ICONS = {
     "assets/icons/ams-icon-192.png": "192x192",
     "assets/icons/ams-icon-512.png": "512x512",
 }
-PUBLIC_RESEARCH_SUFFIXES = {".csv", ".json", ".jsonl", ".md", ".py", ".txt"}
+PUBLIC_RESEARCH_SUFFIXES = {".csv", ".json", ".jsonl", ".md", ".py", ".sha256", ".txt"}
 NS = {
     "bib": "http://purl.org/net/biblio#",
     "dc": "http://purl.org/dc/elements/1.1/",

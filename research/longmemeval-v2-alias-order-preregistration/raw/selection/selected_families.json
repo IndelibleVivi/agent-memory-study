@@ -1,0 +1,86 @@
+[
+  {
+    "abstention_ids": [
+      "5d6ecdeb"
+    ],
+    "all_question_ids": [
+      "5d6ecdeb",
+      "fec652a9"
+    ],
+    "answerable_ids": [
+      "fec652a9"
+    ],
+    "base_question_type": "procedure",
+    "class_id": "web:procedure:4c6bd7b5e8468fd004157e2686f716e47249cb38fe65a1fa49f49e923550f159",
+    "domain": "web",
+    "medium_ordered_hash": "4c6bd7b5e8468fd004157e2686f716e47249cb38fe65a1fa49f49e923550f159",
+    "pair_eligible": true,
+    "selected_abstention_id": "5d6ecdeb",
+    "selected_answerable_id": "fec652a9",
+    "selected_medium_length": 500,
+    "selected_small_lengths": {
+      "5d6ecdeb": 100,
+      "fec652a9": 100
+    },
+    "selected_small_ordered_hashes": {
+      "5d6ecdeb": "731bba3f629000d537ddad7a1dd95af07e6810c40e39e4ba9bfa9a9ce490941a",
+      "fec652a9": "731bba3f629000d537ddad7a1dd95af07e6810c40e39e4ba9bfa9a9ce490941a"
+    }
+  },
+  {
+    "abstention_ids": [
+      "3b8210a1"
+    ],
+    "all_question_ids": [
+      "07b49858",
+      "3b8210a1"
+    ],
+    "answerable_ids": [
+      "07b49858"
+    ],
+    "base_question_type": "procedure",
+    "class_id": "web:procedure:b089cbd606a3428cb015e5a2e0c0ff56074da1736b54a229a757347ece7217a1",
+    "domain": "web",
+    "medium_ordered_hash": "b089cbd606a3428cb015e5a2e0c0ff56074da1736b54a229a757347ece7217a1",
+    "pair_eligible": true,
+    "selected_abstention_id": "3b8210a1",
+    "selected_answerable_id": "07b49858",
+    "selected_medium_length": 500,
+    "selected_small_lengths": {
+      "07b49858": 100,
+      "3b8210a1": 100
+    },
+    "selected_small_ordered_hashes": {
+      "07b49858": "731bba3f629000d537ddad7a1dd95af07e6810c40e39e4ba9bfa9a9ce490941a",
+      "3b8210a1": "731bba3f629000d537ddad7a1dd95af07e6810c40e39e4ba9bfa9a9ce490941a"
+    }
+  },
+  {
+    "abstention_ids": [
+      "1fec75e5"
+    ],
+    "all_question_ids": [
+      "1fec75e5",
+      "401566e6"
+    ],
+    "answerable_ids": [
+      "401566e6"
+    ],
+    "base_question_type": "procedure",
+    "class_id": "web:procedure:cc34c288253b4817408fd815d06d8a4b2a22fcb1eb015a82599200a6779c5f35",
+    "domain": "web",
+    "medium_ordered_hash": "cc34c288253b4817408fd815d06d8a4b2a22fcb1eb015a82599200a6779c5f35",
+    "pair_eligible": true,
+    "selected_abstention_id": "1fec75e5",
+    "selected_answerable_id": "401566e6",
+    "selected_medium_length": 500,
+    "selected_small_lengths": {
+      "1fec75e5": 100,
+      "401566e6": 100
+    },
+    "selected_small_ordered_hashes": {
+      "1fec75e5": "731bba3f629000d537ddad7a1dd95af07e6810c40e39e4ba9bfa9a9ce490941a",
+      "401566e6": "731bba3f629000d537ddad7a1dd95af07e6810c40e39e4ba9bfa9a9ce490941a"
+    }
+  }
+]

@@ -195,6 +195,84 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         self.assertIn("memory_modules/agentrunbook_c.py", manifest["source_file_hashes"])
         self.assertIn("memory_modules/trajectory_store.py", manifest["source_file_hashes"])
 
+    def test_longmemeval_alias_order_census_is_checked_in_and_held(self):
+        material = next(
+            item for item in self.data["materials"]
+            if item["id"] == "longmemeval-v2-experienced-colleague"
+        )
+        contribution = material["contributions"][1]
+        self.assertEqual(contribution["type"], "public-test")
+        self.assertEqual(contribution["byline"], "Agent Memory Study editors")
+        linked_names = {link["url"].rsplit("/", 1)[-1] for link in contribution["links"]}
+        self.assertEqual(
+            linked_names,
+            {
+                "README.md", "PREREGISTRATION.md", "decision.json",
+                "selected_families.json", "protocol_ledger.json",
+            },
+        )
+        artifact_root = build.ROOT / "research" / "longmemeval-v2-alias-order-preregistration"
+        self.assertTrue((artifact_root / "README.md").is_file())
+        self.assertTrue((artifact_root / "PREREGISTRATION.md").is_file())
+        self.assertTrue((artifact_root / "raw" / "decision.json").is_file())
+        self.assertTrue((artifact_root / "raw" / "selection" / "selected_families.json").is_file())
+        self.assertTrue((artifact_root / "raw" / "protocol_ledger.json").is_file())
+        self.assertTrue((artifact_root / "raw" / "runtime_attestation.json").is_file())
+        decision = json.loads((artifact_root / "raw" / "decision.json").read_text(encoding="utf-8"))
+        self.assertEqual(decision["eligible_question_count"], 422)
+        self.assertEqual(decision["excluded_question_count"], 29)
+        self.assertEqual(decision["selected_exact_class_count"], 3)
+        self.assertEqual(decision["selected_question_count"], 6)
+        self.assertEqual(decision["selected_domains"], ["web"])
+        self.assertEqual(decision["selected_base_types"], ["procedure"])
+        self.assertEqual(decision["selected_small_length"], 100)
+        self.assertTrue(decision["all_selected_small_arrays_equal"])
+        self.assertTrue(decision["renderer_erases_filesystem_materialization_order_reversal"])
+        self.assertTrue(decision["rank_preserving_alias_preserves_tie_order"])
+        self.assertTrue(decision["non_rank_preserving_alias_can_change_tie_order"])
+        self.assertTrue(decision["preseeded_summary_order_surface_passed"])
+        self.assertEqual(decision["runtime_evidence_kind"], "author_recorded_local_preflight_observation")
+        self.assertFalse(decision["runtime_observation_replayed_by_artifact"])
+        self.assertEqual(decision["planned_controller_jobs"], 66)
+        self.assertEqual(decision["controller_jobs_released_by_protocol"], 0)
+        self.assertEqual(decision["controller_jobs_executed"], 0)
+        self.assertEqual(decision["controller_phase"], "HOLD")
+        protocol = json.loads((artifact_root / "raw" / "protocol_ledger.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(protocol["medium_treatments"]), 3)
+        self.assertEqual(len(protocol["small_treatment"]["official_order"]), 100)
+        self.assertEqual(len(protocol["jobs"]), 66)
+        self.assertEqual(len(protocol["execution_order"]), 66)
+        self.assertEqual(len(set(protocol["execution_order"])), 66)
+        repeat_cells = [item["cell"] for item in protocol["repeat_allocation"]]
+        self.assertEqual({cell: repeat_cells.count(cell) for cell in set(repeat_cells)}, {
+            "C00": 3, "C10": 3, "C01": 3, "C11": 3,
+        })
+        self.assertIn("network isolation", " ".join(protocol["unreleased_gates"]))
+
+    def test_public_research_tree_has_no_build_residue(self):
+        research_root = build.ROOT / "research"
+        residue = [
+            path.relative_to(build.ROOT).as_posix()
+            for path in research_root.rglob("*")
+            if path.is_file()
+            and (
+                "__pycache__" in path.parts
+                or path.suffix.lower() in {".pyc", ".pyo", ".log", ".tmp"}
+                or path.name == ".DS_Store"
+            )
+        ]
+        self.assertEqual(residue, [])
+
+    def test_alias_audit_rebuild_is_output_root_scoped_and_comparable(self):
+        source = (
+            build.ROOT / "research" / "longmemeval-v2-alias-order-preregistration" / "audit.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn('(output_root / "RESULTS.txt").write_text', source)
+        self.assertIn("write_checksums(output_root)", source)
+        self.assertNotIn('(ARTIFACT_ROOT / "RESULTS.txt").write_text', source)
+        self.assertIn("compare_checked(args.output_dir.resolve())", source)
+        self.assertIn("checksum manifest file set is incomplete or contains extras", source)
+
     def test_public_research_artifacts_are_in_boundary_scan(self):
         relative_paths = {path.relative_to(build.ROOT).as_posix() for path in build.public_copy_paths()}
         self.assertIn("research/doyle-tms-static-oracle/oracle.py", relative_paths)
@@ -203,6 +281,23 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         self.assertIn("research/longmemeval-v2-boundary-audit/audit.py", relative_paths)
         self.assertIn("research/longmemeval-v2-boundary-audit/raw/decision.json", relative_paths)
         self.assertIn("research/longmemeval-v2-boundary-audit/raw/reader_contexts.jsonl", relative_paths)
+        self.assertIn("research/longmemeval-v2-alias-order-preregistration/audit.py", relative_paths)
+        self.assertIn(
+            "research/longmemeval-v2-alias-order-preregistration/raw/decision.json",
+            relative_paths,
+        )
+        self.assertIn(
+            "research/longmemeval-v2-alias-order-preregistration/raw/selection/selected_families.json",
+            relative_paths,
+        )
+        self.assertIn(
+            "research/longmemeval-v2-alias-order-preregistration/raw/protocol_ledger.json",
+            relative_paths,
+        )
+        self.assertIn(
+            "research/longmemeval-v2-alias-order-preregistration/raw/runtime_attestation.json",
+            relative_paths,
+        )
         build.validate_public_copy_files()
 
     def test_unknown_failure_surface_is_rejected(self):

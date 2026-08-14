@@ -1,0 +1,12 @@
+{
+  "architecture": "arm64",
+  "controller_jobs_executed": 0,
+  "models_called": 0,
+  "network_used_by_audit": false,
+  "os": "Darwin",
+  "os_version": "26.5.2",
+  "python": "3.13.3",
+  "reader_or_judge_called": false,
+  "selector": "all exact ordered-Medium answerable/abstention equivalence classes",
+  "source_commit": "2cc8c540bdb87fe6761629b585e727e1c4704520"
+}
