@@ -2,7 +2,7 @@
 
 一个关于 long-term memory、belief revision、prospective memory 与 cognitive architecture 的公开 research atlas / annotated reading room。
 
-[打开 Reading Room](https://indeliblevivi.github.io/agent-memory-study/) · [下载当前 main branch](https://github.com/IndelibleVivi/agent-memory-study/archive/refs/heads/main.zip) · [下载最近一次 tagged Zotero 包](https://github.com/IndelibleVivi/agent-memory-study/releases/latest/download/agent-memory-study-zotero.zip)
+[打开 Reading Room](https://indeliblevivi.github.io/agent-memory-study/) · [阅读项目介绍 PDF](./publications/agent-memory-study-project-introduction.zh-CN.pdf) · [下载当前 main branch](https://github.com/IndelibleVivi/agent-memory-study/archive/refs/heads/main.zip) · [下载最近一次 tagged Zotero 包](https://github.com/IndelibleVivi/agent-memory-study/releases/latest/download/agent-memory-study-zotero.zip)
 
 ## 这里有什么
 

@@ -3,6 +3,10 @@
 __pycache__/
 *.pyc
 *.pdf
+!publications/
+publications/*
+!publications/README.md
+!publications/agent-memory-study-project-introduction.zh-CN.pdf
 !papers/
 papers/*
 !papers/02-yang-2026-trustmem.pdf

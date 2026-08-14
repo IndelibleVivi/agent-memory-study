@@ -10,5 +10,6 @@ This repository is a hybrid reading index.
 - The public site does not publish private project mappings, source-inspection notes, runtime or offline probes, internal revision identifiers, prompts, sessions, routing evidence, private names, local paths, or private continuity.
 - The reader is static and contains no backend. Its only third-party runtime script is the Cloudflare Web Analytics beacon, used for aggregate traffic and performance measurement without cookies, localStorage, visitor profiles, query-string collection, or custom reading events.
 - No open-source or Creative Commons license is granted for the reader code or editorial notes at this time. Public visibility does not by itself grant permission to reproduce or adapt them.
+- `publications/agent-memory-study-project-introduction.zh-CN.pdf` is a separate Faye-authored publication licensed under CC BY 4.0. Its grant covers that PDF and its four Faye-controlled project screenshots only; attribution and source details are recorded in [publications/README.md](./publications/README.md).
 
-The file-level paper licenses do not license this repository as a whole. Links are provided for scholarship and navigation. If a source, access label, or attribution is incorrect, please open an issue with the canonical source.
+The file-level paper licenses and the selected project-publication license do not license this repository as a whole. Links are provided for scholarship and navigation. If a source, access label, or attribution is incorrect, please open an issue with the canonical source.
