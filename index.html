@@ -143,7 +143,7 @@
           <h2 id="about-title">读源，<span class="mobile-keep">不把导航冒充结论。</span></h2>
           <div class="about-grid">
             <p id="editorial-note"></p>
-            <p>这个页面是 static、no-backend、no-analytics、no-tracking。PDF 采用 hybrid delivery：只有逐文件确认 public redistribution license 的文件随站提供，其余材料回到 official source。</p>
+            <p>这个页面是 static、no-backend，并只使用 Cloudflare Web Analytics 的轻量 aggregate beacon：不使用 cookie 或 localStorage 识别、画像访客，也不记录 query string 或自定义阅读事件。PDF 采用 hybrid delivery：只有逐文件确认 public redistribution license 的文件随站提供，其余材料回到 official source。</p>
           </div>
           <button class="architecture-note" id="architecture-note" type="button" aria-pressed="false">
             <span class="architecture-line" id="architecture-line"></span>
@@ -258,5 +258,8 @@
     <noscript>这个 reading room 需要 JavaScript 来读取同 repo 的 public canonical data。材料与许可说明仍可在 GitHub repository 中查看。</noscript>
     <script src="assets/materials-data.js?v=20260813-easter-1"></script>
     <script src="assets/app.js?v=20260813-easter-1"></script>
+    <!-- Cloudflare Web Analytics -->
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"4e0929eca0504d43aca1cc1a1f30ffaf"}'></script>
+    <!-- End Cloudflare Web Analytics -->
   </body>
 </html>

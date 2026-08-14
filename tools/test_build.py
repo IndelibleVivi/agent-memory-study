@@ -55,6 +55,13 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         self.assertEqual(manifest["start_url"], "./")
         self.assertEqual(manifest["scope"], "./")
 
+    def test_only_approved_cloudflare_web_analytics_beacon_is_present(self):
+        build.validate_public_copy_files()
+        source = (build.ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(source.count(build.CLOUDFLARE_WEB_ANALYTICS_SRC), 1)
+        self.assertEqual(source.count(build.CLOUDFLARE_WEB_ANALYTICS_TOKEN), 1)
+        self.assertIn('<script type="module"', source)
+
     def test_landing_map_has_no_implicit_surface(self):
         source = (build.ROOT / "assets" / "app.js").read_text(encoding="utf-8")
         self.assertNotIn("defaultSurfaceId", source)

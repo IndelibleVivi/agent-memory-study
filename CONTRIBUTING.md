@@ -73,7 +73,7 @@ Project-specific 评价可以进入，但被评价的 project、版本与证据�
 
 ## Canonical source 与验证
 
-`data/materials.json` 是唯一 canonical public content source；`assets/materials-data.js` 由 builder 生成，不能手工维护。网页贡献也必须保持 static、no-backend、no-analytics、no-tracking，不引入需要登录却没有 durable authority 的 annotation state。
+`data/materials.json` 是唯一 canonical public content source；`assets/materials-data.js` 由 builder 生成，不能手工维护。网页贡献也必须保持 static、no-backend；Cloudflare Web Analytics 的 aggregate beacon 是唯一获准的 analytics，不得加入 custom events、visitor profiles、其他 tracking vendor，或需要登录却没有 durable authority 的 annotation state。
 
 运行：
 
@@ -82,4 +82,4 @@ python3 tools/build.py
 python3 -m unittest tools.test_build
 ```
 
-builder 会检查 schema、publication boundary、no-tracking contract、GitHub Pages subpath asset URLs、RDF attachment modes 与 bundled PDF exact allowlist，再从 canonical JSON 重建 browser payload。
+builder 会检查 schema、publication boundary、approved-analytics boundary、GitHub Pages subpath asset URLs、RDF attachment modes 与 bundled PDF exact allowlist，再从 canonical JSON 重建 browser payload。

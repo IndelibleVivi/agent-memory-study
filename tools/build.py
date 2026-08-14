@@ -31,10 +31,12 @@ PRIVATE_PATTERNS = (
         re.IGNORECASE,
     ),
 )
-TRACKING_PATTERNS = (
+DISALLOWED_TRACKING_PATTERNS = (
     re.compile(r"google-analytics|googletagmanager", re.IGNORECASE),
     re.compile(r"plausible\.io|posthog|mixpanel|hotjar|segment\.com", re.IGNORECASE),
 )
+CLOUDFLARE_WEB_ANALYTICS_SRC = "https://static.cloudflareinsights.com/beacon.min.js"
+CLOUDFLARE_WEB_ANALYTICS_TOKEN = "4e0929eca0504d43aca1cc1a1f30ffaf"
 PUBLIC_COPY_PATHS = (
     "index.html",
     "site.webmanifest",
@@ -150,12 +152,24 @@ def validate_public_copy_files() -> None:
             raise ValueError(f"public copy file is missing: {relative_path}")
         text = path.read_text(encoding="utf-8")
         assert_public_text({relative_path: text})
-        for pattern in TRACKING_PATTERNS:
+        for pattern in DISALLOWED_TRACKING_PATTERNS:
             match = pattern.search(text)
             if match:
-                raise ValueError(f"tracking token in {relative_path}: {match.group(0)!r}")
+                raise ValueError(
+                    f"unapproved analytics or tracking token in {relative_path}: {match.group(0)!r}"
+                )
 
     index_text = (ROOT / "index.html").read_text(encoding="utf-8")
+    beacon_pattern = re.compile(
+        r'<script\s+type="module"\s+'
+        rf'src="{re.escape(CLOUDFLARE_WEB_ANALYTICS_SRC)}"\s+'
+        rf'data-cf-beacon=\'\{{"token":"{CLOUDFLARE_WEB_ANALYTICS_TOKEN}"\}}\'>'
+        r'</script>'
+    )
+    if len(beacon_pattern.findall(index_text)) != 1:
+        raise ValueError("index.html must contain exactly one approved Cloudflare Web Analytics beacon")
+    if index_text.count("static.cloudflareinsights.com") != 1:
+        raise ValueError("index.html must not contain additional Cloudflare Insights scripts")
     root_relative_asset = re.search(r"(?:src|href)=[\"']/[^/\"']", index_text)
     if root_relative_asset:
         raise ValueError(
