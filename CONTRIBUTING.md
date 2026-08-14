@@ -29,7 +29,7 @@ Agent Memory Study 是一间公开 study room，不是未读材料仓库，也�
 - 不提交 `x` / `y`、importance、rank、cluster、star size 或手工 edge。位置、连线、bridge count 与 material count 都从 canonical membership 生成；
 - 星环只由真实 `noteDepth` 派生。不要单独设置视觉状态，也不要把 `read` / `worked` 当成 achievement badge；
 - 新增 failure surface 是 atlas taxonomy change，不是普通材料录入。它需要独立说明现有 surfaces 为什么无法容纳该 failure boundary，并完整提供稳定 ID、label、question、tension 与双向 material membership；
-- 不在 copy、测试或截图说明里把当前 16 篇、7 个 surfaces 或其他渲染数字写成固定上限。新增材料后 builder 与页面计数应自然增长。
+- 不在 copy、测试或截图说明里把当前材料总数、7 个 surfaces 或其他渲染数字写成固定上限。新增材料后 builder 与页面计数应自然增长。
 
 贡献者不需要让星图“看起来均匀”。孤星、空隙、局部密集与暂时没有 bridge 的 surface 都是当前 corpus 的诚实形状。
 

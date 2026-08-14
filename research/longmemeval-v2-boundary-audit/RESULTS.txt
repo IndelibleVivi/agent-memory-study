@@ -1,0 +1,11 @@
+LongMemEval-V2 boundary audit
+release: c5c552dfcf023f5a2939f586541c7f6e55a36d5d
+privacy fix: ef67f10aacd9080c75aeb2dd527a0af25dc26f1b
+current: 2cc8c540bdb87fe6761629b585e727e1c4704520
+query-boundary source checks: PASS
+answer-evidence binding property: FAIL
+failing evidence-binding patterns: 6
+failing patterns: answer_only, gated_empty_supported, gated_insufficient_answer, opposite_value_decoy, out_of_range, unknown_trajectory
+failing rows after two-token replication: 12
+syntactic policy mismatch rejected: True
+boundary: source lineage plus a synthetic postprocessing contract test; not a benchmark reproduction

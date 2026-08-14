@@ -51,7 +51,8 @@
           "coala-cognitive-architecture",
           "continual-learning-experience-reuse",
           "agentic-memory",
-          "insightemb-action-intent-retrieval"
+          "insightemb-action-intent-retrieval",
+          "longmemeval-v2-experienced-colleague"
         ]
       },
       {
@@ -78,7 +79,8 @@
           "continual-learning-experience-reuse",
           "truth-maintenance-system",
           "memory-beyond-recall",
-          "insightemb-action-intent-retrieval"
+          "insightemb-action-intent-retrieval",
+          "longmemeval-v2-experienced-colleague"
         ]
       },
       {
@@ -113,6 +115,7 @@
           "a-tma-state-aware-memory",
           "verifiable-memory",
           "insightemb-action-intent-retrieval",
+          "longmemeval-v2-experienced-colleague",
           "continual-learning-experience-reuse"
         ]
       },
@@ -1249,6 +1252,211 @@
       },
       "editorialQuestion": "最有用的 partial-trajectory anchors 仍继承 problem-level label，而且每个 insight–problem pair 只验证一次；如果当前 goal 或 state label 本身不可靠，action-intent retrieval 会不会只是更有方向地注入错误？",
       "sourceNote": "arXiv v2；PDF 共 29 页。"
+    },
+    {
+      "number": 17,
+      "id": "longmemeval-v2-experienced-colleague",
+      "kind": "paper",
+      "title": "LongMemEval-V2: Evaluating Long-Term Agent Memory Toward Experienced Colleagues",
+      "authors": [
+        "Di Wu",
+        "Zixiang Ji",
+        "Asmi Kawatkar",
+        "Bryan Kwan",
+        "Jia-Chen Gu",
+        "Nanyun Peng",
+        "Kai-Wei Chang"
+      ],
+      "shortAuthor": "Wu 等",
+      "year": 2026,
+      "doi": "10.48550/arXiv.2605.12493",
+      "noteDepth": "read",
+      "readingScope": "完整读了 arXiv v1 的 §§1–6、Appendix A–E、Tables 1–11 与 Figures 1–7，共 32 个 PDF pages；references 只用于 lineage 定位。另检查 official code 的 paper-day release、2026-08-05 benchmark-metadata query-boundary fix 与 2026-08-09 current source，并执行 source-linked CPU-only boundary test；没有运行 benchmark、模型、reader、judge 或真实 trajectory。",
+      "intro": "LongMemEval-V2 把 agent memory 评价写成 context gathering：memory module 先消费大规模 multimodal trajectory history，再为固定 reader 返回不超过 200K tokens 的 evidence package。它直接测的是 bounded evidence construction，不是 online learning、未来 web-task success 或端到端 agent competence。（§3.3；Appendix E，PDF pp. 5–6、26–27）",
+      "whyRead": "这篇把“经验”从一句产品隐喻逼成了一个可定位的 evaluation object：25M–115M token 的历史怎样经过 memory 与 query controller 进入 bounded active context。真正值得保留的也不是 72.5% 单点，而是 paper、paper-day release、August query-boundary fix 与 current source 之间的 protocol drift，以及 current postprocessor 允许 controller prose 在没有有效支持时先进入 built memory context 的事实。它让 retrieval miss、controller assistance、evidence provenance、reader error 与 cost accounting 不再被同一个 memory score 吞掉。",
+      "keyPoints": [
+        "Evaluation object：451 个问题分别配一份有序 trajectory haystack；memory 经 Insert→Query 返回 context，固定 Qwen3.5-9B reader 在 200K-token cap 内回答。Small 平均 100 trajectories / 25.6M tokens，Medium 约 498 / 114.8M。（§3.2–§3.3；Figure 3，PDF pp. 4–6）",
+        "Correlated tiers：Small 在 domain 内共享 haystack；Medium 为 question-specific，却沿用 Small 的 answer seeds 后增加 fillers；zero-support abstention 与 source anchor 复用同一 haystack。两层不是 902 个独立 questions。（Appendix A.2–A.4，PDF pp. 15–17）",
+        "Controller-assisted headline：AgentRunbook-C 的 Small / Medium 为 74.9% / 70.1%，equal-tier average 72.5%；Codex 为 69.3%，strongest RAG 为 48.5%。但 C 的 gotcha 两层都低于 Codex，Medium overall gain 没有 paper legend 下的 significance marker。（Table 2，PDF p. 9）",
+        "Versioned boundary：paper-day AgentRunbook-R planner 使用 question type 与 original goals；August fix 才把 backend context 改成 opaque invocation ID。paper-day C backend API 可见 raw question item，但 direct-executed release sandbox payload builder 仍只返回 query text/image，不能夸成 gold 或 metadata 已转入 sandbox。（Appendix Tables 9–10；official source history）",
+        "Executed contract test：current Codex postprocessing 会在 spans 为空、unknown、越界或只指向 opposite-value decoy 时继续把 answer-like memory_markdown 放进 built memory context；current AgentRunbook-C source 继承并调用这组 methods，optional evidence gate 也不要求 directly_supported 至少有一个 valid span。（public synthetic artifact）"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 先把经验变成 bounded evidence task",
+          "claim": "作者不让 memory system 直接操作网站或生成最终 benchmark answer，而是把它放在 trajectory history 与固定 reader 之间；这样 retrieval / synthesis 与 reader answering 可以被分别观察。",
+          "locator": "§1；§3.3，PDF pp. 1–2、5–6"
+        },
+        {
+          "step": "02 · 用稀疏 needles 压测环境知识",
+          "claim": "451 个问题覆盖 static、dynamic、workflow、gotcha 与 premise awareness；平均 answer core 只有 1.39 trajectories，却被埋进 100 或约 498 条 web-agent histories。",
+          "locator": "§3.1–§3.2；Figures 2–3，PDF pp. 4–5"
+        },
+        {
+          "step": "03 · 比较 retrieval controller 与 file-research controller",
+          "claim": "R 从 raw states、events 与 notes 中生成结构化 queries；C 将 trajectories 文件化，让 coding agent 先分类、短列、检索 spans 并写 narrative context，再交固定 reader。",
+          "locator": "§4.1；Appendix A.8–A.9，PDF pp. 7–8、21–24"
+        },
+        {
+          "step": "04 · 用 adverse results 与 source lineage 限定 headline",
+          "claim": "C 整体领先并更快于 vanilla Codex，但 gotcha 退化、helper ablation 在 Medium 提高 accuracy；paper-facing metadata contract 又与 current source 不同，因此结果属于特定 controller protocol，而不是 method name 的 timeless property。",
+          "locator": "§4.2–§4.3；Tables 2、9–11，PDF pp. 8–10、28–30"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Question and coverage construction",
+          "text": "四名学生 annotators 构造问题；frontier-model no-context failures 被用于过滤、改写或形成 distractors。answer-bearing trajectories 先由 Codex-assisted proposals 找候选，再由人确认 final minimal core；公开说明没有建立 exhaustive-negative coverage audit。",
+          "locator": "§3.2；Appendix A.1–A.3，PDF pp. 4–5、14–16"
+        },
+        {
+          "label": "Reader and heterogeneous scoring",
+          "text": "固定 Qwen3.5-9B reader 使用 stochastic decoding；structured answers 做 phrase / order matching，gotcha 与 abstention 由 GPT-5.2 medium judge。UNKNOWN 恒错，abstention 的 environment-access disclaimer 也可能得分。",
+          "locator": "Appendix A.5–A.6；Tables 4–5，PDF pp. 17–20"
+        },
+        {
+          "label": "Query-stage latency",
+          "text": "reported memory latency 包围 query stage；trajectory insertion / index building、context truncation、reader、judge 与 post-query consolidation 不在同一数字内。Medium question-specific workspaces 与 Small shared workspaces 的 amortization 也不同。",
+          "locator": "§4.2；Appendix A.7；Table 2，PDF pp. 8–9、20"
+        },
+        {
+          "label": "Source-linked local audit",
+          "text": "公开 runner 对三个 exact Git revisions 做 AST/source-locator checks，并用 sentinel metadata 直接执行每个 revision 的 AgentRunbook-C payload builder；随后执行 current output validator / normalizer / context builder。18 个 synthetic AXTree rows 使用两个 opaque answer tokens、fresh temp workspaces 与 standard-library import shim。",
+          "locator": "research/longmemeval-v2-boundary-audit/"
+        }
+      ],
+      "reportedFindings": [
+        "Table 2 的 Small / Medium overall：slice RAG 42.8 / 38.1，slice+notes 51.0 / 45.9，AgentRunbook-R 58.6 / 57.0，Codex 69.9 / 68.7，AgentRunbook-C 74.9 / 70.1。（PDF p. 9）",
+        "AgentRunbook-C 在 gotchas 低于 Codex：48.3 vs 58.6（Small），44.9 vs 51.7（Medium）；Medium workflow 同为 61.3。C 的 Medium overall 70.1 vs 68.7 在论文表格中没有 significance marker。（Table 2，PDF p. 9）",
+        "移除 C helper functions 后 Medium overall 从 70.1 升到 71.8、workflow 从 61.3 升到 68.9，但 latency 增加；helper 的作用是 accuracy–latency trade，不是 uniform accuracy gain。（Table 11，PDF p. 30）",
+        "no-context pilot 与 oracle pilot 只用 323 个 non-abstention questions；Codex 的 89.7% oracle-trajectory pilot 直接从 answer-bearing files 写 final answer，不经过 main fixed-reader boundary。（Appendix B，PDF pp. 18–20）",
+        "Introduction 报 simple slice RAG average 40.1%，Table 2 的 42.8% 与 38.1% 等权平均为 40.45%；selected paper/source 没有提供能得到 40.1 的 alternative denominator。"
+      ],
+      "evidenceLimits": [
+        "这是 arXiv v1 work-in-progress preprint。current official code 是 paper 之后持续修改的 successor；没有 paper-era run artifacts、per-question predictions、judge transcripts、seeds 或完整 bootstrap implementation 可独立恢复 Table 2。leaderboard source 把 paper points hard-code，不能代替 reproduction。",
+        "paper 只评估 pre-collected browser trajectories 与 fixed-reader context gathering，不评估 live online learning、未来 website task success、sensitive enterprise history、human interruption cost 或行动安全。",
+        "Small / Medium 复用同 questions 与 answer seeds，abstention/source pairs 也共享 haystacks；paired bootstrap 的 resampling unit、次数、CI、multiple-comparison 与 cluster handling 未公开。",
+        "公开 questions 与 answers 使 current benchmark-metadata query-boundary regression tests 只能防 accidental backend coupling，不能把 public leaderboard 变成 held-out test；exact question text 仍可被 unrestricted custom backend 当 lookup key。",
+        "本地 contract test 证明 current postprocessor 允许 unsupported answer-like prose，不证明 controller 实际生成过这种输出、不估计频率、不解释 paper gain，也没有测 question-set fingerprint、ordering cue 或 sandbox escape。",
+        "synthetic valid-but-decoy case 使用 exact opaque-token oracle 判断 semantic support；它足以证明没有 semantic alignment enforcement，却不是一般 natural-language entailment evaluator。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "Paper method 与 paper-day C code 已分叉",
+          "observation": "Appendix Table 10 说 C 的 question.json 含 ID 与 metadata；paper-day release harness/backend context 也可见 raw item，但同 revision 的 C/Codex sandbox payload builder 只序列化 query text/image。",
+          "implication": "不能让 paper prose、release API visibility 与 sandbox contents 互相替代；May 72.5% 的 exact operational protocol 仍不能从 current source alone 恢复。",
+          "locators": [
+            "Appendix Table 10，PDF p. 29",
+            "official source c5c552d…"
+          ]
+        },
+        {
+          "label": "Accuracy gain 在 gotcha 与 helper 上反向",
+          "observation": "C 的 overall average 高于 Codex，但 gotcha 两层都更低；移除 helper functions 又提高 Medium overall 与 workflow accuracy。",
+          "implication": "specialized controller 的收益依赖 question family 与 cost budget，不能从 aggregate 推出每个 memory ability 或 helper 都改善。",
+          "locators": [
+            "Table 2，PDF p. 9",
+            "Table 11，PDF p. 30"
+          ]
+        },
+        {
+          "label": "Structured output 没有形成 evidence contract",
+          "observation": "current output schema 同时允许 answer-like memory_markdown 与 empty spans；normalizer 只删除 unknown / out-of-range spans，context builder 仍先发送 prose。optional evidence gate 只检查 status/policy pairing，而且 evidence_status / answer_policy 没有被渲染进 built memory context。",
+          "implication": "structured JSON 提高 addressability，却不能单独证明 built memory context 中的 synthesis 被 cited trajectory 支持；prose admission 与 span provenance 需要额外 contract。",
+          "locators": [
+            "current memory_modules/codex.py",
+            "public boundary audit raw cases"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "A context package is an authored evidence object",
+          "text": "query controller 不只是找回旧内容：它决定 query routing、选择 spans、生成 narrative、排列 evidence 并在 token cap 下占据前缀。它产出的 context package 本身需要 provenance、admission 与 truncation semantics，不能继承 raw trajectory 的 authority。",
+          "boundary": "这是由 paper method、prefix context order 与 local contract test 推出的 editorial synthesis；论文没有提出完整的 provenance-enforcing context package schema。"
+        },
+        {
+          "label": "Query-boundary isolation and benchmark integrity are different",
+          "text": "opaque invocation ID 能消除 honest backend 对 question type、gold row 与 original goals 的 API coupling；公开 question text / answers、question-specific haystack fingerprints 与 unrestricted code execution仍是另一组 leaderboard-integrity问题。",
+          "boundary": "current benchmark-metadata query-boundary tests 证明 direct-interface narrowing；它们不是 held-out benchmark、安全 sandbox 或反作弊机制，也没有证据表明 reported methods 做了 answer lookup。"
+        },
+        {
+          "label": "Experienced colleague is a layered claim",
+          "text": "trajectory authority、retrieval、controller synthesis、reader comprehension、task execution 与 action authorization 是六个不同层次。LME-V2 对前四层中的 bounded QA path 有价值，但不能用一个 context-gathering score替后两层签字。",
+          "boundary": "这是对 evaluation object 与 Appendix E limitations 的 architecture-level interpretation，不是论文声称已经验证 online colleague competence。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "Alias × order × prose-admission protocol",
+          "status": "proposed-not-run",
+          "question": "AgentRunbook-C / Codex 的相对结果有多少来自 trajectory-set identity、ordering 与 controller prose channel，而不是被链接的 raw evidence？",
+          "method": "对公开 evaluation items 分别使用 fresh random trajectory aliases、independent haystack shuffle、prose-only、evidence-only 与 provenance-gated context；固定 reader、question order、token cap 与 retry policy。",
+          "fixtures": "公开 question/haystack data、version-pinned original methods 与 metadata-narrowed current methods；每条 output 保存 controller prose、valid/invalid spans、truncation order 与 reader answer。",
+          "controls": "保留 original IDs/order、query-text-only R/C、no-prose、no-raw-evidence、invalid-span injection 与 question-text lookup sentinel；Small / Medium 与 abstention/source pairs 成组分析。",
+          "measures": "报告 per-question answer change、valid-evidence recall、unsupported-prose admission、truncation survival、category accuracy、cluster-aware uncertainty、query/index/post-query/reader/judge 分阶段 cost。",
+          "limitations": "这是尚未执行的 successor protocol；它仍依赖公开 benchmark、stochastic controllers/readers 与 exact model availability，不能恢复缺失的 May run artifacts。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "Versioned benchmark-metadata query and answer-evidence boundary audit",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-08-14",
+          "basis": "Paper-facing audit of Appendix Tables 9–10 plus official source at the paper-day release, the 2026-08-05 query-boundary fix, and the 2026-08-09 current revision. Current Codex output behavior is locally executed through the exact validator, normalizer, and context builder; AgentRunbook-C inheritance and call sites are source-inspected.",
+          "boundary": "This is a versioned source/payload audit and synthetic built-context contract test, not a LongMemEval-V2 benchmark reproduction. It does not execute the reader, estimate controller behavior frequency, explain Table 2 gains, prove answer lookup or sandbox escape, apply to AgentRunbook-C V2, or validate any deployed memory system.",
+          "method": "Run sixteen AST- and payload-level checks across three exact Git revisions, each with blob/function/line/excerpt locators and sentinel metadata; then run 18 standard-library-only AXTree rows with two opaque answer tokens through current CodexMemory output validation, span normalization, and built-context construction.",
+          "environment": "macOS 26.5.2 arm64；Python 3.13.3；Python standard library only；targeted Python socket DNS/connect guard；local Git object reads only；no model, reader, judge, tokenizer or embedding calls.",
+          "fixture": "Each fresh workspace contains a two-state support trajectory whose final AXTree carries the opaque answer token and a one-state AMBER decoy. Cases cover valid support, evidence-only, empty spans, missing trajectory, out-of-range state, decoy evidence, two evidence-gate inconsistencies, a syntactic policy mismatch and an empty control.",
+          "controls": "Supported and evidence-only positives, empty negative, syntactic gate mismatch, independent CERULEAN/MAGENTA token repetitions, exact source revision checks, clean checkout requirement, source-file hashes and checked-in full normalized outputs / built memory contexts.",
+          "rawResult": "All sixteen versioned source/payload checks passed. Supported/evidence-only controls passed and the status/policy mismatch was rejected. Six predeclared evidence-binding failure patterns, each replicated with two opaque tokens, left answer-like prose in built memory context without selected token support; twelve rows failed in total.",
+          "derivedResult": "The fix/current direct query boundary is narrower than the release boundary. At current source, the Codex postprocessor does not enforce that answer-like memory_markdown included in built memory context is supported by valid selected trajectory spans; current AgentRunbook-C inherits and invokes those methods without another semantic gate.",
+          "limitations": "The support oracle is exact-token presence in synthetic AXTree text; the opposite-value decoy is valid for this fixture, not a general entailment judge. Six designed patterns and twelve replicated rows are not population estimates. No reader, benchmark data or model behavior was measured; current regression tests were located in source, not executed by this runner.",
+          "links": [
+            {
+              "label": "method, decision rules and limits",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/longmemeval-v2-boundary-audit/README.md"
+            },
+            {
+              "label": "runner",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/longmemeval-v2-boundary-audit/audit.py"
+            },
+            {
+              "label": "raw decision",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/longmemeval-v2-boundary-audit/raw/decision.json"
+            },
+            {
+              "label": "all built memory contexts",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/longmemeval-v2-boundary-audit/raw/reader_contexts.jsonl"
+            }
+          ]
+        }
+      ],
+      "keywords": [
+        "trajectory memory",
+        "context gathering",
+        "evidence provenance",
+        "query boundary"
+      ],
+      "categories": [
+        "可靠性",
+        "持续学习"
+      ],
+      "failureSurfaces": [
+        "retrieval-active-context",
+        "abstraction-experience"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2605.12493v1",
+      "pdf": {
+        "delivery": "bundled",
+        "url": "papers/17-wu-2026-longmemeval-v2.pdf",
+        "originalUrl": "https://arxiv.org/pdf/2605.12493v1",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "editorialQuestion": "当 query controller 能读取 benchmark-derived routing hints、生成 answer-like narrative、决定 evidence order 并优先占据 token budget 时，什么 contract 才能证明 fixed reader 得到的是 trajectory-supported experience，而不是一个更会写答案的中间层？",
+      "sourceNote": "arXiv v1 work-in-progress preprint；PDF 共 32 页。paper-day release、August query-boundary fix 与 current source 分开标注；public test 停在 built memory context，不执行 fixed reader 或重现 benchmark results。"
     }
   ]
 }

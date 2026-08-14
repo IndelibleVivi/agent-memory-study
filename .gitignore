@@ -14,5 +14,6 @@ papers/*
 !papers/10-hu-2026-continual-learning-to-memory.pdf
 !papers/11-yu-2026-agentic-memory.pdf
 !papers/16-chung-2026-insightemb.pdf
+!papers/17-wu-2026-longmemeval-v2.pdf
 *.zip
 dist/

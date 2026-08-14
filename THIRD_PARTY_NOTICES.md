@@ -1,6 +1,6 @@
 # Third-party PDF notices
 
-The nine files below are unmodified copies distributed under their respective file-level licenses. “Unmodified” means this repository did not edit, OCR, annotate, recompress, or otherwise adapt the PDF bytes.
+The ten files below are unmodified copies distributed under their respective file-level licenses. “Unmodified” means this repository did not edit, OCR, annotate, recompress, or otherwise adapt the PDF bytes.
 
 ## CC BY 4.0
 
@@ -14,6 +14,7 @@ The following works are distributed under [Creative Commons Attribution 4.0 Inte
 - `papers/09-luo-2026-storage-to-experience.pdf` — Jinghao Luo, Yuchen Tian, Chuxue Cao, Ziyang Luo, Hongzhan Lin, Kaixin Li, Chuyi Kong, Ruichao Yang, and Jing Ma, “From storage to experience: a survey on the evolution of LLM agent memory mechanisms.” [ACL Anthology PDF](https://aclanthology.org/2026.findings-acl.2069.pdf).
 - `papers/11-yu-2026-agentic-memory.pdf` — Yi Yu, Liuyi Yao, Yuexiang Xie, Qingquan Tan, Jiaqi Feng, Yaliang Li, and Libing Wu, “Agentic memory: Learning unified long-term and short-term memory management for large language model agents.” [ACL Anthology PDF](https://aclanthology.org/2026.acl-long.981.pdf).
 - `papers/16-chung-2026-insightemb.pdf` — Tsz Ting Chung, Jiangnan Li, Jie Zhou, and Mo Yu, “InsightEmb: Learning Action-Intent Embeddings for Agentic Insight Retrieval.” [Official PDF](https://arxiv.org/pdf/2608.04761v2).
+- `papers/17-wu-2026-longmemeval-v2.pdf` — Di Wu, Zixiang Ji, Asmi Kawatkar, Bryan Kwan, Jia-Chen Gu, Nanyun Peng, and Kai-Wei Chang, “LongMemEval-V2: Evaluating Long-Term Agent Memory Toward Experienced Colleagues.” [Official PDF](https://arxiv.org/pdf/2605.12493v1).
 
 ## CC BY-NC-SA 4.0
 

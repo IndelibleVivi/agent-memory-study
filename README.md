@@ -11,7 +11,7 @@
 - 可按主题、failure surface、depth、标题或作者进入材料；
 - 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；达到 `read` 的 entry 进一步展示 argument map、方法与监督、原文内部张力、为什么值得读，以及明确标成 `proposed-not-run` 的公开 protocol；已经执行的 public / synthetic test 则保留署名、method、environment、raw / derived result、controls、limitations 与可复核 artifact links；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 一个没有 backend、CDN、analytics 或 tracking 的静态 reader；
-- 9 份按原许可随站提供的 PDF，另 7 份从 reader 直达 official full text；
+- 10 份按原许可随站提供的 PDF，另 7 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
 
 这些札记是阅读导航，不是逐篇全文批注，也不代替原文。转述、问题和编辑判断不能冒充作者主张；需要引用时，请回到每条记录链接的 official source。
@@ -33,9 +33,9 @@ Constellation 是同一 canonical data 的 semantic projection：failure surface
 
 ## PDF 怎样分发
 
-这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。9 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；其余 7 篇只链接作者、publisher 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
+这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。10 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；其余 7 篇只链接作者、publisher 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
 
-不要单独下载 `agent-memory-study.rdf`：其中 9 个 attachment 使用相对路径。请下载 `main` branch ZIP、解压后再导入 RDF；具体步骤与导入后应出现的结构见 [ZOTERO-IMPORT.md](./ZOTERO-IMPORT.md)。tagged Zotero ZIP 只在显式发版时更新，可能暂时落后于 `main`。Doyle 1979 只链接 MIT DSpace 的 official scan，本地 OCR derivative 不在 repo 或分享包里。
+不要单独下载 `agent-memory-study.rdf`：其中 10 个 attachment 使用相对路径。请下载 `main` branch ZIP、解压后再导入 RDF；具体步骤与导入后应出现的结构见 [ZOTERO-IMPORT.md](./ZOTERO-IMPORT.md)。tagged Zotero ZIP 只在显式发版时更新，可能暂时落后于 `main`。Doyle 1979 只链接 MIT DSpace 的 official scan，本地 OCR derivative 不在 repo 或分享包里。
 
 ## 本地运行
 
@@ -54,6 +54,15 @@ python3 research/doyle-tms-static-oracle/oracle.py
 ```
 
 方法、解释边界与 checked-in raw stdout 见 [`research/doyle-tms-static-oracle/`](./research/doyle-tms-static-oracle/)；它不是 original TMS reproduction。
+
+LongMemEval-V2 close-read 所附的 benchmark-metadata query / answer-evidence audit 需要一个包含三个 pinned revisions、当前位于 `2cc8c540…` 且 clean 的 official-code checkout：
+
+```bash
+PYTHONHASHSEED=0 python3 research/longmemeval-v2-boundary-audit/audit.py \
+  --source-repo /path/to/LongMemEval-V2
+```
+
+fixed decision rules、runner、逐 case normalized output 与完整 built memory contexts 见 [`research/longmemeval-v2-boundary-audit/`](./research/longmemeval-v2-boundary-audit/)；它证明 source / postprocessing boundary，不是 benchmark reproduction。
 
 ## 通过 pull request 贡献
 

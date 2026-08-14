@@ -1,0 +1,27 @@
+{
+  "current_revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+  "fixture_tokens": [
+    "CERULEAN",
+    "MAGENTA",
+    "AMBER"
+  ],
+  "import_strategy": "Execute the exact current codex.py through a minimal standard-library import shim so unrelated optional benchmark dependencies are not installed.",
+  "network_guard": "installed",
+  "privacy_fix_revision": "ef67f10aacd9080c75aeb2dd527a0af25dc26f1b",
+  "pythonhashseed": "0",
+  "release_revision": "c5c552dfcf023f5a2939f586541c7f6e55a36d5d",
+  "source_file_hashes": {
+    "evaluation/harness.py": "93fe5855a74ad46d7e8b489cebac24de38a9b30ba7ec1de2dd8708bd4aeebdb6",
+    "memory_modules/agentrunbook_c.py": "18b30338c847f246734d116d6830967894867598b7b0b73c71070db3ad5dcea3",
+    "memory_modules/agentrunbook_r.py": "7e96c0f386224bf13ad2a694f35bc6546738bf3b99de09c89fcc3a85509fb8f8",
+    "memory_modules/codex.py": "3d7c248f3c91a49dd7f8c15d564d41c0ecf26ad0bbc7645883757223780722e7",
+    "memory_modules/trajectory_store.py": "437b825499000f7ae774f948a5e62a2ff9f455367491f97d0382431965ce594c",
+    "tests/test_query_privacy.py": "e0a006b7ce9c41f52545a01c13555cfe9d065153cd3b2b91c40d1b68d01e113c"
+  },
+  "source_repo": "caller-supplied clean official checkout",
+  "target_functions": [
+    "memory_modules.codex.validate_memory_module_output_payload",
+    "memory_modules.codex.CodexMemory._normalize_output_for_query",
+    "memory_modules.codex.CodexMemory._build_memory_context_from_output"
+  ]
+}

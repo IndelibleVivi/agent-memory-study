@@ -1,0 +1,29 @@
+{
+  "actions": [
+    "click(advance)"
+  ],
+  "goal": "Inspect the final status badge.",
+  "id": "T_SUPPORT",
+  "outcome": "synthetic",
+  "start_url": "https://example.invalid/status",
+  "states": [
+    {
+      "action": "click(advance)",
+      "screenshot": "unused.png",
+      "state_index": 0,
+      "step": 0,
+      "text": "Status badge: AMBER",
+      "thoughts": null,
+      "url": "https://example.invalid/status"
+    },
+    {
+      "action": null,
+      "screenshot": "unused.png",
+      "state_index": 1,
+      "step": 1,
+      "text": "Status badge: CERULEAN",
+      "thoughts": null,
+      "url": "https://example.invalid/status"
+    }
+  ]
+}

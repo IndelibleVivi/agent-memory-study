@@ -1,0 +1,6 @@
+OS: Darwin 25.5.0
+Architecture: arm64
+Python: 3.13.3
+Dependencies: Python standard library only
+Network: Python socket DNS/connect guard installed; local Git object reads only
+Models/readers/judges/tokenizers/embeddings: not invoked

@@ -1,0 +1,34 @@
+{
+  "answer_evidence_binding_property_passed": false,
+  "audit_type": "executed_synthetic_answer_evidence_binding_test",
+  "case_count": 18,
+  "evidence_only_accepted": true,
+  "failing_pattern_count": 6,
+  "failing_patterns": [
+    "answer_only",
+    "gated_empty_supported",
+    "gated_insufficient_answer",
+    "opposite_value_decoy",
+    "out_of_range",
+    "unknown_trajectory"
+  ],
+  "failing_row_count": 12,
+  "failing_rows": [
+    "answer_only__cerulean",
+    "answer_only__magenta",
+    "gated_empty_supported__cerulean",
+    "gated_empty_supported__magenta",
+    "gated_insufficient_answer__cerulean",
+    "gated_insufficient_answer__magenta",
+    "opposite_value_decoy__cerulean",
+    "opposite_value_decoy__magenta",
+    "out_of_range__cerulean",
+    "out_of_range__magenta",
+    "unknown_trajectory__cerulean",
+    "unknown_trajectory__magenta"
+  ],
+  "interpretation": "A failure means the current postprocessor does not enforce that answer-like memory_markdown included in built memory context has selected token support in these synthetic fixtures. It does not execute the reader, establish controller frequency, or alter paper-reported benchmark scores.",
+  "supported_exact_accepted": true,
+  "syntactic_gate_rejects_policy_mismatch": true,
+  "token_replications_per_pattern": 2
+}

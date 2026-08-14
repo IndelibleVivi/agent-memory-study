@@ -1,0 +1,18 @@
+{
+  "actions": [],
+  "goal": "Inspect the final status badge.",
+  "id": "T_DECOY",
+  "outcome": "synthetic",
+  "start_url": "https://example.invalid/status",
+  "states": [
+    {
+      "action": null,
+      "screenshot": "unused.png",
+      "state_index": 0,
+      "step": 0,
+      "text": "Status badge: AMBER",
+      "thoughts": null,
+      "url": "https://example.invalid/status"
+    }
+  ]
+}

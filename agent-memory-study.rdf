@@ -826,6 +826,65 @@
         <dc:identifier>DOI 10.48550/arXiv.2608.04761</dc:identifier>
         <link:link rdf:resource="#attachment_16_insightemb-action-intent-retrieval" />
     </rdf:Description>
+    <rdf:Description rdf:about="https://arxiv.org/abs/2605.12493v1">
+        <z:itemType>document</z:itemType>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Wu</foaf:surname>
+                        <foaf:givenName>Di</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Ji</foaf:surname>
+                        <foaf:givenName>Zixiang</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kawatkar</foaf:surname>
+                        <foaf:givenName>Asmi</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kwan</foaf:surname>
+                        <foaf:givenName>Bryan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Gu</foaf:surname>
+                        <foaf:givenName>Jia-Chen</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Peng</foaf:surname>
+                        <foaf:givenName>Nanyun</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Chang</foaf:surname>
+                        <foaf:givenName>Kai-Wei</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>LongMemEval-V2: Evaluating Long-Term Agent Memory Toward Experienced Colleagues</dc:title>
+        <dc:date>2026</dc:date>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/abs/2605.12493v1</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dc:description>arXiv: 2605.12493 [cs.CL]</dc:description>
+        <dc:identifier>DOI 10.48550/arXiv.2605.12493</dc:identifier>
+        <link:link rdf:resource="#attachment_17_longmemeval-v2-experienced-colleague" />
+    </rdf:Description>
     <z:Attachment rdf:about="#attachment_01_a-tma-state-aware-memory">
         <z:itemType>attachment</z:itemType>
         <dc:title>Full Text PDF</dc:title>
@@ -956,5 +1015,11 @@
         <dc:title>Full Text PDF</dc:title>
         <link:type>application/pdf</link:type>
         <z:path rdf:resource="papers/16-chung-2026-insightemb.pdf" />
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_17_longmemeval-v2-experienced-colleague">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <z:path rdf:resource="papers/17-wu-2026-longmemeval-v2.pdf" />
     </z:Attachment>
 </rdf:RDF>

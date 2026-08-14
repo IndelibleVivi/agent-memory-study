@@ -1,0 +1,615 @@
+{
+  "all_checks_passed": true,
+  "audit_type": "versioned_source_and_payload_boundary_audit",
+  "check_count": 16,
+  "checks": [
+    {
+      "evidence": {
+        "blob_sha": "1f2176bea87ca64d2ae7c0347e25a7947e2cd236",
+        "end_line": 549,
+        "excerpt": "    memory.set_query_context(\n        question_id=qid,\n        question_type=item[\"question_type\"],\n        question_item=item[\"question_item\"],\n    )",
+        "path": "evaluation/harness.py",
+        "revision": "c5c552dfcf023f5a2939f586541c7f6e55a36d5d",
+        "start_line": 545,
+        "symbol": "memory.set_query_context"
+      },
+      "expected": {
+        "has_indirect_keyword_expansion": false,
+        "keyword_names": [
+          "question_id",
+          "question_item",
+          "question_type"
+        ]
+      },
+      "name": "release_backend_query_context_exact_keywords",
+      "observed": {
+        "has_indirect_keyword_expansion": false,
+        "keyword_names": [
+          "question_id",
+          "question_item",
+          "question_type"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "evidence": {
+        "blob_sha": "c8a5448e296e0e948cc0169c101ead1820c9fafd",
+        "end_line": 1398,
+        "excerpt": "    def _build_query_generation_messages(\n        self,\n        *,\n        query: str,\n        query_image: str | None,\n        query_context: dict[str, object],\n    ) -> list[dict[str, Any]]:\n        question_id = self._question_id_from_context(query_context)\n        question_type = self._question_type_from_context(query_context)\n        original_goals = self._question_original_goals_from_context(query_context)\n        summary_text = self._runtime_query_summary or self._render_runtime_query_summary()\n        user_text = \"\\n\\n\".join(\n            [\n                \"Memory pool summary:\",\n                summary_text,\n                \"Output schema example:\",\n                json.dumps(QUERY_SCHEMA_EXAMPLE, ensure_ascii=True),\n                \"Prompt examples:\",\n                QUERY_GENERATION_EXAMPLES,\n                \"Question to rewrite into retrieval queries:\",\n                f\"Question ID: {question_id}\",\n                f\"Question type: {question_type}\",\n                f\"Question text: {query}\",\n                f\"Question image path: {query_image or '<none>'}\",\n                f\"Original goals attached to this benchmark question: {json.dumps(original_goals, ensure_ascii=True)}\",\n                \"Return only the JSON object.\",\n            ]\n        )\n        return [\n            {\"role\": \"system\", \"content\": QUERY_GENERATION_SYSTEM_PROMPT},\n            {\"role\": \"user\", \"content\": user_text},\n        ]",
+        "path": "memory_modules/agentrunbook_r.py",
+        "revision": "c5c552dfcf023f5a2939f586541c7f6e55a36d5d",
+        "start_line": 1367,
+        "symbol": "AgentRunbookR._build_query_generation_messages"
+      },
+      "expected": {
+        "original_goals_label": true,
+        "question_id_label": true,
+        "question_image_path_label": true,
+        "question_text_label": true,
+        "question_type_label": true
+      },
+      "name": "release_agentrunbook_r_prompt_contract",
+      "observed": {
+        "original_goals_label": true,
+        "question_id_label": true,
+        "question_image_path_label": true,
+        "question_text_label": true,
+        "question_type_label": true
+      },
+      "passed": true
+    },
+    {
+      "evidence": [
+        {
+          "blob_sha": "d44c088c4c0313f15b8a829b3cf353a156c8491e",
+          "end_line": 18,
+          "excerpt": "{\n  \"memory_type\": \"codex\",\n  \"memory_params\": {\n    \"questions_path\": \"SET_BY_SCRIPT\",\n    \"evidence_mode\": \"both\",\n    \"trajectory_pool_root\": null,\n    \"codex_params\": {\n      \"binary\": \"SET_CODEX_BINARY\",\n      \"model\": \"gpt-5.4-mini\",\n      \"reasoning_effort\": \"xhigh\",\n      \"timeout_seconds\": 1800.0,\n      \"max_retries\": 3,\n      \"extra_config\": [],\n      \"extra_args\": []\n    }\n  }\n}\n",
+          "path": "evaluation/memory_configs/codex.json",
+          "revision": "c5c552dfcf023f5a2939f586541c7f6e55a36d5d",
+          "start_line": 1,
+          "symbol": "memory_params"
+        },
+        {
+          "blob_sha": "d1f87d59925b9a26cc00249cec249b80882d4a53",
+          "end_line": 17,
+          "excerpt": "{\n  \"memory_type\": \"agentrunbook_c\",\n  \"memory_params\": {\n    \"questions_path\": \"SET_BY_SCRIPT\",\n    \"evidence_mode\": \"both\",\n    \"trajectory_pool_root\": null,\n    \"query_codex_params\": {\n      \"binary\": \"SET_CODEX_BINARY\",\n      \"model\": \"gpt-5.4-mini\",\n      \"reasoning_effort\": \"xhigh\",\n      \"timeout_seconds\": 1800.0,\n      \"max_retries\": 3,\n      \"extra_config\": [],\n      \"extra_args\": []\n    }\n  }\n}",
+          "path": "evaluation/memory_configs/agentrunbook_c.json",
+          "revision": "c5c552dfcf023f5a2939f586541c7f6e55a36d5d",
+          "start_line": 1,
+          "symbol": "memory_params"
+        }
+      ],
+      "expected": {
+        "agentrunbook_c.json": true,
+        "codex.json": true
+      },
+      "name": "release_coding_configs_reference_questions_path",
+      "observed": {
+        "agentrunbook_c.json": true,
+        "codex.json": true
+      },
+      "passed": true
+    },
+    {
+      "evidence": [
+        {
+          "blob_sha": "53ea4d3b738ff9dd098e29759dddc8f33c01fee9",
+          "end_line": 49,
+          "excerpt": "class AgentRunbookC(CodexMemory):",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "c5c552dfcf023f5a2939f586541c7f6e55a36d5d",
+          "start_line": 49,
+          "symbol": "AgentRunbookC declaration"
+        },
+        {
+          "blob_sha": "53ea4d3b738ff9dd098e29759dddc8f33c01fee9",
+          "end_line": 386,
+          "excerpt": "            memory_context = self._build_memory_context_from_output(normalized_output)",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "c5c552dfcf023f5a2939f586541c7f6e55a36d5d",
+          "start_line": 386,
+          "symbol": "AgentRunbookC._run_query_attempt::_build_memory_context_from_output"
+        },
+        {
+          "blob_sha": "53ea4d3b738ff9dd098e29759dddc8f33c01fee9",
+          "end_line": 247,
+          "excerpt": "        question_payload = self._build_question_payload(\n            question_id=question_id,\n            question_item=question_item,\n            query_text=query_text,\n            query_image=query_image,\n            sandbox_dir=sandbox_dir,\n        )",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "c5c552dfcf023f5a2939f586541c7f6e55a36d5d",
+          "start_line": 241,
+          "symbol": "AgentRunbookC._run_query_attempt::_build_question_payload"
+        },
+        {
+          "blob_sha": "53ea4d3b738ff9dd098e29759dddc8f33c01fee9",
+          "end_line": 385,
+          "excerpt": "            normalized_output = self._normalize_output_for_query(output_path)",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "c5c552dfcf023f5a2939f586541c7f6e55a36d5d",
+          "start_line": 385,
+          "symbol": "AgentRunbookC._run_query_attempt::_normalize_output_for_query"
+        }
+      ],
+      "expected": {
+        "overrides_build_memory_context_from_output": false,
+        "overrides_build_question_payload": true,
+        "overrides_normalize_output_for_query": false,
+        "run_query_attempt_calls": [
+          "_build_memory_context_from_output",
+          "_build_question_payload",
+          "_normalize_output_for_query"
+        ],
+        "subclasses_codex_memory": true
+      },
+      "name": "release_agentrunbook_c_inheritance_and_calls",
+      "observed": {
+        "overrides_build_memory_context_from_output": false,
+        "overrides_build_question_payload": true,
+        "overrides_normalize_output_for_query": false,
+        "run_query_attempt_calls": [
+          "_build_memory_context_from_output",
+          "_build_question_payload",
+          "_normalize_output_for_query"
+        ],
+        "subclasses_codex_memory": true
+      },
+      "passed": true
+    },
+    {
+      "evidence": [
+        {
+          "blob_sha": "53ea4d3b738ff9dd098e29759dddc8f33c01fee9",
+          "end_line": 49,
+          "excerpt": "class AgentRunbookC(CodexMemory):",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "c5c552dfcf023f5a2939f586541c7f6e55a36d5d",
+          "start_line": 49,
+          "symbol": "AgentRunbookC declaration"
+        },
+        {
+          "blob_sha": "53ea4d3b738ff9dd098e29759dddc8f33c01fee9",
+          "end_line": 247,
+          "excerpt": "        question_payload = self._build_question_payload(\n            question_id=question_id,\n            question_item=question_item,\n            query_text=query_text,\n            query_image=query_image,\n            sandbox_dir=sandbox_dir,\n        )",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "c5c552dfcf023f5a2939f586541c7f6e55a36d5d",
+          "start_line": 241,
+          "symbol": "AgentRunbookC._run_query_attempt::_build_question_payload"
+        }
+      ],
+      "expected": {
+        "question": "How do I complete the task?"
+      },
+      "name": "release_agentrunbook_c_question_payload_exact_output",
+      "observed": {
+        "question": "How do I complete the task?"
+      },
+      "passed": true
+    },
+    {
+      "evidence": {
+        "blob_sha": "6a7182440a2cdd3ace6286dd966f7953fc383e8e",
+        "end_line": 563,
+        "excerpt": "    memory.set_query_context(\n        query_invocation_id=item[\"query_invocation_id\"],\n    )",
+        "path": "evaluation/harness.py",
+        "revision": "ef67f10aacd9080c75aeb2dd527a0af25dc26f1b",
+        "start_line": 561,
+        "symbol": "memory.set_query_context"
+      },
+      "expected": {
+        "has_indirect_keyword_expansion": false,
+        "keyword_names": [
+          "query_invocation_id"
+        ]
+      },
+      "name": "fix_backend_query_context_exact_keywords",
+      "observed": {
+        "has_indirect_keyword_expansion": false,
+        "keyword_names": [
+          "query_invocation_id"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "evidence": {
+        "blob_sha": "81a4cad7f88d99bd30ac5a09e7ebd536227d50db",
+        "end_line": 1382,
+        "excerpt": "    def _build_query_generation_messages(\n        self,\n        *,\n        query: str,\n    ) -> list[dict[str, Any]]:\n        summary_text = self._runtime_query_summary or self._render_runtime_query_summary()\n        user_text = \"\\n\\n\".join(\n            [\n                \"Memory pool summary:\",\n                summary_text,\n                \"Output schema example:\",\n                json.dumps(QUERY_SCHEMA_EXAMPLE, ensure_ascii=True),\n                \"Prompt examples:\",\n                QUERY_GENERATION_EXAMPLES,\n                \"Question to rewrite into retrieval queries:\",\n                f\"Question text: {query}\",\n                \"Return only the JSON object.\",\n            ]\n        )\n        return [\n            {\"role\": \"system\", \"content\": QUERY_GENERATION_SYSTEM_PROMPT},\n            {\"role\": \"user\", \"content\": user_text},\n        ]",
+        "path": "memory_modules/agentrunbook_r.py",
+        "revision": "ef67f10aacd9080c75aeb2dd527a0af25dc26f1b",
+        "start_line": 1360,
+        "symbol": "AgentRunbookR._build_query_generation_messages"
+      },
+      "expected": {
+        "original_goals_label": false,
+        "question_id_label": false,
+        "question_image_path_label": false,
+        "question_text_label": true,
+        "question_type_label": false
+      },
+      "name": "fix_agentrunbook_r_prompt_contract",
+      "observed": {
+        "original_goals_label": false,
+        "question_id_label": false,
+        "question_image_path_label": false,
+        "question_text_label": true,
+        "question_type_label": false
+      },
+      "passed": true
+    },
+    {
+      "evidence": [
+        {
+          "blob_sha": "a02f3e6cdfde54cb9c6487ef4f93710afdc6465a",
+          "end_line": 16,
+          "excerpt": "{\n  \"memory_type\": \"codex\",\n  \"memory_params\": {\n    \"evidence_mode\": \"both\",\n    \"trajectory_pool_root\": null,\n    \"codex_params\": {\n      \"binary\": \"SET_CODEX_BINARY\",\n      \"model\": \"gpt-5.4-mini\",\n      \"reasoning_effort\": \"xhigh\",\n      \"timeout_seconds\": 1800.0,\n      \"max_retries\": 3,\n      \"extra_config\": [],\n      \"extra_args\": []\n    }\n  }\n}",
+          "path": "evaluation/memory_configs/codex.json",
+          "revision": "ef67f10aacd9080c75aeb2dd527a0af25dc26f1b",
+          "start_line": 1,
+          "symbol": "memory_params"
+        },
+        {
+          "blob_sha": "dae2d44fc04eb559316be8078a4394999b762fa1",
+          "end_line": 16,
+          "excerpt": "{\n  \"memory_type\": \"agentrunbook_c\",\n  \"memory_params\": {\n    \"evidence_mode\": \"both\",\n    \"trajectory_pool_root\": null,\n    \"query_codex_params\": {\n      \"binary\": \"SET_CODEX_BINARY\",\n      \"model\": \"gpt-5.4-mini\",\n      \"reasoning_effort\": \"xhigh\",\n      \"timeout_seconds\": 1800.0,\n      \"max_retries\": 3,\n      \"extra_config\": [],\n      \"extra_args\": []\n    }\n  }\n}",
+          "path": "evaluation/memory_configs/agentrunbook_c.json",
+          "revision": "ef67f10aacd9080c75aeb2dd527a0af25dc26f1b",
+          "start_line": 1,
+          "symbol": "memory_params"
+        }
+      ],
+      "expected": {
+        "agentrunbook_c.json": false,
+        "codex.json": false
+      },
+      "name": "fix_coding_configs_reference_questions_path",
+      "observed": {
+        "agentrunbook_c.json": false,
+        "codex.json": false
+      },
+      "passed": true
+    },
+    {
+      "evidence": [
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 49,
+          "excerpt": "class AgentRunbookC(CodexMemory):",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "ef67f10aacd9080c75aeb2dd527a0af25dc26f1b",
+          "start_line": 49,
+          "symbol": "AgentRunbookC declaration"
+        },
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 365,
+          "excerpt": "            memory_context = self._build_memory_context_from_output(normalized_output)",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "ef67f10aacd9080c75aeb2dd527a0af25dc26f1b",
+          "start_line": 365,
+          "symbol": "AgentRunbookC._run_query_attempt::_build_memory_context_from_output"
+        },
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 223,
+          "excerpt": "        question_payload = self._build_question_payload(\n            query_text=query_text,\n            query_image=query_image,\n            sandbox_dir=sandbox_dir,\n        )",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "ef67f10aacd9080c75aeb2dd527a0af25dc26f1b",
+          "start_line": 219,
+          "symbol": "AgentRunbookC._run_query_attempt::_build_question_payload"
+        },
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 364,
+          "excerpt": "            normalized_output = self._normalize_output_for_query(output_path)",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "ef67f10aacd9080c75aeb2dd527a0af25dc26f1b",
+          "start_line": 364,
+          "symbol": "AgentRunbookC._run_query_attempt::_normalize_output_for_query"
+        }
+      ],
+      "expected": {
+        "overrides_build_memory_context_from_output": false,
+        "overrides_build_question_payload": false,
+        "overrides_normalize_output_for_query": false,
+        "run_query_attempt_calls": [
+          "_build_memory_context_from_output",
+          "_build_question_payload",
+          "_normalize_output_for_query"
+        ],
+        "subclasses_codex_memory": true
+      },
+      "name": "fix_agentrunbook_c_inheritance_and_calls",
+      "observed": {
+        "overrides_build_memory_context_from_output": false,
+        "overrides_build_question_payload": false,
+        "overrides_normalize_output_for_query": false,
+        "run_query_attempt_calls": [
+          "_build_memory_context_from_output",
+          "_build_question_payload",
+          "_normalize_output_for_query"
+        ],
+        "subclasses_codex_memory": true
+      },
+      "passed": true
+    },
+    {
+      "evidence": [
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 49,
+          "excerpt": "class AgentRunbookC(CodexMemory):",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "ef67f10aacd9080c75aeb2dd527a0af25dc26f1b",
+          "start_line": 49,
+          "symbol": "AgentRunbookC declaration"
+        },
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 223,
+          "excerpt": "        question_payload = self._build_question_payload(\n            query_text=query_text,\n            query_image=query_image,\n            sandbox_dir=sandbox_dir,\n        )",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "ef67f10aacd9080c75aeb2dd527a0af25dc26f1b",
+          "start_line": 219,
+          "symbol": "AgentRunbookC._run_query_attempt::_build_question_payload"
+        }
+      ],
+      "expected": {
+        "question": "How do I complete the task?"
+      },
+      "name": "fix_agentrunbook_c_question_payload_exact_output",
+      "observed": {
+        "question": "How do I complete the task?"
+      },
+      "passed": true
+    },
+    {
+      "evidence": {
+        "blob_sha": "6a7182440a2cdd3ace6286dd966f7953fc383e8e",
+        "end_line": 563,
+        "excerpt": "    memory.set_query_context(\n        query_invocation_id=item[\"query_invocation_id\"],\n    )",
+        "path": "evaluation/harness.py",
+        "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+        "start_line": 561,
+        "symbol": "memory.set_query_context"
+      },
+      "expected": {
+        "has_indirect_keyword_expansion": false,
+        "keyword_names": [
+          "query_invocation_id"
+        ]
+      },
+      "name": "current_backend_query_context_exact_keywords",
+      "observed": {
+        "has_indirect_keyword_expansion": false,
+        "keyword_names": [
+          "query_invocation_id"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "evidence": {
+        "blob_sha": "81a4cad7f88d99bd30ac5a09e7ebd536227d50db",
+        "end_line": 1382,
+        "excerpt": "    def _build_query_generation_messages(\n        self,\n        *,\n        query: str,\n    ) -> list[dict[str, Any]]:\n        summary_text = self._runtime_query_summary or self._render_runtime_query_summary()\n        user_text = \"\\n\\n\".join(\n            [\n                \"Memory pool summary:\",\n                summary_text,\n                \"Output schema example:\",\n                json.dumps(QUERY_SCHEMA_EXAMPLE, ensure_ascii=True),\n                \"Prompt examples:\",\n                QUERY_GENERATION_EXAMPLES,\n                \"Question to rewrite into retrieval queries:\",\n                f\"Question text: {query}\",\n                \"Return only the JSON object.\",\n            ]\n        )\n        return [\n            {\"role\": \"system\", \"content\": QUERY_GENERATION_SYSTEM_PROMPT},\n            {\"role\": \"user\", \"content\": user_text},\n        ]",
+        "path": "memory_modules/agentrunbook_r.py",
+        "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+        "start_line": 1360,
+        "symbol": "AgentRunbookR._build_query_generation_messages"
+      },
+      "expected": {
+        "original_goals_label": false,
+        "question_id_label": false,
+        "question_image_path_label": false,
+        "question_text_label": true,
+        "question_type_label": false
+      },
+      "name": "current_agentrunbook_r_prompt_contract",
+      "observed": {
+        "original_goals_label": false,
+        "question_id_label": false,
+        "question_image_path_label": false,
+        "question_text_label": true,
+        "question_type_label": false
+      },
+      "passed": true
+    },
+    {
+      "evidence": [
+        {
+          "blob_sha": "a02f3e6cdfde54cb9c6487ef4f93710afdc6465a",
+          "end_line": 16,
+          "excerpt": "{\n  \"memory_type\": \"codex\",\n  \"memory_params\": {\n    \"evidence_mode\": \"both\",\n    \"trajectory_pool_root\": null,\n    \"codex_params\": {\n      \"binary\": \"SET_CODEX_BINARY\",\n      \"model\": \"gpt-5.4-mini\",\n      \"reasoning_effort\": \"xhigh\",\n      \"timeout_seconds\": 1800.0,\n      \"max_retries\": 3,\n      \"extra_config\": [],\n      \"extra_args\": []\n    }\n  }\n}",
+          "path": "evaluation/memory_configs/codex.json",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 1,
+          "symbol": "memory_params"
+        },
+        {
+          "blob_sha": "dae2d44fc04eb559316be8078a4394999b762fa1",
+          "end_line": 16,
+          "excerpt": "{\n  \"memory_type\": \"agentrunbook_c\",\n  \"memory_params\": {\n    \"evidence_mode\": \"both\",\n    \"trajectory_pool_root\": null,\n    \"query_codex_params\": {\n      \"binary\": \"SET_CODEX_BINARY\",\n      \"model\": \"gpt-5.4-mini\",\n      \"reasoning_effort\": \"xhigh\",\n      \"timeout_seconds\": 1800.0,\n      \"max_retries\": 3,\n      \"extra_config\": [],\n      \"extra_args\": []\n    }\n  }\n}",
+          "path": "evaluation/memory_configs/agentrunbook_c.json",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 1,
+          "symbol": "memory_params"
+        }
+      ],
+      "expected": {
+        "agentrunbook_c.json": false,
+        "codex.json": false
+      },
+      "name": "current_coding_configs_reference_questions_path",
+      "observed": {
+        "agentrunbook_c.json": false,
+        "codex.json": false
+      },
+      "passed": true
+    },
+    {
+      "evidence": [
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 49,
+          "excerpt": "class AgentRunbookC(CodexMemory):",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 49,
+          "symbol": "AgentRunbookC declaration"
+        },
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 365,
+          "excerpt": "            memory_context = self._build_memory_context_from_output(normalized_output)",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 365,
+          "symbol": "AgentRunbookC._run_query_attempt::_build_memory_context_from_output"
+        },
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 223,
+          "excerpt": "        question_payload = self._build_question_payload(\n            query_text=query_text,\n            query_image=query_image,\n            sandbox_dir=sandbox_dir,\n        )",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 219,
+          "symbol": "AgentRunbookC._run_query_attempt::_build_question_payload"
+        },
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 364,
+          "excerpt": "            normalized_output = self._normalize_output_for_query(output_path)",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 364,
+          "symbol": "AgentRunbookC._run_query_attempt::_normalize_output_for_query"
+        }
+      ],
+      "expected": {
+        "overrides_build_memory_context_from_output": false,
+        "overrides_build_question_payload": false,
+        "overrides_normalize_output_for_query": false,
+        "run_query_attempt_calls": [
+          "_build_memory_context_from_output",
+          "_build_question_payload",
+          "_normalize_output_for_query"
+        ],
+        "subclasses_codex_memory": true
+      },
+      "name": "current_agentrunbook_c_inheritance_and_calls",
+      "observed": {
+        "overrides_build_memory_context_from_output": false,
+        "overrides_build_question_payload": false,
+        "overrides_normalize_output_for_query": false,
+        "run_query_attempt_calls": [
+          "_build_memory_context_from_output",
+          "_build_question_payload",
+          "_normalize_output_for_query"
+        ],
+        "subclasses_codex_memory": true
+      },
+      "passed": true
+    },
+    {
+      "evidence": [
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 49,
+          "excerpt": "class AgentRunbookC(CodexMemory):",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 49,
+          "symbol": "AgentRunbookC declaration"
+        },
+        {
+          "blob_sha": "28a71f4f77ec8cfcbd7544d31c2fd3a35ddcd67e",
+          "end_line": 223,
+          "excerpt": "        question_payload = self._build_question_payload(\n            query_text=query_text,\n            query_image=query_image,\n            sandbox_dir=sandbox_dir,\n        )",
+          "path": "memory_modules/agentrunbook_c.py",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 219,
+          "symbol": "AgentRunbookC._run_query_attempt::_build_question_payload"
+        }
+      ],
+      "expected": {
+        "question": "How do I complete the task?"
+      },
+      "name": "current_agentrunbook_c_question_payload_exact_output",
+      "observed": {
+        "question": "How do I complete the task?"
+      },
+      "passed": true
+    },
+    {
+      "evidence": [
+        {
+          "blob_sha": "83fbc7d709b223569dfbe054413693e6ef6c0318",
+          "end_line": 99,
+          "excerpt": "    def test_agentrunbook_r_planner_uses_only_question_text(self) -> None:\n        memory = object.__new__(AgentRunbookR)\n        memory._runtime_query_summary = \"safe memory summary\"\n\n        messages = memory._build_query_generation_messages(\n            query=\"How do I complete the task?\",\n        )\n        prompt = messages[1][\"content\"]\n\n        self.assertIn(\"Question text: How do I complete the task?\", prompt)\n        for forbidden in (\n            \"Question ID:\",\n            \"Question type:\",\n            \"Question image path:\",\n            \"Original goals attached\",\n        ):\n            self.assertNotIn(forbidden, prompt)",
+          "path": "tests/test_query_privacy.py",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 83,
+          "symbol": "QueryPrivacyTest.test_agentrunbook_r_planner_uses_only_question_text"
+        },
+        {
+          "blob_sha": "83fbc7d709b223569dfbe054413693e6ef6c0318",
+          "end_line": 73,
+          "excerpt": "    def test_all_backends_receive_only_opaque_query_context(self) -> None:\n        for memory_type in (\n            \"no_retrieval\",\n            \"rag\",\n            \"agentrunbook_r\",\n            \"codex\",\n            \"agentrunbook_c\",\n            \"agentrunbook_c_v2\",\n        ):\n            with self.subTest(memory_type=memory_type):\n                memory = QueryContextSpyMemory(memory_type)\n                build_prompt_row(\n                    prompt_item(),\n                    haystack_ids=[],\n                    memory=memory,\n                    system_prompt=\"Answer using memory.\",\n                    memory_context_max_tokens=1,\n                )\n                self.assertEqual(\n                    memory.seen_query_context,\n                    {\"query_invocation_id\": \"opaque-invocation-id\"},\n                )\n                self.assertEqual(memory.get_query_context(), {})",
+          "path": "tests/test_query_privacy.py",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 51,
+          "symbol": "QueryPrivacyTest.test_all_backends_receive_only_opaque_query_context"
+        },
+        {
+          "blob_sha": "83fbc7d709b223569dfbe054413693e6ef6c0318",
+          "end_line": 120,
+          "excerpt": "    def test_codex_question_payload_contains_only_query_inputs(self) -> None:\n        memory = object.__new__(CodexMemory)\n        with tempfile.TemporaryDirectory() as temp_dir:\n            payload = memory._build_question_payload(\n                query_text=\"How do I complete the task?\",\n                query_image=None,\n                sandbox_dir=Path(temp_dir),\n            )\n        self.assertEqual(payload, {\"question\": \"How do I complete the task?\"})",
+          "path": "tests/test_query_privacy.py",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 112,
+          "symbol": "QueryPrivacyTest.test_codex_question_payload_contains_only_query_inputs"
+        },
+        {
+          "blob_sha": "83fbc7d709b223569dfbe054413693e6ef6c0318",
+          "end_line": 193,
+          "excerpt": "    def test_coding_backend_configs_do_not_reference_questions_file(self) -> None:\n        repo_root = Path(__file__).resolve().parents[1]\n        for config_name in (\"codex.json\", \"agentrunbook_c.json\"):\n            with self.subTest(config_name=config_name):\n                config = json.loads(\n                    (repo_root / \"evaluation\" / \"memory_configs\" / config_name).read_text(\n                        encoding=\"utf-8\"\n                    )\n                )\n                self.assertNotIn(\"questions_path\", config[\"memory_params\"])",
+          "path": "tests/test_query_privacy.py",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 184,
+          "symbol": "QueryPrivacyTest.test_coding_backend_configs_do_not_reference_questions_file"
+        },
+        {
+          "blob_sha": "83fbc7d709b223569dfbe054413693e6ef6c0318",
+          "end_line": 81,
+          "excerpt": "    def test_query_context_api_rejects_benchmark_metadata(self) -> None:\n        memory = QueryContextSpyMemory(\"spy\")\n        with self.assertRaises(TypeError):\n            memory.set_query_context(  # type: ignore[call-arg]\n                query_invocation_id=\"opaque-invocation-id\",\n                question_id=\"secret-question-id\",\n            )",
+          "path": "tests/test_query_privacy.py",
+          "revision": "2cc8c540bdb87fe6761629b585e727e1c4704520",
+          "start_line": 75,
+          "symbol": "QueryPrivacyTest.test_query_context_api_rejects_benchmark_metadata"
+        }
+      ],
+      "expected": [
+        "test_agentrunbook_r_planner_uses_only_question_text",
+        "test_all_backends_receive_only_opaque_query_context",
+        "test_codex_question_payload_contains_only_query_inputs",
+        "test_coding_backend_configs_do_not_reference_questions_file",
+        "test_query_context_api_rejects_benchmark_metadata"
+      ],
+      "name": "current_query_boundary_regression_tests_present_in_source",
+      "observed": [
+        "test_agentrunbook_r_planner_uses_only_question_text",
+        "test_all_backends_receive_only_opaque_query_context",
+        "test_codex_question_payload_contains_only_query_inputs",
+        "test_coding_backend_configs_do_not_reference_questions_file",
+        "test_query_context_api_rejects_benchmark_metadata"
+      ],
+      "passed": true
+    }
+  ],
+  "interpretation": {
+    "current": "The current source preserves the fix-revision boundary and contains regression tests asserting it. This runner locates those tests in source; it does not execute the official test suite.",
+    "fix": "At the 2026-08-05 revision, the exact backend call uses only an opaque invocation ID; AgentRunbook-R is query-text-only; coding configs omit questions_path; AgentRunbook-C directly produces a text-only question payload.",
+    "release": "The backend query-context call exposed question ID, question type, and raw question item; AgentRunbook-R used benchmark-derived routing hints; both coding configs referenced questions_path. Direct execution of release AgentRunbook-C's payload builder produced query text only and did not serialize sentinel metadata or gold."
+  }
+}

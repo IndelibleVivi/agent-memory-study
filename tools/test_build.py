@@ -113,9 +113,11 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         atma = by_id["a-tma-state-aware-memory"]
         insightemb = by_id["insightemb-action-intent-retrieval"]
         doyle = by_id["truth-maintenance-system"]
+        longmemeval = by_id["longmemeval-v2-experienced-colleague"]
         self.assertEqual(atma["noteDepth"], "read")
         self.assertEqual(insightemb["noteDepth"], "read")
         self.assertEqual(doyle["noteDepth"], "read")
+        self.assertEqual(longmemeval["noteDepth"], "read")
         current_skim_ids = {
             "trustmem-consolidation", "verifiable-memory", "mosaic-long-term-memory",
             "proactive-wake-anchor", "pm-bench", "mistake-notebook-learning",
@@ -124,7 +126,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             "agm-theory-change", "memory-beyond-recall",
         }
         self.assertTrue(all(by_id[material_id]["noteDepth"] == "skim" for material_id in current_skim_ids))
-        for material in (atma, insightemb, doyle):
+        for material in (atma, insightemb, doyle, longmemeval):
             for field in (
                 "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
                 "sourceTensions", "editorialInferences", "openProtocols",
@@ -137,6 +139,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         self.assertEqual(atma["editorialInferences"][0]["label"], "Read-side label amplification")
         self.assertEqual(insightemb["editorialInferences"][0]["label"], "Retrieval is a staged decision")
         self.assertEqual(doyle["editorialInferences"][1]["label"], "Abstraction lifecycle is a separate contract")
+        self.assertEqual(longmemeval["editorialInferences"][0]["label"], "A context package is an authored evidence object")
 
     def test_sparse_records_remain_valid_without_invented_richer_fields(self):
         validated = self.validate_copy(copy.deepcopy(self.data))
@@ -161,11 +164,45 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         artifact_root = build.ROOT / "research" / "doyle-tms-static-oracle"
         self.assertTrue(all((artifact_root / name).is_file() for name in linked_names))
 
+    def test_longmemeval_public_test_links_checked_in_artifacts(self):
+        material = next(
+            item for item in self.data["materials"]
+            if item["id"] == "longmemeval-v2-experienced-colleague"
+        )
+        contribution = material["contributions"][0]
+        self.assertEqual(contribution["type"], "public-test")
+        self.assertEqual(contribution["byline"], "Agent Memory Study editors")
+        linked_names = {link["url"].rsplit("/", 1)[-1] for link in contribution["links"]}
+        self.assertEqual(linked_names, {"README.md", "audit.py", "decision.json", "reader_contexts.jsonl"})
+        artifact_root = build.ROOT / "research" / "longmemeval-v2-boundary-audit"
+        self.assertTrue((artifact_root / "README.md").is_file())
+        self.assertTrue((artifact_root / "audit.py").is_file())
+        self.assertTrue((artifact_root / "raw" / "decision.json").is_file())
+        self.assertTrue((artifact_root / "raw" / "reader_contexts.jsonl").is_file())
+        decision = json.loads((artifact_root / "raw" / "decision.json").read_text(encoding="utf-8"))
+        self.assertFalse(decision["answer_evidence_binding_property_passed"])
+        self.assertEqual(decision["failing_pattern_count"], 6)
+        self.assertEqual(decision["failing_row_count"], 12)
+        self.assertNotIn("provenance_precision", decision)
+        query_boundary = json.loads(
+            (artifact_root / "raw" / "query_boundary.json").read_text(encoding="utf-8")
+        )
+        self.assertTrue(query_boundary["all_checks_passed"])
+        self.assertEqual(query_boundary["check_count"], 16)
+        manifest = json.loads(
+            (artifact_root / "raw" / "run_manifest.json").read_text(encoding="utf-8")
+        )
+        self.assertIn("memory_modules/agentrunbook_c.py", manifest["source_file_hashes"])
+        self.assertIn("memory_modules/trajectory_store.py", manifest["source_file_hashes"])
+
     def test_public_research_artifacts_are_in_boundary_scan(self):
         relative_paths = {path.relative_to(build.ROOT).as_posix() for path in build.public_copy_paths()}
         self.assertIn("research/doyle-tms-static-oracle/oracle.py", relative_paths)
         self.assertIn("research/doyle-tms-static-oracle/RESULTS.txt", relative_paths)
         self.assertIn("research/doyle-tms-static-oracle/README.md", relative_paths)
+        self.assertIn("research/longmemeval-v2-boundary-audit/audit.py", relative_paths)
+        self.assertIn("research/longmemeval-v2-boundary-audit/raw/decision.json", relative_paths)
+        self.assertIn("research/longmemeval-v2-boundary-audit/raw/reader_contexts.jsonl", relative_paths)
         build.validate_public_copy_files()
 
     def test_unknown_failure_surface_is_rejected(self):
