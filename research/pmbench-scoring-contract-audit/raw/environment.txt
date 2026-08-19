@@ -1,0 +1,7 @@
+OS: Darwin 25.5.0
+Architecture: arm64
+Python: 3.13.3
+Dependencies: Python standard library plus Git CLI; official source imports its bundled scorer
+Network: no network call
+Models/APIs: not invoked
+Official source mutation: none; clean status required before and after execution

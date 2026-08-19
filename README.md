@@ -77,6 +77,26 @@ python3 research/longmemeval-v2-alias-order-preregistration/audit.py --verify-ch
 [`research/longmemeval-v2-alias-order-preregistration/`](./research/longmemeval-v2-alias-order-preregistration/)。它记录
 `0/66` controller jobs，不是 controller、reader 或 benchmark result。
 
+PM-Bench close-read 所附的 scorer-contract / released-log audit 可以先做无 source 的 checked-artifact 校验：
+
+```bash
+python3 research/pmbench-scoring-contract-audit/audit.py --verify-checked
+```
+
+要从 official source 重建 probes、64-run audit 与 report comparison，需要 clean checkout 固定在
+`e1093c470c8981daf522d4ef047a7c3a71e077d7`，并使用新的 output directory：
+
+```bash
+python3 research/pmbench-scoring-contract-audit/audit.py \
+  --source-repo /path/to/PMBench \
+  --output-dir /tmp/pmbench-scoring-contract-rebuild
+```
+
+method、raw/derived separation、exact hashes、claim-by-claim verdict 与 limits 见
+[`research/pmbench-scoring-contract-audit/`](./research/pmbench-scoring-contract-audit/)。它不调用模型、不生成新
+trajectory，也不改变 released headline Set-F1；它证明的是锁定 revision 的 scorer contract 与 64 份 released
+primary logs 的边界。
+
 ## 通过 pull request 贡献
 
 这个 repo 接受 source correction / version watch、新材料 + reading note、对已有 entry 的署名 perspective / critique，以及使用 public / synthetic fixtures 的可复核 test artifact。完整 evidence、attribution、privacy 与 schema contract 见 [CONTRIBUTING.md](./CONTRIBUTING.md)。

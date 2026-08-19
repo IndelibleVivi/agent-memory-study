@@ -1,0 +1,14 @@
+{
+  "builder_sha256": "02a0e6c4dbfba41c749b764c4391a4c4fd3b11c8230c3ed3403697db63004e1f",
+  "builder_stdout_normalized": "Wrote report: <temporary-output>/report.md",
+  "byte_identical": false,
+  "checked_report_sha256": "ee61a8e26685458531df5847ef7485b83c91ec0e26b0ce085d0fc2d63ddf60df",
+  "only_difference": {
+    "checked": "runs/March_ALL_results_v9",
+    "rebuilt": "runs/all_results_v9"
+  },
+  "rebuilt_report_sha256": "3b263f8cdda2c37975ce7d4df6e59615193f0b59dcc422595659c927fceefa7f",
+  "semantic_content_identical_after_single_path_repair": true,
+  "status": "PASS",
+  "stderr": ""
+}

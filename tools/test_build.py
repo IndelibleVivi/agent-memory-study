@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import json
 import tempfile
 import unittest
@@ -121,19 +122,21 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         insightemb = by_id["insightemb-action-intent-retrieval"]
         doyle = by_id["truth-maintenance-system"]
         longmemeval = by_id["longmemeval-v2-experienced-colleague"]
+        pmbench = by_id["pm-bench"]
         self.assertEqual(atma["noteDepth"], "read")
         self.assertEqual(insightemb["noteDepth"], "read")
         self.assertEqual(doyle["noteDepth"], "read")
         self.assertEqual(longmemeval["noteDepth"], "read")
+        self.assertEqual(pmbench["noteDepth"], "worked")
         current_skim_ids = {
             "trustmem-consolidation", "verifiable-memory", "mosaic-long-term-memory",
-            "proactive-wake-anchor", "pm-bench", "mistake-notebook-learning",
+            "proactive-wake-anchor", "mistake-notebook-learning",
             "coala-cognitive-architecture", "storage-to-experience",
             "continual-learning-experience-reuse", "agentic-memory", "midca-dual-cycle",
             "agm-theory-change", "memory-beyond-recall",
         }
         self.assertTrue(all(by_id[material_id]["noteDepth"] == "skim" for material_id in current_skim_ids))
-        for material in (atma, insightemb, doyle, longmemeval):
+        for material in (atma, insightemb, doyle, longmemeval, pmbench):
             for field in (
                 "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
                 "sourceTensions", "editorialInferences", "openProtocols",
@@ -147,6 +150,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         self.assertEqual(insightemb["editorialInferences"][0]["label"], "Retrieval is a staged decision")
         self.assertEqual(doyle["editorialInferences"][1]["label"], "Abstraction lifecycle is a separate contract")
         self.assertEqual(longmemeval["editorialInferences"][0]["label"], "A context package is an authored evidence object")
+        self.assertEqual(pmbench["contributions"][0]["type"], "public-test")
 
     def test_sparse_records_remain_valid_without_invented_richer_fields(self):
         validated = self.validate_copy(copy.deepcopy(self.data))
@@ -201,6 +205,81 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         )
         self.assertIn("memory_modules/agentrunbook_c.py", manifest["source_file_hashes"])
         self.assertIn("memory_modules/trajectory_store.py", manifest["source_file_hashes"])
+
+    def test_pmbench_worked_audit_is_checked_and_bounded(self):
+        material = next(
+            item for item in self.data["materials"]
+            if item["id"] == "pm-bench"
+        )
+        self.assertEqual(material["noteDepth"], "worked")
+        contribution = material["contributions"][0]
+        self.assertEqual(contribution["type"], "public-test")
+        self.assertEqual(contribution["byline"], "Agent Memory Study editors")
+        linked_names = {link["url"].rsplit("/", 1)[-1] for link in contribution["links"]}
+        self.assertEqual(
+            linked_names,
+            {"README.md", "audit.py", "RESULTS.txt", "decision.json", "source_manifest.json"},
+        )
+
+        artifact_root = build.ROOT / "research" / "pmbench-scoring-contract-audit"
+        decision = json.loads((artifact_root / "raw" / "decision.json").read_text(encoding="utf-8"))
+        probes = json.loads(
+            (artifact_root / "raw" / "official_probes.json").read_text(encoding="utf-8")
+        )
+        report = json.loads(
+            (artifact_root / "raw" / "report_comparison.json").read_text(encoding="utf-8")
+        )
+        source_manifest = json.loads(
+            (artifact_root / "raw" / "source_manifest.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(probes["status"], "PASS")
+        self.assertEqual(decision["inventory"]["primary_run_count"], 64)
+        self.assertEqual(decision["inventory"]["live_run_count"], 48)
+        self.assertEqual(decision["inventory"]["replay_run_count"], 16)
+        self.assertEqual(
+            decision["hidden_channel_attribution"][
+                "without_required_query_from_due_through_completion_count"
+            ],
+            381,
+        )
+        self.assertEqual(
+            decision["update_violation"]["accepted_late_current_state_by_scorer_count"],
+            27,
+        )
+        self.assertEqual(decision["step_identity"]["identity_problem_run_count"], 0)
+        self.assertEqual(
+            decision["step_identity"]["score_changed_after_identity_alignment_run_count"],
+            0,
+        )
+        self.assertTrue(report["semantic_content_identical_after_single_path_repair"])
+        self.assertEqual(len(source_manifest["released_primary_log_sha256"]), 64)
+        self.assertEqual(
+            len((artifact_root / "raw" / "run_scores.jsonl").read_text(encoding="utf-8").splitlines()),
+            64,
+        )
+        self.assertEqual(
+            len(
+                (artifact_root / "raw" / "hidden_channel_findings.jsonl")
+                .read_text(encoding="utf-8")
+                .splitlines()
+            ),
+            1062,
+        )
+        self.assertEqual(
+            len(
+                (artifact_root / "raw" / "update_violation_findings.jsonl")
+                .read_text(encoding="utf-8")
+                .splitlines()
+            ),
+            541,
+        )
+
+        checksum_lines = (artifact_root / "checksums.sha256").read_text(encoding="utf-8").splitlines()
+        self.assertEqual(len(checksum_lines), 9)
+        for line in checksum_lines:
+            expected, relative = line.split("  ", 1)
+            observed = hashlib.sha256((artifact_root / relative).read_bytes()).hexdigest()
+            self.assertEqual(observed, expected)
 
     def test_longmemeval_alias_order_census_is_checked_in_and_held(self):
         material = next(

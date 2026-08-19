@@ -513,13 +513,178 @@
       "shortAuthor": "Liu 等",
       "year": 2026,
       "doi": null,
-      "noteDepth": "skim",
-      "readingScope": "Abstract、§3–§5、Ethics Statement；未通读 related work 或附录中的完整 invariant、prompt 与 channel-level breakdown。",
-      "intro": "把“记得一件事”与“在正确 cue/time 做出或压住行动”分开，专门测试更新、取消、改期和监控成本。",
+      "noteDepth": "worked",
+      "readingScope": "完整读了 arXiv v1 的 §§1–6、Ethics Statement、Appendix A.1–A.6、Tables 1–7 与 Figures 1–4，共 22 个 PDF pages；references 只用于 lineage 定位。另检查 official code / data commit e1093c470c8981daf522d4ef047a7c3a71e077d7，运行三个 deterministic scorer-contract probes，验证并重算 64 份 released primary logs、重建 official comparison report；没有调用模型、生成新 trajectory、复现实验采样过程或测试第二个 synthetic week。PDF 的 pypdf preflight 因依赖未安装只能标为 advisory unavailable；页数与关键定位已用 pdfinfo、两种 pdftotext page breaks 和 rendered pages 交叉核对。",
+      "intro": "PM-Bench 把“记得意图”与“在正确 cue/time 行动或抑制旧行动”拆开：一个固定 synthetic week 同时施加 time/event cues、hidden state channels、updates、lures 与 false-positive 成本。本站复核发现 headline Set-F1 可重建，但三处 diagnostic contract 需要收窄：monitoring hit 不证明 query provenance，update violation 会包含 accepted current-state late action，scorer 也不以 step_id 绑定 row identity。",
+      "whyRead": "这篇值得深读，因为它把 prospective memory 从普通 recall benchmark 中剥离出来：真正难的不是回忆一句旧事实，而是保持意图、监控环境、在 cue 到来时执行、在 cue 未到时克制，并在 cancel / override / reschedule 后放弃旧目标。更重要的是，它把 precision、false positives、query volume 与 update handling 同时摆上桌，让“更主动”不再自动等于“更好”。公开 scorer audit 又暴露出评测语言与可观测 contract 的边界：一个有解释力的 diagnostic 名称仍可能比代码实际测到的对象更强。",
       "keyPoints": [
-        "benchmark 要求 agent 在正确 cue 或 time 执行意图，并在 cancellation、override、reschedule 后更新或抑制旧行为，而非只回答过去记过什么。（§1；§3.1）",
-        "发布的 synthetic week 包含 80 steps、81 个 scored tasks、11 个 state channels、11 个 update events 与 74 个 lures，采用 query-then-act protocol。（§3.1）",
-        "optional heartbeat 的跨模型 macro set-F1 最高为 65.1%；30-minute automatic heartbeat 的 update hit rate 最高，但同时产生 489 个 false positives，说明更多 monitoring 不自动等于更可靠。（§4.2–§4.4）"
+        "Evaluation object：agent 不只要保存 intention，还要在正确 time/event cue 选择 task、在无 cue 时不误触，并让 cancellation、override、reschedule 改写后续有效行为；scoring 同时记录 hit/late/miss、set TP/FP/FN、update 与 query counts。（§§1、3.1、3.3；Appendix A.4，PDF pp. 1、3–5、16–17）",
+        "Fixed week：发布的一个 seeded synthetic week 有 7 days、80 steps、83 task definitions，其中 81 scored、2 canceled；另有 11 state channels、11 update events、74 lures，并要求 query-then-act。（Table 1；§3.1，PDF pp. 3–4）",
+        "Precision–monitoring tradeoff：optional heartbeat 的跨模型 macro Set-F1 最高为 65.1%；30-minute auto heartbeat 提高部分 update / monitoring hit，却产生 489 FP；hierarchical union 发出 1661 次 state queries，仍只有 45.2% macro Set-F1。（Table 2；§§4.2–4.5，PDF pp. 7–9）",
+        "Scorer contract：public audit 在 exact official commit 上确认 monitoring/channel hits 不以 required-channel query 为条件、updated current mutable task 的 accepted-late selection 仍可计 update_violation、row order 可覆盖 declared step_id；但 64 份 released logs 的 step identity 全部有效，realignment 改变 0 个分数，headline aggregates 保持不变。（public test artifact）"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 先把 prospective memory 从 recall 拆出来",
+          "claim": "论文把 prospective memory 定义为 deferred intention 的保持与适时执行：同样记得 task，不代表 agent 能识别 cue、在正确 window 动作、在其余 steps 抑制误触，或在计划更新后停止旧行为。",
+          "locator": "§§1–2，PDF pp. 1–2"
+        },
+        {
+          "step": "02 · 用一个可审计 synthetic week 固定环境",
+          "claim": "benchmark 以 seeded generator、rejection sampling、manual review、scenario validator 与 perfect-play audit 构造 7-day/80-step week；任务、cues、hidden channels、updates 与 lures 在同一时序里共同施压。",
+          "locator": "§§3.1–3.3；Table 1，PDF pp. 3–5"
+        },
+        {
+          "step": "03 · 把 agent scaffold 当作 monitoring policy 比较",
+          "claim": "single baseline、todo ledger、optional/automatic heartbeat 与 hierarchical aggregation 不是单一能力刻度：它们在 recall、wake frequency、query cost、false positives 与 update handling 之间选择不同 operating points。",
+          "locator": "§3.2；§§4.2–4.5；Tables 2–3，PDF pp. 4、7–9"
+        },
+        {
+          "step": "04 · 结果指向 control problem，而非 context-window victory",
+          "claim": "最强 aggregate 仍不完美；更频繁 monitoring 可以提高某些 hit rate，却也放大误触和资源消耗。论文因此把 prospective memory 作为独立 evaluation axis，而不是 long context 或 generic retrieval 的附带收益。",
+          "locator": "§§4.2–6；Ethics Statement，PDF pp. 7–10"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Scenario generation and validation",
+          "text": "一个 generator 从 seed 产生固定 7-day schedule，通过 rejection sampling 满足 task/update/lure composition，再由 authors manual review；released validator 检查 scenario invariants，paper 还报告 perfect-play audit。本站在锁定 commit 上运行 validator，得到 0 errors / 0 warnings。",
+          "locator": "§§3.1、3.3；Appendix A.2，PDF pp. 3–5、14–16；official data / validator"
+        },
+        {
+          "label": "Query-then-act protocol",
+          "text": "每一步 agent 先看到 narrative context；若 clock 或其他 state channel 为 hidden，必须显式 query 才获得该 channel 当前值，然后提交 task selections。Scorer另记 state-query volume，但 task result 与 query count 是不同统计面。",
+          "locator": "§3.1；Figure 2；Appendix A.3–A.4，PDF pp. 3–5、16–17"
+        },
+        {
+          "label": "Scoring and aggregation",
+          "text": "行为按 hit / late / miss 与 set TP/FP/FN 评分；per-run Set-F1 先计算，再跨八个 models 取 macro，micro 则汇总 TP/FP/FN。update、cross-day、monitoring-required、channel 和 query counts 是诊断维度，不应自动等同于 verified causal mechanism。",
+          "locator": "§3.3；Appendix A.4；Tables 2–3，PDF pp. 5、8、16–17"
+        },
+        {
+          "label": "Live versus replay-derived setups",
+          "text": "六个 setups 是 live agent runs；majority-vote 与 unanimous-vote 从 hierarchical union outputs deterministic replay 得到。它们继承 union query evidence，metadata duration 为 0，不能当作 fresh model inference runtime。",
+          "locator": "§3.2；Appendix A.5；official released run metadata，PDF pp. 4–5、17–21"
+        }
+      ],
+      "reportedFindings": [
+        "Table 2 的跨模型 macro Set-F1 依次显示 optional heartbeat 65.1、todo ledger 62.8、single baseline 60.0、auto-30m 57.8、auto-60m 56.6、union 45.2、majority 37.2、unanimous 35.3；不存在一个 setup 在所有指标上支配其他方法。（§4.2；Table 2，PDF pp. 7–8）",
+        "Optional heartbeat 同时有 70.6 precision、50.0 cross-day hit 与 44.4 update hit；auto-30m 有 489 FP 与 203 queries，union 有 273 FP 与 1661 queries。更多 queries 或更频繁 wake 并不单调提高 Set-F1。（Table 2；§§4.2–4.5，PDF pp. 7–9）",
+        "Table 3 中 GPT-5.4 的 optional-heartbeat Set-F1 是 79.1，而 65.1 是 Table 2 的 across-model setup macro；abstract 把 65.1 appositively 归给 GPT-5.4 agent，与两张表的 statistical object 不一致。（Abstract；Tables 2–3，PDF pp. 1、8）",
+        "Appendix A.6 的 qualitative failures 包括 missed cross-day task、non-clock monitoring failure、update-sensitive failure 与 false-positive cascade；这些 examples 用来解释 aggregate pattern，不构成独立频率估计。（Appendix A.6；Table 7，PDF pp. 21–22）"
+      ],
+      "evidenceLimits": [
+        "所有 aggregate conclusions 来自一个 seeded、人工复核的 synthetic week。论文没有报告跨 seed / 跨 week uncertainty、置信区间或 schedule-composition robustness；64 runs 是同一 released scenario 上的 model/setup grid。",
+        "benchmark 使用 synthetic records 与 model outputs，没有 human-subject result 或真实 interruption-cost measurement。Ethics Statement 也明确不把高分当成 health、transport 或其他 high-stakes deployment certification。（PDF p. 10）",
+        "`proactive_monitoring_required` 与 channel hit 在 scorer 中是 category-conditioned success bucket，不是 verified query provenance。本站可数出 required-channel query 缺失，却不能从 log 证明 agent 没有通过 narrative、prior context、inference 或猜测取得相关信息。",
+        "`update_violation` 的 released log 没有 intention-version / target binding。27 个 accepted-late current-state co-occurrences 是精确 scorer event；其中多少反映 agent 真的选择 current target，语义上只能给出 0–27 bounds。",
+        "Scorer 的 positional row contract 能被 synthetic reversal 触发；锁定的 64 logs 恰好全部 identity-valid，不能据此保证未来 writer、replay tool 或不同 revision 不会生成 malformed order。",
+        "PDF preflight 没有 pypdf 依赖，故只标 advisory unavailable。22-page count、page breaks 与关键表页已由独立 CLI 与 render inspection 交叉核对，但这不等同于该 preflight 工具的 PASS。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "65.1% 的 statistical object 在 abstract 与 tables 间漂移",
+          "observation": "Abstract 把 best method 描述为 GPT-5.4 agent 并给出 65.1%；§4.2 / Table 2 把 65.1 定义为 optional-heartbeat 跨八模型 macro，Table 3 的 GPT-5.4 optional-heartbeat cell 则是 79.1。",
+          "implication": "65.1 本身可由 released logs 重建，但引用时必须说清它是 setup-level across-model macro，不能写成单个 GPT-5.4 run/model result。",
+          "locators": [
+            "Abstract，PDF p. 1",
+            "§4.2；Tables 2–3，PDF pp. 7–8",
+            "public audit raw/decision.json"
+          ]
+        },
+        {
+          "label": "Monitoring 名称强于 scorer 可验证对象",
+          "observation": "Appendix A.4 把 proactive-monitoring-required 定义为需要 hidden-state monitoring 的 task category，query counts 另列；official scorer 的 category/channel hit buckets只看 task 分类与 final result，不要求 completion window 内存在该 channel query。",
+          "implication": "该 hit rate 可以评价需要 monitoring 的任务是否做对，却不能单独证明 monitoring action 曾发生；行为成功与 observation provenance 应分成两个 diagnostics。",
+          "locators": [
+            "Appendix A.4，PDF pp. 16–17",
+            "official sim/pm_bench.py:2206-2250, 2522-2581",
+            "public audit raw/official_probes.json"
+          ]
+        },
+        {
+          "label": "Stale-version 语义与 updated/off-due 实现不同",
+          "observation": "Appendix A.4 把 update violation 描述为 update 后仍作用于 stale version；official scorer 却在 updated task 被选中且不在 exact due set 时递增，即使 current mutable state 已把同一 action 接受为 late。",
+          "implication": "update_violation 不能直接当作 stale-intention count。若要做 version semantics，需要 action 明确绑定 target/version，并把 current-late 与 retired-target selection 分开。",
+          "locators": [
+            "Appendix A.4，PDF p. 17",
+            "official sim/pm_bench.py:2492-2518, 2569-2581",
+            "public audit raw/update_violation_findings.jsonl"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "Prospective memory is a control contract",
+          "text": "一个 memory architecture 只有在 cue admission、wake policy、active intention version、action timing 与 suppression 都可审计时，才真正拥有 prospective-memory behavior；retrieval success 只是其中一环。",
+          "boundary": "这是把论文 task decomposition 映射到 agent architecture 的 editorial synthesis，不是论文验证过的 production design，也不说明这些责任必须由独立服务实现。"
+        },
+        {
+          "label": "Action success and observation provenance need separate metrics",
+          "text": "对 hidden-channel task，应该同时保留 category-conditioned task success 与 query-conditioned verified-observation diagnostic；前者容纳 inference / lucky action，后者回答实际 evidence path，任何一项都不应吞掉另一项。",
+          "boundary": "public audit 证明当前 scorer 不用 query 条件化 hit bucket；它没有证明没有 query 就一定不合理，也没有定义唯一正确 observation window。"
+        },
+        {
+          "label": "Intention identity must survive updates",
+          "text": "cancel / override / reschedule 之后，只传 task_id 会把 current 与 retired intention collapse 到同一 mutable slot。versioned target identity 应成为 action schema 的一等字段，scorer 才能区分 current-late、stale-target 与无效重放。",
+          "boundary": "这是由 paper semantics 与 scorer mismatch 推出的 repair direction。released rows 不含 version/target，故本站没有把 27 个 co-occurrences 逐条判定为 agent intent。"
+        },
+        {
+          "label": "More monitoring is not free reliability",
+          "text": "wake frequency、state-query volume、false-positive budget 与 interruption cost 应作为共同 control surface，而不是先最大化 monitoring 再把副作用留给 deployment。optional heartbeat 的 operating point 值得研究，不能被读成一种 scaffold 已普遍胜出。",
+          "boundary": "论文报告同一 synthetic week 上的 precision/recall/query tradeoff；没有跨 seed、真实 user cost、calibration curve 或 high-stakes deployment evidence。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "Multi-week prospective-memory contract protocol",
+          "status": "proposed-not-run",
+          "question": "scaffold ranking、verified monitoring gap、update-version taxonomy 与 false-positive cost 在不同 seed、schedule density、channel visibility 和 update mix 下是否稳定？",
+          "method": "冻结 generator/source revision 后生成多个 validator-clean weeks；为每个 task/action 加 explicit intention-version binding；分别报告 category-conditioned success、query-conditioned observation、current-late、retired-target violation 与 identity rejection，再以 paired seeds 比较 setups。",
+          "fixtures": "至少正交改变 time/event ratio、non-clock channel density、cross-day span、cancel/override/reschedule composition、lure density 与 cue ambiguity；保留 original released week 作为 anchor，不使用 private calendar 或真实通信。",
+          "controls": "加入 perfect-play、zero-query informed action、zero-query lucky action、wrong-channel query、current-version late、retired-version selection、duplicate/missing/unknown/cross-day step_id、row reversal、live/replay separation 与 query-cost-matched baselines。",
+          "measures": "报告 per-week macro/micro Set-F1、precision/recall、verified-observation rate、unverified hidden-task success、current-late、stale-version violations、identity rejection、queries、FP 与 paired-seed uncertainty；不把 replay duration 当 live runtime。",
+          "limitations": "这是 proposed-not-run successor，不是本次 64-log audit 的已执行部分。多 synthetic weeks 仍不能替代真实 interruption cost、human oversight 或 deployment safety evidence。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "Exact scorer-contract probes and 64-log released-corpus audit",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-08-20",
+          "basis": "Paper-facing audit of arXiv:2607.12385v1 and official genglinliu/PMBench commit e1093c470c8981daf522d4ef047a7c3a71e077d7, including the released scenario, scorer, report builder, checked report and all 64 primary logs.",
+          "boundary": "This is a deterministic scorer-contract and released-input audit. It makes no model or API call, generates no new trajectory, estimates no population frequency, does not recover agent intention, and does not claim that headline Set-F1 changes.",
+          "method": "Execute paired exact-official scorer fixtures; validate the full official scenario; inventory and rescore the 8 x 8 released grid; independently validate and align every (day, step_id); trace locked scorer locals for all update-violation increments; reconstruct required-channel query windows; rebuild the official report; assert paper Table 2 aggregates and clean checkout preservation.",
+          "environment": "macOS 26.5.2 arm64；Python 3.13.3 standard library plus Git CLI；clean exact official checkout；no third-party Python package, network, model or API call. PDF pypdf preflight was unavailable and is not reported as PASS; page anchors were cross-checked separately.",
+          "fixture": "Three paired scorer-level synthetic fixtures test zero/one required-channel query, updated/no-update accepted-late action, and chronological/reversed rows with unchanged step IDs. The validator-clean whole-scenario fixture is the released 7-day/80-step week and its 64 primary logs.",
+          "controls": "Exact commit/file/log hashes, clean-worktree gates, official validator, complete one-run-per-model/setup grid, live/replay metadata check, paired probes, trace-count equality, independent identity alignment, original-versus-rebuilt report comparison and rounded Table 2 assertions.",
+          "rawResult": "All probes and scenario checks passed. The 64-log grid contained 1,062 successful proactive-required completions; 382 lacked the required-channel query on completion and 381 lacked it from due/cue through completion. There were 541 update-violation increments, including 27 accepted-late current-mutable-state co-occurrences. All 64 step identities were valid and realignment changed zero scores. The report rebuild differed only in one stale results-directory path.",
+          "derivedResult": "Monitoring/channel hit rates measure successful behavior on task categories, not verified query provenance. Update violation conflates at least an observable scorer-level current-state/late co-occurrence with stale-version wording, while semantic agent intent remains bounded 0–27. Positional replay is an integrity risk but did not affect the locked released logs. Optional heartbeat remains 65.1% across-model macro Set-F1; headline aggregates are unchanged.",
+          "limitations": "One synthetic week cannot establish cross-seed stability or real interruption cost. Missing required-channel queries do not reveal all information available to an agent. Released rows lack target/version binding, so 27 co-occurrences cannot be semantically classified. Identity integrity is proven only for the locked 64 logs; replay-derived duration is not live runtime.",
+          "links": [
+            {
+              "label": "method, claim verdicts and limitations",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/pmbench-scoring-contract-audit/README.md"
+            },
+            {
+              "label": "reproducible runner",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/pmbench-scoring-contract-audit/audit.py"
+            },
+            {
+              "label": "compact derived result",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/pmbench-scoring-contract-audit/RESULTS.txt"
+            },
+            {
+              "label": "aggregate decision",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/pmbench-scoring-contract-audit/raw/decision.json"
+            },
+            {
+              "label": "exact source and released-log hashes",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/pmbench-scoring-contract-audit/raw/source_manifest.json"
+            }
+          ]
+        }
       ],
       "keywords": [
         "prospective memory",

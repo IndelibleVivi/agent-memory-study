@@ -1,0 +1,1572 @@
+{
+  "aggregates_by_setup": [
+    {
+      "duration_seconds_sum": 1568.261,
+      "macro_set_f1": 0.5779998351659872,
+      "micro_set_f1": 0.5146962769431744,
+      "run_count": 8,
+      "run_type": "live",
+      "set_fn": 254,
+      "set_fp": 489,
+      "set_tp": 394,
+      "setup": "heartbeat-auto-30m",
+      "state_query_calls": 203
+    },
+    {
+      "duration_seconds_sum": 1475.467,
+      "macro_set_f1": 0.5662587286039837,
+      "micro_set_f1": 0.5220994475138122,
+      "run_count": 8,
+      "run_type": "live",
+      "set_fn": 270,
+      "set_fp": 422,
+      "set_tp": 378,
+      "setup": "heartbeat-auto-60m",
+      "state_query_calls": 172
+    },
+    {
+      "duration_seconds_sum": 1852.757,
+      "macro_set_f1": 0.6511563715342901,
+      "micro_set_f1": 0.6503267973856209,
+      "run_count": 8,
+      "run_type": "live",
+      "set_fn": 250,
+      "set_fp": 178,
+      "set_tp": 398,
+      "setup": "heartbeat-proactive",
+      "state_query_calls": 130
+    },
+    {
+      "duration_seconds_sum": 0.0,
+      "macro_set_f1": 0.3723143965230153,
+      "micro_set_f1": 0.38337468982630274,
+      "run_count": 8,
+      "run_type": "replay",
+      "set_fn": 339,
+      "set_fp": 655,
+      "set_tp": 309,
+      "setup": "hier-majority-vote",
+      "state_query_calls": 1661
+    },
+    {
+      "duration_seconds_sum": 0.0,
+      "macro_set_f1": 0.35319930104305625,
+      "micro_set_f1": 0.3961937716262976,
+      "run_count": 8,
+      "run_type": "replay",
+      "set_fn": 419,
+      "set_fp": 279,
+      "set_tp": 229,
+      "setup": "hier-unanimous-vote",
+      "state_query_calls": 1661
+    },
+    {
+      "duration_seconds_sum": 16389.801,
+      "macro_set_f1": 0.45239475317363703,
+      "micro_set_f1": 0.4585774058577406,
+      "run_count": 8,
+      "run_type": "live",
+      "set_fn": 374,
+      "set_fp": 273,
+      "set_tp": 274,
+      "setup": "hier-union-query",
+      "state_query_calls": 1661
+    },
+    {
+      "duration_seconds_sum": 1239.453,
+      "macro_set_f1": 0.6002945996747369,
+      "micro_set_f1": 0.5941908713692946,
+      "run_count": 8,
+      "run_type": "live",
+      "set_fn": 290,
+      "set_fp": 199,
+      "set_tp": 358,
+      "setup": "single-baseline",
+      "state_query_calls": 106
+    },
+    {
+      "duration_seconds_sum": 3256.575,
+      "macro_set_f1": 0.628418852324527,
+      "micro_set_f1": 0.6280701754385964,
+      "run_count": 8,
+      "run_type": "live",
+      "set_fn": 290,
+      "set_fp": 134,
+      "set_tp": 358,
+      "setup": "single-todo-ledger",
+      "state_query_calls": 118
+    }
+  ],
+  "artifact": "PM-Bench released trajectory scorer-contract audit",
+  "boundary": "Read-only audit of released scorer inputs at the locked commit. No model calls, new benchmark run, population estimate, or causal attribution.",
+  "duration_treatment": {
+    "boundary": "Replay metadata duration is deterministic replay time, not fresh model inference time; zero must not be compared as agent runtime against live configurations.",
+    "live_duration_missing_count": 0,
+    "replay_duration_missing_count": 0,
+    "replay_zero_duration_count": 16
+  },
+  "grand_totals": {
+    "set_fn": 2486,
+    "set_fp": 2629,
+    "set_tp": 2698,
+    "state_query_calls": 5712,
+    "update_late": 27,
+    "update_violation": 541
+  },
+  "hidden_channel_attribution": {
+    "completed_proactive_required_task_count": 1062,
+    "grouped_without_completion_row_query": [
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "gpt-53-codex",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 4,
+        "model": "gpt-53-codex",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 7,
+        "model": "gpt-53-codex",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "calendar",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 10,
+        "model": "gpt-54",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 9,
+        "model": "gpt-54",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 3,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "gpt-54",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "gpt-54",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "gpt-54",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 11,
+        "model": "llama-33-70b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 11,
+        "model": "llama-33-70b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 11,
+        "model": "llama-33-70b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 12,
+        "model": "llama-33-70b-instruct",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "llama-33-70b-instruct",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 10,
+        "model": "llama-33-70b-instruct",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "library_hold",
+        "count": 1,
+        "model": "mistral-large-2512",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "mistral-large-2512",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 6,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 7,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 2,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 7,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "bank_balance",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "calendar",
+        "count": 3,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 24,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "library_hold",
+        "count": 3,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "shipment_status",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "bank_balance",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "calendar",
+        "count": 3,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 21,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "course_portal",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "library_hold",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "shipment_status",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 7,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 7,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "email",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "calendar",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 5,
+        "model": "qwen3-32b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 6,
+        "model": "qwen3-32b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "qwen3-32b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 2,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 4,
+        "model": "qwen3-32b",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 4,
+        "model": "qwen3-32b",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 2,
+        "model": "qwen3-8b",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "course_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 9,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "course_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 2,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "bank_balance",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "calendar",
+        "count": 2,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 16,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "course_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "library_hold",
+        "count": 2,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "shipment_status",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 9,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 2,
+        "model": "qwen3-8b",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "course_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 6,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      }
+    ],
+    "grouped_without_due_to_completion_query": [
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "gpt-53-codex",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 4,
+        "model": "gpt-53-codex",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 7,
+        "model": "gpt-53-codex",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "calendar",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-53-codex",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 10,
+        "model": "gpt-54",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 9,
+        "model": "gpt-54",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 3,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "gpt-54",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "gpt-54",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "gpt-54",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "gpt-54",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 11,
+        "model": "llama-33-70b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 11,
+        "model": "llama-33-70b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 11,
+        "model": "llama-33-70b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 12,
+        "model": "llama-33-70b-instruct",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "llama-33-70b-instruct",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 10,
+        "model": "llama-33-70b-instruct",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "mistral-large-2512",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 6,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 7,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 2,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 7,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "mistral-small-32-24b-instruct",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "bank_balance",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "calendar",
+        "count": 3,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 24,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "library_hold",
+        "count": 3,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "shipment_status",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "bank_balance",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "calendar",
+        "count": 3,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 21,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "course_portal",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "library_hold",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "shipment_status",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 7,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 7,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "email",
+        "count": 2,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "calendar",
+        "count": 1,
+        "model": "qwen3-14b",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "qwen3-14b",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 5,
+        "model": "qwen3-32b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 6,
+        "model": "qwen3-32b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "qwen3-32b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 2,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 4,
+        "model": "qwen3-32b",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 4,
+        "model": "qwen3-32b",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-32b",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 8,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "clock",
+        "count": 2,
+        "model": "qwen3-8b",
+        "result": "late",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "course_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-30m"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 9,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "late",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "course_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-auto-60m"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 2,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "bank_balance",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "calendar",
+        "count": 2,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "clock",
+        "count": 16,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "course_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "email",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "library_hold",
+        "count": 2,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "shipment_status",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "heartbeat-proactive"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 9,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "clock",
+        "count": 2,
+        "model": "qwen3-8b",
+        "result": "late",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "course_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "single-baseline"
+      },
+      {
+        "channel": "appointment_portal",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 6,
+        "model": "qwen3-8b",
+        "result": "hit",
+        "setup": "single-todo-ledger"
+      },
+      {
+        "channel": "clock",
+        "count": 1,
+        "model": "qwen3-8b",
+        "result": "late",
+        "setup": "single-todo-ledger"
+      }
+    ],
+    "without_required_query_from_due_through_completion_count": 381,
+    "without_required_query_on_completion_row_count": 382
+  },
+  "inventory": {
+    "live_run_count": 48,
+    "metadata_modes": {
+      "replay-multi-majority-vote-from-union-debug": 8,
+      "replay-multi-unanimous-vote-from-union-debug": 8,
+      "run-hierarchical-agent": 8,
+      "run-llm": 32,
+      "run-todo-ledger-agent": 8
+    },
+    "model_count": 8,
+    "model_setup_cells": 64,
+    "primary_run_count": 64,
+    "replay_run_count": 16,
+    "run_type_mismatch_count": 0,
+    "setup_count": 8
+  },
+  "scenario": {
+    "days": 7,
+    "steps": 80,
+    "tasks": 83,
+    "validation_errors": [],
+    "validation_warnings": []
+  },
+  "source": {
+    "commit": "e1093c470c8981daf522d4ef047a7c3a71e077d7",
+    "dirty": false,
+    "pm_bench_py_sha256": "d8ec27d8dcf4679d7a789c52fc305286df460844d47e9f116b81f2400ac254d8",
+    "repository": "genglinliu/PMBench",
+    "synthetic_week_v9_sha256": "94a45937da1363be19ccfdc2c188d132f23093041e30abd3ec22d64d70da8f24"
+  },
+  "status": "PASS",
+  "step_identity": {
+    "changed_after_alignment": [],
+    "global_day_row_order_problem_run_count": 0,
+    "global_order_problem_runs": [],
+    "identity_problem_run_count": 0,
+    "identity_problem_runs": [],
+    "rejected_alignment_run_count": 0,
+    "score_changed_after_identity_alignment_run_count": 0,
+    "within_day_order_problem_runs": [],
+    "within_day_out_of_order_run_count": 0
+  },
+  "update_violation": {
+    "accepted_late_current_state_by_scorer_count": 27,
+    "boundary": "The scorer applies every selected task_id to the mutable current task state. Released action rows do not bind a selection to an intention version or target. The exact scorer-level co-occurrence is measurable; the agent's retired-versus-current intention is not reconstructable, so its semantic count is bounded from zero to the scorer-level co-occurrence count.",
+    "machine_readable_selection_fields": [
+      "all_subagents_failed",
+      "check_time",
+      "choice",
+      "coordinator_recoveries",
+      "day",
+      "heartbeat_enabled",
+      "heartbeat_interval_minutes",
+      "heartbeat_prompted",
+      "ledger",
+      "state_queries",
+      "step_id",
+      "subagent_failures",
+      "task_handles",
+      "task_ids",
+      "timestamp_pst"
+    ],
+    "semantic_current_version_lower_bound": 0,
+    "semantic_current_version_upper_bound": 27,
+    "semantic_retired_vs_current_intention_reconstructable": false,
+    "total_increment_count": 541,
+    "version_or_target_named_selection_fields": []
+  }
+}

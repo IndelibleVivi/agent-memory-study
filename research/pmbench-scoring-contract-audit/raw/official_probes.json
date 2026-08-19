@@ -1,0 +1,125 @@
+{
+  "artifact": "PM-Bench exact-official-checkout scorer-contract probes",
+  "fixture_boundary": "Direct scorer-function fixtures, not complete scenario-validator fixtures. The released-corpus lane separately validates the full official scenario.",
+  "probes": {
+    "chronological_rows": {
+      "check_time_calls": 0,
+      "hit": 1,
+      "late": 0,
+      "miss": 0,
+      "set_fn": 0,
+      "set_fp": 0,
+      "set_tp": 1,
+      "state_query_calls": 0,
+      "update_hit": 0,
+      "update_late": 0,
+      "update_miss": 0,
+      "update_total": 0,
+      "update_violation": 0
+    },
+    "hidden_channel_no_query": {
+      "email_channel": {
+        "hit": 1,
+        "late": 0,
+        "miss": 0,
+        "total": 1
+      },
+      "metrics": {
+        "check_time_calls": 0,
+        "hit": 1,
+        "late": 0,
+        "miss": 0,
+        "set_fn": 0,
+        "set_fp": 0,
+        "set_tp": 1,
+        "state_query_calls": 0,
+        "update_hit": 0,
+        "update_late": 0,
+        "update_miss": 0,
+        "update_total": 0,
+        "update_violation": 0
+      },
+      "monitoring": {
+        "hit": 1,
+        "late": 0,
+        "miss": 0,
+        "total": 1
+      }
+    },
+    "hidden_channel_with_query": {
+      "email_channel": {
+        "hit": 1,
+        "late": 0,
+        "miss": 0,
+        "total": 1
+      },
+      "metrics": {
+        "check_time_calls": 0,
+        "hit": 1,
+        "late": 0,
+        "miss": 0,
+        "set_fn": 0,
+        "set_fp": 0,
+        "set_tp": 1,
+        "state_query_calls": 1,
+        "update_hit": 0,
+        "update_late": 0,
+        "update_miss": 0,
+        "update_total": 0,
+        "update_violation": 0
+      },
+      "monitoring": {
+        "hit": 1,
+        "late": 0,
+        "miss": 0,
+        "total": 1
+      }
+    },
+    "no_update_late_control": {
+      "check_time_calls": 0,
+      "hit": 0,
+      "late": 1,
+      "miss": 0,
+      "set_fn": 1,
+      "set_fp": 1,
+      "set_tp": 0,
+      "state_query_calls": 0,
+      "update_hit": 0,
+      "update_late": 0,
+      "update_miss": 0,
+      "update_total": 0,
+      "update_violation": 0
+    },
+    "reversed_rows_same_declared_step_ids": {
+      "check_time_calls": 0,
+      "hit": 0,
+      "late": 1,
+      "miss": 0,
+      "set_fn": 1,
+      "set_fp": 1,
+      "set_tp": 0,
+      "state_query_calls": 0,
+      "update_hit": 0,
+      "update_late": 0,
+      "update_miss": 0,
+      "update_total": 0,
+      "update_violation": 0
+    },
+    "updated_current_version_late": {
+      "check_time_calls": 0,
+      "hit": 0,
+      "late": 1,
+      "miss": 0,
+      "set_fn": 1,
+      "set_fp": 1,
+      "set_tp": 0,
+      "state_query_calls": 0,
+      "update_hit": 0,
+      "update_late": 1,
+      "update_miss": 0,
+      "update_total": 1,
+      "update_violation": 1
+    }
+  },
+  "status": "PASS"
+}

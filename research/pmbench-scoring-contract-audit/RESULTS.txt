@@ -1,0 +1,19 @@
+PM-Bench scorer-contract and released-log audit
+official source revision e1093c470c8981daf522d4ef047a7c3a71e077d7
+status: PASS
+official scorer probes: PASS (A hidden-channel attribution; B update violation; C row identity)
+official scenario validation: PASS
+released primary logs: 64 (8 models x 8 setups; 48 live, 16 replay-derived)
+proactive-required successful completions: 1062
+without required-channel query on completion row: 382
+without required-channel query from due/cue through completion: 381
+update_violation scorer increments: 541
+accepted-late current-mutable-state co-occurrences: 27
+semantic current-version count reconstructable: no (bounded 0..27)
+released logs with invalid (day, step_id) identity: 0
+released logs whose score changed after identity alignment: 0
+optional-heartbeat across-model macro Set-F1: 65.1%
+grand totals: TP=2698 FP=2629 FN=2486 state_queries=5712
+official report rebuild: metric/text equality after repairing one stale results-directory path
+headline Set-F1 changed by this audit: no
+boundary: deterministic scorer-contract and released-input audit; no model calls, new benchmark run, causal attribution, or population estimate
