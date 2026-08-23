@@ -281,6 +281,63 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             observed = hashlib.sha256((artifact_root / relative).read_bytes()).hexdigest()
             self.assertEqual(observed, expected)
 
+    def test_statefuse_worked_essay_and_evidence_audit_are_checked_and_separate(self):
+        material = next(
+            item for item in self.data["materials"]
+            if item["id"] == "statefuse-conflict-preserving-memory"
+        )
+        self.assertEqual(material["noteDepth"], "worked")
+        self.assertIn("完整读了 arXiv v1", material["readingScope"])
+
+        contribution = material["contributions"][0]
+        self.assertEqual(contribution["type"], "public-test")
+        self.assertEqual(contribution["byline"], "Agent Memory Study editors")
+        linked_names = {link["url"].rsplit("/", 1)[-1] for link in contribution["links"]}
+        self.assertEqual(
+            linked_names,
+            {
+                "README.md", "PREREGISTRATION.md", "audit.py", "decision.json",
+                "readiness.json", "reproduction.json", "source_manifest.json",
+            },
+        )
+
+        artifact_root = build.ROOT / "research" / "statefuse-interpretation-contract-audit"
+        decision = json.loads((artifact_root / "raw" / "decision.json").read_text(encoding="utf-8"))
+        readiness = json.loads(
+            (artifact_root / "raw" / "readiness.json").read_text(encoding="utf-8")
+        )
+        source_manifest = json.loads(
+            (artifact_root / "raw" / "source_manifest.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(decision["official_suite"]["passed_count"], 139)
+        self.assertEqual(decision["official_suite"]["skipped_count"], 0)
+        self.assertEqual(decision["case_count"], 8)
+        self.assertEqual(decision["permutation_group_count"], 17)
+        self.assertEqual(decision["run_result_count"], 428)
+        self.assertTrue(decision["h1"]["supported"])
+        self.assertTrue(decision["h2"]["supported"])
+        self.assertEqual(readiness["schema"], "statefuse-readiness/2")
+        self.assertTrue(readiness["integration_readiness_passed"])
+        self.assertEqual(readiness["canonical_ams_status"], "not_assessed_by_evidence_artifact")
+        self.assertEqual(readiness["public_note_depth"], "not_assessed_by_evidence_artifact")
+        self.assertNotIn("worked_candidate", readiness)
+        self.assertEqual(
+            source_manifest["workshop_manuscript"]["title"],
+            "StateFuse: Taxonomy-Aware Conflict-Preserving Memory for Heterogeneous Agent Systems",
+        )
+        self.assertNotEqual(source_manifest["workshop_manuscript"]["title"], material["title"])
+        self.assertNotIn(
+            "Local worked candidate",
+            (artifact_root / "RESULTS.txt").read_text(encoding="utf-8"),
+        )
+
+        checksum_lines = (artifact_root / "checksums.sha256").read_text(encoding="utf-8").splitlines()
+        self.assertEqual(len(checksum_lines), 14)
+        for line in checksum_lines:
+            expected, relative = line.split("  ", 1)
+            observed = hashlib.sha256((artifact_root / relative).read_bytes()).hexdigest()
+            self.assertEqual(observed, expected)
+
     def test_longmemeval_alias_order_census_is_checked_in_and_held(self):
         material = next(
             item for item in self.data["materials"]
@@ -382,6 +439,18 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         )
         self.assertIn(
             "research/longmemeval-v2-alias-order-preregistration/raw/runtime_attestation.json",
+            relative_paths,
+        )
+        self.assertIn(
+            "research/statefuse-interpretation-contract-audit/audit.py",
+            relative_paths,
+        )
+        self.assertIn(
+            "research/statefuse-interpretation-contract-audit/raw/decision.json",
+            relative_paths,
+        )
+        self.assertIn(
+            "research/statefuse-interpretation-contract-audit/raw/readiness.json",
             relative_paths,
         )
         build.validate_public_copy_files()

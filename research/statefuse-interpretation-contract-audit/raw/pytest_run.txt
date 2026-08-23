@@ -1,0 +1,9 @@
+command: <PYTHON> -m pytest -q -ra
+working_directory: <SOURCE_REPO>
+exit_code: 0
+elapsed_time: normalized_as_non_semantic_receipt_metadata
+stdout:
+........................................................................ [ 51%]
+...................................................................      [100%]
+139 passed in <elapsed>s
+stderr:

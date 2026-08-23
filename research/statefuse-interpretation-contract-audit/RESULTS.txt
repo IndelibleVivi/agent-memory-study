@@ -1,0 +1,19 @@
+StateFuse interpretation-contract audit
+
+Official suite: 139 passed; 0 skipped
+Synthetic result rows: 428
+Fixed-contract constructor-permutation groups: 17
+Exact execution contract: True
+Insertion-order/canonicalization integrity: True
+H1 equality stratum: True
+H1 semantic-handle stratum: True
+H1 detector/lifecycle stratum: True
+H1 declared-version control: True
+H1 interpretation-contract binding: True
+H2 semantic-ref tombstone carryover: True
+Fresh byte reproduction: True
+Local audit complete: True
+Integration evidence ready: True
+AMS essay, note depth, and canonical integration: not determined by this evidence artifact
+Commit, push, publication, and deployment: not performed
+Boundary: synthetic contract test, not paper/benchmark/model reproduction, CRDT-law failure, vulnerability, production estimate, or bug claim.

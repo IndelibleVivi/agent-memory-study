@@ -1,0 +1,347 @@
+{
+  "artifact_status": "primary_probe_supported_pending_fresh_reproduction",
+  "case_count": 8,
+  "evidence_labels": {
+    "local_pytest": "official-source execution receipt",
+    "paper": "paper-reported",
+    "probe": "synthetic contract test",
+    "source": "official-source",
+    "workshop": "official-source / unpublished_repository_manuscript"
+  },
+  "execution_contract": {
+    "exact_case_matrix": true,
+    "exact_group_matrix": true,
+    "expected_case_count": 8,
+    "expected_group_count": 17,
+    "expected_result_count": 428,
+    "fixture_bindings_verified": true,
+    "payload_digests_recomputed": true,
+    "permutation_coverage_verified": true,
+    "permutation_groups": [
+      {
+        "contract_id": "D1-budget-v1-ab",
+        "fixture_id": "H1-DET",
+        "permutation_count": 120,
+        "projection_digest_count": 1,
+        "query_id": "fixed",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "D2-budget-v1-abc",
+        "fixture_id": "H1-DET",
+        "permutation_count": 120,
+        "projection_digest_count": 1,
+        "query_id": "fixed",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "D2-budget-v2-abc",
+        "fixture_id": "H1-DET",
+        "permutation_count": 120,
+        "projection_digest_count": 1,
+        "query_id": "fixed",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "E0-raw-equality",
+        "fixture_id": "H1-EQ",
+        "permutation_count": 2,
+        "projection_digest_count": 1,
+        "query_id": "fixed",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "E1-folded-equality",
+        "fixture_id": "H1-EQ",
+        "permutation_count": 2,
+        "projection_digest_count": 1,
+        "query_id": "fixed",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "R0-raw-ref",
+        "fixture_id": "H1-REF",
+        "permutation_count": 6,
+        "projection_digest_count": 1,
+        "query_id": "fixed",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "R1-folded-ref",
+        "fixture_id": "H1-REF",
+        "permutation_count": 6,
+        "projection_digest_count": 1,
+        "query_id": "fixed",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "H2-identity",
+        "fixture_id": "H2-CTX",
+        "permutation_count": 6,
+        "projection_digest_count": 1,
+        "query_id": "tuesday-noon",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "H2-identity",
+        "fixture_id": "H2-CTX",
+        "permutation_count": 6,
+        "projection_digest_count": 1,
+        "query_id": "valid-at-none",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "H2-identity",
+        "fixture_id": "H2-ID",
+        "permutation_count": 6,
+        "projection_digest_count": 1,
+        "query_id": "tuesday-noon",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "H2-identity",
+        "fixture_id": "H2-ID",
+        "permutation_count": 6,
+        "projection_digest_count": 1,
+        "query_id": "valid-at-none",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "H2-identity",
+        "fixture_id": "H2-NONE",
+        "permutation_count": 2,
+        "projection_digest_count": 1,
+        "query_id": "tuesday-noon",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "H2-identity",
+        "fixture_id": "H2-NONE",
+        "permutation_count": 2,
+        "projection_digest_count": 1,
+        "query_id": "valid-at-none",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "H2-identity",
+        "fixture_id": "H2-REF",
+        "permutation_count": 6,
+        "projection_digest_count": 1,
+        "query_id": "tuesday-noon",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "H2-identity",
+        "fixture_id": "H2-REF",
+        "permutation_count": 6,
+        "projection_digest_count": 1,
+        "query_id": "valid-at-none",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "H2-identity",
+        "fixture_id": "H2-VALUE",
+        "permutation_count": 6,
+        "projection_digest_count": 1,
+        "query_id": "tuesday-noon",
+        "state_digest_count": 1
+      },
+      {
+        "contract_id": "H2-identity",
+        "fixture_id": "H2-VALUE",
+        "permutation_count": 6,
+        "projection_digest_count": 1,
+        "query_id": "valid-at-none",
+        "state_digest_count": 1
+      }
+    ],
+    "supported": true
+  },
+  "h1": {
+    "c_promotion_decision_gate": false,
+    "c_promotion_observed_post_test": true,
+    "detector_lifecycle_supported": true,
+    "equality_supported": true,
+    "headline": "interpretation-contract binding",
+    "identical_ops_across_contract_pairs": true,
+    "ref_normalization_supported": true,
+    "supported": true,
+    "versioned_detector_control_supported": true
+  },
+  "h2": {
+    "mechanism": "semantic-ref tombstone carryover",
+    "question": "semantic-reference recurrence scope",
+    "supported": true
+  },
+  "interpretation_boundary": {
+    "benchmark_reproduction": false,
+    "crdt_merge_law_failure": false,
+    "model_evaluation": false,
+    "production_frequency_or_harm_estimate": false,
+    "security_vulnerability": false,
+    "semantic_ref_behavior_labeled_bug": false
+  },
+  "official_suite": {
+    "collect_command": [
+      "<PYTHON>",
+      "-m",
+      "pytest",
+      "--collect-only",
+      "-q"
+    ],
+    "collected_node_count": 139,
+    "passed_count": 139,
+    "run_command": [
+      "<PYTHON>",
+      "-m",
+      "pytest",
+      "-q",
+      "-ra"
+    ],
+    "skipped_count": 0,
+    "status": "passed"
+  },
+  "permutation_group_count": 17,
+  "permutation_groups": [
+    {
+      "contract_id": "D1-budget-v1-ab",
+      "fixture_id": "H1-DET",
+      "permutation_count": 120,
+      "projection_digest_count": 1,
+      "query_id": "fixed",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "D2-budget-v1-abc",
+      "fixture_id": "H1-DET",
+      "permutation_count": 120,
+      "projection_digest_count": 1,
+      "query_id": "fixed",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "D2-budget-v2-abc",
+      "fixture_id": "H1-DET",
+      "permutation_count": 120,
+      "projection_digest_count": 1,
+      "query_id": "fixed",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "E0-raw-equality",
+      "fixture_id": "H1-EQ",
+      "permutation_count": 2,
+      "projection_digest_count": 1,
+      "query_id": "fixed",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "E1-folded-equality",
+      "fixture_id": "H1-EQ",
+      "permutation_count": 2,
+      "projection_digest_count": 1,
+      "query_id": "fixed",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "R0-raw-ref",
+      "fixture_id": "H1-REF",
+      "permutation_count": 6,
+      "projection_digest_count": 1,
+      "query_id": "fixed",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "R1-folded-ref",
+      "fixture_id": "H1-REF",
+      "permutation_count": 6,
+      "projection_digest_count": 1,
+      "query_id": "fixed",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "H2-identity",
+      "fixture_id": "H2-CTX",
+      "permutation_count": 6,
+      "projection_digest_count": 1,
+      "query_id": "tuesday-noon",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "H2-identity",
+      "fixture_id": "H2-CTX",
+      "permutation_count": 6,
+      "projection_digest_count": 1,
+      "query_id": "valid-at-none",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "H2-identity",
+      "fixture_id": "H2-ID",
+      "permutation_count": 6,
+      "projection_digest_count": 1,
+      "query_id": "tuesday-noon",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "H2-identity",
+      "fixture_id": "H2-ID",
+      "permutation_count": 6,
+      "projection_digest_count": 1,
+      "query_id": "valid-at-none",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "H2-identity",
+      "fixture_id": "H2-NONE",
+      "permutation_count": 2,
+      "projection_digest_count": 1,
+      "query_id": "tuesday-noon",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "H2-identity",
+      "fixture_id": "H2-NONE",
+      "permutation_count": 2,
+      "projection_digest_count": 1,
+      "query_id": "valid-at-none",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "H2-identity",
+      "fixture_id": "H2-REF",
+      "permutation_count": 6,
+      "projection_digest_count": 1,
+      "query_id": "tuesday-noon",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "H2-identity",
+      "fixture_id": "H2-REF",
+      "permutation_count": 6,
+      "projection_digest_count": 1,
+      "query_id": "valid-at-none",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "H2-identity",
+      "fixture_id": "H2-VALUE",
+      "permutation_count": 6,
+      "projection_digest_count": 1,
+      "query_id": "tuesday-noon",
+      "state_digest_count": 1
+    },
+    {
+      "contract_id": "H2-identity",
+      "fixture_id": "H2-VALUE",
+      "permutation_count": 6,
+      "projection_digest_count": 1,
+      "query_id": "valid-at-none",
+      "state_digest_count": 1
+    }
+  ],
+  "permutation_integrity_passed": true,
+  "primary_probe_supported": true,
+  "run_result_count": 428,
+  "strongest_claim_level": "preregistered_synthetic_interpretation_contract_and_recurrence_consequences"
+}

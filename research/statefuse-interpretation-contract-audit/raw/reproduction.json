@@ -1,0 +1,20 @@
+{
+  "comparison": "byte-for-byte",
+  "comparison_emitted_by": "audit.py after an internal fresh second pass; any mismatch aborts the run",
+  "determinism_class": "same-environment deterministic repeatability",
+  "generated_files": {
+    "raw/cases.jsonl": "5c20545e86514c8a2888a98cdc98e9b06f3b7db2dc60f126434b7dc4d93f4580",
+    "raw/contract_descriptors.json": "18cef23b95cbd6d39e6731dbe65acfd3a240ffc173735c03318b09c1378f7d1f",
+    "raw/decision.json": "7714e963669413eaa803547272f06741c27952fd3958e2e924258cd2787c7dcf",
+    "raw/environment.json": "39663d7215c171ae8388b26ff7b6c09e7a0ee2d6e888c38a95f9cfabfb6c2c3a",
+    "raw/pytest_collect.txt": "ae165487dd3c3092723ff1e9f24aa6175a82f20d6ca977a04ebe0a31e9d24a2a",
+    "raw/pytest_run.txt": "5213c131c2d65e0745b0345678f59b5b62911754af80db2d30261c4a931cbcbb",
+    "raw/run_results.jsonl": "885ce9f035902466c28d186698d98c8de1a81d18c972ad57c43a233df380c35b",
+    "raw/source_manifest.json": "9866f4147fc7fe433a0489c0abf4d5ac5a67bfab6ca2ee4b481bc48db172bb3c"
+  },
+  "matched_file_count": 8,
+  "method": "One runner invocation executed two complete passes in distinct output roots. Each pass rechecked the locked source and paper, reran both upstream pytest commands, rebuilt every fixture/contract/query/permutation, rederived the decision from raw payloads, and serialized the complete primary output set before byte comparison.",
+  "receipt_normalization": "Python subprocess text mode performs universal-newline decoding; only elapsed-time tokens on pytest summary lines are replaced with <elapsed>; terminal whitespace and all other stdout/stderr text are retained",
+  "schema": "statefuse-reproduction/2",
+  "verdict": "REPRODUCIBLE"
+}

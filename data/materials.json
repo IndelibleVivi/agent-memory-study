@@ -22,7 +22,8 @@
         "materialIds": [
           "a-tma-state-aware-memory",
           "mosaic-long-term-memory",
-          "memory-beyond-recall"
+          "memory-beyond-recall",
+          "statefuse-conflict-preserving-memory"
         ]
       },
       {
@@ -36,7 +37,8 @@
           "verifiable-memory",
           "mistake-notebook-learning",
           "agentic-memory",
-          "memory-beyond-recall"
+          "memory-beyond-recall",
+          "statefuse-conflict-preserving-memory"
         ]
       },
       {
@@ -101,7 +103,8 @@
         "tension": "当前有 justification 不等于来源为真；形式 revision 也不能授权覆盖 raw source。",
         "materialIds": [
           "truth-maintenance-system",
-          "agm-theory-change"
+          "agm-theory-change",
+          "statefuse-conflict-preserving-memory"
         ]
       }
     ],
@@ -129,7 +132,8 @@
           "agm-theory-change",
           "a-tma-state-aware-memory",
           "trustmem-consolidation",
-          "memory-beyond-recall"
+          "memory-beyond-recall",
+          "statefuse-conflict-preserving-memory"
         ]
       },
       {
@@ -1659,6 +1663,231 @@
       },
       "editorialQuestion": "当 query controller 能读取 benchmark-derived routing hints、生成 answer-like narrative、决定 evidence order 并优先占据 token budget 时，什么 contract 才能证明 fixed reader 得到的是 trajectory-supported experience，而不是一个更会写答案的中间层？",
       "sourceNote": "arXiv v1 work-in-progress preprint；PDF 共 32 页。paper-day release、August query-boundary fix 与 current source 分开标注；两组 public tests 分别停在 built-context contract 与 model-free selection/intervention feasibility，不执行 controller、fixed reader 或 benchmark reproduction。"
+    },
+    {
+      "number": 18,
+      "id": "statefuse-conflict-preserving-memory",
+      "kind": "paper",
+      "title": "StateFuse: Deterministic Conflict-Preserving Memory for Multi-Agent Systems",
+      "authors": [
+        "Sergey Volkov",
+        "Yang Li",
+        "Ye Luo"
+      ],
+      "shortAuthor": "Volkov 等",
+      "year": 2026,
+      "doi": "10.48550/arXiv.2607.05844",
+      "noteDepth": "worked",
+      "readingScope": "完整读了 arXiv v1 的 §§1–6、Appendix A.1–A.5、Tables 1–5 与 Figures 1–3，共 18 个 PDF pages；references 只用于 lineage 定位。另检查 official source commit 79a6229f83a7b174a2a9ac8fd0ace267ae30e79b（StateFuse 0.3.0），运行完整 139-test official suite，并执行 preregistered model-free interpretation-contract audit：8 个 synthetic fixtures、17 个 same-contract permutation groups、428 个 raw state/projection rows 与一次 fresh byte reproduction。没有复现论文的 MemoryAgentBench slice、uniform-verification agent loop、correction-handle ablation、模型输出、live connector 或 production trace；repository 中标题不同的 unpublished manuscript 只作为独立 successor source 标注，不向 arXiv v1 反向转移主张。",
+      "intro": "StateFuse 把 replicated memory 拆成两个容易被混淆的层：immutable OpSet 负责让 operation set 收敛，predicate registry、conflict detector、resolver 与 query constraints 再把这个集合解释成可行动的 view。本条 worked essay 所附的 synthetic contract audit 在锁定的 StateFuse 0.3.0 source 上显示：在这些 preregistered fixtures 中，byte-identical operations 仍可因 deterministic interpretation contracts 不同而产生不同的 conflict、activity、resolution lifecycle 与 projection；这收窄的是 replay precondition，不构成 OpSet merge law 的反例。",
+      "whyRead": "这篇值得做成 worked essay，不是因为它发明了新的 CRDT join——作者反复否认这一点——而是因为它把 agent memory 最常被悄悄吞掉的三件事变成 public contract：分歧是否被显式保留、修正到底指向一个 assertion 还是一个 semantic class、downstream resolver 能否把选择写回历史。close read 与本地测试合在一起后，真正有用的结论更尖锐：merge substrate 的确定性只管同一组 immutable operations；要让 replica 的 semantic view 也可复现，还必须绑定 interpretation contract。",
+      "keyPoints": [
+        "Contract boundary：StateFuse 以 immutable EvidenceAdded / ClaimAdded / ClaimRetracted / DecisionAdded operations 构成 OpSet；materialization 先计算 effective claim refs、应用 exact / semantic tombstones、过滤 inactive claims，再为 functional keys 生成显式 ConflictSet。projection 可以选择、abstain 或 fail closed，但不能修改 base memory。（§§3.2–3.4；Figure 1，PDF pp. 5–7）",
+        "Dual correction handles：arXiv v1 将 claim_id 定义为 assertion-local identity，将 claim_ref 定义为由 claim key 与 predicate-governed value contract 导出的 cross-replica semantic handle。锁定的 0.3.0 official source 进一步显示，default ref payload 包含 key 与 value，仅在 non-default 时包含 kind、在 non-empty 时包含 context；validity、confidence、timestamp、evidence、provenance 与 derivation identity 不进入该 payload。semantic retraction 会使共享该 ref 的 claim instances 失活，包括随后才进入 merged OpSet 的 instances。（arXiv v1 §§3.2–3.3；Appendix A.1、A.3–A.4，printed PDF pp. 5–6、14–15；official source src/statefuse/model.py 与 src/statefuse/materialize.py）",
+        "Paper result：在 282-question MemoryAgentBench conflict-bearing slice 上，aggressive StateFuse、flat multi-value、raw log 与 collapsed baselines 同为 97.5% final accuracy；显式 conflict-preserving surfaces 的差异主要是 100% conflict recall。uniform-verification synthetic loop 中 conservative non-collapsing surfaces 同到 100% post-verify success，而 collapsed surface 为 60% 且有 40% post-verify false confidence。（§4.2；Tables 2–4，PDF pp. 9–11）",
+        "Executed synthetic result：锁定 0.3.0 source 上的 8 个 exact fixtures、17 个 fixed-contract constructor-permutation groups 与 428 个 raw state/projection rows 满足 preregistered H1/H2 gates。每个 fixed-contract group 各自产生一个 state digest 与一个 projection digest。该结果未测试 merge-tree equivalence、实现内部 replay-path independence 或跨环境重现。（public synthetic contract test）"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 先把 merge 与 interpretation 拆开",
+          "claim": "论文接受标准 OpSet set-union 作为 convergence substrate；它的研究对象不是新的 join，而是 operations 收敛之后，memory 怎样形成 active claims、conflicts 与 task-scoped projection。",
+          "locator": "§§1、2.1、3.3；Appendix A.1–A.3，PDF pp. 1–3、6、14–15"
+        },
+        {
+          "step": "02 · 把 disagreement 留在 public surface",
+          "claim": "materialization 不以 latest-write 覆盖 functional-key disagreement，而是发出 ConflictSet；resolver 的 authority 被限制在 projection，resolution 失败或 abstention 仍留下 unresolved/surfaced conflict 与 explanation。",
+          "locator": "§§3.3–3.4；Figures 1–3，PDF pp. 6–9"
+        },
+        {
+          "step": "03 · 用 matched policy budget 收窄 empirical claim",
+          "claim": "strong flat conflict-preserving baselines 在 answer accuracy 与 conservative operating point 上能追平 StateFuse；因此论文把贡献收窄为 contradiction surfacing、abstention 与 auditable semantic correction 的 contract，而不是 universal accuracy gain。",
+          "locator": "§§4.2–5.3；Tables 2–5，PDF pp. 9–12"
+        },
+        {
+          "step": "04 · 再问 fixed OpSet 是否已经足够",
+          "claim": "论文的 replayability 明示 fixed predicate registry、resolver 与 constraints；本地 audit 进一步显示 current source 没有把 registry/detector implementation identity 写进 shared OpSet。same-contract replay 仍稳定，但 cross-contract replicas 可以对同一 operations 形成不同 semantic views。",
+          "locator": "§3.2；Appendix Proposition 6，PDF pp. 5、15；official source 79a6229…；public H1 audit"
+        },
+        {
+          "step": "05 · 把 correction scope 当 ontology 选择",
+          "claim": "semantic ref 是故意设计的 broad correction handle。它能解决 missing-ID / unseen-target correction，也会让不同 validity occurrences 在 semantic identity 相同时共享 tombstone；应用必须明确自己要 correction assertion、occurrence 还是 semantic class。",
+          "locator": "§§3.2–3.3、4.3；Table 5；Appendix A.1、A.4，PDF pp. 5–6、9–10、12、14–16；public H2 audit"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "OpSet materialization and projection",
+          "text": "Merge 对 immutable op_id 做 set union；materialization 以 sorted traversal 建索引、派生 refs、应用 exact/semantic tombstones、按 ClaimKey 分组并生成 conflicts。build_view 读取 materialized state 与 constraints，由 deterministic conservative resolver 或受 schema 限制的 optional LLM resolver 形成 separate projection。",
+          "locator": "§§3.3–3.4；Appendix A.1–A.3，PDF pp. 6–7、14–15"
+        },
+        {
+          "label": "Paper evaluation layers",
+          "text": "主 evidence 是 converted official MemoryAgentBench conflict-bearing slice 与每种 surface 共享 verification budget 的 50-task synthetic agent loop；另用 13-task deterministic handle ablation 比较 claim_id / claim_ref。paper tables 报 final accuracy、false certainty、conflict recall、recoverability 与 abstention quality，但本次本站 audit 没有重跑这些 datasets/runs。",
+          "locator": "§§3.6、4.1–4.3；Tables 2–5，PDF pp. 7–12"
+        },
+        {
+          "label": "Preregistered interpretation-contract audit",
+          "text": "H1 的 equality、semantic-handle normalization 与 detector/lifecycle strata 在 paired treatments 中锁定 canonical operation JSON、OpSet hash、query constraints、resolver、serialization、locale/timezone；H2 使用 Monday/Tuesday disjoint validity claims，比较 no retraction、exact-ID、same-ref、changed-context 与 changed-value controls。每个 fixed-contract OpSet 穷举全部 2、6 或 120 个 constructor permutations。",
+          "locator": "research/statefuse-interpretation-contract-audit/PREREGISTRATION.md；raw/cases.jsonl"
+        },
+        {
+          "label": "Source, suite and reproduction receipts",
+          "text": "runner 锁定 arXiv PDF hash、official commit、package version、14 个 source/test/manuscript blobs 与自身 source hash；记录 pytest collect/run 全输出，重算 428 rows 的 payload digests 与 H1/H2 decision，再在同一 invocation 内完整执行 second pass，对八个 primary files 做 byte comparison。",
+          "locator": "research/statefuse-interpretation-contract-audit/raw/source_manifest.json；raw/environment.json；raw/reproduction.json"
+        }
+      ],
+      "reportedFindings": [
+        "aggressive official-slice comparison中，StateFuse、flat multi-value、raw log 与 collapsed latest-write 都是 97.5% final accuracy；StateFuse 与 flat conflict-preserving surfaces 为 100% conflict recall，raw log/collapsed 为 0%。这支持 surface distinction，不支持 unique answer-accuracy gain。（§4.2；Table 3，PDF pp. 9、11）",
+        "conservative official-slice operating point 中，StateFuse、StateFuse core、MV register 与 provenance surface 都为 64.9% accuracy、100% conflict recall、2.1% false certainty；raw log conservative 同为 64.9% accuracy 但 0% conflict recall。（Tables 2–3，PDF pp. 10–11）",
+        "uniform-verification 50-task loop 中，五个 conservative non-collapsing surfaces 都从 80% pre-verify 到 100% post-verify success、0% post-verify false confidence；collapsed surface 从 40% 到 60%，仍有 40% false confidence。该 loop deterministic，paper 因此没有给 confidence intervals。（Tables 2、4，PDF pp. 10–11）",
+        "13-task correction-handle ablation 中，claim_ref 为 100% final accuracy / no-resurrection / ID-target match / semantic-target recoverability；claim_id 为 76.9% / 76.9% / 100% / 0%。这是 paper 对 semantic handle expressivity 的主要支持。（§4.3；Table 5，PDF pp. 9–10、12）",
+        "本地 H1 中，byte-identical operations 在不同 deterministic equality/ref/detector contracts 下改变 conflict formation、effective refs、inactive sets、candidate membership、resolution lifecycle 与 projection；declared detector v2 control 把 behavior change 移到新的 visible locus。H2 中 same-ref retraction 同时停用 disjoint-validity Monday/Tuesday claims，而 exact-ID、changed-context 与 changed-value controls 保留 Tuesday claim。（public synthetic contract test）"
+      ],
+      "evidenceLimits": [
+        "论文的 strongest external evidence 是一个 converted MemoryAgentBench conflict-bearing slice；本站没有取得并独立重算这 282 questions 的转换、predictions 或 aggregate，也没有重跑 50-task agent loop 与 13-task handle ablation，因此这些数字保持 paper-reported。",
+        "uniform-verification loop 与 handle ablation 是 controlled deterministic evaluations，没有 repeated stochastic runs 或 confidence intervals；论文也没有 large naturally arising trace study、broad benchmark portfolio 或 endpoint-specific live LLM comparison。（§5.5，PDF pp. 12–13）",
+        "H1 只证明 exact StateFuse 0.3.0 在四组 newly authored synthetic fixture strata 上允许 cross-contract semantic divergence；它不估计 replica contract drift 的生产频率、损害、攻击可利用性、整体 reliability 或对其他 versions 的适用性。",
+        "H2 组合的是 source 已明确的 broad semantic tombstone 与 validity-independent default ref identity。它证明 recurrence consequence，不证明 library bug、data loss 或错误 ontology；需要 occurrence-local correction 的应用可以把 occurrence 编入 key/value/context，或使用 exact-ID handle。",
+        "同一 fixed contract 下的 17 个 permutation groups 全部产生单一 state/projection digest；因此当前结果不能被写成 merge-order nondeterminism、OpSet commutativity/associativity/idempotence failure 或论文 Propositions 1–2 的 same-contract counterexample。",
+        "repository 的 paper/main.tex 在 locked commit 中是标题和实验叙述均不同的 unpublished successor manuscript。official suite 的 139 passed/0 skipped 是本地 source execution receipt，不能反向替代 arXiv v1 的 paper-reported evidence或被说成 paper reproduction。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "Same OpSet 不是完整 replay identity",
+          "observation": "Appendix Proposition 1 将 benign-replica convergence 写成 O1 = O2 ⇒ M(O1) = M(O2)，但 Proposition 6 的 projection replayability 明确还要求 fixed predicate registry、resolver 与 constraints；official source 接受 pluggable equality/ref normalization 与 conflict detectors，却没有把一份 shared contract digest 绑定进 OpSet。",
+          "implication": "对外引用 convergence 时必须补全 interpretation precondition。可复现 semantic view 的 identity 是 operations 加 contract/query/projection inputs，而不是 operation bytes 单独决定。",
+          "locators": [
+            "§3.2；Appendix Propositions 1、6，PDF pp. 5、15",
+            "official source 79a6229… predicate registry / detector paths",
+            "public H1 raw decision"
+          ]
+        },
+        {
+          "label": "Semantic correction 的优势与范围来自同一机制",
+          "observation": "Paper-reported：arXiv v1 在 contract 层将 claim_ref 描述为由 claim key 与 predicate-governed value contract 导出的 semantic handle，并规定 semantic-handle retraction 的 no-resurrection 语义。Official-source observation：锁定的 0.3.0 default implementation 具体将 key/value、non-default kind 与 non-empty context 纳入 ref payload，同时将 validity 与其他 occurrence metadata 留在 payload 之外。H2 因此属于 exact-source synthetic audit 的 correction-scope observation，不是 arXiv v1 报告的实验结果。",
+          "implication": "missing-ID recoverability 与 cross-occurrence tombstone carryover 不能被当作无关特性：handle 的 semantic identity 越宽，correction reach 越强，应用越需要明确 recurrence / occurrence ontology。这只识别一个 locked implementation 与 fixture family 产生的 correction granularity，不证明 paper contradiction、defect、vulnerability 或普遍更优的 occurrence ontology。",
+          "locators": [
+            "§§3.2–3.3、4.3；Table 5，PDF pp. 5–6、9–10、12",
+            "official source model/materialize paths",
+            "public H2 raw decision"
+          ]
+        },
+        {
+          "label": "arXiv v1 与 repository manuscript 必须分层",
+          "observation": "reviewed arXiv v1 题为 StateFuse: Deterministic Conflict-Preserving Memory for Multi-Agent Systems；locked repository 的 paper/main.tex 是题为 StateFuse: Taxonomy-Aware Conflict-Preserving Memory for Heterogeneous Agent Systems 的 unpublished successor manuscript。两者共享 project lineage，但不是同一个 reviewed evidence object，其主张或 test counts 不向 arXiv v1 反向转移。",
+          "implication": "essay 只把 PDF pp. locators 归给 arXiv v1；current source/manuscript 用 exact commit 与 unpublished-successor 标签单列，不能用后来的 code/tests/manuscript 修补 paper claim。",
+          "locators": [
+            "arXiv:2607.05844v1，PDF p. 1",
+            "official source 79a6229… paper/main.tex",
+            "public source manifest"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "Merge convergence is not view convergence",
+          "text": "replicated memory 的一致性至少有两个 axes：operation membership 是否收敛，以及相同 operations 是否在相同 semantic contract 下得到同一 active/conflict/projection view。只给 OpSet hash 只能回答第一问。",
+          "boundary": "这是对 paper replay preconditions 与 H1 synthetic result 的 architecture synthesis；不是新 CRDT theorem、形式证明或对 StateFuse merge implementation 的 failure claim。"
+        },
+        {
+          "label": "Interpretation contracts need deployable identity",
+          "text": "normalizer、equality、claim-ref derivation、detector behavior 与 detector ID 应形成可比较的 manifest/version，并在 replica handshake、snapshot、migration 与 audit receipt 中共同出现；deterministic source code 仍可能是另一份 deterministic contract。",
+          "boundary": "audit 证明 current exact source 不强制 cross-replica contract identity；它没有验证某一种 manifest protocol、rolling upgrade mechanism 或 distributed deployment。"
+        },
+        {
+          "label": "Correction handles are ontology, not only API ergonomics",
+          "text": "claim_id、claim_ref 与 occurrence-bearing identity 分别回答“撤回这次 assertion”“撤回这类 semantic assertion”“撤回这个时段/事件实例”。把它们 collapse 成一个 retraction endpoint，会让 correction authority 的范围只能靠 payload accident 决定。",
+          "boundary": "H2 展示 current default identity 的 controlled consequence；不同 domain 可以合理选择不同 granularity，本站没有宣布 universal correct ontology。"
+        },
+        {
+          "label": "Surfacing conflict and authorizing action are separate",
+          "text": "ConflictSet 让 disagreement 变得可见，但不会替 agent 决定何时 abstain、验证、选择或请求 human review。一个 auditable memory surface 是 action governance 的输入，不是 authorization 本身。",
+          "boundary": "paper 的 bounded resolver contract 与 synthetic loop 支持分层阅读；它没有测 human oversight、real-world action cost 或 high-stakes deployment safety。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "Replica contract-manifest and rolling-migration protocol",
+          "status": "proposed-not-run",
+          "question": "当 replicas 在 registry、claim-ref derivation 或 detector version 上滚动升级时，什么 manifest/handshake contract 能让 semantic-view divergence 被拒绝、显式隔离或可审计迁移，而不重写 immutable history？",
+          "method": "在 fixed OpSets 上引入 canonical contract manifest，分别执行 same-version replay、silent behavior drift、declared-version change、mixed-version rolling window 与 explicit migration projection；每次 merge/materialize 前比较 manifest identity，并把 reject/quarantine/dual-view/migrate 四种 policy 写成独立 treatments。",
+          "fixtures": "复用 H1 equality、ref-normalization 与 detector/lifecycle OpSets，再增加 old-ref/new-ref 并存、old detector resolution 对 new candidate set 失效、semantic tombstone 跨 identity-version 与 snapshot restore cases。",
+          "controls": "byte-identical operations、fixed query/resolver/serializer、same-contract positives、manifest-only negative、behavior-different same-ID adversarial control、declared-version control、clean restart 与 two-replica exchange；不使用 model、live connector 或 private trace。",
+          "measures": "分别报告 operation-set convergence、manifest agreement、state/projection digest agreement、rejected/quarantined operations、dual-view exposure、resolution carryover、retraction reach 与 migration reversibility；任何 automatic rewrite 都必须保留 old/new provenance。",
+          "limitations": "这是 proposed-not-run deployment-contract protocol。它不能从当前 local fixtures 推出 production prevalence、network partition behavior、Byzantine safety、schema-migration policy或最佳 user-facing resolution experience。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "Interpretation-contract binding and semantic-reference recurrence audit",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-08-24",
+          "basis": "Paper-facing audit of arXiv:2607.05844v1 and official nZiben/statefuse commit 79a6229f83a7b174a2a9ac8fd0ace267ae30e79b (package 0.3.0), with exact source/test blobs, the repository's separately labeled unpublished manuscript, and newly authored synthetic fixtures.",
+          "boundary": "This is a preregistered, model-free synthetic interpretation-contract test. It is not a paper benchmark reproduction, model or connector evaluation, CRDT merge-law counterexample, security vulnerability, bug declaration, production frequency/harm estimate, or validation of the repository successor manuscript's experiments.",
+          "method": "Lock the paper, source commit, package version, source/test blobs, registry/detector descriptors, resolver, queries and serializers; run the complete official suite; execute all permutations for eight exact fixtures; store 428 schema-versioned state/projection snapshots; recompute every payload digest and derive H1/H2 decisions from raw fields; then repeat the full pass and byte-compare the primary outputs.",
+          "environment": "macOS 26.5.2 arm64；CPython 3.13.3；pytest 9.1.1；StateFuse imported from a reader-supplied clean exact checkout；socket network guard around every custom registry/detector invocation；no model, API, credential, benchmark trace, live connector or private data.",
+          "fixture": "H1 uses raw/folded equality, raw/folded semantic-handle normalization, detector A/B vs A/B/C under a silent same-ID drift, and a declared detector-v2 control. H2 uses disjoint Monday/Tuesday validity occurrences with none, exact-ID, same-ref, changed-context and changed-value treatments, each queried at Tuesday noon and valid_at=None where applicable.",
+          "controls": "Canonical operation JSON and OpSet SHA-256 equality across paired contracts; exact case/group/result matrix; exhaustive 2/6/120 constructor permutations; fixed query, resolver, locale/timezone and serializer; source/paper/blob locks; complete pytest receipts; raw-payload rederivation; same-invocation fresh second pass; checked file-set manifest and clean source checkout.",
+          "rawResult": "The official suite collected and passed 139 tests with zero skips. Eight fixtures produced 17 same-contract permutation groups and 428 raw rows; every group had one state digest and one projection digest. H1 equality, ref-normalization, detector/lifecycle and declared-version strata matched their preregistered field-level expectations. H2 same-ref retraction deactivated both disjoint-validity claims; exact-ID and identity-changing controls preserved Tuesday. All eight primary files byte-matched the fresh second pass.",
+          "derivedResult": "At the exact 0.3.0 source, byte-identical immutable operations do not alone determine one materialized/projected view across different deterministic interpretation contracts. The tested differences can change conflict formation, effective semantic handles, activity, candidate membership, resolution applicability and projection. Default semantic-ref tombstones also cross validity occurrences that share semantic identity. Every tested fixed-contract constructor-permutation group produced one state digest and one projection digest; merge-tree equivalence and implementation-internal replay-path independence were not tested.",
+          "limitations": "The fixtures are deliberately small synthetic contract cases and do not estimate prevalence, harm or performance. The audit does not reproduce paper benchmarks, evaluate models/connectors, exercise distributed networking or concurrency, prove formal properties, label semantic-ref behavior incorrect, or establish that real deployments use mismatched contracts. Same-environment byte reproduction is not cross-platform reproducibility.",
+          "links": [
+            {
+              "label": "method, result and claim boundaries",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/statefuse-interpretation-contract-audit/README.md"
+            },
+            {
+              "label": "frozen preregistration",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/statefuse-interpretation-contract-audit/PREREGISTRATION.md"
+            },
+            {
+              "label": "reproducible runner",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/statefuse-interpretation-contract-audit/audit.py"
+            },
+            {
+              "label": "raw-rederived decision",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/statefuse-interpretation-contract-audit/raw/decision.json"
+            },
+            {
+              "label": "evidence-package readiness boundary",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/statefuse-interpretation-contract-audit/raw/readiness.json"
+            },
+            {
+              "label": "fresh reproduction receipt",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/statefuse-interpretation-contract-audit/raw/reproduction.json"
+            },
+            {
+              "label": "exact source manifest",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/statefuse-interpretation-contract-audit/raw/source_manifest.json"
+            }
+          ]
+        }
+      ],
+      "keywords": [
+        "conflict-preserving memory",
+        "OpSet",
+        "semantic correction",
+        "interpretation contract"
+      ],
+      "categories": [
+        "记忆架构",
+        "可靠性",
+        "信念修正"
+      ],
+      "failureSurfaces": [
+        "state-representation",
+        "write-consolidation",
+        "justification-revision"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2607.05844v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2607.05844v1",
+        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
+      },
+      "editorialQuestion": "如果 operations 已经 byte-identical，但 replicas 没有共同绑定 predicate registry、claim-ref derivation 与 detector implementation identity，我们究竟是在复制同一份 memory，还是只复制了同一份待解释的历史？",
+      "sourceNote": "arXiv v1，2026-07-07；PDF 共 18 页，essay locators 使用 printed PDF page numbers。official source audit 锁定 commit 79a6229… / StateFuse 0.3.0。repository paper/main.tex 是标题与实验叙述不同的 unpublished successor manuscript，已与 arXiv v1 分层；139-test receipt 与 428-row synthetic audit 只支持 current-source contract claims。"
     }
   ]
 }

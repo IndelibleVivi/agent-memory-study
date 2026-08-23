@@ -1,0 +1,42 @@
+{
+  "architecture": "arm64",
+  "dependency_receipt": [
+    "Pygments==2.21.0",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pip==25.0.1",
+    "pluggy==1.6.0",
+    "pypdf==6.16.1",
+    "pytest==9.1.1"
+  ],
+  "locale": "C/C.UTF-8/C/C/C/C",
+  "network": "socket-blocked for every custom registry/detector invocation; no network used by synthetic runner",
+  "operating_system": "Darwin",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "pytest": {
+    "collect_command": [
+      "<PYTHON>",
+      "-m",
+      "pytest",
+      "--collect-only",
+      "-q"
+    ],
+    "collected_node_count": 139,
+    "passed_count": 139,
+    "run_command": [
+      "<PYTHON>",
+      "-m",
+      "pytest",
+      "-q",
+      "-ra"
+    ],
+    "skipped_count": 0,
+    "status": "passed"
+  },
+  "pytest_version": "9.1.1",
+  "python_implementation": "CPython",
+  "python_version": "3.13.3",
+  "receipt_normalization": "Python subprocess text mode performs universal-newline decoding; only elapsed-time tokens on pytest summary lines are replaced with <elapsed>; terminal whitespace and all other stdout/stderr text are retained",
+  "statefuse_import": "reader-supplied exact checkout via PYTHONPATH; package not copied or installed",
+  "timezone": "Asia/Singapore"
+}

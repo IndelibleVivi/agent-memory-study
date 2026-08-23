@@ -1,0 +1,127 @@
+{
+  "contract_count": 8,
+  "contracts": [
+    {
+      "contract_id": "D1-budget-v1-ab",
+      "description": "Budget detector budget/v1 includes capacity and cost claims A/B.",
+      "descriptor_sha256": "29abc65aa863943aafedc28bb4345f47cd3175f3c4270b33042a85fc8c2a12dd",
+      "implementation_source": "audit.py",
+      "implementation_source_sha256": "bd0410def5d1cb9e36ce3158bc30bb352f335d74e0fabff912d759ab010cff5c",
+      "model_free": true,
+      "parameters": {
+        "detector_id": "budget/v1",
+        "included_costs": [
+          "A",
+          "B"
+        ]
+      },
+      "pure": true
+    },
+    {
+      "contract_id": "D2-budget-v1-abc",
+      "description": "Deliberate silent drift: budget/v1 includes capacity and A/B/C.",
+      "descriptor_sha256": "6684ec29e28e38ca935c3a1c4b073f808b8d1b72aaaacb19a2ac2253c48ae8d7",
+      "implementation_source": "audit.py",
+      "implementation_source_sha256": "bd0410def5d1cb9e36ce3158bc30bb352f335d74e0fabff912d759ab010cff5c",
+      "model_free": true,
+      "parameters": {
+        "detector_id": "budget/v1",
+        "included_costs": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "pure": true
+    },
+    {
+      "contract_id": "D2-budget-v2-abc",
+      "description": "Declared-version control: D2 behavior reports budget/v2.",
+      "descriptor_sha256": "b2a7495a511524777048663a5e2f79981fecb4a3422a9a6301d75289e8529944",
+      "implementation_source": "audit.py",
+      "implementation_source_sha256": "bd0410def5d1cb9e36ce3158bc30bb352f335d74e0fabff912d759ab010cff5c",
+      "model_free": true,
+      "parameters": {
+        "detector_id": "budget/v2",
+        "included_costs": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "pure": true
+    },
+    {
+      "contract_id": "E0-raw-equality",
+      "description": "Default raw equality; semantic refs retain raw values.",
+      "descriptor_sha256": "d6c90b3199b57adaeac341ee51e4298a91062952df8e3a8e1c63def4fc56fd84",
+      "implementation_source": "audit.py",
+      "implementation_source_sha256": "bd0410def5d1cb9e36ce3158bc30bb352f335d74e0fabff912d759ab010cff5c",
+      "model_free": true,
+      "parameters": {
+        "equality": "raw",
+        "normalize_for_claim_ref": false
+      },
+      "pure": true
+    },
+    {
+      "contract_id": "E1-folded-equality",
+      "description": "Strip-and-casefold equality; semantic refs retain raw values.",
+      "descriptor_sha256": "8968811d386a2df1d2e32143b1ec2c77a680973edb6f22d315ebed65ef6837b5",
+      "implementation_source": "audit.py",
+      "implementation_source_sha256": "bd0410def5d1cb9e36ce3158bc30bb352f335d74e0fabff912d759ab010cff5c",
+      "model_free": true,
+      "parameters": {
+        "equality": "strip_casefold",
+        "normalize_for_claim_ref": false
+      },
+      "pure": true
+    },
+    {
+      "contract_id": "H2-identity",
+      "description": "Default identity registry with no normalization or custom detector.",
+      "descriptor_sha256": "b459d068fbb7fb24fdbab96247d059ff0c5fa31def04d6cfc726b623be8d9dc2",
+      "implementation_source": "audit.py",
+      "implementation_source_sha256": "bd0410def5d1cb9e36ce3158bc30bb352f335d74e0fabff912d759ab010cff5c",
+      "model_free": true,
+      "parameters": {
+        "equality": "raw",
+        "normalize_for_claim_ref": false
+      },
+      "pure": true
+    },
+    {
+      "contract_id": "R0-raw-ref",
+      "description": "Strip-and-casefold equality without claim-ref normalization.",
+      "descriptor_sha256": "bcc1ed62c7bd985d5f2f939250fca99e110f12f954ba59329fd4761ad86b9493",
+      "implementation_source": "audit.py",
+      "implementation_source_sha256": "bd0410def5d1cb9e36ce3158bc30bb352f335d74e0fabff912d759ab010cff5c",
+      "model_free": true,
+      "parameters": {
+        "equality": "strip_casefold",
+        "normalize_for_claim_ref": false
+      },
+      "pure": true
+    },
+    {
+      "contract_id": "R1-folded-ref",
+      "description": "The same equality with claim-ref value normalization enabled.",
+      "descriptor_sha256": "23a91fccc5e3cb6148d4121b436de132d09a3c45863210626c1c5a3ece470ef6",
+      "implementation_source": "audit.py",
+      "implementation_source_sha256": "bd0410def5d1cb9e36ce3158bc30bb352f335d74e0fabff912d759ab010cff5c",
+      "model_free": true,
+      "parameters": {
+        "equality": "strip_casefold",
+        "normalize_for_claim_ref": true
+      },
+      "pure": true
+    }
+  ],
+  "network_access": "blocked during synthetic runs",
+  "resolver": {
+    "class": "ConservativeHeuristicResolver",
+    "confidence_margin": 0.05,
+    "evidence_count_margin": 1,
+    "time_margin_seconds": 300.0
+  }
+}

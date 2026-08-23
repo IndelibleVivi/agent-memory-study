@@ -1,0 +1,93 @@
+{
+  "ams_audit": {
+    "base_commit": "8385c4bc9e4fcec24fa84cd740b6a0d8e7998522",
+    "runner": "audit.py",
+    "runner_sha256": "bd0410def5d1cb9e36ce3158bc30bb352f335d74e0fabff912d759ab010cff5c"
+  },
+  "arxiv_paper": {
+    "identifier": "arXiv:2607.05844v1",
+    "reviewed_pdf_sha256": "128853be83e65122ff6f29b006416c7d79b5c74a601fe277b65b82b6ff9dc96e",
+    "url": "https://arxiv.org/pdf/2607.05844v1"
+  },
+  "official_source": {
+    "commit": "79a6229f83a7b174a2a9ac8fd0ace267ae30e79b",
+    "files": {
+      "README.md": {
+        "git_blob": "6251e3d40693e37188a4283f50ded875b180109b",
+        "sha256": "f267ff33faa160aee03ade44c76e4247e748e1a6d666be1c506574186e5c7998"
+      },
+      "paper/main.tex": {
+        "git_blob": "9fe67c385111e15ffc31c0fa2b9cac4e9dd8a68c",
+        "sha256": "f1097cb838055b6631402d610661e447b2ab4bd1bbd98eddea3748bf82aec404"
+      },
+      "pyproject.toml": {
+        "git_blob": "d99fb7bba787124d8745fecc343d94610c9c7440",
+        "sha256": "9dfbb6496ffb7b821dfe76f728f19e25024d4eada5a85645fa09cf98b86e9647"
+      },
+      "src/statefuse/conflict.py": {
+        "git_blob": "e9b24469121adea208b67a11b5437da8bd569fca",
+        "sha256": "39b4b895a8701202f256927ea03c6f4de9757294bfd571d703836df648799444"
+      },
+      "src/statefuse/materialize.py": {
+        "git_blob": "513ed8c1aa4e0088580b7a9d3f33ddb5987ae283",
+        "sha256": "75de266ba3822afc65681b452315a755e80d7f8f42e95812525af3e6225fb928"
+      },
+      "src/statefuse/model.py": {
+        "git_blob": "17073f82dcaa722ba4706c57baea00a9305e5ef7",
+        "sha256": "21f5948ccb974aa483a8ce988398bbb7c84e508cf422c8673993ca06d4182bb9"
+      },
+      "src/statefuse/oplog.py": {
+        "git_blob": "6b7a59c348cc486d56e8911f44578ac0b9dd3642",
+        "sha256": "ecaa86d68836b4016bad8ee89444e0e891860e6d9110a4c0fcf4b3d0eccecb80"
+      },
+      "src/statefuse/ops.py": {
+        "git_blob": "12aa5f9d32ef26493826ef55e63dccb6b70d3212",
+        "sha256": "4f8c86ff2ddc270119567ece0f96af67975cc81491543420f82b2964ce9b36d2"
+      },
+      "src/statefuse/resolver.py": {
+        "git_blob": "d6b667ff401bfcbbcd5c820bff10862ba6b68980",
+        "sha256": "31b25a08cb07b260d8e6aa910cb3d4b3d2b3abaf9178f898cf148f2ba3ba5804"
+      },
+      "src/statefuse/utils.py": {
+        "git_blob": "d88a26c049e18535952b3ec5adeaf9520b59a320",
+        "sha256": "face7a288e566980326a71b0ca8e48dc8ef4e9b6774048b3b366a4eb14aa1bf9"
+      },
+      "src/statefuse/view.py": {
+        "git_blob": "6c3e7782fa1a06d1eb423a9b4d0bdb90ecbad037",
+        "sha256": "332095b8dd6229ef0de8bb0e917ca04ad29dd5769aaa4f0c9a1af1e8b8e25dc3"
+      },
+      "tests/test_conflicts.py": {
+        "git_blob": "08cd7249925f8bfa57e811fdbb3a18602ceefbcc",
+        "sha256": "67f784ed7de5a2350b6247e1b50c939fdab9fad6ce9929cbb0d81cbddccf2948"
+      },
+      "tests/test_resolution_lifecycle.py": {
+        "git_blob": "2127f863b5e2a20727f1a794d95c77b208008eea",
+        "sha256": "7ed669673da5486646a93401eedd9aaf2812495a386e0c3677f6e55f7dbd00c5"
+      },
+      "tests/test_taxonomy_conflicts.py": {
+        "git_blob": "8826063ff01ee38be1e1dd68dfd2a73670bee1b8",
+        "sha256": "931cce1c04edb5370736aed53aba65ded2319c78d3a9a029c0150cf68b1f3790"
+      },
+      "tests/test_view_projection.py": {
+        "git_blob": "598d583cab76012f49427065874af1863b21cf2c",
+        "sha256": "c2ef9f3e82051159868207e3c18cf565fe6110c25a61f9c03bebe2155968193e"
+      }
+    },
+    "package_version": "0.3.0",
+    "package_version_verified_from": "pyproject.toml:project.version",
+    "repository": "https://github.com/nZiben/statefuse"
+  },
+  "out_of_scope": [
+    "PM-Bench audit results and artifacts",
+    "StateFuse paper benchmark/model experiments",
+    "live connectors and service credentials"
+  ],
+  "retrieval_date": "2026-08-23",
+  "workshop_manuscript": {
+    "git_blob": "9fe67c385111e15ffc31c0fa2b9cac4e9dd8a68c",
+    "path": "paper/main.tex",
+    "sha256": "f1097cb838055b6631402d610661e447b2ab4bd1bbd98eddea3748bf82aec404",
+    "status": "unpublished_repository_manuscript",
+    "title": "StateFuse: Taxonomy-Aware Conflict-Preserving Memory for Heterogeneous Agent Systems"
+  }
+}

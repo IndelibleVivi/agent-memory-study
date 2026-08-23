@@ -1,0 +1,19 @@
+{
+  "artifact_status": "local_audit_complete",
+  "canonical_ams_status": "not_assessed_by_evidence_artifact",
+  "criteria": {
+    "complete_primary_outputs": true,
+    "exact_execution_contract": true,
+    "exact_source_lock": true,
+    "fresh_byte_reproduction": true,
+    "h1_supported": true,
+    "h2_supported": true,
+    "official_suite_passed": true,
+    "primary_probe_supported": true,
+    "reported_post_test_observations": true
+  },
+  "integration_readiness_passed": true,
+  "public_note_depth": "not_assessed_by_evidence_artifact",
+  "schema": "statefuse-readiness/2",
+  "strongest_claim_level": "preregistered_synthetic_interpretation_contract_and_recurrence_consequences"
+}

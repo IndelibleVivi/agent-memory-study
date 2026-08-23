@@ -885,6 +885,41 @@
         <dc:identifier>DOI 10.48550/arXiv.2605.12493</dc:identifier>
         <link:link rdf:resource="#attachment_17_longmemeval-v2-experienced-colleague" />
     </rdf:Description>
+    <rdf:Description rdf:about="https://arxiv.org/abs/2607.05844v1">
+        <z:itemType>document</z:itemType>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Volkov</foaf:surname>
+                        <foaf:givenName>Sergey</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Li</foaf:surname>
+                        <foaf:givenName>Yang</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Luo</foaf:surname>
+                        <foaf:givenName>Ye</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>StateFuse: Deterministic Conflict-Preserving Memory for Multi-Agent Systems</dc:title>
+        <dc:date>2026</dc:date>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/abs/2607.05844v1</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dc:description>arXiv: 2607.05844 [cs.AI]</dc:description>
+        <dc:identifier>DOI 10.48550/arXiv.2607.05844</dc:identifier>
+        <link:link rdf:resource="#attachment_18_statefuse-conflict-preserving-memory" />
+    </rdf:Description>
     <z:Attachment rdf:about="#attachment_01_a-tma-state-aware-memory">
         <z:itemType>attachment</z:itemType>
         <dc:title>Full Text PDF</dc:title>
@@ -1021,5 +1056,16 @@
         <dc:title>Full Text PDF</dc:title>
         <link:type>application/pdf</link:type>
         <z:path rdf:resource="papers/17-wu-2026-longmemeval-v2.pdf" />
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_18_statefuse-conflict-preserving-memory">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/pdf/2607.05844v1</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <z:linkMode>3</z:linkMode>
     </z:Attachment>
 </rdf:RDF>
