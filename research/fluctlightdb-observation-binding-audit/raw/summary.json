@@ -1,0 +1,2823 @@
+{
+  "compact_query_rows": 1140,
+  "interpretation_contract": {
+    "paired_provenance_population": "45 non-wallet lexical-bound cases with both pair members visible at K=128",
+    "scope_failure_observable": "returned stored episode.agent_id differs from requested agent_id",
+    "security_or_production_claims": "not assessed",
+    "structural_ceiling": "conditional on within-frozen-store top-1 invariance",
+    "tenant_claims": "not assessed"
+  },
+  "logical_reproducibility": {
+    "paper-time": {
+      "ambiguous_core_stable": true,
+      "ambiguous_specific_winner_stable": false,
+      "exact_full_signature_stable": false,
+      "exact_missing_agent_control_stable": {
+        "foreign_by_query": true,
+        "top_by_query": true
+      },
+      "lexical_non_wallet_k128_stable": true,
+      "scoped_low_k_rescued_case_set_stable": false,
+      "scoped_wallet_foreign_pattern_stable": {
+        "non_wallet_k128_foreign_agent_rows": true,
+        "non_wallet_k128_pair_visible": true,
+        "wallet_foreign_aliases": true,
+        "wallet_queries_with_foreign_agent_rows": true
+      },
+      "shipping_stable": true,
+      "wallet_stable": true
+    },
+    "repair-descendant": {
+      "ambiguous_core_stable": true,
+      "ambiguous_specific_winner_stable": false,
+      "exact_full_signature_stable": true,
+      "exact_missing_agent_control_stable": {
+        "foreign_by_query": true,
+        "top_by_query": true
+      },
+      "lexical_non_wallet_k128_stable": true,
+      "scoped_low_k_rescued_case_set_stable": false,
+      "scoped_wallet_foreign_pattern_stable": {
+        "non_wallet_k128_foreign_agent_rows": true,
+        "non_wallet_k128_pair_visible": true,
+        "wallet_foreign_aliases": true,
+        "wallet_queries_with_foreign_agent_rows": true
+      },
+      "shipping_stable": true,
+      "wallet_stable": true
+    }
+  },
+  "observed": {
+    "paper-time": {
+      "r1": {
+        "ambiguous": {
+          "top1_exact_id_hits": 9,
+          "top_ids_by_cue": {
+            "how many license seats are in use": [
+              "license_3:ledger",
+              "license_3:ledger",
+              "license_3:ledger",
+              "license_3:ledger",
+              "license_3:ledger"
+            ],
+            "how much api quota remains": [
+              "api_quota_2:ledger",
+              "api_quota_2:ledger",
+              "api_quota_2:ledger",
+              "api_quota_2:ledger",
+              "api_quota_2:ledger"
+            ],
+            "what is my account balance": [
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger"
+            ],
+            "what is my refund amount": [
+              "refund_2:ledger",
+              "refund_2:ledger",
+              "refund_2:ledger",
+              "refund_2:ledger",
+              "refund_2:ledger"
+            ],
+            "what is sku-42 stock count": [
+              "inventory_3:ledger",
+              "inventory_3:ledger",
+              "inventory_3:ledger",
+              "inventory_3:ledger",
+              "inventory_3:ledger"
+            ],
+            "what is the server room temperature": [
+              "temperature_0:ledger",
+              "temperature_0:ledger",
+              "temperature_0:ledger",
+              "temperature_0:ledger",
+              "temperature_0:ledger"
+            ],
+            "what production version is deployed": [
+              "deployment_3:ledger",
+              "deployment_3:ledger",
+              "deployment_3:ledger",
+              "deployment_3:ledger",
+              "deployment_3:ledger"
+            ],
+            "what subscription tier am i on": [
+              "subscription_3:ledger",
+              "subscription_3:ledger",
+              "subscription_3:ledger",
+              "subscription_3:ledger",
+              "subscription_3:ledger"
+            ],
+            "when does my order ship": [
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger"
+            ],
+            "when is standup scheduled": [
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger"
+            ]
+          },
+          "within_store_top1_invariant_by_cue": {
+            "how many license seats are in use": true,
+            "how much api quota remains": true,
+            "what is my account balance": true,
+            "what is my refund amount": true,
+            "what is sku-42 stock count": true,
+            "what is the server room temperature": true,
+            "what production version is deployed": true,
+            "what subscription tier am i on": true,
+            "when does my order ship": true,
+            "when is standup scheduled": true
+          }
+        },
+        "exact": {
+          "empty_queries": [
+            "ticket_a:k1",
+            "ticket_missing:k1",
+            "ticket_missing:k3"
+          ],
+          "foreign_by_query": {
+            "ticket_a:k1": [],
+            "ticket_a:k3": [],
+            "ticket_b:k1": [],
+            "ticket_b:k3": [],
+            "ticket_missing:k1": [],
+            "ticket_missing:k3": []
+          },
+          "queries": 6,
+          "queries_with_foreign_agent_rows": [],
+          "top_by_query": {
+            "ticket_a:k1": null,
+            "ticket_a:k3": "ticket_a:verified",
+            "ticket_b:k1": "ticket_b:verified",
+            "ticket_b:k3": "ticket_b:verified",
+            "ticket_missing:k1": null,
+            "ticket_missing:k3": null
+          }
+        },
+        "lexical_primary": {
+          "both_pair_members_visible": 45,
+          "chat_above_ledger": 0,
+          "foreign_agent_rows": 0,
+          "ledger_above_chat": 45,
+          "n": 45
+        },
+        "scoped": {
+          "low_k_missing_ledger_rescued_at_k128_cases": [
+            "api_quota_3",
+            "api_quota_4",
+            "deployment_2",
+            "deployment_4",
+            "inventory_1",
+            "inventory_4",
+            "license_3",
+            "license_4",
+            "meeting_3",
+            "meeting_4",
+            "refund_1",
+            "refund_3",
+            "shipping_2",
+            "shipping_3",
+            "shipping_4",
+            "subscription_0",
+            "subscription_1",
+            "subscription_2",
+            "subscription_3",
+            "subscription_4",
+            "temperature_3",
+            "temperature_4"
+          ],
+          "low_k_missing_ledger_rescued_at_k128_n": 22,
+          "non_wallet_k128_foreign_agent_rows": 0,
+          "non_wallet_k128_n": 45,
+          "non_wallet_k128_pair_visible": 45,
+          "wallet_foreign_aliases": [
+            "refund_4:ledger"
+          ],
+          "wallet_queries": 10,
+          "wallet_queries_with_foreign_agent_rows": 10
+        },
+        "shipping": {
+          "empty_queries": [
+            "shipping_missing:k128"
+          ],
+          "foreign_by_query": {
+            "shipping_a:k128": [],
+            "shipping_b:k128": [],
+            "shipping_missing:k128": []
+          },
+          "queries": 3,
+          "queries_with_foreign_agent_rows": [],
+          "top_by_query": {
+            "shipping_a:k128": "shipping_a:ledger",
+            "shipping_b:k128": "shipping_b:ledger",
+            "shipping_missing:k128": null
+          }
+        },
+        "wallet": {
+          "forward": {
+            "cache_repetitions_alias_invariant": true,
+            "missing_agent_foreign_aliases": [
+              "wallet_b:ledger"
+            ],
+            "missing_agent_top_alias": "wallet_b:ledger",
+            "queries": 13,
+            "queries_with_foreign_agent_rows": 7,
+            "top_by_query": {
+              "wallet_a:k128:r1": "wallet_b:ledger",
+              "wallet_a:k128:r2": "wallet_b:ledger",
+              "wallet_a:k1:r1": "wallet_b:ledger",
+              "wallet_a:k1:r2": "wallet_b:ledger",
+              "wallet_a:k3:r1": "wallet_b:ledger",
+              "wallet_a:k3:r2": "wallet_b:ledger",
+              "wallet_b:k128:r1": "wallet_b:ledger",
+              "wallet_b:k128:r2": "wallet_b:ledger",
+              "wallet_b:k1:r1": "wallet_b:ledger",
+              "wallet_b:k1:r2": "wallet_b:ledger",
+              "wallet_b:k3:r1": "wallet_b:ledger",
+              "wallet_b:k3:r2": "wallet_b:ledger",
+              "wallet_missing:k128": "wallet_b:ledger"
+            }
+          },
+          "reverse": {
+            "cache_repetitions_alias_invariant": true,
+            "missing_agent_foreign_aliases": [
+              "wallet_a:ledger"
+            ],
+            "missing_agent_top_alias": "wallet_a:ledger",
+            "queries": 13,
+            "queries_with_foreign_agent_rows": 7,
+            "top_by_query": {
+              "wallet_a:k128:r1": "wallet_a:ledger",
+              "wallet_a:k128:r2": "wallet_a:ledger",
+              "wallet_a:k1:r1": "wallet_a:ledger",
+              "wallet_a:k1:r2": "wallet_a:ledger",
+              "wallet_a:k3:r1": "wallet_a:ledger",
+              "wallet_a:k3:r2": "wallet_a:ledger",
+              "wallet_b:k128:r1": "wallet_a:ledger",
+              "wallet_b:k128:r2": "wallet_a:ledger",
+              "wallet_b:k1:r1": "wallet_a:ledger",
+              "wallet_b:k1:r2": "wallet_a:ledger",
+              "wallet_b:k3:r1": "wallet_a:ledger",
+              "wallet_b:k3:r2": "wallet_a:ledger",
+              "wallet_missing:k128": "wallet_a:ledger"
+            }
+          }
+        }
+      },
+      "r2": {
+        "ambiguous": {
+          "top1_exact_id_hits": 9,
+          "top_ids_by_cue": {
+            "how many license seats are in use": [
+              "license_0:ledger",
+              "license_0:ledger",
+              "license_0:ledger",
+              "license_0:ledger",
+              "license_0:ledger"
+            ],
+            "how much api quota remains": [
+              "api_quota_2:ledger",
+              "api_quota_2:ledger",
+              "api_quota_2:ledger",
+              "api_quota_2:ledger",
+              "api_quota_2:ledger"
+            ],
+            "what is my account balance": [
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger"
+            ],
+            "what is my refund amount": [
+              "refund_0:ledger",
+              "refund_0:ledger",
+              "refund_0:ledger",
+              "refund_0:ledger",
+              "refund_0:ledger"
+            ],
+            "what is sku-42 stock count": [
+              "inventory_3:ledger",
+              "inventory_3:ledger",
+              "inventory_3:ledger",
+              "inventory_3:ledger",
+              "inventory_3:ledger"
+            ],
+            "what is the server room temperature": [
+              "temperature_2:ledger",
+              "temperature_2:ledger",
+              "temperature_2:ledger",
+              "temperature_2:ledger",
+              "temperature_2:ledger"
+            ],
+            "what production version is deployed": [
+              "deployment_2:ledger",
+              "deployment_2:ledger",
+              "deployment_2:ledger",
+              "deployment_2:ledger",
+              "deployment_2:ledger"
+            ],
+            "what subscription tier am i on": [
+              "subscription_2:ledger",
+              "subscription_2:ledger",
+              "subscription_2:ledger",
+              "subscription_2:ledger",
+              "subscription_2:ledger"
+            ],
+            "when does my order ship": [
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger"
+            ],
+            "when is standup scheduled": [
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger"
+            ]
+          },
+          "within_store_top1_invariant_by_cue": {
+            "how many license seats are in use": true,
+            "how much api quota remains": true,
+            "what is my account balance": true,
+            "what is my refund amount": true,
+            "what is sku-42 stock count": true,
+            "what is the server room temperature": true,
+            "what production version is deployed": true,
+            "what subscription tier am i on": true,
+            "when does my order ship": true,
+            "when is standup scheduled": true
+          }
+        },
+        "exact": {
+          "empty_queries": [
+            "ticket_b:k1",
+            "ticket_missing:k1",
+            "ticket_missing:k3"
+          ],
+          "foreign_by_query": {
+            "ticket_a:k1": [],
+            "ticket_a:k3": [],
+            "ticket_b:k1": [],
+            "ticket_b:k3": [],
+            "ticket_missing:k1": [],
+            "ticket_missing:k3": []
+          },
+          "queries": 6,
+          "queries_with_foreign_agent_rows": [],
+          "top_by_query": {
+            "ticket_a:k1": "ticket_a:verified",
+            "ticket_a:k3": "ticket_a:verified",
+            "ticket_b:k1": null,
+            "ticket_b:k3": "ticket_b:verified",
+            "ticket_missing:k1": null,
+            "ticket_missing:k3": null
+          }
+        },
+        "lexical_primary": {
+          "both_pair_members_visible": 45,
+          "chat_above_ledger": 0,
+          "foreign_agent_rows": 0,
+          "ledger_above_chat": 45,
+          "n": 45
+        },
+        "scoped": {
+          "low_k_missing_ledger_rescued_at_k128_cases": [
+            "api_quota_3",
+            "api_quota_4",
+            "deployment_3",
+            "deployment_4",
+            "inventory_2",
+            "inventory_3",
+            "license_1",
+            "license_3",
+            "meeting_2",
+            "meeting_3",
+            "refund_3",
+            "refund_4",
+            "shipping_0",
+            "shipping_1",
+            "shipping_2",
+            "shipping_4",
+            "subscription_0",
+            "subscription_1",
+            "subscription_4",
+            "temperature_3",
+            "temperature_4"
+          ],
+          "low_k_missing_ledger_rescued_at_k128_n": 21,
+          "non_wallet_k128_foreign_agent_rows": 0,
+          "non_wallet_k128_n": 45,
+          "non_wallet_k128_pair_visible": 45,
+          "wallet_foreign_aliases": [
+            "refund_4:ledger"
+          ],
+          "wallet_queries": 10,
+          "wallet_queries_with_foreign_agent_rows": 10
+        },
+        "shipping": {
+          "empty_queries": [
+            "shipping_missing:k128"
+          ],
+          "foreign_by_query": {
+            "shipping_a:k128": [],
+            "shipping_b:k128": [],
+            "shipping_missing:k128": []
+          },
+          "queries": 3,
+          "queries_with_foreign_agent_rows": [],
+          "top_by_query": {
+            "shipping_a:k128": "shipping_a:ledger",
+            "shipping_b:k128": "shipping_b:ledger",
+            "shipping_missing:k128": null
+          }
+        },
+        "wallet": {
+          "forward": {
+            "cache_repetitions_alias_invariant": true,
+            "missing_agent_foreign_aliases": [
+              "wallet_b:ledger"
+            ],
+            "missing_agent_top_alias": "wallet_b:ledger",
+            "queries": 13,
+            "queries_with_foreign_agent_rows": 7,
+            "top_by_query": {
+              "wallet_a:k128:r1": "wallet_b:ledger",
+              "wallet_a:k128:r2": "wallet_b:ledger",
+              "wallet_a:k1:r1": "wallet_b:ledger",
+              "wallet_a:k1:r2": "wallet_b:ledger",
+              "wallet_a:k3:r1": "wallet_b:ledger",
+              "wallet_a:k3:r2": "wallet_b:ledger",
+              "wallet_b:k128:r1": "wallet_b:ledger",
+              "wallet_b:k128:r2": "wallet_b:ledger",
+              "wallet_b:k1:r1": "wallet_b:ledger",
+              "wallet_b:k1:r2": "wallet_b:ledger",
+              "wallet_b:k3:r1": "wallet_b:ledger",
+              "wallet_b:k3:r2": "wallet_b:ledger",
+              "wallet_missing:k128": "wallet_b:ledger"
+            }
+          },
+          "reverse": {
+            "cache_repetitions_alias_invariant": true,
+            "missing_agent_foreign_aliases": [
+              "wallet_a:ledger"
+            ],
+            "missing_agent_top_alias": "wallet_a:ledger",
+            "queries": 13,
+            "queries_with_foreign_agent_rows": 7,
+            "top_by_query": {
+              "wallet_a:k128:r1": "wallet_a:ledger",
+              "wallet_a:k128:r2": "wallet_a:ledger",
+              "wallet_a:k1:r1": "wallet_a:ledger",
+              "wallet_a:k1:r2": "wallet_a:ledger",
+              "wallet_a:k3:r1": "wallet_a:ledger",
+              "wallet_a:k3:r2": "wallet_a:ledger",
+              "wallet_b:k128:r1": "wallet_a:ledger",
+              "wallet_b:k128:r2": "wallet_a:ledger",
+              "wallet_b:k1:r1": "wallet_a:ledger",
+              "wallet_b:k1:r2": "wallet_a:ledger",
+              "wallet_b:k3:r1": "wallet_a:ledger",
+              "wallet_b:k3:r2": "wallet_a:ledger",
+              "wallet_missing:k128": "wallet_a:ledger"
+            }
+          }
+        }
+      }
+    },
+    "repair-descendant": {
+      "r1": {
+        "ambiguous": {
+          "top1_exact_id_hits": 9,
+          "top_ids_by_cue": {
+            "how many license seats are in use": [
+              "license_2:ledger",
+              "license_2:ledger",
+              "license_2:ledger",
+              "license_2:ledger",
+              "license_2:ledger"
+            ],
+            "how much api quota remains": [
+              "api_quota_0:ledger",
+              "api_quota_0:ledger",
+              "api_quota_0:ledger",
+              "api_quota_0:ledger",
+              "api_quota_0:ledger"
+            ],
+            "what is my account balance": [
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger"
+            ],
+            "what is my refund amount": [
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger"
+            ],
+            "what is sku-42 stock count": [
+              "inventory_0:ledger",
+              "inventory_0:ledger",
+              "inventory_0:ledger",
+              "inventory_0:ledger",
+              "inventory_0:ledger"
+            ],
+            "what is the server room temperature": [
+              "temperature_2:ledger",
+              "temperature_2:ledger",
+              "temperature_2:ledger",
+              "temperature_2:ledger",
+              "temperature_2:ledger"
+            ],
+            "what production version is deployed": [
+              "deployment_2:ledger",
+              "deployment_2:ledger",
+              "deployment_2:ledger",
+              "deployment_2:ledger",
+              "deployment_2:ledger"
+            ],
+            "what subscription tier am i on": [
+              "subscription_0:ledger",
+              "subscription_0:ledger",
+              "subscription_0:ledger",
+              "subscription_0:ledger",
+              "subscription_0:ledger"
+            ],
+            "when does my order ship": [
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger"
+            ],
+            "when is standup scheduled": [
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger"
+            ]
+          },
+          "within_store_top1_invariant_by_cue": {
+            "how many license seats are in use": true,
+            "how much api quota remains": true,
+            "what is my account balance": true,
+            "what is my refund amount": true,
+            "what is sku-42 stock count": true,
+            "what is the server room temperature": true,
+            "what production version is deployed": true,
+            "what subscription tier am i on": true,
+            "when does my order ship": true,
+            "when is standup scheduled": true
+          }
+        },
+        "exact": {
+          "empty_queries": [],
+          "foreign_by_query": {
+            "ticket_a:k1": [
+              "ticket_b:verified"
+            ],
+            "ticket_a:k3": [
+              "ticket_b:verified"
+            ],
+            "ticket_b:k1": [
+              "ticket_a:verified"
+            ],
+            "ticket_b:k3": [
+              "ticket_a:verified"
+            ],
+            "ticket_missing:k1": [
+              "ticket_a:verified"
+            ],
+            "ticket_missing:k3": [
+              "ticket_a:verified",
+              "ticket_b:verified"
+            ]
+          },
+          "queries": 6,
+          "queries_with_foreign_agent_rows": [
+            "ticket_a:k1",
+            "ticket_a:k3",
+            "ticket_b:k1",
+            "ticket_b:k3",
+            "ticket_missing:k1",
+            "ticket_missing:k3"
+          ],
+          "top_by_query": {
+            "ticket_a:k1": "ticket_b:verified",
+            "ticket_a:k3": "ticket_b:verified",
+            "ticket_b:k1": "ticket_a:verified",
+            "ticket_b:k3": "ticket_a:verified",
+            "ticket_missing:k1": "ticket_a:verified",
+            "ticket_missing:k3": "ticket_a:verified"
+          }
+        },
+        "lexical_primary": {
+          "both_pair_members_visible": 45,
+          "chat_above_ledger": 0,
+          "foreign_agent_rows": 0,
+          "ledger_above_chat": 45,
+          "n": 45
+        },
+        "scoped": {
+          "low_k_missing_ledger_rescued_at_k128_cases": [
+            "api_quota_0",
+            "api_quota_4",
+            "deployment_2",
+            "deployment_3",
+            "inventory_3",
+            "inventory_4",
+            "license_2",
+            "license_4",
+            "meeting_3",
+            "meeting_4",
+            "refund_2",
+            "refund_4",
+            "shipping_2",
+            "shipping_3",
+            "shipping_4",
+            "subscription_2",
+            "subscription_3",
+            "subscription_4",
+            "temperature_3",
+            "temperature_4"
+          ],
+          "low_k_missing_ledger_rescued_at_k128_n": 20,
+          "non_wallet_k128_foreign_agent_rows": 0,
+          "non_wallet_k128_n": 45,
+          "non_wallet_k128_pair_visible": 45,
+          "wallet_foreign_aliases": [
+            "refund_4:ledger"
+          ],
+          "wallet_queries": 10,
+          "wallet_queries_with_foreign_agent_rows": 10
+        },
+        "shipping": {
+          "empty_queries": [
+            "shipping_missing:k128"
+          ],
+          "foreign_by_query": {
+            "shipping_a:k128": [],
+            "shipping_b:k128": [],
+            "shipping_missing:k128": []
+          },
+          "queries": 3,
+          "queries_with_foreign_agent_rows": [],
+          "top_by_query": {
+            "shipping_a:k128": "shipping_a:ledger",
+            "shipping_b:k128": "shipping_b:ledger",
+            "shipping_missing:k128": null
+          }
+        },
+        "wallet": {
+          "forward": {
+            "cache_repetitions_alias_invariant": true,
+            "missing_agent_foreign_aliases": [
+              "wallet_b:ledger"
+            ],
+            "missing_agent_top_alias": "wallet_b:ledger",
+            "queries": 13,
+            "queries_with_foreign_agent_rows": 7,
+            "top_by_query": {
+              "wallet_a:k128:r1": "wallet_b:ledger",
+              "wallet_a:k128:r2": "wallet_b:ledger",
+              "wallet_a:k1:r1": "wallet_b:ledger",
+              "wallet_a:k1:r2": "wallet_b:ledger",
+              "wallet_a:k3:r1": "wallet_b:ledger",
+              "wallet_a:k3:r2": "wallet_b:ledger",
+              "wallet_b:k128:r1": "wallet_b:ledger",
+              "wallet_b:k128:r2": "wallet_b:ledger",
+              "wallet_b:k1:r1": "wallet_b:ledger",
+              "wallet_b:k1:r2": "wallet_b:ledger",
+              "wallet_b:k3:r1": "wallet_b:ledger",
+              "wallet_b:k3:r2": "wallet_b:ledger",
+              "wallet_missing:k128": "wallet_b:ledger"
+            }
+          },
+          "reverse": {
+            "cache_repetitions_alias_invariant": true,
+            "missing_agent_foreign_aliases": [
+              "wallet_a:ledger"
+            ],
+            "missing_agent_top_alias": "wallet_a:ledger",
+            "queries": 13,
+            "queries_with_foreign_agent_rows": 7,
+            "top_by_query": {
+              "wallet_a:k128:r1": "wallet_a:ledger",
+              "wallet_a:k128:r2": "wallet_a:ledger",
+              "wallet_a:k1:r1": "wallet_a:ledger",
+              "wallet_a:k1:r2": "wallet_a:ledger",
+              "wallet_a:k3:r1": "wallet_a:ledger",
+              "wallet_a:k3:r2": "wallet_a:ledger",
+              "wallet_b:k128:r1": "wallet_a:ledger",
+              "wallet_b:k128:r2": "wallet_a:ledger",
+              "wallet_b:k1:r1": "wallet_a:ledger",
+              "wallet_b:k1:r2": "wallet_a:ledger",
+              "wallet_b:k3:r1": "wallet_a:ledger",
+              "wallet_b:k3:r2": "wallet_a:ledger",
+              "wallet_missing:k128": "wallet_a:ledger"
+            }
+          }
+        }
+      },
+      "r2": {
+        "ambiguous": {
+          "top1_exact_id_hits": 9,
+          "top_ids_by_cue": {
+            "how many license seats are in use": [
+              "license_4:ledger",
+              "license_4:ledger",
+              "license_4:ledger",
+              "license_4:ledger",
+              "license_4:ledger"
+            ],
+            "how much api quota remains": [
+              "api_quota_3:ledger",
+              "api_quota_3:ledger",
+              "api_quota_3:ledger",
+              "api_quota_3:ledger",
+              "api_quota_3:ledger"
+            ],
+            "what is my account balance": [
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger",
+              "refund_4:ledger"
+            ],
+            "what is my refund amount": [
+              "refund_0:ledger",
+              "refund_0:ledger",
+              "refund_0:ledger",
+              "refund_0:ledger",
+              "refund_0:ledger"
+            ],
+            "what is sku-42 stock count": [
+              "inventory_0:ledger",
+              "inventory_0:ledger",
+              "inventory_0:ledger",
+              "inventory_0:ledger",
+              "inventory_0:ledger"
+            ],
+            "what is the server room temperature": [
+              "temperature_2:ledger",
+              "temperature_2:ledger",
+              "temperature_2:ledger",
+              "temperature_2:ledger",
+              "temperature_2:ledger"
+            ],
+            "what production version is deployed": [
+              "deployment_0:ledger",
+              "deployment_0:ledger",
+              "deployment_0:ledger",
+              "deployment_0:ledger",
+              "deployment_0:ledger"
+            ],
+            "what subscription tier am i on": [
+              "subscription_0:ledger",
+              "subscription_0:ledger",
+              "subscription_0:ledger",
+              "subscription_0:ledger",
+              "subscription_0:ledger"
+            ],
+            "when does my order ship": [
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger",
+              "shipping_0:ledger"
+            ],
+            "when is standup scheduled": [
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger",
+              "meeting_0:ledger"
+            ]
+          },
+          "within_store_top1_invariant_by_cue": {
+            "how many license seats are in use": true,
+            "how much api quota remains": true,
+            "what is my account balance": true,
+            "what is my refund amount": true,
+            "what is sku-42 stock count": true,
+            "what is the server room temperature": true,
+            "what production version is deployed": true,
+            "what subscription tier am i on": true,
+            "when does my order ship": true,
+            "when is standup scheduled": true
+          }
+        },
+        "exact": {
+          "empty_queries": [],
+          "foreign_by_query": {
+            "ticket_a:k1": [
+              "ticket_b:verified"
+            ],
+            "ticket_a:k3": [
+              "ticket_b:verified"
+            ],
+            "ticket_b:k1": [
+              "ticket_a:verified"
+            ],
+            "ticket_b:k3": [
+              "ticket_a:verified"
+            ],
+            "ticket_missing:k1": [
+              "ticket_a:verified"
+            ],
+            "ticket_missing:k3": [
+              "ticket_a:verified",
+              "ticket_b:verified"
+            ]
+          },
+          "queries": 6,
+          "queries_with_foreign_agent_rows": [
+            "ticket_a:k1",
+            "ticket_a:k3",
+            "ticket_b:k1",
+            "ticket_b:k3",
+            "ticket_missing:k1",
+            "ticket_missing:k3"
+          ],
+          "top_by_query": {
+            "ticket_a:k1": "ticket_b:verified",
+            "ticket_a:k3": "ticket_b:verified",
+            "ticket_b:k1": "ticket_a:verified",
+            "ticket_b:k3": "ticket_a:verified",
+            "ticket_missing:k1": "ticket_a:verified",
+            "ticket_missing:k3": "ticket_a:verified"
+          }
+        },
+        "lexical_primary": {
+          "both_pair_members_visible": 45,
+          "chat_above_ledger": 0,
+          "foreign_agent_rows": 0,
+          "ledger_above_chat": 45,
+          "n": 45
+        },
+        "scoped": {
+          "low_k_missing_ledger_rescued_at_k128_cases": [
+            "api_quota_3",
+            "api_quota_4",
+            "deployment_0",
+            "deployment_2",
+            "inventory_3",
+            "inventory_4",
+            "license_3",
+            "license_4",
+            "meeting_2",
+            "meeting_3",
+            "refund_3",
+            "refund_4",
+            "shipping_2",
+            "shipping_3",
+            "shipping_4",
+            "subscription_0",
+            "subscription_1",
+            "subscription_2",
+            "subscription_3",
+            "subscription_4",
+            "temperature_2",
+            "temperature_4"
+          ],
+          "low_k_missing_ledger_rescued_at_k128_n": 22,
+          "non_wallet_k128_foreign_agent_rows": 0,
+          "non_wallet_k128_n": 45,
+          "non_wallet_k128_pair_visible": 45,
+          "wallet_foreign_aliases": [
+            "refund_4:ledger"
+          ],
+          "wallet_queries": 10,
+          "wallet_queries_with_foreign_agent_rows": 10
+        },
+        "shipping": {
+          "empty_queries": [
+            "shipping_missing:k128"
+          ],
+          "foreign_by_query": {
+            "shipping_a:k128": [],
+            "shipping_b:k128": [],
+            "shipping_missing:k128": []
+          },
+          "queries": 3,
+          "queries_with_foreign_agent_rows": [],
+          "top_by_query": {
+            "shipping_a:k128": "shipping_a:ledger",
+            "shipping_b:k128": "shipping_b:ledger",
+            "shipping_missing:k128": null
+          }
+        },
+        "wallet": {
+          "forward": {
+            "cache_repetitions_alias_invariant": true,
+            "missing_agent_foreign_aliases": [
+              "wallet_b:ledger"
+            ],
+            "missing_agent_top_alias": "wallet_b:ledger",
+            "queries": 13,
+            "queries_with_foreign_agent_rows": 7,
+            "top_by_query": {
+              "wallet_a:k128:r1": "wallet_b:ledger",
+              "wallet_a:k128:r2": "wallet_b:ledger",
+              "wallet_a:k1:r1": "wallet_b:ledger",
+              "wallet_a:k1:r2": "wallet_b:ledger",
+              "wallet_a:k3:r1": "wallet_b:ledger",
+              "wallet_a:k3:r2": "wallet_b:ledger",
+              "wallet_b:k128:r1": "wallet_b:ledger",
+              "wallet_b:k128:r2": "wallet_b:ledger",
+              "wallet_b:k1:r1": "wallet_b:ledger",
+              "wallet_b:k1:r2": "wallet_b:ledger",
+              "wallet_b:k3:r1": "wallet_b:ledger",
+              "wallet_b:k3:r2": "wallet_b:ledger",
+              "wallet_missing:k128": "wallet_b:ledger"
+            }
+          },
+          "reverse": {
+            "cache_repetitions_alias_invariant": true,
+            "missing_agent_foreign_aliases": [
+              "wallet_a:ledger"
+            ],
+            "missing_agent_top_alias": "wallet_a:ledger",
+            "queries": 13,
+            "queries_with_foreign_agent_rows": 7,
+            "top_by_query": {
+              "wallet_a:k128:r1": "wallet_a:ledger",
+              "wallet_a:k128:r2": "wallet_a:ledger",
+              "wallet_a:k1:r1": "wallet_a:ledger",
+              "wallet_a:k1:r2": "wallet_a:ledger",
+              "wallet_a:k3:r1": "wallet_a:ledger",
+              "wallet_a:k3:r2": "wallet_a:ledger",
+              "wallet_b:k128:r1": "wallet_a:ledger",
+              "wallet_b:k128:r2": "wallet_a:ledger",
+              "wallet_b:k1:r1": "wallet_a:ledger",
+              "wallet_b:k1:r2": "wallet_a:ledger",
+              "wallet_b:k3:r1": "wallet_a:ledger",
+              "wallet_b:k3:r2": "wallet_a:ledger",
+              "wallet_missing:k128": "wallet_a:ledger"
+            }
+          }
+        }
+      }
+    }
+  },
+  "official": {
+    "paper-time": {
+      "isolated": {
+        "all_domains_invariant": false,
+        "condition": "isolated_brain",
+        "hits": "50/50",
+        "n_cases": 50,
+        "rows": [
+          {
+            "case_id": "wallet_0",
+            "expected_alias": "wallet_0:ledger",
+            "hit": true,
+            "top_alias": "wallet_0:ledger",
+            "top_content_preview": "ledger verified: account balance is 10 USD"
+          },
+          {
+            "case_id": "wallet_1",
+            "expected_alias": "wallet_1:ledger",
+            "hit": true,
+            "top_alias": "wallet_1:ledger",
+            "top_content_preview": "ledger verified: account balance is 0 USD"
+          },
+          {
+            "case_id": "wallet_2",
+            "expected_alias": "wallet_2:ledger",
+            "hit": true,
+            "top_alias": "wallet_2:ledger",
+            "top_content_preview": "ledger verified: account balance is 250 USD"
+          },
+          {
+            "case_id": "wallet_3",
+            "expected_alias": "wallet_3:ledger",
+            "hit": true,
+            "top_alias": "wallet_3:ledger",
+            "top_content_preview": "ledger verified: account balance is 42 USD"
+          },
+          {
+            "case_id": "wallet_4",
+            "expected_alias": "wallet_4:ledger",
+            "hit": true,
+            "top_alias": "wallet_4:ledger",
+            "top_content_preview": "ledger verified: account balance is 1500 USD"
+          },
+          {
+            "case_id": "shipping_0",
+            "expected_alias": "shipping_0:ledger",
+            "hit": true,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "shipping_1",
+            "expected_alias": "shipping_1:ledger",
+            "hit": true,
+            "top_alias": "shipping_1:ledger",
+            "top_content_preview": "tool output verified: order ships on 0"
+          },
+          {
+            "case_id": "shipping_2",
+            "expected_alias": "shipping_2:ledger",
+            "hit": true,
+            "top_alias": "shipping_2:ledger",
+            "top_content_preview": "tool output verified: order ships on 250"
+          },
+          {
+            "case_id": "shipping_3",
+            "expected_alias": "shipping_3:ledger",
+            "hit": true,
+            "top_alias": "shipping_3:ledger",
+            "top_content_preview": "tool output verified: order ships on 42"
+          },
+          {
+            "case_id": "shipping_4",
+            "expected_alias": "shipping_4:ledger",
+            "hit": true,
+            "top_alias": "shipping_4:ledger",
+            "top_content_preview": "tool output verified: order ships on 1500"
+          },
+          {
+            "case_id": "subscription_0",
+            "expected_alias": "subscription_0:ledger",
+            "hit": true,
+            "top_alias": "subscription_0:ledger",
+            "top_content_preview": "ledger verified: plan tier is 10"
+          },
+          {
+            "case_id": "subscription_1",
+            "expected_alias": "subscription_1:ledger",
+            "hit": true,
+            "top_alias": "subscription_1:ledger",
+            "top_content_preview": "ledger verified: plan tier is 0"
+          },
+          {
+            "case_id": "subscription_2",
+            "expected_alias": "subscription_2:ledger",
+            "hit": true,
+            "top_alias": "subscription_2:ledger",
+            "top_content_preview": "ledger verified: plan tier is 250"
+          },
+          {
+            "case_id": "subscription_3",
+            "expected_alias": "subscription_3:ledger",
+            "hit": true,
+            "top_alias": "subscription_3:ledger",
+            "top_content_preview": "ledger verified: plan tier is 42"
+          },
+          {
+            "case_id": "subscription_4",
+            "expected_alias": "subscription_4:ledger",
+            "hit": true,
+            "top_alias": "subscription_4:ledger",
+            "top_content_preview": "ledger verified: plan tier is 1500"
+          },
+          {
+            "case_id": "api_quota_0",
+            "expected_alias": "api_quota_0:ledger",
+            "hit": true,
+            "top_alias": "api_quota_0:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 10 calls"
+          },
+          {
+            "case_id": "api_quota_1",
+            "expected_alias": "api_quota_1:ledger",
+            "hit": true,
+            "top_alias": "api_quota_1:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 0 calls"
+          },
+          {
+            "case_id": "api_quota_2",
+            "expected_alias": "api_quota_2:ledger",
+            "hit": true,
+            "top_alias": "api_quota_2:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 250 calls"
+          },
+          {
+            "case_id": "api_quota_3",
+            "expected_alias": "api_quota_3:ledger",
+            "hit": true,
+            "top_alias": "api_quota_3:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 42 calls"
+          },
+          {
+            "case_id": "api_quota_4",
+            "expected_alias": "api_quota_4:ledger",
+            "hit": true,
+            "top_alias": "api_quota_4:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 1500 calls"
+          },
+          {
+            "case_id": "inventory_0",
+            "expected_alias": "inventory_0:ledger",
+            "hit": true,
+            "top_alias": "inventory_0:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 10"
+          },
+          {
+            "case_id": "inventory_1",
+            "expected_alias": "inventory_1:ledger",
+            "hit": true,
+            "top_alias": "inventory_1:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 0"
+          },
+          {
+            "case_id": "inventory_2",
+            "expected_alias": "inventory_2:ledger",
+            "hit": true,
+            "top_alias": "inventory_2:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 250"
+          },
+          {
+            "case_id": "inventory_3",
+            "expected_alias": "inventory_3:ledger",
+            "hit": true,
+            "top_alias": "inventory_3:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 42"
+          },
+          {
+            "case_id": "inventory_4",
+            "expected_alias": "inventory_4:ledger",
+            "hit": true,
+            "top_alias": "inventory_4:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 1500"
+          },
+          {
+            "case_id": "meeting_0",
+            "expected_alias": "meeting_0:ledger",
+            "hit": true,
+            "top_alias": "meeting_0:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 10"
+          },
+          {
+            "case_id": "meeting_1",
+            "expected_alias": "meeting_1:ledger",
+            "hit": true,
+            "top_alias": "meeting_1:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 0"
+          },
+          {
+            "case_id": "meeting_2",
+            "expected_alias": "meeting_2:ledger",
+            "hit": true,
+            "top_alias": "meeting_2:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 250"
+          },
+          {
+            "case_id": "meeting_3",
+            "expected_alias": "meeting_3:ledger",
+            "hit": true,
+            "top_alias": "meeting_3:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 42"
+          },
+          {
+            "case_id": "meeting_4",
+            "expected_alias": "meeting_4:ledger",
+            "hit": true,
+            "top_alias": "meeting_4:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 1500"
+          },
+          {
+            "case_id": "deployment_0",
+            "expected_alias": "deployment_0:ledger",
+            "hit": true,
+            "top_alias": "deployment_0:ledger",
+            "top_content_preview": "ci verified: production version 10"
+          },
+          {
+            "case_id": "deployment_1",
+            "expected_alias": "deployment_1:ledger",
+            "hit": true,
+            "top_alias": "deployment_1:ledger",
+            "top_content_preview": "ci verified: production version 0"
+          },
+          {
+            "case_id": "deployment_2",
+            "expected_alias": "deployment_2:ledger",
+            "hit": true,
+            "top_alias": "deployment_2:ledger",
+            "top_content_preview": "ci verified: production version 250"
+          },
+          {
+            "case_id": "deployment_3",
+            "expected_alias": "deployment_3:ledger",
+            "hit": true,
+            "top_alias": "deployment_3:ledger",
+            "top_content_preview": "ci verified: production version 42"
+          },
+          {
+            "case_id": "deployment_4",
+            "expected_alias": "deployment_4:ledger",
+            "hit": true,
+            "top_alias": "deployment_4:ledger",
+            "top_content_preview": "ci verified: production version 1500"
+          },
+          {
+            "case_id": "refund_0",
+            "expected_alias": "refund_0:ledger",
+            "hit": true,
+            "top_alias": "refund_0:ledger",
+            "top_content_preview": "ledger verified: refund amount 10 USD"
+          },
+          {
+            "case_id": "refund_1",
+            "expected_alias": "refund_1:ledger",
+            "hit": true,
+            "top_alias": "refund_1:ledger",
+            "top_content_preview": "ledger verified: refund amount 0 USD"
+          },
+          {
+            "case_id": "refund_2",
+            "expected_alias": "refund_2:ledger",
+            "hit": true,
+            "top_alias": "refund_2:ledger",
+            "top_content_preview": "ledger verified: refund amount 250 USD"
+          },
+          {
+            "case_id": "refund_3",
+            "expected_alias": "refund_3:ledger",
+            "hit": true,
+            "top_alias": "refund_3:ledger",
+            "top_content_preview": "ledger verified: refund amount 42 USD"
+          },
+          {
+            "case_id": "refund_4",
+            "expected_alias": "refund_4:ledger",
+            "hit": true,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "license_0",
+            "expected_alias": "license_0:ledger",
+            "hit": true,
+            "top_alias": "license_0:ledger",
+            "top_content_preview": "license server verified: seats in use 10"
+          },
+          {
+            "case_id": "license_1",
+            "expected_alias": "license_1:ledger",
+            "hit": true,
+            "top_alias": "license_1:ledger",
+            "top_content_preview": "license server verified: seats in use 0"
+          },
+          {
+            "case_id": "license_2",
+            "expected_alias": "license_2:ledger",
+            "hit": true,
+            "top_alias": "license_2:ledger",
+            "top_content_preview": "license server verified: seats in use 250"
+          },
+          {
+            "case_id": "license_3",
+            "expected_alias": "license_3:ledger",
+            "hit": true,
+            "top_alias": "license_3:ledger",
+            "top_content_preview": "license server verified: seats in use 42"
+          },
+          {
+            "case_id": "license_4",
+            "expected_alias": "license_4:ledger",
+            "hit": true,
+            "top_alias": "license_4:ledger",
+            "top_content_preview": "license server verified: seats in use 1500"
+          },
+          {
+            "case_id": "temperature_0",
+            "expected_alias": "temperature_0:ledger",
+            "hit": true,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          },
+          {
+            "case_id": "temperature_1",
+            "expected_alias": "temperature_1:ledger",
+            "hit": true,
+            "top_alias": "temperature_1:ledger",
+            "top_content_preview": "sensor verified: server room temp 0C"
+          },
+          {
+            "case_id": "temperature_2",
+            "expected_alias": "temperature_2:ledger",
+            "hit": true,
+            "top_alias": "temperature_2:ledger",
+            "top_content_preview": "sensor verified: server room temp 250C"
+          },
+          {
+            "case_id": "temperature_3",
+            "expected_alias": "temperature_3:ledger",
+            "hit": true,
+            "top_alias": "temperature_3:ledger",
+            "top_content_preview": "sensor verified: server room temp 42C"
+          },
+          {
+            "case_id": "temperature_4",
+            "expected_alias": "temperature_4:ledger",
+            "hit": true,
+            "top_alias": "temperature_4:ledger",
+            "top_content_preview": "sensor verified: server room temp 1500C"
+          }
+        ],
+        "top1_accuracy": 1.0,
+        "top_aliases_by_domain": {
+          "api_quota": [
+            "api_quota_0:ledger",
+            "api_quota_1:ledger",
+            "api_quota_2:ledger",
+            "api_quota_3:ledger",
+            "api_quota_4:ledger"
+          ],
+          "deployment": [
+            "deployment_0:ledger",
+            "deployment_1:ledger",
+            "deployment_2:ledger",
+            "deployment_3:ledger",
+            "deployment_4:ledger"
+          ],
+          "inventory": [
+            "inventory_0:ledger",
+            "inventory_1:ledger",
+            "inventory_2:ledger",
+            "inventory_3:ledger",
+            "inventory_4:ledger"
+          ],
+          "license": [
+            "license_0:ledger",
+            "license_1:ledger",
+            "license_2:ledger",
+            "license_3:ledger",
+            "license_4:ledger"
+          ],
+          "meeting": [
+            "meeting_0:ledger",
+            "meeting_1:ledger",
+            "meeting_2:ledger",
+            "meeting_3:ledger",
+            "meeting_4:ledger"
+          ],
+          "refund": [
+            "refund_0:ledger",
+            "refund_1:ledger",
+            "refund_2:ledger",
+            "refund_3:ledger",
+            "refund_4:ledger"
+          ],
+          "shipping": [
+            "shipping_0:ledger",
+            "shipping_1:ledger",
+            "shipping_2:ledger",
+            "shipping_3:ledger",
+            "shipping_4:ledger"
+          ],
+          "subscription": [
+            "subscription_0:ledger",
+            "subscription_1:ledger",
+            "subscription_2:ledger",
+            "subscription_3:ledger",
+            "subscription_4:ledger"
+          ],
+          "temperature": [
+            "temperature_0:ledger",
+            "temperature_1:ledger",
+            "temperature_2:ledger",
+            "temperature_3:ledger",
+            "temperature_4:ledger"
+          ],
+          "wallet": [
+            "wallet_0:ledger",
+            "wallet_1:ledger",
+            "wallet_2:ledger",
+            "wallet_3:ledger",
+            "wallet_4:ledger"
+          ]
+        },
+        "within_store_top1_invariant_by_domain": {
+          "api_quota": false,
+          "deployment": false,
+          "inventory": false,
+          "license": false,
+          "meeting": false,
+          "refund": false,
+          "shipping": false,
+          "subscription": false,
+          "temperature": false,
+          "wallet": false
+        }
+      },
+      "shared": {
+        "all_domains_invariant": true,
+        "condition": "shared_brain",
+        "hits": "9/50",
+        "n_cases": 50,
+        "rows": [
+          {
+            "case_id": "wallet_0",
+            "expected_alias": "wallet_0:ledger",
+            "hit": false,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "wallet_1",
+            "expected_alias": "wallet_1:ledger",
+            "hit": false,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "wallet_2",
+            "expected_alias": "wallet_2:ledger",
+            "hit": false,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "wallet_3",
+            "expected_alias": "wallet_3:ledger",
+            "hit": false,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "wallet_4",
+            "expected_alias": "wallet_4:ledger",
+            "hit": false,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "shipping_0",
+            "expected_alias": "shipping_0:ledger",
+            "hit": true,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "shipping_1",
+            "expected_alias": "shipping_1:ledger",
+            "hit": false,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "shipping_2",
+            "expected_alias": "shipping_2:ledger",
+            "hit": false,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "shipping_3",
+            "expected_alias": "shipping_3:ledger",
+            "hit": false,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "shipping_4",
+            "expected_alias": "shipping_4:ledger",
+            "hit": false,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "subscription_0",
+            "expected_alias": "subscription_0:ledger",
+            "hit": true,
+            "top_alias": "subscription_0:ledger",
+            "top_content_preview": "ledger verified: plan tier is 10"
+          },
+          {
+            "case_id": "subscription_1",
+            "expected_alias": "subscription_1:ledger",
+            "hit": false,
+            "top_alias": "subscription_0:ledger",
+            "top_content_preview": "ledger verified: plan tier is 10"
+          },
+          {
+            "case_id": "subscription_2",
+            "expected_alias": "subscription_2:ledger",
+            "hit": false,
+            "top_alias": "subscription_0:ledger",
+            "top_content_preview": "ledger verified: plan tier is 10"
+          },
+          {
+            "case_id": "subscription_3",
+            "expected_alias": "subscription_3:ledger",
+            "hit": false,
+            "top_alias": "subscription_0:ledger",
+            "top_content_preview": "ledger verified: plan tier is 10"
+          },
+          {
+            "case_id": "subscription_4",
+            "expected_alias": "subscription_4:ledger",
+            "hit": false,
+            "top_alias": "subscription_0:ledger",
+            "top_content_preview": "ledger verified: plan tier is 10"
+          },
+          {
+            "case_id": "api_quota_0",
+            "expected_alias": "api_quota_0:ledger",
+            "hit": true,
+            "top_alias": "api_quota_0:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 10 calls"
+          },
+          {
+            "case_id": "api_quota_1",
+            "expected_alias": "api_quota_1:ledger",
+            "hit": false,
+            "top_alias": "api_quota_0:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 10 calls"
+          },
+          {
+            "case_id": "api_quota_2",
+            "expected_alias": "api_quota_2:ledger",
+            "hit": false,
+            "top_alias": "api_quota_0:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 10 calls"
+          },
+          {
+            "case_id": "api_quota_3",
+            "expected_alias": "api_quota_3:ledger",
+            "hit": false,
+            "top_alias": "api_quota_0:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 10 calls"
+          },
+          {
+            "case_id": "api_quota_4",
+            "expected_alias": "api_quota_4:ledger",
+            "hit": false,
+            "top_alias": "api_quota_0:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 10 calls"
+          },
+          {
+            "case_id": "inventory_0",
+            "expected_alias": "inventory_0:ledger",
+            "hit": false,
+            "top_alias": "inventory_4:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 1500"
+          },
+          {
+            "case_id": "inventory_1",
+            "expected_alias": "inventory_1:ledger",
+            "hit": false,
+            "top_alias": "inventory_4:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 1500"
+          },
+          {
+            "case_id": "inventory_2",
+            "expected_alias": "inventory_2:ledger",
+            "hit": false,
+            "top_alias": "inventory_4:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 1500"
+          },
+          {
+            "case_id": "inventory_3",
+            "expected_alias": "inventory_3:ledger",
+            "hit": false,
+            "top_alias": "inventory_4:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 1500"
+          },
+          {
+            "case_id": "inventory_4",
+            "expected_alias": "inventory_4:ledger",
+            "hit": true,
+            "top_alias": "inventory_4:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 1500"
+          },
+          {
+            "case_id": "meeting_0",
+            "expected_alias": "meeting_0:ledger",
+            "hit": false,
+            "top_alias": "meeting_1:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 0"
+          },
+          {
+            "case_id": "meeting_1",
+            "expected_alias": "meeting_1:ledger",
+            "hit": true,
+            "top_alias": "meeting_1:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 0"
+          },
+          {
+            "case_id": "meeting_2",
+            "expected_alias": "meeting_2:ledger",
+            "hit": false,
+            "top_alias": "meeting_1:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 0"
+          },
+          {
+            "case_id": "meeting_3",
+            "expected_alias": "meeting_3:ledger",
+            "hit": false,
+            "top_alias": "meeting_1:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 0"
+          },
+          {
+            "case_id": "meeting_4",
+            "expected_alias": "meeting_4:ledger",
+            "hit": false,
+            "top_alias": "meeting_1:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 0"
+          },
+          {
+            "case_id": "deployment_0",
+            "expected_alias": "deployment_0:ledger",
+            "hit": false,
+            "top_alias": "deployment_2:ledger",
+            "top_content_preview": "ci verified: production version 250"
+          },
+          {
+            "case_id": "deployment_1",
+            "expected_alias": "deployment_1:ledger",
+            "hit": false,
+            "top_alias": "deployment_2:ledger",
+            "top_content_preview": "ci verified: production version 250"
+          },
+          {
+            "case_id": "deployment_2",
+            "expected_alias": "deployment_2:ledger",
+            "hit": true,
+            "top_alias": "deployment_2:ledger",
+            "top_content_preview": "ci verified: production version 250"
+          },
+          {
+            "case_id": "deployment_3",
+            "expected_alias": "deployment_3:ledger",
+            "hit": false,
+            "top_alias": "deployment_2:ledger",
+            "top_content_preview": "ci verified: production version 250"
+          },
+          {
+            "case_id": "deployment_4",
+            "expected_alias": "deployment_4:ledger",
+            "hit": false,
+            "top_alias": "deployment_2:ledger",
+            "top_content_preview": "ci verified: production version 250"
+          },
+          {
+            "case_id": "refund_0",
+            "expected_alias": "refund_0:ledger",
+            "hit": false,
+            "top_alias": "refund_3:ledger",
+            "top_content_preview": "ledger verified: refund amount 42 USD"
+          },
+          {
+            "case_id": "refund_1",
+            "expected_alias": "refund_1:ledger",
+            "hit": false,
+            "top_alias": "refund_3:ledger",
+            "top_content_preview": "ledger verified: refund amount 42 USD"
+          },
+          {
+            "case_id": "refund_2",
+            "expected_alias": "refund_2:ledger",
+            "hit": false,
+            "top_alias": "refund_3:ledger",
+            "top_content_preview": "ledger verified: refund amount 42 USD"
+          },
+          {
+            "case_id": "refund_3",
+            "expected_alias": "refund_3:ledger",
+            "hit": true,
+            "top_alias": "refund_3:ledger",
+            "top_content_preview": "ledger verified: refund amount 42 USD"
+          },
+          {
+            "case_id": "refund_4",
+            "expected_alias": "refund_4:ledger",
+            "hit": false,
+            "top_alias": "refund_3:ledger",
+            "top_content_preview": "ledger verified: refund amount 42 USD"
+          },
+          {
+            "case_id": "license_0",
+            "expected_alias": "license_0:ledger",
+            "hit": false,
+            "top_alias": "license_4:ledger",
+            "top_content_preview": "license server verified: seats in use 1500"
+          },
+          {
+            "case_id": "license_1",
+            "expected_alias": "license_1:ledger",
+            "hit": false,
+            "top_alias": "license_4:ledger",
+            "top_content_preview": "license server verified: seats in use 1500"
+          },
+          {
+            "case_id": "license_2",
+            "expected_alias": "license_2:ledger",
+            "hit": false,
+            "top_alias": "license_4:ledger",
+            "top_content_preview": "license server verified: seats in use 1500"
+          },
+          {
+            "case_id": "license_3",
+            "expected_alias": "license_3:ledger",
+            "hit": false,
+            "top_alias": "license_4:ledger",
+            "top_content_preview": "license server verified: seats in use 1500"
+          },
+          {
+            "case_id": "license_4",
+            "expected_alias": "license_4:ledger",
+            "hit": true,
+            "top_alias": "license_4:ledger",
+            "top_content_preview": "license server verified: seats in use 1500"
+          },
+          {
+            "case_id": "temperature_0",
+            "expected_alias": "temperature_0:ledger",
+            "hit": true,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          },
+          {
+            "case_id": "temperature_1",
+            "expected_alias": "temperature_1:ledger",
+            "hit": false,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          },
+          {
+            "case_id": "temperature_2",
+            "expected_alias": "temperature_2:ledger",
+            "hit": false,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          },
+          {
+            "case_id": "temperature_3",
+            "expected_alias": "temperature_3:ledger",
+            "hit": false,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          },
+          {
+            "case_id": "temperature_4",
+            "expected_alias": "temperature_4:ledger",
+            "hit": false,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          }
+        ],
+        "top1_accuracy": 0.18,
+        "top_aliases_by_domain": {
+          "api_quota": [
+            "api_quota_0:ledger",
+            "api_quota_0:ledger",
+            "api_quota_0:ledger",
+            "api_quota_0:ledger",
+            "api_quota_0:ledger"
+          ],
+          "deployment": [
+            "deployment_2:ledger",
+            "deployment_2:ledger",
+            "deployment_2:ledger",
+            "deployment_2:ledger",
+            "deployment_2:ledger"
+          ],
+          "inventory": [
+            "inventory_4:ledger",
+            "inventory_4:ledger",
+            "inventory_4:ledger",
+            "inventory_4:ledger",
+            "inventory_4:ledger"
+          ],
+          "license": [
+            "license_4:ledger",
+            "license_4:ledger",
+            "license_4:ledger",
+            "license_4:ledger",
+            "license_4:ledger"
+          ],
+          "meeting": [
+            "meeting_1:ledger",
+            "meeting_1:ledger",
+            "meeting_1:ledger",
+            "meeting_1:ledger",
+            "meeting_1:ledger"
+          ],
+          "refund": [
+            "refund_3:ledger",
+            "refund_3:ledger",
+            "refund_3:ledger",
+            "refund_3:ledger",
+            "refund_3:ledger"
+          ],
+          "shipping": [
+            "shipping_0:ledger",
+            "shipping_0:ledger",
+            "shipping_0:ledger",
+            "shipping_0:ledger",
+            "shipping_0:ledger"
+          ],
+          "subscription": [
+            "subscription_0:ledger",
+            "subscription_0:ledger",
+            "subscription_0:ledger",
+            "subscription_0:ledger",
+            "subscription_0:ledger"
+          ],
+          "temperature": [
+            "temperature_0:ledger",
+            "temperature_0:ledger",
+            "temperature_0:ledger",
+            "temperature_0:ledger",
+            "temperature_0:ledger"
+          ],
+          "wallet": [
+            "refund_4:ledger",
+            "refund_4:ledger",
+            "refund_4:ledger",
+            "refund_4:ledger",
+            "refund_4:ledger"
+          ]
+        },
+        "within_store_top1_invariant_by_domain": {
+          "api_quota": true,
+          "deployment": true,
+          "inventory": true,
+          "license": true,
+          "meeting": true,
+          "refund": true,
+          "shipping": true,
+          "subscription": true,
+          "temperature": true,
+          "wallet": true
+        }
+      }
+    },
+    "repair-descendant": {
+      "isolated": {
+        "all_domains_invariant": false,
+        "condition": "isolated_brain",
+        "hits": "50/50",
+        "n_cases": 50,
+        "rows": [
+          {
+            "case_id": "wallet_0",
+            "expected_alias": "wallet_0:ledger",
+            "hit": true,
+            "top_alias": "wallet_0:ledger",
+            "top_content_preview": "ledger verified: account balance is 10 USD"
+          },
+          {
+            "case_id": "wallet_1",
+            "expected_alias": "wallet_1:ledger",
+            "hit": true,
+            "top_alias": "wallet_1:ledger",
+            "top_content_preview": "ledger verified: account balance is 0 USD"
+          },
+          {
+            "case_id": "wallet_2",
+            "expected_alias": "wallet_2:ledger",
+            "hit": true,
+            "top_alias": "wallet_2:ledger",
+            "top_content_preview": "ledger verified: account balance is 250 USD"
+          },
+          {
+            "case_id": "wallet_3",
+            "expected_alias": "wallet_3:ledger",
+            "hit": true,
+            "top_alias": "wallet_3:ledger",
+            "top_content_preview": "ledger verified: account balance is 42 USD"
+          },
+          {
+            "case_id": "wallet_4",
+            "expected_alias": "wallet_4:ledger",
+            "hit": true,
+            "top_alias": "wallet_4:ledger",
+            "top_content_preview": "ledger verified: account balance is 1500 USD"
+          },
+          {
+            "case_id": "shipping_0",
+            "expected_alias": "shipping_0:ledger",
+            "hit": true,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "shipping_1",
+            "expected_alias": "shipping_1:ledger",
+            "hit": true,
+            "top_alias": "shipping_1:ledger",
+            "top_content_preview": "tool output verified: order ships on 0"
+          },
+          {
+            "case_id": "shipping_2",
+            "expected_alias": "shipping_2:ledger",
+            "hit": true,
+            "top_alias": "shipping_2:ledger",
+            "top_content_preview": "tool output verified: order ships on 250"
+          },
+          {
+            "case_id": "shipping_3",
+            "expected_alias": "shipping_3:ledger",
+            "hit": true,
+            "top_alias": "shipping_3:ledger",
+            "top_content_preview": "tool output verified: order ships on 42"
+          },
+          {
+            "case_id": "shipping_4",
+            "expected_alias": "shipping_4:ledger",
+            "hit": true,
+            "top_alias": "shipping_4:ledger",
+            "top_content_preview": "tool output verified: order ships on 1500"
+          },
+          {
+            "case_id": "subscription_0",
+            "expected_alias": "subscription_0:ledger",
+            "hit": true,
+            "top_alias": "subscription_0:ledger",
+            "top_content_preview": "ledger verified: plan tier is 10"
+          },
+          {
+            "case_id": "subscription_1",
+            "expected_alias": "subscription_1:ledger",
+            "hit": true,
+            "top_alias": "subscription_1:ledger",
+            "top_content_preview": "ledger verified: plan tier is 0"
+          },
+          {
+            "case_id": "subscription_2",
+            "expected_alias": "subscription_2:ledger",
+            "hit": true,
+            "top_alias": "subscription_2:ledger",
+            "top_content_preview": "ledger verified: plan tier is 250"
+          },
+          {
+            "case_id": "subscription_3",
+            "expected_alias": "subscription_3:ledger",
+            "hit": true,
+            "top_alias": "subscription_3:ledger",
+            "top_content_preview": "ledger verified: plan tier is 42"
+          },
+          {
+            "case_id": "subscription_4",
+            "expected_alias": "subscription_4:ledger",
+            "hit": true,
+            "top_alias": "subscription_4:ledger",
+            "top_content_preview": "ledger verified: plan tier is 1500"
+          },
+          {
+            "case_id": "api_quota_0",
+            "expected_alias": "api_quota_0:ledger",
+            "hit": true,
+            "top_alias": "api_quota_0:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 10 calls"
+          },
+          {
+            "case_id": "api_quota_1",
+            "expected_alias": "api_quota_1:ledger",
+            "hit": true,
+            "top_alias": "api_quota_1:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 0 calls"
+          },
+          {
+            "case_id": "api_quota_2",
+            "expected_alias": "api_quota_2:ledger",
+            "hit": true,
+            "top_alias": "api_quota_2:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 250 calls"
+          },
+          {
+            "case_id": "api_quota_3",
+            "expected_alias": "api_quota_3:ledger",
+            "hit": true,
+            "top_alias": "api_quota_3:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 42 calls"
+          },
+          {
+            "case_id": "api_quota_4",
+            "expected_alias": "api_quota_4:ledger",
+            "hit": true,
+            "top_alias": "api_quota_4:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 1500 calls"
+          },
+          {
+            "case_id": "inventory_0",
+            "expected_alias": "inventory_0:ledger",
+            "hit": true,
+            "top_alias": "inventory_0:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 10"
+          },
+          {
+            "case_id": "inventory_1",
+            "expected_alias": "inventory_1:ledger",
+            "hit": true,
+            "top_alias": "inventory_1:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 0"
+          },
+          {
+            "case_id": "inventory_2",
+            "expected_alias": "inventory_2:ledger",
+            "hit": true,
+            "top_alias": "inventory_2:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 250"
+          },
+          {
+            "case_id": "inventory_3",
+            "expected_alias": "inventory_3:ledger",
+            "hit": true,
+            "top_alias": "inventory_3:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 42"
+          },
+          {
+            "case_id": "inventory_4",
+            "expected_alias": "inventory_4:ledger",
+            "hit": true,
+            "top_alias": "inventory_4:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 1500"
+          },
+          {
+            "case_id": "meeting_0",
+            "expected_alias": "meeting_0:ledger",
+            "hit": true,
+            "top_alias": "meeting_0:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 10"
+          },
+          {
+            "case_id": "meeting_1",
+            "expected_alias": "meeting_1:ledger",
+            "hit": true,
+            "top_alias": "meeting_1:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 0"
+          },
+          {
+            "case_id": "meeting_2",
+            "expected_alias": "meeting_2:ledger",
+            "hit": true,
+            "top_alias": "meeting_2:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 250"
+          },
+          {
+            "case_id": "meeting_3",
+            "expected_alias": "meeting_3:ledger",
+            "hit": true,
+            "top_alias": "meeting_3:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 42"
+          },
+          {
+            "case_id": "meeting_4",
+            "expected_alias": "meeting_4:ledger",
+            "hit": true,
+            "top_alias": "meeting_4:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 1500"
+          },
+          {
+            "case_id": "deployment_0",
+            "expected_alias": "deployment_0:ledger",
+            "hit": true,
+            "top_alias": "deployment_0:ledger",
+            "top_content_preview": "ci verified: production version 10"
+          },
+          {
+            "case_id": "deployment_1",
+            "expected_alias": "deployment_1:ledger",
+            "hit": true,
+            "top_alias": "deployment_1:ledger",
+            "top_content_preview": "ci verified: production version 0"
+          },
+          {
+            "case_id": "deployment_2",
+            "expected_alias": "deployment_2:ledger",
+            "hit": true,
+            "top_alias": "deployment_2:ledger",
+            "top_content_preview": "ci verified: production version 250"
+          },
+          {
+            "case_id": "deployment_3",
+            "expected_alias": "deployment_3:ledger",
+            "hit": true,
+            "top_alias": "deployment_3:ledger",
+            "top_content_preview": "ci verified: production version 42"
+          },
+          {
+            "case_id": "deployment_4",
+            "expected_alias": "deployment_4:ledger",
+            "hit": true,
+            "top_alias": "deployment_4:ledger",
+            "top_content_preview": "ci verified: production version 1500"
+          },
+          {
+            "case_id": "refund_0",
+            "expected_alias": "refund_0:ledger",
+            "hit": true,
+            "top_alias": "refund_0:ledger",
+            "top_content_preview": "ledger verified: refund amount 10 USD"
+          },
+          {
+            "case_id": "refund_1",
+            "expected_alias": "refund_1:ledger",
+            "hit": true,
+            "top_alias": "refund_1:ledger",
+            "top_content_preview": "ledger verified: refund amount 0 USD"
+          },
+          {
+            "case_id": "refund_2",
+            "expected_alias": "refund_2:ledger",
+            "hit": true,
+            "top_alias": "refund_2:ledger",
+            "top_content_preview": "ledger verified: refund amount 250 USD"
+          },
+          {
+            "case_id": "refund_3",
+            "expected_alias": "refund_3:ledger",
+            "hit": true,
+            "top_alias": "refund_3:ledger",
+            "top_content_preview": "ledger verified: refund amount 42 USD"
+          },
+          {
+            "case_id": "refund_4",
+            "expected_alias": "refund_4:ledger",
+            "hit": true,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "license_0",
+            "expected_alias": "license_0:ledger",
+            "hit": true,
+            "top_alias": "license_0:ledger",
+            "top_content_preview": "license server verified: seats in use 10"
+          },
+          {
+            "case_id": "license_1",
+            "expected_alias": "license_1:ledger",
+            "hit": true,
+            "top_alias": "license_1:ledger",
+            "top_content_preview": "license server verified: seats in use 0"
+          },
+          {
+            "case_id": "license_2",
+            "expected_alias": "license_2:ledger",
+            "hit": true,
+            "top_alias": "license_2:ledger",
+            "top_content_preview": "license server verified: seats in use 250"
+          },
+          {
+            "case_id": "license_3",
+            "expected_alias": "license_3:ledger",
+            "hit": true,
+            "top_alias": "license_3:ledger",
+            "top_content_preview": "license server verified: seats in use 42"
+          },
+          {
+            "case_id": "license_4",
+            "expected_alias": "license_4:ledger",
+            "hit": true,
+            "top_alias": "license_4:ledger",
+            "top_content_preview": "license server verified: seats in use 1500"
+          },
+          {
+            "case_id": "temperature_0",
+            "expected_alias": "temperature_0:ledger",
+            "hit": true,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          },
+          {
+            "case_id": "temperature_1",
+            "expected_alias": "temperature_1:ledger",
+            "hit": true,
+            "top_alias": "temperature_1:ledger",
+            "top_content_preview": "sensor verified: server room temp 0C"
+          },
+          {
+            "case_id": "temperature_2",
+            "expected_alias": "temperature_2:ledger",
+            "hit": true,
+            "top_alias": "temperature_2:ledger",
+            "top_content_preview": "sensor verified: server room temp 250C"
+          },
+          {
+            "case_id": "temperature_3",
+            "expected_alias": "temperature_3:ledger",
+            "hit": true,
+            "top_alias": "temperature_3:ledger",
+            "top_content_preview": "sensor verified: server room temp 42C"
+          },
+          {
+            "case_id": "temperature_4",
+            "expected_alias": "temperature_4:ledger",
+            "hit": true,
+            "top_alias": "temperature_4:ledger",
+            "top_content_preview": "sensor verified: server room temp 1500C"
+          }
+        ],
+        "top1_accuracy": 1.0,
+        "top_aliases_by_domain": {
+          "api_quota": [
+            "api_quota_0:ledger",
+            "api_quota_1:ledger",
+            "api_quota_2:ledger",
+            "api_quota_3:ledger",
+            "api_quota_4:ledger"
+          ],
+          "deployment": [
+            "deployment_0:ledger",
+            "deployment_1:ledger",
+            "deployment_2:ledger",
+            "deployment_3:ledger",
+            "deployment_4:ledger"
+          ],
+          "inventory": [
+            "inventory_0:ledger",
+            "inventory_1:ledger",
+            "inventory_2:ledger",
+            "inventory_3:ledger",
+            "inventory_4:ledger"
+          ],
+          "license": [
+            "license_0:ledger",
+            "license_1:ledger",
+            "license_2:ledger",
+            "license_3:ledger",
+            "license_4:ledger"
+          ],
+          "meeting": [
+            "meeting_0:ledger",
+            "meeting_1:ledger",
+            "meeting_2:ledger",
+            "meeting_3:ledger",
+            "meeting_4:ledger"
+          ],
+          "refund": [
+            "refund_0:ledger",
+            "refund_1:ledger",
+            "refund_2:ledger",
+            "refund_3:ledger",
+            "refund_4:ledger"
+          ],
+          "shipping": [
+            "shipping_0:ledger",
+            "shipping_1:ledger",
+            "shipping_2:ledger",
+            "shipping_3:ledger",
+            "shipping_4:ledger"
+          ],
+          "subscription": [
+            "subscription_0:ledger",
+            "subscription_1:ledger",
+            "subscription_2:ledger",
+            "subscription_3:ledger",
+            "subscription_4:ledger"
+          ],
+          "temperature": [
+            "temperature_0:ledger",
+            "temperature_1:ledger",
+            "temperature_2:ledger",
+            "temperature_3:ledger",
+            "temperature_4:ledger"
+          ],
+          "wallet": [
+            "wallet_0:ledger",
+            "wallet_1:ledger",
+            "wallet_2:ledger",
+            "wallet_3:ledger",
+            "wallet_4:ledger"
+          ]
+        },
+        "within_store_top1_invariant_by_domain": {
+          "api_quota": false,
+          "deployment": false,
+          "inventory": false,
+          "license": false,
+          "meeting": false,
+          "refund": false,
+          "shipping": false,
+          "subscription": false,
+          "temperature": false,
+          "wallet": false
+        }
+      },
+      "shared": {
+        "all_domains_invariant": true,
+        "condition": "shared_brain",
+        "hits": "9/50",
+        "n_cases": 50,
+        "rows": [
+          {
+            "case_id": "wallet_0",
+            "expected_alias": "wallet_0:ledger",
+            "hit": false,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "wallet_1",
+            "expected_alias": "wallet_1:ledger",
+            "hit": false,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "wallet_2",
+            "expected_alias": "wallet_2:ledger",
+            "hit": false,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "wallet_3",
+            "expected_alias": "wallet_3:ledger",
+            "hit": false,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "wallet_4",
+            "expected_alias": "wallet_4:ledger",
+            "hit": false,
+            "top_alias": "refund_4:ledger",
+            "top_content_preview": "ledger verified: refund amount 1500 USD"
+          },
+          {
+            "case_id": "shipping_0",
+            "expected_alias": "shipping_0:ledger",
+            "hit": true,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "shipping_1",
+            "expected_alias": "shipping_1:ledger",
+            "hit": false,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "shipping_2",
+            "expected_alias": "shipping_2:ledger",
+            "hit": false,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "shipping_3",
+            "expected_alias": "shipping_3:ledger",
+            "hit": false,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "shipping_4",
+            "expected_alias": "shipping_4:ledger",
+            "hit": false,
+            "top_alias": "shipping_0:ledger",
+            "top_content_preview": "tool output verified: order ships on 10"
+          },
+          {
+            "case_id": "subscription_0",
+            "expected_alias": "subscription_0:ledger",
+            "hit": false,
+            "top_alias": "subscription_2:ledger",
+            "top_content_preview": "ledger verified: plan tier is 250"
+          },
+          {
+            "case_id": "subscription_1",
+            "expected_alias": "subscription_1:ledger",
+            "hit": false,
+            "top_alias": "subscription_2:ledger",
+            "top_content_preview": "ledger verified: plan tier is 250"
+          },
+          {
+            "case_id": "subscription_2",
+            "expected_alias": "subscription_2:ledger",
+            "hit": true,
+            "top_alias": "subscription_2:ledger",
+            "top_content_preview": "ledger verified: plan tier is 250"
+          },
+          {
+            "case_id": "subscription_3",
+            "expected_alias": "subscription_3:ledger",
+            "hit": false,
+            "top_alias": "subscription_2:ledger",
+            "top_content_preview": "ledger verified: plan tier is 250"
+          },
+          {
+            "case_id": "subscription_4",
+            "expected_alias": "subscription_4:ledger",
+            "hit": false,
+            "top_alias": "subscription_2:ledger",
+            "top_content_preview": "ledger verified: plan tier is 250"
+          },
+          {
+            "case_id": "api_quota_0",
+            "expected_alias": "api_quota_0:ledger",
+            "hit": false,
+            "top_alias": "api_quota_1:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 0 calls"
+          },
+          {
+            "case_id": "api_quota_1",
+            "expected_alias": "api_quota_1:ledger",
+            "hit": true,
+            "top_alias": "api_quota_1:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 0 calls"
+          },
+          {
+            "case_id": "api_quota_2",
+            "expected_alias": "api_quota_2:ledger",
+            "hit": false,
+            "top_alias": "api_quota_1:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 0 calls"
+          },
+          {
+            "case_id": "api_quota_3",
+            "expected_alias": "api_quota_3:ledger",
+            "hit": false,
+            "top_alias": "api_quota_1:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 0 calls"
+          },
+          {
+            "case_id": "api_quota_4",
+            "expected_alias": "api_quota_4:ledger",
+            "hit": false,
+            "top_alias": "api_quota_1:ledger",
+            "top_content_preview": "tool grounded: api quota remaining 0 calls"
+          },
+          {
+            "case_id": "inventory_0",
+            "expected_alias": "inventory_0:ledger",
+            "hit": false,
+            "top_alias": "inventory_1:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 0"
+          },
+          {
+            "case_id": "inventory_1",
+            "expected_alias": "inventory_1:ledger",
+            "hit": true,
+            "top_alias": "inventory_1:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 0"
+          },
+          {
+            "case_id": "inventory_2",
+            "expected_alias": "inventory_2:ledger",
+            "hit": false,
+            "top_alias": "inventory_1:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 0"
+          },
+          {
+            "case_id": "inventory_3",
+            "expected_alias": "inventory_3:ledger",
+            "hit": false,
+            "top_alias": "inventory_1:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 0"
+          },
+          {
+            "case_id": "inventory_4",
+            "expected_alias": "inventory_4:ledger",
+            "hit": false,
+            "top_alias": "inventory_1:ledger",
+            "top_content_preview": "file observation verified: sku-42 stock count 0"
+          },
+          {
+            "case_id": "meeting_0",
+            "expected_alias": "meeting_0:ledger",
+            "hit": true,
+            "top_alias": "meeting_0:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 10"
+          },
+          {
+            "case_id": "meeting_1",
+            "expected_alias": "meeting_1:ledger",
+            "hit": false,
+            "top_alias": "meeting_0:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 10"
+          },
+          {
+            "case_id": "meeting_2",
+            "expected_alias": "meeting_2:ledger",
+            "hit": false,
+            "top_alias": "meeting_0:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 10"
+          },
+          {
+            "case_id": "meeting_3",
+            "expected_alias": "meeting_3:ledger",
+            "hit": false,
+            "top_alias": "meeting_0:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 10"
+          },
+          {
+            "case_id": "meeting_4",
+            "expected_alias": "meeting_4:ledger",
+            "hit": false,
+            "top_alias": "meeting_0:ledger",
+            "top_content_preview": "calendar verified: standup scheduled 10"
+          },
+          {
+            "case_id": "deployment_0",
+            "expected_alias": "deployment_0:ledger",
+            "hit": true,
+            "top_alias": "deployment_0:ledger",
+            "top_content_preview": "ci verified: production version 10"
+          },
+          {
+            "case_id": "deployment_1",
+            "expected_alias": "deployment_1:ledger",
+            "hit": false,
+            "top_alias": "deployment_0:ledger",
+            "top_content_preview": "ci verified: production version 10"
+          },
+          {
+            "case_id": "deployment_2",
+            "expected_alias": "deployment_2:ledger",
+            "hit": false,
+            "top_alias": "deployment_0:ledger",
+            "top_content_preview": "ci verified: production version 10"
+          },
+          {
+            "case_id": "deployment_3",
+            "expected_alias": "deployment_3:ledger",
+            "hit": false,
+            "top_alias": "deployment_0:ledger",
+            "top_content_preview": "ci verified: production version 10"
+          },
+          {
+            "case_id": "deployment_4",
+            "expected_alias": "deployment_4:ledger",
+            "hit": false,
+            "top_alias": "deployment_0:ledger",
+            "top_content_preview": "ci verified: production version 10"
+          },
+          {
+            "case_id": "refund_0",
+            "expected_alias": "refund_0:ledger",
+            "hit": false,
+            "top_alias": "refund_2:ledger",
+            "top_content_preview": "ledger verified: refund amount 250 USD"
+          },
+          {
+            "case_id": "refund_1",
+            "expected_alias": "refund_1:ledger",
+            "hit": false,
+            "top_alias": "refund_2:ledger",
+            "top_content_preview": "ledger verified: refund amount 250 USD"
+          },
+          {
+            "case_id": "refund_2",
+            "expected_alias": "refund_2:ledger",
+            "hit": true,
+            "top_alias": "refund_2:ledger",
+            "top_content_preview": "ledger verified: refund amount 250 USD"
+          },
+          {
+            "case_id": "refund_3",
+            "expected_alias": "refund_3:ledger",
+            "hit": false,
+            "top_alias": "refund_2:ledger",
+            "top_content_preview": "ledger verified: refund amount 250 USD"
+          },
+          {
+            "case_id": "refund_4",
+            "expected_alias": "refund_4:ledger",
+            "hit": false,
+            "top_alias": "refund_2:ledger",
+            "top_content_preview": "ledger verified: refund amount 250 USD"
+          },
+          {
+            "case_id": "license_0",
+            "expected_alias": "license_0:ledger",
+            "hit": true,
+            "top_alias": "license_0:ledger",
+            "top_content_preview": "license server verified: seats in use 10"
+          },
+          {
+            "case_id": "license_1",
+            "expected_alias": "license_1:ledger",
+            "hit": false,
+            "top_alias": "license_0:ledger",
+            "top_content_preview": "license server verified: seats in use 10"
+          },
+          {
+            "case_id": "license_2",
+            "expected_alias": "license_2:ledger",
+            "hit": false,
+            "top_alias": "license_0:ledger",
+            "top_content_preview": "license server verified: seats in use 10"
+          },
+          {
+            "case_id": "license_3",
+            "expected_alias": "license_3:ledger",
+            "hit": false,
+            "top_alias": "license_0:ledger",
+            "top_content_preview": "license server verified: seats in use 10"
+          },
+          {
+            "case_id": "license_4",
+            "expected_alias": "license_4:ledger",
+            "hit": false,
+            "top_alias": "license_0:ledger",
+            "top_content_preview": "license server verified: seats in use 10"
+          },
+          {
+            "case_id": "temperature_0",
+            "expected_alias": "temperature_0:ledger",
+            "hit": true,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          },
+          {
+            "case_id": "temperature_1",
+            "expected_alias": "temperature_1:ledger",
+            "hit": false,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          },
+          {
+            "case_id": "temperature_2",
+            "expected_alias": "temperature_2:ledger",
+            "hit": false,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          },
+          {
+            "case_id": "temperature_3",
+            "expected_alias": "temperature_3:ledger",
+            "hit": false,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          },
+          {
+            "case_id": "temperature_4",
+            "expected_alias": "temperature_4:ledger",
+            "hit": false,
+            "top_alias": "temperature_0:ledger",
+            "top_content_preview": "sensor verified: server room temp 10C"
+          }
+        ],
+        "top1_accuracy": 0.18,
+        "top_aliases_by_domain": {
+          "api_quota": [
+            "api_quota_1:ledger",
+            "api_quota_1:ledger",
+            "api_quota_1:ledger",
+            "api_quota_1:ledger",
+            "api_quota_1:ledger"
+          ],
+          "deployment": [
+            "deployment_0:ledger",
+            "deployment_0:ledger",
+            "deployment_0:ledger",
+            "deployment_0:ledger",
+            "deployment_0:ledger"
+          ],
+          "inventory": [
+            "inventory_1:ledger",
+            "inventory_1:ledger",
+            "inventory_1:ledger",
+            "inventory_1:ledger",
+            "inventory_1:ledger"
+          ],
+          "license": [
+            "license_0:ledger",
+            "license_0:ledger",
+            "license_0:ledger",
+            "license_0:ledger",
+            "license_0:ledger"
+          ],
+          "meeting": [
+            "meeting_0:ledger",
+            "meeting_0:ledger",
+            "meeting_0:ledger",
+            "meeting_0:ledger",
+            "meeting_0:ledger"
+          ],
+          "refund": [
+            "refund_2:ledger",
+            "refund_2:ledger",
+            "refund_2:ledger",
+            "refund_2:ledger",
+            "refund_2:ledger"
+          ],
+          "shipping": [
+            "shipping_0:ledger",
+            "shipping_0:ledger",
+            "shipping_0:ledger",
+            "shipping_0:ledger",
+            "shipping_0:ledger"
+          ],
+          "subscription": [
+            "subscription_2:ledger",
+            "subscription_2:ledger",
+            "subscription_2:ledger",
+            "subscription_2:ledger",
+            "subscription_2:ledger"
+          ],
+          "temperature": [
+            "temperature_0:ledger",
+            "temperature_0:ledger",
+            "temperature_0:ledger",
+            "temperature_0:ledger",
+            "temperature_0:ledger"
+          ],
+          "wallet": [
+            "refund_4:ledger",
+            "refund_4:ledger",
+            "refund_4:ledger",
+            "refund_4:ledger",
+            "refund_4:ledger"
+          ]
+        },
+        "within_store_top1_invariant_by_domain": {
+          "api_quota": true,
+          "deployment": true,
+          "inventory": true,
+          "license": true,
+          "meeting": true,
+          "refund": true,
+          "shipping": true,
+          "subscription": true,
+          "temperature": true,
+          "wallet": true
+        }
+      }
+    }
+  },
+  "official_gate": {
+    "paper-time": {
+      "isolated_script_threshold_pass": true,
+      "shared_within_conditional_ceiling": true,
+      "shared_within_store_invariant": true
+    },
+    "repair-descendant": {
+      "isolated_script_threshold_pass": true,
+      "shared_within_conditional_ceiling": true,
+      "shared_within_store_invariant": true
+    }
+  },
+  "protocol_gate": {
+    "all_matrix_receipts_pass": true,
+    "all_official_gates_pass": true,
+    "matrix_receipts": {
+      "paper-time.r1": {
+        "completed": 6,
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "status": "PASS"
+      },
+      "paper-time.r2": {
+        "completed": 6,
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "status": "PASS"
+      },
+      "repair-descendant.r1": {
+        "completed": 6,
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "status": "PASS"
+      },
+      "repair-descendant.r2": {
+        "completed": 6,
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "status": "PASS"
+      }
+    }
+  },
+  "schema": "ams-fluctlightdb-compact-analysis/1",
+  "status": "COMPLETE"
+}

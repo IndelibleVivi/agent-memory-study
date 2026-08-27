@@ -23,7 +23,8 @@
           "a-tma-state-aware-memory",
           "mosaic-long-term-memory",
           "memory-beyond-recall",
-          "statefuse-conflict-preserving-memory"
+          "statefuse-conflict-preserving-memory",
+          "fluctlightdb-observation-binding"
         ]
       },
       {
@@ -54,7 +55,8 @@
           "continual-learning-experience-reuse",
           "agentic-memory",
           "insightemb-action-intent-retrieval",
-          "longmemeval-v2-experienced-colleague"
+          "longmemeval-v2-experienced-colleague",
+          "fluctlightdb-observation-binding"
         ]
       },
       {
@@ -119,7 +121,8 @@
           "verifiable-memory",
           "insightemb-action-intent-retrieval",
           "longmemeval-v2-experienced-colleague",
-          "continual-learning-experience-reuse"
+          "continual-learning-experience-reuse",
+          "fluctlightdb-observation-binding"
         ]
       },
       {
@@ -1888,6 +1891,236 @@
       },
       "editorialQuestion": "如果 operations 已经 byte-identical，但 replicas 没有共同绑定 predicate registry、claim-ref derivation 与 detector implementation identity，我们究竟是在复制同一份 memory，还是只复制了同一份待解释的历史？",
       "sourceNote": "arXiv v1，2026-07-07；PDF 共 18 页，essay locators 使用 printed PDF page numbers。official source audit 锁定 commit 79a6229… / StateFuse 0.3.0。repository paper/main.tex 是标题与实验叙述不同的 unpublished successor manuscript，已与 arXiv v1 分层；139-test receipt 与 428-row synthetic audit 只支持 current-source contract claims。"
+    },
+    {
+      "number": 19,
+      "id": "fluctlightdb-observation-binding",
+      "kind": "paper",
+      "title": "FluctlightDB: A Memory Model of Data for AI Agents",
+      "authors": [
+        "Ganesh S"
+      ],
+      "shortAuthor": "Ganesh S",
+      "year": 2026,
+      "doi": "10.48550/arXiv.2608.12365",
+      "noteDepth": "worked",
+      "readingScope": "完整读了 arXiv v1 的 abstract、§§1–8、Tables 1–9、Figures 1–5 与 references，共 16 个 PDF pages；另锁定 paper-time official source 593623eea50361e563180c112322e26d0ab4093b、current main d867f3cdbcffcefe4e14473333a78ce33a06ae47 与 official repair descendant f5d51e247b544503f8f47960b9dc6ecd43c2f464。对两条可执行 revision 各运行 unmodified official isolated/shared script 与两次 fresh-process six-treatment matrix，完整 reducer 产生 1,140 个 compact query rows；没有下载或复现 LoCoMo、LongMemEval、BEIR、FAMB corpus/result，没有调用 model、reader、judge、API、remote service、production runtime 或 private data。",
+      "intro": "FluctlightDB 把 `experience()` / `activate()` / `checkpoint()` 提成 database-native memory verbs，并把 provenance-aware ranking 放进 read semantics。但它自己的 shared-brain provenance suite 在排序之前已经缺少 query→observation identity：十个 cue classes 各用一个相同 query 对五个 incompatible target IDs 计 exact top-1；在本地复现的 within-store invariance 下，50-row scalar 条件性最多只能命中 10 行。source-linked controls 又露出排序之后的另一条 seam：`agent_id` retain 后，不接收 scope 的 wallet / successor exact helpers 可以重新插入 foreign stored episodes。",
+      "whyRead": "这篇值得做成 worked essay，不是因为“brain-native database”这个比喻够新，而是因为它把三个常被压成一个 accuracy 数字的 contract 拆了出来：query 是否指明 intended observation、已识别的 ledger/chat 怎样排序、final output 是否在所有 helper 之后仍满足 scope。official 9/50、45-case identity-bearing control 与 nonexistent-agent negative controls 合在一起，给出的不是一条安全 headline，而是一套能分辨 identification、ranking、candidate truncation 与 late reinjection 的读法。",
+      "keyPoints": [
+        "Data-model claim：论文把 relational row / predicate、vector embedding / nearest neighbor 与 agent-memory experience / cue activation 区分；write path 负责编码 content、context、salience、provenance 与 graph edges，read path 融合 lexical、semantic、graph 与 provenance scores。`experience()` / `activate()` / `checkpoint()` 是 embedded engine contract，不是对 Mem0、Zep 或 HippoRAG application layer 的直接替代。（Abstract；§§1–3.7；Figure 1，PDF pp. 1–6、15）",
+        "Paper evidence：arXiv v1 报告 LoCoMo evidence recall 99.0% @150、LongMemEval-S session recall@8 97.6%、LongMemEval-S E2E 97.4%、BEIR SciFact 0.646 nDCG@10 / 0.792 Recall@10，以及 author-designed FAMB/provenance regressions。metric、retrieval budget、reader/judge 与 harness 不同，不能折成一张 memory-quality 排名。（§§4.1–4.5；Tables 3–8；Figures 2–4，PDF pp. 7–12）",
+        "Structural ceiling：official shared fixture 的十个 domain 各有五个 distinct expected ledger IDs，却在同一 frozen store 上重复 byte-identical cue；五次 call 若 top-1 invariant，每类最多命中一个，故上限是 10/50。paper-time 与 repair-descendant unmodified runs 均为 isolated 50/50、shared 9/50，且十类全部 within-store invariant。（paper-time / repair-descendant official-source execution receipt；synthetic audit）",
+        "Identity-bearing control：45 个 non-wallet lexical-bound K=128 pairs 在两条 revisions × 两个 fresh repeats 中全部同时返回 intended ledger/chat，configured verified higher-salience ledger 为 45/45 above chat、0 chat-above-ledger、0 foreign-agent rows。该 treatment 同时保留 salience、confidence、context、source、verification 与 wording differences，所以不是 provenance-only causal estimate。（synthetic contract test）",
+        "Scope closure：两条 source lines 都在 global activation/sort/top-K 后 retain matching `agent_id`，再运行 unscoped wallet helper；repair/current 又运行 unscoped exact helper。wallet、repair exact-status 与 nonexistent-agent controls 返回 foreign stored `episode.agent_id`，shipping control 不返回 foreign rows。结论只到 exact local `agent_id` output-scope preservation，不扩成 tenant/auth/security/remote/production claim。（official-source + synthetic contract test）"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 先把 memory 变成 database contract",
+          "claim": "论文把 experience encoding、cue activation、provenance ranking、consolidation 与 durability 作为 engine-native primitives，要求 agent memory 不再只是 application 在 vector index 外围拼的隐式 pipeline。",
+          "locator": "Abstract；§§1–3.7；Tables 1–2；Figure 1，PDF pp. 1–6"
+        },
+        {
+          "step": "02 · 再问 provenance suite 的 scorer 认识谁",
+          "claim": "official shared suite 把五个 incompatible ledger observations 放进一个 store，却对它们使用同一 cue 并轮换 exact-ID gold；在 ranking quality 之前，query 已经无法唯一标识 intended observation。",
+          "locator": "§4.3；Table 6，PDF pp. 8–9；official benchmark source"
+        },
+        {
+          "step": "03 · 用 conditional theorem 而不是事后故事读 9/50",
+          "claim": "within-frozen-store five-call top-1 invariance 使每个 cue class 最多一行 exact-ID hit；本地 unmodified runs 验证 premise 与 9/50 observation。winner 可跨 fresh brain 改变，不影响 store-local 10/50 ceiling。",
+          "locator": "paper-time / repair-descendant official execution；raw/summary.json"
+        },
+        {
+          "step": "04 · 给 pair 加 identity，仍不把 composite treatment 偷换成 provenance-only",
+          "claim": "neutral lexical key 让 intended ledger/chat 都进入 K=128 observable set；45/45 ledger-above-chat 排除了‘41 个 official misses 等于 41 个 observed pairwise provenance losses’，但多个 ledger/chat score inputs 同时不同，不能给 provenance field 单独归因。",
+          "locator": "public synthetic lexical treatment；raw/posttest-evidence.json"
+        },
+        {
+          "step": "05 · 把 scope 当 pipeline 末端 postcondition",
+          "claim": "source 把 agent retain 放在 unscoped helpers 之前；foreign stored `episode.agent_id` 与 nonexistent-agent positives 证明 helper 能在 retain 后重新填充结果。scope 若要成立，所有 add/boost/expand paths 必须共享 scope 或在末端重新 fail closed。",
+          "locator": "paper-time/current `crates/fluctlightdb/src/brain.rs`；wallet/exact/shipping synthetic controls"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Paper architecture and metric separation",
+          "text": "essay 分开读 full episodic engine、index/CHORUS lanes、optional Recall Fabric、retrieval metric、E2E reader/judge 与 author-designed regressions；不把 LoCoMo @150、LongMemEval session@8、E2E QA、BEIR 与 FAMB 当同一个 construct。",
+          "locator": "§§3.5–3.7、4.1–4.5、5；PDF pp. 5–12"
+        },
+        {
+          "label": "Exact source/build chain",
+          "text": "runner 在 import 前校验 exact commit、clean checkout 与七个 source blobs/hashes。paper-time 0.5.9 exact wheel 可构建；current-main 0.5.10 在 Python crate 调用未从 crate root re-export 的 `sync_once` 处以 Rust E0425 fail closed；official repair descendant 只恢复该 export，并以独立 runtime label 执行。",
+          "locator": "research/fluctlightdb-observation-binding-audit/raw/source-manifest.json；raw/current-main-build-receipt.md"
+        },
+        {
+          "label": "Preregistered complete construction",
+          "text": "static preflight 固定 10×5 census、五个 distinct labels/class、tokenizer-stable `x000…x049`、wallet/exact router classification；每个 pair 必须取得 non-nil、non-rejected、non-deduplicated IDs，并在 full snapshot 中完整出现且保留 expected agent metadata。",
+          "locator": "research/fluctlightdb-observation-binding-audit/PREREGISTRATION.md；audit.py"
+        },
+        {
+          "label": "Fresh-process matrix and logical reducer",
+          "text": "每个 treatment 独立 child process；两条 executable revisions 各跑六个 treatments × 两个 fresh repeats，再加四个 official runs。reducer 无条件处理完整 1,140 rows，以 stable aliases 比较 claim-level objects，保留 ambiguous winner、low-K set 与 paper-time ordinary K=1 instability。",
+          "locator": "research/fluctlightdb-observation-binding-audit/analyze_results.py；raw/compact-query-rows.json；raw/summary.json"
+        }
+      ],
+      "reportedFindings": [
+        "paper-reported：LoCoMo evidence recall 99.0% @150、LongMemEval-S session recall@8 97.6%、LongMemEval-S E2E 97.4%；paper 同时报告 LoCoMo 50-question E2E pilot 23.5% F1，并明确 retrieval 与 QA 指标不同。（Abstract；§§4.2、4.4–4.5、5；Tables 4–8，PDF pp. 1、7–12）",
+        "paper-reported：provenance-conflict suite isolated 50/50、shared 9/50；作者把 shared drop 归因于 cross-case cue contamination，说明尚无 mitigation，并不把 isolated figure 当 multi-tenant readiness evidence。（§4.3；Table 6；§5–6，PDF pp. 8–12）",
+        "official-source execution：paper-time 与 repair descendant 的 unmodified scripts 各自重现 isolated 50/50、shared 9/50；十个 shared cue classes 在各自 frozen store 内均为 single top-ID invariant，满足 conditional 20% ceiling premise。",
+        "synthetic contract test：四个 revision/repeat cells 各有 45/45 non-wallet K=128 rows 同时显示 paired observations、ledger above chat、0 chat-above-ledger、0 foreign rows；完整 selected population 是 180 rows，不把 repeats 当 180 个独立样本。",
+        "synthetic contract test：两条 revisions 的 50-case scoped wallet 10/10 queries 含 foreign `refund_4:ledger`；two-agent wallet winner 随 tied ingest order 反转，other-agent 与 nonexistent-agent queries 都接到 later-ingested stored ledger，cache repeated logical signatures invariant。",
+        "synthetic contract test：repair-descendant exact-status 的 A/B/nonexistent queries 全部含 foreign verified rows，nonexistent K=3 返回两 agents；paper-time nonexistent exact controls 稳定为空；shipping A/B 只返回 own pair、nonexistent 为空。"
+      ],
+      "evidenceLimits": [
+        "本站没有下载、执行或独立重算 LoCoMo、LongMemEval、BEIR、FAMB result；paper 的 headline、baseline、公平性与 statistics 都保持 paper-reported。",
+        "conditional 10/50 theorem 只适用于 locked fixture 的 10×5 geometry 与 within-frozen-store top-1 invariance；它不证明 FluctlightDB 全局 deterministic，也不说明每个 shared-memory query 都需要相同 identity scheme。",
+        "45-case control 不是 verified/provenance field 的 matched ablation；ledger/chat 同时改变 salience、confidence、context、source metadata、verification 与 content，不能报告 provenance-only effect size、accuracy 或 reliability。",
+        "foreign `episode.agent_id` rows 证明 exact local output scope 不保留；paper/API 没有让本站把 `agent_id` 等同 tenant、authorization 或 security principal，且未测试 HTTP server、remote caller、production deployment、privacy incident、frequency、severity 或 harm。",
+        "current main exact source只产生 E0425 compile receipt；所有 successor runtime claims 属于 separately labeled official repair descendant。retrieval blobs matching current main 不把 descendant execution 变成 current-main execution。",
+        "K=3→K=128 rescued rows 每次存在但 case set/count 不稳，只与 global candidate top-K before late retain 一致；不能报告 stable low-K rate、universal failure 或唯一 causal stage。",
+        "full UUID-bearing raw snapshots/ingest reports保存在研究工作线而不随站分发；public artifact 提供完整 1,140-row normalized compact data、360 claim-selected rows、source/build manifests、runner/reducer 与 checked hashes，允许复算所有 public claims但不重建原始绝对路径/UUID bytes。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "Shared 9/50 同时混合 target identification 与 ranking",
+          "observation": "paper 把 shared drop 解释成 cross-case cue contamination；exact fixture 又让相同 store/cue 对五个 incompatible exact IDs 计分。本地 run 验证每类 single-winner premise，9/50 因而落在条件性 10/50 ceiling 内。",
+          "implication": "paper 的 contamination observation 仍可能成立，但 scalar 不能单独量化 pairwise provenance failure；未来 scorer 至少要分 wrong-ledger、chat-over-ledger、target-absent 与 underidentified query。",
+          "locators": [
+            "§4.3；Table 6，PDF pp. 8–9",
+            "official benchmark source",
+            "public official/source-linked audit"
+          ]
+        },
+        {
+          "label": "Scope retain 后的 helper 可以改变 returned set",
+          "observation": "paper-time/current source 都在 agent retain 后调用 wallet helper；repair/current 又调用 exact helper。helpers 不接收 `agent_id`，而 nonexistent-agent controls 直接返回 stored foreign-agent episodes。",
+          "implication": "scope 不能只作为 pipeline 中段 filter；能 insert/boost/expand 的每个 path 都必须继承 scope，或由 final validator 对 actual returned episodes 重新 enforce。",
+          "locators": [
+            "paper-time/current `crates/fluctlightdb/src/brain.rs`",
+            "public wallet/exact/shipping rows"
+          ]
+        },
+        {
+          "label": "arXiv 99.0 与 successor 96.8 必须分层",
+          "observation": "arXiv v1 headlined 99.0% LoCoMo @150；current official README/docs 后来把它标成 ±3 neighbor-expansion scoring artifact，改报 raw no-expansion 96.8% @150，并强调 @5 72.6%。",
+          "implication": "successor correction 提醒 reader 检查 scorer expansion 与 tight-k，但不能静默改写 v1 或被本站冒充独立 reproduction；二者必须分别用 paper-reported / current official-source labels。",
+          "locators": [
+            "arXiv v1 §4.2、§5，PDF pp. 7–11",
+            "current official README / docs/BENCHMARKS.md at d867f3c…"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "Observation binding precedes trust ranking",
+          "text": "provenance、confidence 与 salience 只能在 query 已区分的 candidate observations 之间排序；若 scorer 自己轮换 target 而 retrieval input 不变，top-1 首先测的是 target contract 缺失。",
+          "boundary": "这是 locked fixture geometry、conditional theorem 与 identity-bearing controls 的 synthesis；不是 FluctlightDB 全局 ranking failure 或 universal query-schema prescription。"
+        },
+        {
+          "label": "Scope is a closure property",
+          "text": "scope 的 operational identity 不是‘曾经 retain 过’，而是 pipeline 完成后每个 returned episode 都满足 scope，或者带有 explicit authorized bridge。任何 post-filter insert/boost/expand helper 都属于 scope contract。",
+          "boundary": "本地 test 只覆盖两个 helper families 与 Python/native `agent_id` surface；没有验证 tenant/security/remote/production policy。"
+        },
+        {
+          "label": "Nonexistent-scope queries are causal controls",
+          "text": "当 requested agent 在 store 中没有任何 row，正确 retain 应为空；若 helper-positive query 仍返回 stored rows，candidate truncation 无法独自解释 reinjection。这个 negative control 比只看 matching-agent miss 更能定位 late add path。",
+          "boundary": "它定位 tested pipeline 的 source-supported mechanism，不估计其他 queries/helpers 的发生率。"
+        },
+        {
+          "label": "Metric receipts need transformation lineage",
+          "text": "99.0→96.8 的 successor correction 与 shared 9/50 ceiling 都说明 headline 必须携带 raw target、retrieval budget、expansion、reader/judge 与 scoring identity；‘source available’不能替 transformation ledger。",
+          "boundary": "这是跨 paper/source tension 的 reporting proposal，不重算 LoCoMo，也不判定其他 benchmark 的 validity。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "Target-binding × provenance-only × scope-closure factorial",
+          "status": "proposed-not-run",
+          "question": "在 uniquely identified observations 上单独改变 provenance/verification 时，ranking effect 是否仍存在；scope 在 candidate generation、late retain 与 final postcondition 三种位置的 recall/foreign-row tradeoff 又怎样？",
+          "method": "构造 matched ledger/chat text、salience、confidence、context 与 source，分别只改变 verified/provenance；交叉 anonymous cue、lexical target key、agent scope 与 explicit authorized bridge。对 scope placement 运行 candidate-prefilter、existing late-retain、late-retain+final validator 三个 source-local treatments。",
+          "fixtures": "至少覆盖 non-helper numeric fact、wallet helper、exact-status helper、target-absent、nonexistent-agent、two-agent tied order 与 one declared cross-agent bridge；每个 fixture fresh store/process，并保留 actual returned episode metadata。",
+          "controls": "byte-identical content/score inputs、provenance-only pair、no-helper shipping、router-positive/negative、K sweep、forward/reverse order、cache repeat、source manifest、clean checkout 与 final returned-scope receipt；不使用 model、remote service 或 private trace。",
+          "measures": "分别报告 intended ledger/chat visibility、paired rank, wrong-ledger、foreign-agent、empty result、authorized bridge、K rescue 与 final postcondition；inferential unit 保持 fixture family，不把 repeated rows当独立样本。",
+          "limitations": "这是 proposed-not-run successor protocol。它不会从现有 45/45 composite treatment 推出 provenance-only effect，也不能把 `agent_id` 自动升级为 tenant/security authority。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "Observation-binding ceiling and scoped-recall helper audit",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-08-27",
+          "basis": "Paper-facing audit of arXiv:2608.12365v1, exact paper-time commit 593623eea50361e563180c112322e26d0ab4093b, exact current-main source/build receipt d867f3cdbcffcefe4e14473333a78ce33a06ae47, and separately labeled official repair descendant f5d51e247b544503f8f47960b9dc6ecd43c2f464, with the unmodified official script and newly authored model-free fixtures.",
+          "boundary": "This is a preregistered exact-source execution and synthetic output-contract audit. It is not a LoCoMo/LongMemEval/BEIR/FAMB reproduction, provenance-only causal experiment, tenant/authentication/security test, vulnerability finding, remote or production evaluation, privacy incident, or prevalence/severity/harm estimate. Repair-descendant runtime evidence is not current-main runtime evidence.",
+          "method": "Verify exact clean checkouts and source blobs; build/install paper-time and repair-descendant native wheels in isolated environments; run both unmodified official conditions; run ambiguous, scoped, lexical, wallet, exact-status and shipping treatments twice per executable revision in fresh child processes; fail incomplete ingest/snapshot/agent metadata; normalize UUIDs to stable aliases; reduce all four matrices without success filtering; and verify the complete compact/selected receipts and source/build identities by hash.",
+          "environment": "macOS 26.5.2 arm64；CPython 3.13.3；Rust/Cargo 1.98.0；maturin 1.15.0；paper-time native 0.5.9 and official repair-descendant native 0.5.10 in separate environments；initial child `FLUCTLIGHT_*` cleared, with only registered pre-connection overrides before official SDK mode defaults；no model, API, credential, private data, benchmark corpus, remote service or production runtime.",
+          "fixture": "Official 10-domain × five-variant provenance pairs; tokenizer-stable lexical keys x000…x049; agent-tagged 50-pair K=3/K=128 scope matrix; forward/reverse two-agent wallet; router-positive two-agent exact-status plus nonexistent agent; router-negative shipping plus nonexistent agent.",
+          "controls": "Exact paper/source/wheel identities; unmodified official scripts; conditional-ceiling premise checked per frozen cue class; full nonnil/nonrejected/nondeduplicated 100-engram construction where applicable; complete snapshot ID/agent metadata equality; wallet pre-exclusion from paired aggregate; K=3/K=128; forward/reverse order; same-store cache repeats; paper-time exact negative revision; shipping negative; complete 1,140-row reduction; 360-row claim selection; public source-delta and byte-reduction receipts.",
+          "rawResult": "Both executable revisions returned official isolated 50/50 and shared 9/50; every shared five-call cue class was within-store top-1 invariant. Each of four revision/repeat cells had 45/45 non-wallet lexical K=128 pairs with both rows visible, ledger above chat, no chat-above-ledger and no foreign-agent row. Every scoped wallet query returned foreign refund_4:ledger; two-agent wallet winner reversed with tied ingest order and populated a nonexistent agent. Repair exact-status populated A/B/nonexistent agents with foreign verified rows; paper-time nonexistent exact and both shipping nonexistent controls were empty. The complete reducer emitted 1,140 compact rows and 360 claim-selected rows; checked verification passed.",
+          "derivedResult": "The locked official shared exact-ID scalar is conditionally capped at 10/50 under the observed within-store invariance and cannot alone quantify pairwise provenance loss. The 45-case composite control rejects treating 41 official misses as 41 observed chat-over-ledger losses but does not isolate provenance. Stored-agent mismatches and helper-positive nonexistent-agent controls establish bounded post-retain output-scope failures for wallet and repair exact helpers, while negative controls preserve scope.",
+          "limitations": "Arbitrary tied winners and low-K rescued case sets vary across fresh brains; no stable low-K rate is reported. The audit does not isolate provenance, reproduce paper benchmarks, execute current main, test tenant/security/remote/production behavior, or estimate real-world prevalence or harm. UUID-bearing raw snapshots remain outside the site; complete normalized compact rows and every public-claim row are checked in.",
+          "links": [
+            {
+              "label": "method, result and claim boundaries",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/fluctlightdb-observation-binding-audit/README.md"
+            },
+            {
+              "label": "frozen preregistration",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/fluctlightdb-observation-binding-audit/PREREGISTRATION.md"
+            },
+            {
+              "label": "source-locked runner",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/fluctlightdb-observation-binding-audit/audit.py"
+            },
+            {
+              "label": "complete compact query rows",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/fluctlightdb-observation-binding-audit/raw/compact-query-rows.json"
+            },
+            {
+              "label": "complete normalized summary",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/fluctlightdb-observation-binding-audit/raw/summary.json"
+            },
+            {
+              "label": "all public-claim selected rows",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/fluctlightdb-observation-binding-audit/raw/posttest-evidence.json"
+            },
+            {
+              "label": "exact paper/source/wheel manifest",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/fluctlightdb-observation-binding-audit/raw/source-manifest.json"
+            },
+            {
+              "label": "current-main build boundary",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/fluctlightdb-observation-binding-audit/raw/current-main-build-receipt.md"
+            },
+            {
+              "label": "public reducer reproduction receipt",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/fluctlightdb-observation-binding-audit/raw/reproduction.json"
+            }
+          ]
+        }
+      ],
+      "keywords": [
+        "memory database",
+        "observation binding",
+        "provenance ranking",
+        "scoped recall"
+      ],
+      "categories": [
+        "记忆架构",
+        "可靠性"
+      ],
+      "failureSurfaces": [
+        "state-representation",
+        "retrieval-active-context"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2608.12365v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2608.12365v1",
+        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
+      },
+      "editorialQuestion": "如果 query 没有指明 intended observation，而 scope filter 之后的 helper 又能重新插入别的 agent 的 row，那么 provenance-aware top-1 究竟在排序可信证据，还是替 scorer 猜 target、替 pipeline 猜 permission？",
+      "sourceNote": "arXiv v1，2026-08-17；PDF 共 16 页。paper-time 0.5.9、current-main source/build failure 与 official repair-descendant 0.5.10 分层标注；paper headline 99.0% 与 successor official correction 96.8% 也保持版本边界。public audit 的 1,140 normalized rows只支持 conditional ceiling、official-format paired control 与 exact local `agent_id` output-scope claims。"
     }
   ]
 }

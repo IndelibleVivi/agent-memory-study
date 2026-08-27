@@ -11,7 +11,7 @@
 - 可按主题、failure surface、depth、标题或作者进入材料；
 - 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；达到 `read` 的 entry 进一步展示 argument map、方法与监督、原文内部张力、为什么值得读，以及明确标成 `proposed-not-run` 的公开 protocol；已经执行的 public / synthetic test 则保留署名、method、environment、raw / derived result、controls、limitations 与可复核 artifact links；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 一个没有 backend、继续由 GitHub Pages 托管的静态 reader；唯一 analytics 是 Cloudflare Web Analytics 的 aggregate beacon，不使用 cookie 或 localStorage 识别、画像访客；
-- 10 份按原许可随站提供的 PDF，另 7 份从 reader 直达 official full text；
+- 10 份按原许可随站提供的 PDF，另 9 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
 
 这些札记是阅读导航，不是逐篇全文批注，也不代替原文。转述、问题和编辑判断不能冒充作者主张；需要引用时，请回到每条记录链接的 official source。
@@ -96,6 +96,28 @@ method、raw/derived separation、exact hashes、claim-by-claim verdict 与 limi
 [`research/pmbench-scoring-contract-audit/`](./research/pmbench-scoring-contract-audit/)。它不调用模型、不生成新
 trajectory，也不改变 released headline Set-F1；它证明的是锁定 revision 的 scorer contract 与 64 份 released
 primary logs 的边界。
+
+StateFuse close-read 所附的 interpretation-contract / semantic-reference audit 可以离线复核 checked artifacts：
+
+```bash
+python3 research/statefuse-interpretation-contract-audit/audit.py --verify-checked
+```
+
+完整 preregistration、exact official-source identity、synthetic contracts、raw/derived receipts 与复现入口见
+[`research/statefuse-interpretation-contract-audit/`](./research/statefuse-interpretation-contract-audit/)。它不复现论文的
+model 或 benchmark experiments，也不把 locked implementation behavior 倒推成 paper-time result。
+
+FluctlightDB close-read 所附的 observation-binding / scoped-recall audit 也可在没有 upstream checkout 或 native
+package 的环境里验证：
+
+```bash
+python3 research/fluctlightdb-observation-binding-audit/verify_checked.py
+```
+
+checked result 包含 unmodified official runs、identity-bearing paired controls、scope/negative controls 与 1,140 条
+compact query rows；exact source、wheel、runtime identities 和 bounded claim ceiling 见
+[`research/fluctlightdb-observation-binding-audit/`](./research/fluctlightdb-observation-binding-audit/)。它不复现论文
+benchmarks，不隔离 provenance 单变量效应，也不把本地 SDK output finding 冒充 tenant、security 或 production claim。
 
 ## 通过 pull request 贡献
 

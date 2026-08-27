@@ -920,6 +920,29 @@
         <dc:identifier>DOI 10.48550/arXiv.2607.05844</dc:identifier>
         <link:link rdf:resource="#attachment_18_statefuse-conflict-preserving-memory" />
     </rdf:Description>
+    <rdf:Description rdf:about="https://arxiv.org/abs/2608.12365v1">
+        <z:itemType>document</z:itemType>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>S</foaf:surname>
+                        <foaf:givenName>Ganesh</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>FluctlightDB: A Memory Model of Data for AI Agents</dc:title>
+        <dc:date>2026</dc:date>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/abs/2608.12365v1</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dc:description>arXiv: 2608.12365 [cs.AI]</dc:description>
+        <dc:identifier>DOI 10.48550/arXiv.2608.12365</dc:identifier>
+        <link:link rdf:resource="#attachment_19_fluctlightdb-observation-binding" />
+    </rdf:Description>
     <z:Attachment rdf:about="#attachment_01_a-tma-state-aware-memory">
         <z:itemType>attachment</z:itemType>
         <dc:title>Full Text PDF</dc:title>
@@ -1064,6 +1087,17 @@
         <dc:identifier>
             <dcterms:URI>
                 <rdf:value>https://arxiv.org/pdf/2607.05844v1</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <z:linkMode>3</z:linkMode>
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_19_fluctlightdb-observation-binding">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/pdf/2608.12365v1</rdf:value>
             </dcterms:URI>
         </dc:identifier>
         <z:linkMode>3</z:linkMode>

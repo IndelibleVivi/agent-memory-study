@@ -338,6 +338,118 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             observed = hashlib.sha256((artifact_root / relative).read_bytes()).hexdigest()
             self.assertEqual(observed, expected)
 
+    def test_fluctlightdb_worked_essay_and_scope_audit_are_checked_and_bounded(self):
+        material = next(
+            item for item in self.data["materials"]
+            if item["id"] == "fluctlightdb-observation-binding"
+        )
+        self.assertEqual(material["number"], 19)
+        self.assertEqual(material["noteDepth"], "worked")
+        self.assertIn("完整读了 arXiv v1", material["readingScope"])
+        self.assertEqual(
+            set(material["failureSurfaces"]),
+            {"state-representation", "retrieval-active-context"},
+        )
+
+        contribution = material["contributions"][0]
+        self.assertEqual(contribution["type"], "public-test")
+        self.assertEqual(contribution["byline"], "Agent Memory Study editors")
+        self.assertIn("not a LoCoMo/LongMemEval/BEIR/FAMB reproduction", contribution["boundary"])
+        linked_names = {link["url"].rsplit("/", 1)[-1] for link in contribution["links"]}
+        self.assertEqual(
+            linked_names,
+            {
+                "README.md", "PREREGISTRATION.md", "audit.py",
+                "compact-query-rows.json", "summary.json", "posttest-evidence.json",
+                "source-manifest.json", "current-main-build-receipt.md",
+                "reproduction.json",
+            },
+        )
+
+        artifact_root = build.ROOT / "research" / "fluctlightdb-observation-binding-audit"
+        raw = artifact_root / "raw"
+        summary = json.loads((raw / "summary.json").read_text(encoding="utf-8"))
+        evidence = json.loads((raw / "posttest-evidence.json").read_text(encoding="utf-8"))
+        compact_rows = json.loads((raw / "compact-query-rows.json").read_text(encoding="utf-8"))
+        source_manifest = json.loads((raw / "source-manifest.json").read_text(encoding="utf-8"))
+        reproduction = json.loads((raw / "reproduction.json").read_text(encoding="utf-8"))
+        manifest = json.loads((raw / "manifest.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(summary["status"], "COMPLETE")
+        self.assertEqual(summary["compact_query_rows"], 1140)
+        self.assertTrue(summary["protocol_gate"]["all_matrix_receipts_pass"])
+        self.assertTrue(summary["protocol_gate"]["all_official_gates_pass"])
+        self.assertEqual(len(compact_rows), 1140)
+        self.assertEqual(len(evidence["rows"]), 360)
+        self.assertEqual(
+            evidence["summary_sha256"],
+            hashlib.sha256((raw / "summary.json").read_bytes()).hexdigest(),
+        )
+
+        for revision in ("paper-time", "repair-descendant"):
+            self.assertEqual(summary["official"][revision]["isolated"]["hits"], "50/50")
+            self.assertEqual(summary["official"][revision]["shared"]["hits"], "9/50")
+            self.assertTrue(summary["official"][revision]["shared"]["all_domains_invariant"])
+            for repeat in ("r1", "r2"):
+                lexical = summary["observed"][revision][repeat]["lexical_primary"]
+                self.assertEqual(lexical["n"], 45)
+                self.assertEqual(lexical["both_pair_members_visible"], 45)
+                self.assertEqual(lexical["ledger_above_chat"], 45)
+                self.assertEqual(lexical["chat_above_ledger"], 0)
+                self.assertEqual(lexical["foreign_agent_rows"], 0)
+                scoped = summary["observed"][revision][repeat]["scoped"]
+                self.assertEqual(scoped["wallet_queries_with_foreign_agent_rows"], 10)
+                self.assertEqual(scoped["non_wallet_k128_foreign_agent_rows"], 0)
+
+        self.assertEqual(
+            source_manifest["runtime_objects"]["paper-time"]["commit"],
+            "593623eea50361e563180c112322e26d0ab4093b",
+        )
+        self.assertEqual(
+            source_manifest["runtime_objects"]["current-main"]["runtime_status"],
+            "exact_source_compile_failure",
+        )
+        self.assertEqual(
+            source_manifest["runtime_objects"]["repair-descendant"]["commit"],
+            "f5d51e247b544503f8f47960b9dc6ecd43c2f464",
+        )
+        self.assertTrue(
+            source_manifest["runtime_objects"]["repair-descendant"]
+            ["retrieval_blobs_match_current_main"]
+        )
+        self.assertTrue(reproduction["public_reducer_on_complete_executed_matrix"]
+                        ["summary_byte_matches_checked"])
+        self.assertTrue(reproduction["public_reducer_on_complete_executed_matrix"]
+                        ["posttest_evidence_byte_matches_checked"])
+
+        artifact_text = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in artifact_root.rglob("*")
+            if path.is_file() and path.suffix in {".py", ".md", ".json"}
+        )
+        self.assertNotIn("file://", artifact_text)
+        self.assertNotIn("/Users/", artifact_text)
+        self.assertNotIn("/Volumes/", artifact_text)
+        self.assertIn("synthetic-source:", (raw / "compact-query-rows.json").read_text(encoding="utf-8"))
+
+        checked_paths = {
+            "summary.json": raw / "summary.json",
+            "compact-query-rows.json": raw / "compact-query-rows.json",
+            "posttest-evidence.json": raw / "posttest-evidence.json",
+            "audit.py": artifact_root / "audit.py",
+            "analyze_results.py": artifact_root / "analyze_results.py",
+        }
+        self.assertEqual(set(manifest), set(checked_paths))
+        for name, path in checked_paths.items():
+            self.assertEqual(manifest[name], hashlib.sha256(path.read_bytes()).hexdigest())
+
+        checksum_lines = (artifact_root / "checksums.sha256").read_text(encoding="utf-8").splitlines()
+        self.assertEqual(len(checksum_lines), 12)
+        for line in checksum_lines:
+            expected, relative = line.split("  ", 1)
+            observed = hashlib.sha256((artifact_root / relative).read_bytes()).hexdigest()
+            self.assertEqual(observed, expected)
+
     def test_longmemeval_alias_order_census_is_checked_in_and_held(self):
         material = next(
             item for item in self.data["materials"]

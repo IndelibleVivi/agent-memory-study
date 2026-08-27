@@ -1,0 +1,27 @@
+{
+  "schema": "ams-fluctlightdb-public-reproduction/1",
+  "status": "PASS",
+  "executed_sources": {
+    "runner_sha256": "db4127fb0b5cbf74e700323f4361caf0e22238dc6dbb32e5ed56d971e690d7e6",
+    "reducer_sha256": "e5d7022841cf15b2fe59b337e79ad60d128af9d4e584261cf9f6a27f72091c76"
+  },
+  "public_sources": {
+    "audit.py_sha256": "c73ded04b32899e3bcfbb0e47fe5a90f2f8b298001a47083009cd84892c39e0b",
+    "analyze_results.py_sha256": "c192f7972cb0074b48642bd625534ec18be11c47d236300e02c5968ba5940a49"
+  },
+  "source_delta": {
+    "audit.py": "The module docstring uses public wording, and each synthetic source URI is assembled from adjacent string fragments so the runtime value remains identical without publishing a local-file URI literal.",
+    "analyze_results.py": "The generated manifest points to public audit.py; complete compact rows map synthetic local-file source labels to synthetic-source:<name> for publication. Summary and selected-evidence reduction logic is unchanged.",
+    "treatment_or_reduction_logic_changed": false
+  },
+  "public_reducer_on_complete_executed_matrix": {
+    "status": "COMPLETE",
+    "compact_query_rows": 1140,
+    "missing_inputs": [],
+    "summary_byte_matches_checked": true,
+    "posttest_evidence_byte_matches_checked": true,
+    "summary_sha256": "e1287820bb8582360a748d92e3e916d253d2f6e85822a6da01226360526022f4",
+    "posttest_evidence_sha256": "9394ea6d03383ffaed783f03bae3f9c9ceea41f5cb90b4e2e5e3f5678e8209be"
+  },
+  "boundary": "The byte comparison covers the two checked public result objects, not UUID-bearing raw files, absolute paths, generated manifest metadata, or a third full runtime matrix."
+}

@@ -1,0 +1,68 @@
+{
+  "schema": "ams-fluctlightdb-source-manifest/1",
+  "paper": {
+    "arxiv": "2608.12365v1",
+    "pdf_sha256": "d940a8d5cf424d84ec121492b425be072e5b3a88c3daba53f2040ae1b394bd89",
+    "source_archive_sha256": "8570f1e42e6995a8fd8b9be08d73f3931d5d9528b5f7755ce4a7249c8362f8da",
+    "main_tex_sha256": "07e165d34c99b741916532b4d11a4138bb4e9bba4d6d5f3c2e36e66031154908",
+    "paper_time_main_tex_git_blob": "b99528454ace59535ee80aee081f69af50486756"
+  },
+  "runtime_objects": {
+    "paper-time": {
+      "commit": "593623eea50361e563180c112322e26d0ab4093b",
+      "checkout_status": "clean",
+      "native_version": "0.5.9",
+      "wheel_sha256": "4c363dab673a258eacd2cbc901fed609bb8787cec04f11512b4bcda831143c77",
+      "files": [
+        {"path": "benchmarks/provenance_conflict_bench.py", "git_blob": "c7f045d45c0c71ddb0799d62f74e265258cb040c", "sha256": "7d23b6139eadb61e92425a54e0c92d1fc736f70f7cf38311e82deebb16ed541f"},
+        {"path": "crates/fluctlightdb/src/brain.rs", "git_blob": "34008d76258187acfb8e34ddac8c0e4bdb2cafeb", "sha256": "2f65a30e33f22b92a3300fb45845dc47da972ac07dd482948b7b4c7a45c5194b"},
+        {"path": "crates/fluctlightdb/src/tokenize.rs", "git_blob": "04aea79ec89e2d210746b4e0675dde8dbf638a7a", "sha256": "5781a9ebd8ed28d2e6881e50de090df33428d99d69e12dfdcf4e4707778fc3ce"},
+        {"path": "crates/fluctlightdb/src/recall_router.rs", "git_blob": "a935bd18258bb4b18bdf454c0e3923ffd2525758", "sha256": "ae91905356b4b2351a6980895b1cd5ea2e0d4d142600a956e93dd9f0f26abad7"},
+        {"path": "crates/fluctlight-py/src/lib.rs", "git_blob": "a9590dcf66d2781713b268a93ddf06673ad8a123", "sha256": "7f842f804e930f3948a966fef87609dc0f48a3d48b7601ae6ab4f79e9993a92f"},
+        {"path": "crates/fluctlightdb/src/lib.rs", "git_blob": "c184aef4f88c86de9137ce03969bb73819e1869b", "sha256": "cfaed6e5e517c0a40bf078b83378ebfc357c9e6eb6b03c4bcd9aa6117337d926"},
+        {"path": "sdks/python/fluctlightdb/brain.py", "git_blob": "3e7d8660d4a89b506b69990026164dc2c1f368cf", "sha256": "c9d0ee879167f289f2af7ca020f10271414de8c4bb7598a64be71294ade40e54"}
+      ]
+    },
+    "current-main": {
+      "commit": "d867f3cdbcffcefe4e14473333a78ce33a06ae47",
+      "checkout_status": "clean",
+      "native_version": "0.5.10",
+      "runtime_status": "exact_source_compile_failure",
+      "brain_rs_sha256": "5f16e2eaacf294ea12b574672b034cd31a8b5ea2030aa10e34a05a6a07a20163",
+      "official_benchmark_sha256": "7d23b6139eadb61e92425a54e0c92d1fc736f70f7cf38311e82deebb16ed541f",
+      "python_brain_sha256": "1cda6a8c3babe049de8f8b97991a6bbf5da07d6c55880a3cb91a188f797fa5fe"
+    },
+    "repair-descendant": {
+      "commit": "f5d51e247b544503f8f47960b9dc6ecd43c2f464",
+      "checkout_status": "clean",
+      "native_version": "0.5.10",
+      "wheel_sha256": "2a3b2fc54a8c362010c68b06d70c1e9175920870818db5bab6cdc867cabcd4e2",
+      "relationship": "official descendant of current-main that restores the missing crate-root sync_once export",
+      "retrieval_blobs_match_current_main": true,
+      "files": [
+        {"path": "benchmarks/provenance_conflict_bench.py", "git_blob": "c7f045d45c0c71ddb0799d62f74e265258cb040c", "sha256": "7d23b6139eadb61e92425a54e0c92d1fc736f70f7cf38311e82deebb16ed541f"},
+        {"path": "crates/fluctlightdb/src/brain.rs", "git_blob": "10fcf239c9f304a4ef5a9846e3ba6f7585e200db", "sha256": "5f16e2eaacf294ea12b574672b034cd31a8b5ea2030aa10e34a05a6a07a20163"},
+        {"path": "crates/fluctlightdb/src/tokenize.rs", "git_blob": "04aea79ec89e2d210746b4e0675dde8dbf638a7a", "sha256": "5781a9ebd8ed28d2e6881e50de090df33428d99d69e12dfdcf4e4707778fc3ce"},
+        {"path": "crates/fluctlightdb/src/recall_router.rs", "git_blob": "f4ccc9dff5b3e6982ff5275b452587833b54b5d6", "sha256": "b0a2c3ee4f316c650bdaa6d7ae0424c32da97608e62325e29e83ee89c30999e8"},
+        {"path": "crates/fluctlight-py/src/lib.rs", "git_blob": "bf4fecc692fd71db3436871719f1815a1246d3b9", "sha256": "1bfd2a3f34529f095fa80c7a1618d6a94c092c0a57adc9bda880c33b127a0cdc"},
+        {"path": "crates/fluctlightdb/src/lib.rs", "git_blob": "fc5449bfa81b827e38c484ef72006ce49593dc3e", "sha256": "583d048ceccae064aeca29b7739c4d1489f201e96a7f8b0655239907ec1faf11"},
+        {"path": "sdks/python/fluctlightdb/brain.py", "git_blob": "40bfe4ee961e7874bef019ef64adbd43496feb4c", "sha256": "1cda6a8c3babe049de8f8b97991a6bbf5da07d6c55880a3cb91a188f797fa5fe"}
+      ]
+    }
+  },
+  "execution_environment": {
+    "platform": "macOS 26.5.2 arm64",
+    "python": "3.13.3",
+    "rust": "1.98.0",
+    "cargo": "1.98.0",
+    "maturin": "1.15.0",
+    "child_process_initial_fluctlight_environment": {},
+    "independent_pre_connection_overrides": {
+      "FLUCTLIGHT_SEPARATION_GATE": "0",
+      "FLUCTLIGHT_ACTIVATE_CACHE": "1"
+    },
+    "note": "connect_agent() then applies the official SDK's mode defaults inside each child process; raw treatment receipts record the resulting post-connection FLUCTLIGHT_* state."
+  },
+  "executed_private_runner_sha256": "db4127fb0b5cbf74e700323f4361caf0e22238dc6dbb32e5ed56d971e690d7e6",
+  "executed_private_reducer_sha256": "e5d7022841cf15b2fe59b337e79ad60d128af9d4e584261cf9f6a27f72091c76"
+}
