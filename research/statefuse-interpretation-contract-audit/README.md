@@ -22,9 +22,11 @@ harm, accuracy, safety, or reliability.
 
 The checked artifact is a **completed local evidence audit**. It is not an AMS
 essay, does not assign `noteDepth`, and cannot by itself make a material
-`worked`. It supplies reproducible evidence for a separate authoring and
-canonical-integration decision. Commit, push, publication, and deployment are
-also separate gates.
+`worked`. The separately authored reader-facing essay has since integrated the
+evidence into the canonical material and assigned `worked` on current `main`;
+that editorial decision remains outside this artifact. Canonical integration
+and its commit have therefore occurred, while publication and live deployment
+remain separate gates that this repository-local artifact does not establish.
 
 Historical wording note: the frozen preregistration retains the phrase
 `No worked artifact is permitted`. In that pre-execution document, `worked
@@ -305,5 +307,6 @@ artifact does not rely on the local paths used to create the checked result.
   declares MIT. Supply-your-own checkout avoids unnecessary redistribution.
 - Licensing of newly authored AMS code/docs remains `pending_owner_choice`.
   This local candidate does not add or imply license terms.
-- Canonical-material integration, commit, push, publication, and deployment are
-  separate gates and have not occurred.
+- Canonical-material integration and its commit now exist on current `main`.
+  This evidence artifact still does not decide publication or deployment, and
+  this repository-local record makes no live-deployment claim.

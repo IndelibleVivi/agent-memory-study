@@ -1,0 +1,12 @@
+{
+  "absolute_paths_recorded": false,
+  "credential_policy": "child subprocess environment allowlist; no inherited API/key/token/secret/password variables",
+  "implementation": "CPython",
+  "machine": "arm64",
+  "network_policy": "Python child DNS/connect/sendto blocked by sitecustomize guard",
+  "python": "3.13.3",
+  "schema": "memora-audit-environment/1",
+  "source_execution": "official pytest runs from a temporary git-archive export; source checkout remains unchanged",
+  "system": "Darwin",
+  "timing_recorded": false
+}

@@ -39,7 +39,8 @@
           "mistake-notebook-learning",
           "agentic-memory",
           "memory-beyond-recall",
-          "statefuse-conflict-preserving-memory"
+          "statefuse-conflict-preserving-memory",
+          "memora-from-recall-to-forgetting"
         ]
       },
       {
@@ -106,7 +107,8 @@
         "materialIds": [
           "truth-maintenance-system",
           "agm-theory-change",
-          "statefuse-conflict-preserving-memory"
+          "statefuse-conflict-preserving-memory",
+          "memora-from-recall-to-forgetting"
         ]
       }
     ],
@@ -2121,6 +2123,279 @@
       },
       "editorialQuestion": "如果 query 没有指明 intended observation，而 scope filter 之后的 helper 又能重新插入别的 agent 的 row，那么 provenance-aware top-1 究竟在排序可信证据，还是替 scorer 猜 target、替 pipeline 猜 permission？",
       "sourceNote": "arXiv v1，2026-08-17；PDF 共 16 页。paper-time 0.5.9、current-main source/build failure 与 official repair-descendant 0.5.10 分层标注；paper headline 99.0% 与 successor official correction 96.8% 也保持版本边界。public audit 的 1,140 normalized rows只支持 conditional ceiling、official-format paired control 与 exact local `agent_id` output-scope claims。"
+    },
+    {
+      "number": 20,
+      "id": "memora-from-recall-to-forgetting",
+      "kind": "paper",
+      "title": "From Recall to Forgetting: Benchmarking Long-Term Memory for Personalized Agents",
+      "authors": [
+        "Md Nayem Uddin",
+        "Kumar Shubham",
+        "Eduardo Blanco",
+        "Chitta Baral",
+        "Gengyu Wang"
+      ],
+      "shortAuthor": "Uddin 等",
+      "year": 2026,
+      "doi": "10.48550/arXiv.2604.20006",
+      "noteDepth": "worked",
+      "readingScope": "完整读了 arXiv v1 的 Abstract、§§1–7、Limitations、Ethical Considerations、Appendix A–E、Tables 1–10、Figures 1–7 与 references，共 28 个 physical PDF pages；references 只用于 lineage 定位。另检查 official source current repair commit a6493188efc836d6511ed5e4163fe3ba87da30ff、它的 pre-repair parent e19ebbd1089465876dca11b09e70256977f9755f、30 份 released evaluation-question files、两条 FAMA implementation、两条 judge paths 与 aggregator，并执行先有本地 pretest freeze、后有明示 post-execution amendments 且按修订协议完成两次 fresh rerun 的 read-only / model-free contract audit。没有调用 model、judge、API 或 memory backend，没有生成 answer/eval report，没有运行四个 LLM 或六个 memory agents，也没有重建 Table 3；current official source 是 post-paper successor，不被称为 paper-time source。",
+      "intro": "Memora 把 long-term memory 从“历史里有没有那条信息”推进到“回答是否只服从当前仍有效的 memory state”：每个问题同时携带应出现的 memory-presence criteria 与应消失的 forgetting-absence criteria，再由 FAMA 把 stale-memory reuse 变成显式 penalty。但一条 forgetting-aware headline 仍依赖更长的 evidence chain——criteria 怎样从 trace 生成、三个 judges 是否真的形成三人 quorum、empty forgetting bucket 如何处理、question/task/report 怎样聚合、以及 published table 能否从 released evidence 恢复。本条 worked essay 正是在这些层之间保持边界。",
+      "whyRead": "这篇值得精读，不只是因为它给 forgetting 加了一个分数，而是因为它暴露出 memory revision 的评估对象：系统既要写入并 consolidate 多次 add/update/delete，也要在最终回答里不给旧状态继续投票。论文、Appendix rubric、current source 与 released inputs 放在一起读后，FAMA 不再是一个孤立公式，而是一份 end-to-end evaluation contract；任何 criteria、judge cardinality、empty-bucket policy 或 aggregation identity 的漂移，都会改变“忘得对不对”究竟在测什么。",
+      "keyPoints": [
+        "Benchmark geometry：Memora 用 10 个 professional personas、preference/activity/goal 三类 memory、add/update/delete/neutral sessions 与 explicit before/after traces 构造 weekly、monthly、quarterly histories，并以 Remembering、Reasoning、Recommending 三类问题测试 temporally current memory。Table 1 报告 consolidation 从 weekly 5.3 sessions 平均扩到 quarterly 28.4，mutation 从 2.7 扩到 14.8。（§§1、3.1–3.6；Tables 1–2；Figures 1–2，PDF pp. 1–5）",
+        "FAMA contract：每条 criterion 先被独立判定；question-level `MPA` 是 presence criteria 的满足比例，`FAA` 是 obsolete/deleted criteria 的 absence 比例，`lambda = N_forget / (N_presence + N_forget)`，再计算 `max(0, MPA - lambda * (1 - FAA))`。Table 3 对每个 task-duration 取 question-level FAMA aggregate 并归一到 [0,100]；Table 4 与 Table 5 又分别把三个 durations 或三个 tasks 相加，因此其量尺是 [0,300]，不能读成单一 percentage。（§4.2；Tables 3–5，PDF pp. 6–8）",
+        "Two validator contracts：construction-side auto-eval 要求三个 LLM 对 conversation grounding 全部同意才接受；evaluation-side 则让 GPT-4.1、Claude Haiku 4.5 与 Gemini 2.5 Flash 对单条 criterion 做 binary judgment，以 2/3 majority 决定结果。前者是 dataset admission gate，后者是 score observation protocol，不能因模型数相同就当作同一个 reliability claim。（§3.3；Figure 2，PDF p. 5；§4.2、Appendix B.5–C.1，PDF pp. 6、15–17）",
+        "Human estimand boundary：construction QA 的 5% stratified conversation sample 检查 trace grounding、旧信息重入与 dialogue quality；evaluation calibration 另取 100 条 criteria，刻意平衡为四种 LLM consensus patterns 各 25 条。Table 8 的 88.3% 是这个 balanced diagnostic sample 上三位 annotators 的平均 LLM-majority agreement，不是按 released corpus prevalence 加权的总体 agreement rate。（§3.3；Appendix B.5、C.2；Tables 8–9，PDF pp. 5、16、18）",
+        "Paper comparison boundary：Table 3 比较四个 direct-context LLMs 的 standard/reasoning runs 与六个 external-memory agents；memory agents 在 Table 4 的 Remembering aggregate 平均 119.45，高于两组 LLM 的 65.60/65.80，但 Recommending 不占优，Reasoning 仍低。它是 heterogeneous systems 上的 paper-reported criterion/judge aggregate，不是相同 retrieval budget、storage visibility、cost、latency 或 repeated-run uncertainty 下的 causal ranking。（§§4.1、5；Tables 3–5、10，PDF pp. 6–8、28）",
+        "Released-contract result：current official release 的 30 个 question files 含 600 questions 与 6,415 criteria（2,947 presence / 3,468 forgetting），少于 paper Table 2 的 7,054；全部 200 个 Reasoning questions 都没有 forgetting criterion，current code 因 `lambda=0` 将其 FAMA 退化为 MPA。release 没有 checked eval reports，因此 source-linked audit 只能验证 released-input geometry、FAMA arithmetic、judge/aggregation behavior 与 source repair，不能恢复 Table 3、模型效应或 paper-run provenance。（current official source / released-input census / public model-free audit）"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 把 long-term memory 从 recall 改写为 state maintenance",
+          "claim": "作者认为真实 personalized interaction 中 information 会被加入、更新、删除；benchmark 因而必须同时提高跨 session consolidation 与 mutation pressure，而不是只问能否找回一个旧 fact。",
+          "locator": "§1；Table 1；Figure 1，PDF pp. 1–3"
+        },
+        {
+          "step": "02 · 先生成显式 memory trace，再生成 dialogue 与 questions",
+          "claim": "structured persona/memory seeds 驱动 session simulator，持续保存 before/after state；conversation 与 evaluation criteria 都回指这条 trace，并经 automated unanimity gate 与 human verification 才进入 benchmark。",
+          "locator": "§§3.1–3.6；Table 2；Figure 2；Appendix A–B，PDF pp. 3–5、13–16"
+        },
+        {
+          "step": "03 · 把正确使用与正确遗忘拆成 criterion buckets",
+          "claim": "memory-presence criteria 要求 current valid information 出现，forgetting-absence criteria 要求 invalidated information 不出现；这一拆分使“答案里既有新状态又夹带旧状态”不再被 presence-only metric 当成完全正确。",
+          "locator": "§§3.5、4.2；Appendix B.5–C.1，PDF pp. 5–6、16"
+        },
+        {
+          "step": "04 · 用 multi-judge majority 观测每条 criterion",
+          "claim": "三个 provider-diverse judges 在 temperature 0 下分别输出 yes/no，再以多数票形成 criterion result；Appendix 报 consensus、pairwise kappa 与 balanced human calibration，作为 judge reliability evidence。",
+          "locator": "§4.2；Appendix C.1–C.2；Figures 6–7；Tables 8–9，PDF pp. 6、16–18"
+        },
+        {
+          "step": "05 · 逐层从 criterion 聚合到 question、task-duration 与跨轴总分",
+          "claim": "FAMA 用 question-specific forgetting weight 惩罚 absent-memory violation；Table 3 是 task-duration score，Table 4 跨 durations 求和，Table 5 则把三 tasks 的 presence aggregate 与 FAMA reduction 并列。每次聚合都改变 estimand 与量尺。",
+          "locator": "§4.2；Tables 3–5，PDF pp. 6–8"
+        },
+        {
+          "step": "06 · 以 task/time asymmetry 反驳单一 memory capability",
+          "claim": "paper-reported results 显示 external memory 对 Remembering 更有利、Recommending 容许较宽的 plausible output、Reasoning 普遍低且随缺失 evidence 失败；作者据此把 consolidation、forgetting 与 task-specific retrieval 分开讨论。",
+          "locator": "§§5–7；Figures 3–4；Tables 3–5，PDF pp. 7–9"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Trace-grounded synthetic benchmark",
+          "text": "10 personas 的 preference/activity/goal entities 在 operational/temporal constraints 下经历 add、update、delete 与 neutral sessions。session manager、intent manager、flow manager 与 prompt manager 生成 dialogue；automatic grounding loop、三-validator unanimity 与 5% stratified human check 约束 conversation admission。",
+          "locator": "§§3.1–3.6；Figures 1–2；Appendix A–B；Tables 2、6–7，PDF pp. 3–5、13–16"
+        },
+        {
+          "label": "Criterion-to-score pipeline",
+          "text": "每个 response 对一组 atomic presence/forgetting criteria 分别接受 yes/no judgments；question-level FAMA 再进入 task-duration macro aggregate。Table 4 与 Table 5 使用跨轴求和，reader 必须保留 per-question、[0,100] cell 与 [0,300] aggregate 三层单位。",
+          "locator": "§4.2；Tables 3–5，PDF pp. 6–8"
+        },
+        {
+          "label": "Judge reliability layers",
+          "text": "construction gate 用 unanimity；evaluation gate 用 majority。Appendix C 对三位 LLM judges 报 agreement patterns 与 pairwise kappa，再让三位 humans 各自标注一个四-stratum balanced 100-case sample；这不等同于全 corpus human relabel。",
+          "locator": "§3.3；Appendix B.5、C.1–C.2；Figures 6–7；Tables 8–9，PDF pp. 5、15–18"
+        },
+        {
+          "label": "Versioned official-source and release census",
+          "text": "public audit 把 arXiv v1、current official repair commit a6493188…、pre-repair parent e19ebbd…、30 released question files 与 absent eval reports 分开锁定；source history 只证明 repo 中 judge import fallback 的 defect/repair lineage，不证明 Table 3 使用了任何特定 revision。",
+          "locator": "research/memora-forgetting-contract-audit/PREREGISTRATION.md；raw/source_manifest.json；raw/census.json"
+        },
+        {
+          "label": "Model-free contract matrix",
+          "text": "audit 运行 current official offline regression tests，并以 synthetic counters/records 独立覆盖 729 个 paper-equation positive-denominator fixtures、55 个 separately labeled source zero-bucket extensions、invalid direct-call boundary、report aggregation、judge initialization 与 runtime valid-quorum matrix；没有生成新的 semantic judgments 或 benchmark outputs。",
+          "locator": "research/memora-forgetting-contract-audit/audit.py；raw/fama.json；raw/aggregator.json；raw/judge_binding.json"
+        }
+      ],
+      "reportedFindings": [
+        "paper-reported：Table 2 给出 weekly/monthly/quarterly 各 150/150/300 questions 与 749/1,421/4,884 criteria；平均 sessions/persona 为 155/615/1,991，平均 memory operations 为 103.2/374.3/1,171.4。（§3.4；Table 2，PDF p. 4）",
+        "paper-reported：Table 4 中 memory agents 的 Remembering 三-duration aggregate 平均 119.45，两组 LLM 平均为 65.60 与 65.80；Recommending 则为 138.37 对 144.72/153.34，Reasoning 为 27.55 对 12.37/13.92。这些都是三个 [0,100] cells 的和，量尺 [0,300]。（§5；Tables 3–4，PDF p. 7）",
+        "paper-reported：Table 5 显示所有 systems 的 memory-presence aggregate 在 FAMA 下都被下调；monthly setting 中 MemoryOS/A-Mem 的 MPA aggregate 为 112.8/112.0、Nemori 为 105.4，但 forgetting reductions 为 28.4/29.5/15.4，使 Nemori 的 final aggregate 反超二者。（§5；Table 5，PDF p. 8）",
+        "paper-reported：75-case manual error analysis 每个 task 检查 25 个 errors；Recommending 中 16/25 被归为 outdated memory、7/25 为 partial preference retrieval，Remembering 中 18/25 为 partial retrieval，Reasoning 25/25 都涉及 incomplete retrieval。它是 selected error taxonomy，不是总体 error prevalence。（§6，PDF p. 9）",
+        "paper-reported：balanced 100-criterion human calibration 上，三个 annotators 与 LLM majority 的 agreement 为 88.0%、88.0%、89.0%，平均 88.3%；human-human pairwise agreement 为 93%–95%，kappa 为 0.86–0.90。（Appendix C.2；Tables 8–9，PDF p. 18）"
+      ],
+      "evidenceLimits": [
+        "Memora 是 explicit-trace synthetic benchmark。论文自己限定 10 个 professional personas 与 preference/activity/goal categories，不覆盖真实 interaction 的 implicit updates、contradictory signals、social relationships、多用户 coordination 或长期 consent/privacy dynamics；“lower bound”是作者论证，不是本站验证的 deployment theorem。（Limitations，PDF p. 10）",
+        "Table 3 的四个 LLM、两种 inference settings 与六个 agents 没有共同的 storage/context/retrieval mechanism：direct-context histories 可被 chronological truncation，agents 使用 GPT-4o-mini answer backend 与不同 local/cloud/proprietary stores。论文不报 runtime、latency、cost 或效率，也没有把这些 rows 变成 mechanism-level causal comparison。（§4.1；Appendix E；Table 10，PDF pp. 6、27–28）",
+        "current official commit a6493188… 是 post-paper successor。在 fresh controlled、无 ambient `api_client` 的 historical probe 中，parent 的 Track-2 path 指向不存在的目录并把 ImportError 转为 single-judge fallback；current commit 的 fresh exact-helper probe 把 module/class 都解析到 `evals/model_eval/api_client.py`，但 upstream 仍采用 `sys.path.append` 与 unqualified import，存在 pre-cached/earlier-path shadowing。缺少 paper production run 的 exact source revision、raw reports 与 run manifest，因此不能声称 historical defect 进入 Table 3、推翻 paper scores 或改变 model ranking。",
+        "paper 的 FAMA 定义没有声明 empty presence/forgetting bucket policy。Appendix D.3 展示的 Reasoning example只有 presence criteria；released inputs 进一步显示全部 200 个 Reasoning questions 都是 zero-forgetting。current source 选择 `lambda=0`，令这些 questions 的 FAMA=MPA；这是 successor implementation policy，不是 paper 明说的 forgetting test。",
+        "released inputs 是 6,415 criteria，而 paper Table 2 是 7,054；release 又不含任何 checked eval report。没有 exact paper-run dataset manifest 时，差额不能被归因为 paper error、silent filtering 或 post-paper change，public audit 也不能从 current tree 重算 Table 3。",
+        "Appendix C 说明 invalid judge outputs 可在 retry 后被排除、全失败则判 incorrect，却没有完整规定只剩 1/3、2/3 valid judges 或 1–1 tie 时如何维持“三 judge majority”。current source 的 reduced-quorum behavior 因而只能作为 successor executable contract 报告，不向 paper reliability figures反向转移。",
+        "Table 8 的四个 consensus strata 被强制各取 25 cases；88.3% 对 disagreement-heavy sample 有诊断价值，但不是按 Figure 6 / released corpus consensus prevalence 加权的 accuracy、也不是 judge unbiasedness 或 human equivalence 证明。",
+        "Appendix D.2 的 desired response 直接说用户正在 `leaning away from James Stewart`，相邻 expected-No criterion 却要求 response 不得 `reflect or mention` James Stewart。它是一个明确 rubric tension；单例不能估计 dataset-wide contradiction rate、judge error 或对 Table 3 的影响。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "Three judges 不等于固定三人 quorum",
+          "observation": "paper 把 evaluation 写成三 judges 的 2/3 majority，并强调 no single judge can decide；current source repair 后 Track 2 在 strict mode 才对 0/3、1/3、2/3 fail closed，默认 runners 仍允许显式 single-judge downgrade。Track 1 接受 1/3 或 2/3 initialization；两 tracks 在 per-criterion errors 后都对剩余 valid judges 投票。",
+          "implication": "judge protocol identity 必须同时记录 configured、initialized 与 per-criterion valid quorum。‘multi-judge enabled’或 current offline tests PASS 不足以证明每个 published judgment 经过三人 majority。",
+          "locators": [
+            "§4.2；Appendix C.1，PDF pp. 6、16–17",
+            "official source a6493188… Track 1 / Track 2 evaluator paths",
+            "public raw/judge_binding.json"
+          ]
+        },
+        {
+          "label": "Empty forgetting bucket 改变 FAMA 的含义",
+          "observation": "paper 公式定义 FAA 为 forgetting-absence satisfied fraction，却没有给 N_forget=0 的取值。Appendix D.3 的 Reasoning example没有 forgetting criteria；released census 显示全部 200 个 Reasoning questions N_forget=0。current source 令 FAA=1、lambda=0，于是 FAMA=MPA。",
+          "implication": "这些 Reasoning cells 测 consolidation/presence 而不施加 forgetting penalty；跨 task 比较 FAMA 时，应同时公开 zero-forgetting coverage 与 bucket policy，不能把同名 score 自动当成同一 forgetting exposure。",
+          "locators": [
+            "§4.2，PDF p. 6",
+            "Appendix D.3，PDF pp. 24–27",
+            "public raw/census.json；raw/fama.json"
+          ]
+        },
+        {
+          "label": "Paper inventory 与 current release 不是同一 evidence object",
+          "observation": "paper Table 2 报 7,054 criteria；current release census 为 6,415。official tree 有 question inputs 与 headline README table，却没有 eval reports/results，且 source revision 晚于 paper。",
+          "implication": "current release 适合 audit input geometry 与 executable contracts，但没有 exact dataset/run provenance 就不能被当作 Table 3 reproduction package；paper number 与 current census 必须并列，而不是择一覆盖。",
+          "locators": [
+            "Table 2，PDF p. 4",
+            "official current data/evals source",
+            "public raw/census.json；raw/source_manifest.json"
+          ]
+        },
+        {
+          "label": "Desired response 与 expected-No wording 相撞",
+          "observation": "Appendix D.2 Session 132 的 desired response 通过‘leaning away from James Stewart’解释为什么推荐 Joan Crawford；相邻 criterion 却问 response 是否 `reflect or mention` James Stewart，expected answer 为 No。",
+          "implication": "若 judge 采用 literal mention，oracle-style desired response 会违反 criterion；若采用 semantic alignment，criterion wording 又过宽。criteria 应区分 endorse/use、historical contrast 与 bare mention，而不能把三者压进一个 No。",
+          "locators": [
+            "Appendix D.2，PDF pp. 23–24"
+          ]
+        },
+        {
+          "label": "Balanced human agreement 不是 corpus-weighted reliability",
+          "observation": "Table 8 强制从 unanimous yes、majority yes、majority no、unanimous no 各抽 25 条；Figure 6 同时显示真实 consensus patterns 并非等比例。88.3% 是四 strata 等权平均。",
+          "implication": "该设计能放大分歧 cases、诊断 ambiguity，但若要陈述部署期总体 agreement，必须按目标 population prevalence 重新加权并给 sampling uncertainty。",
+          "locators": [
+            "Figures 6–7；Appendix C.2；Tables 8–9，PDF pp. 17–18"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "Forgetting is a pipeline property",
+          "text": "一个系统是否‘会忘’不只由 store 删除旧记录决定；criteria construction、answer packet、judge semantics、quorum 与 score aggregation 都能让 obsolete memory 被看见、漏看或错误计权。FAMA 应与整条 observation chain 一起版本化。",
+          "boundary": "这是 paper criterion design、source tensions 与 public contract audit 的 architecture synthesis；不是对任何 Table 3 system 的 hidden mechanism 诊断或因果归因。"
+        },
+        {
+          "label": "Negative criteria carry revision authority",
+          "text": "presence criterion 说明什么信息应进入回答，forgetting criterion 则决定哪些旧状态已经失去 answer authority。后者不是普通 negative example，而是 benchmark 对 update/delete semantics 的可执行解释。",
+          "boundary": "Memora 的 explicit traces 支持这一读法；真实用户 correction、withdrawal、coexisting preferences 与 legally significant erasure 可能需要不同 authority model。"
+        },
+        {
+          "label": "Quorum belongs in every score receipt",
+          "text": "每条 criterion 的 receipt 至少要携带 configured judges、initialized judges、valid returned judges、vote split、retry/fallback path 与 criterion identity；只有 aggregate FAMA 无法证明 observed judgment 遵守 advertised majority protocol。",
+          "boundary": "current source 显示该 provenance 的必要性，但本站没有 paper-run receipts，不能推断 published rows 实际经历了 reduced quorum。"
+        },
+        {
+          "label": "Same FAMA label can hide different task contracts",
+          "text": "当 Reasoning 的 N_forget 全为零时，FAMA 等于 MPA；Remembering/Recommending 则同时受 presence 与 forgetting penalty。task-level FAMA 横向比较前，应先报告 criterion composition、zero-bucket rate 与 aggregation weights。",
+          "boundary": "这是 current released-input geometry 下的 metric interpretation；它不否定 Reasoning task，也不证明加入 forgetting criteria 必然改变任何 model ranking。"
+        },
+        {
+          "label": "Release completeness is part of benchmark legibility",
+          "text": "code、input questions 与 headline table 仍不足以独立检查一个 judge-based benchmark；最小 evidence package 还需要 exact run/source/data identities、criterion-level verdicts、quorum receipts 与 deterministic aggregation manifest。",
+          "boundary": "current release 的缺件只限制 independent reconstruction；它不证明 authors 没有保存内部 runs，也不把 unavailable provenance 等同 fabricated result。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "Quorum-bound FAMA and paper-run provenance protocol",
+          "status": "proposed-not-run",
+          "question": "当每个 criterion 都要求 fixed 3/3 initialized judges 与 at least 2/3 valid majority，并把 empty-bucket policy 和 report identity绑定进 receipt 后，哪些 paper-reported task/duration cells、forgetting reductions 与 rankings仍可由 exact run artifacts恢复？",
+          "method": "由 authors 或 future release 提供 exact paper source/data commits、question files、responses、三 judge raw outputs、retry/error states 与 report manifests；先按 declared three-judge quorum fail closed，再独立重算 criterion verdict、question FAMA、task-duration cells、Table 4/5 aggregates，并与 published tables 做 cell-level reconciliation。另行计算 balanced human sample 与 target-population-weighted agreement，禁止用 current source生成替代 paper outputs。",
+          "fixtures": "paper-run immutable manifests；全部 criterion-level raw judge responses；zero-forgetting Reasoning questions；有 1/3、2/3、3/3 valid outputs 的 deterministic routing cases；Appendix D.2 James Stewart mention/use contrast；current release 仅作为 versioned comparison object。",
+          "controls": "exact source/data/report hashes、one report per declared subject/persona/cell、no duplicate timestamp weighting、3/3 initialization positive、judge-loss fail-closed negatives、literal-mention versus semantic-use rubric controls、question-weight/report-weight reconciliation、paper/current release separation。",
+          "measures": "report criteria/questions/personas coverage；quorum-valid fraction；retry/fallback counts；per-question MPA/FAA/FAMA；zero-forgetting rate；Table 3 cell delta；Table 4/5 scale-aware delta；rank stability；balanced 与 population-weighted human agreement及 uncertainty。",
+          "limitations": "这是 proposed-not-run provenance/recalculation protocol，需要未随 current release 提供的 paper-run artifacts；它不授权重新调用 judge APIs、不能从 current successor source猜测 historical execution，也不会把任何差异自动解释为 paper invalidation或 real-world memory effect。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "Judge-protocol binding and forgetting-contract audit",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-08-29",
+          "basis": "Paper-facing audit of arXiv:2604.20006v1, exact current official repair commit a6493188efc836d6511ed5e4163fe3ba87da30ff, its direct pre-repair parent e19ebbd1089465876dca11b09e70256977f9755f, both evaluator tracks, the exact aggregator and all 30 released evaluation-question files.",
+          "boundary": "This exact-revision source execution began under a privately held pretest preregistration. The public-safe protocol record was derived after execution and explicitly separates later reviewer-driven amendments; the checked evidence was then rerun twice under the amended protocol. It is not a benchmark reproduction, model or memory-system evaluation, effect/prevalence estimate, paper-production source identification, Table 3 reconstruction, paper-result invalidation, or evidence that the historical fallback occurred in any paper run. Current successor behavior does not retroactively become paper-time behavior. The raw decision is scoped to one complete fresh run; package acceptance additionally requires the two-run reproduction receipt and installed-tree verifier.",
+          "method": "Lock the 28-page paper and clean current/direct-parent Git identities; run the five selected official offline tests from a temporary Git-archive export; exercise source-exact historical/current judge initialization and runtime-valid-quorum paths with isolated fake clients; record the current fresh exact-helper module/class origin and the remaining import-shadowing mechanics; AST-extract both FAMA functions and the aggregator; compare the 729 positive-denominator FAMA fixtures against an independent Fraction oracle and separately test 55 source-defined zero-bucket extensions; census every released question/criterion and result path; locate the Appendix D.2 criterion; then repeat all 11 primary outputs in a second fresh root and byte-compare them.",
+          "environment": "Darwin arm64；CPython 3.13.3；exact clean official checkout and exact arXiv v1 PDF；official pytest executed from a temporary source export with bytecode/cache disabled；allowlisted child environment with inherited API credentials removed and Python DNS/connect/sendto blocked；no model, LLM judge, memory backend, embedding service, API or network endpoint called.",
+          "fixture": "Current and pre-repair evaluator/aggregator source blobs；30 released evaluation files；0/1/2/3 initialized-client matrices under Track-2 strict/non-strict and Track-1 current behavior；0/1/2/3 valid-runtime-judge matrices；729 paper-equation-domain positive-denominator FAMA fixtures plus 55 separately labeled source zero-bucket extensions with totals 0..6, all 156 released counter-pair corners and one separately labeled out-of-domain call；synthetic unequal/duplicate/missing report rows；paper physical-page anchors for formula, Table 2 and Appendix D.2.",
+          "controls": "Exact paper/source/tree/blob/file hashes；direct-parent and clean-worktree gates before/after；no ambient `api_client` in the historical path；fresh-process current exact-helper module/class origin receipt；explicit `sys.path.append` plus unqualified-import shadowability ceiling；source-exact AST plus an independent Fraction oracle only where the paper equation has positive denominators, with source zero-bucket conventions tested separately；strict/non-strict paired initialization；runtime judge-loss matrix；file-local/composite identity checks；paper-versus-release census separation；zero checked-result inventory；official export file-set/write/cache receipt；two fresh output roots with 11/11 byte-identical primary receipts；complete artifact checksum coverage and no unlisted build residue.",
+          "rawResult": "The five selected official offline tests passed with no export mutation/cache residue. The release contains 30 files, 600 questions and 6,415 criteria: 2,947 presence and 3,468 forgetting-absence, versus paper Table 2's 7,054; all 200 Reasoning questions have zero forgetting criteria. File-local/composite IDs are unique, while bare IDs form 38 question and 178 criterion collision groups. In the isolated no-ambient historical probe, pre-repair Track 2 targeted a nonexistent judge path and converted ImportError to `use_multi_judge=False`. At the current commit, a fresh exact-helper probe resolved both `api_client` and `OpenRouterClient` to `evals/model_eval/api_client.py`; however, upstream still uses `sys.path.append` plus an unqualified import and remains shadowable by a pre-cached or earlier-path module. Initialization matrices used deterministic fake constructors, not real backend clients: non-strict Track 2 downgrades 0/1/2 initialized clients to single-judge while strict accepts only 3/3; Track 1 accepts 1/3 and 2/3, and both tracks vote over 1/2/3 surviving valid judges. Both exact FAMA functions matched an independent Fraction oracle over 729 positive-denominator paper-equation fixtures; 55 source zero-bucket extensions separately matched the released implementations, and all 156 released counter-pair corners matched source behavior. The separately labeled invalid call `(3,2,0,0)` returned 1.5. The tree has zero checked eval-report/result population, and all 11 primary receipts byte-matched across two fresh runs.",
+          "derivedResult": "The current repair binds Track-2 initialization cardinality only when strict mode is enabled; Track 1 and both runtime paths still permit reduced valid-judge quorums. FAMA arithmetic matches the reported equation where both denominators are positive and separately matches released-source zero-bucket conventions, which the paper does not define; the standalone functions do not validate the counter domain or upper-clamp invalid inputs. The aggregator is an unweighted mean of report-level task FAMA rows and enforces neither completeness nor deduplication. The 639-criterion paper/release difference is input-census drift, not result invalidation; without exact paper-run data/source/reports, Table 3 and model effects remain unreconstructed. Appendix D.2 contributes one mention-versus-reliance specification tension, not observed judge behavior or corpus prevalence.",
+          "limitations": "Synthetic clients/counters/reports test executable contracts, not semantic answer quality or real judge reliability; the initialization matrices use fake constructors and do not construct real backend clients. The pretest freeze is private/local, while the public-safe protocol record and amendments were derived after execution; the public file is not a contemporaneously published preregistration. The current import-origin receipt is a fresh controlled-process observation, while upstream path mutation and unqualified import remain shadowable. The selected five official tests are not a full integration suite. No released response or verdict population exists to recompute Figure 6/7, Table 3, balanced human agreement or rankings. The out-of-domain FAMA probe is not reachable evidence from released call-site counters. Bare-ID collisions matter to cross-file joins but do not show per-file scoring corruption. The raw decision covers single-run completeness; package acceptance depends on the separate two-run reproduction and installed-tree verifier. Same-machine byte identity is not cross-platform reproduction, and current source remains a post-paper successor.",
+          "links": [
+            {
+              "label": "method, results and claim ceiling",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memora-forgetting-contract-audit/README.md"
+            },
+            {
+              "label": "public protocol record and dated amendments",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memora-forgetting-contract-audit/PREREGISTRATION.md"
+            },
+            {
+              "label": "source-locked runner",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memora-forgetting-contract-audit/audit.py"
+            },
+            {
+              "label": "single-run bounded decision summary",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memora-forgetting-contract-audit/raw/decision.json"
+            },
+            {
+              "label": "complete released-question census",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memora-forgetting-contract-audit/raw/census.json"
+            },
+            {
+              "label": "judge initialization and runtime quorum matrices",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memora-forgetting-contract-audit/raw/judge_binding.json"
+            },
+            {
+              "label": "FAMA paper-domain, source-extension and boundary matrix",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memora-forgetting-contract-audit/raw/fama.json"
+            },
+            {
+              "label": "aggregation contract fixtures",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memora-forgetting-contract-audit/raw/aggregator.json"
+            },
+            {
+              "label": "exact source manifest",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memora-forgetting-contract-audit/raw/source_manifest.json"
+            },
+            {
+              "label": "two-run byte reproduction receipt",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memora-forgetting-contract-audit/raw/reproduction.json"
+            }
+          ]
+        }
+      ],
+      "keywords": [
+        "long-term memory benchmark",
+        "forgetting-aware evaluation",
+        "memory mutation",
+        "judge quorum",
+        "FAMA"
+      ],
+      "categories": [
+        "可靠性",
+        "信念修正"
+      ],
+      "failureSurfaces": [
+        "write-consolidation",
+        "justification-revision"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2604.20006v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2604.20006v1",
+        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 v1。"
+      },
+      "editorialQuestion": "如果一个 benchmark 用 forgetting criteria 赋予旧 memory ‘不得再支配回答’的 revision authority，却没有把 empty bucket、judge quorum、criterion wording 与 exact report provenance 一起锁进 score receipt，那么同一个 FAMA 数字究竟证明系统忘掉了什么，还是只证明 evaluator 在某条未完整公开的路径上没有看见它？",
+      "sourceNote": "arXiv v1，2026-04-21；ACL 2026 Findings；PDF 共 28 个 physical pages。current official repair commit a6493188… 是 post-paper successor；pre-repair defect/current repair lineage、current tests 与 30-file released-input audit均按 source/release evidence 单列，不被称为 paper-time execution。paper Table 2 的 7,054 criteria 与 current release 的 6,415 并列保留；zero checked eval reports使 Table 3 仍是 paper-reported而非本站重建。"
     }
   ]
 }

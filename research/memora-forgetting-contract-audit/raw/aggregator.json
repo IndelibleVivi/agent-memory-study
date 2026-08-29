@@ -1,0 +1,61 @@
+{
+  "exact_function": {
+    "ast_source_sha256": "f4a1d24954637457346889eae277d2f1bc49979c9a7762157cbc352d1b9e25a3",
+    "name": "aggregate_table3",
+    "path": "evals/model_eval/aggregate_results.py"
+  },
+  "released_input_geometry": {
+    "boundary": "aggregate_table3 itself checks neither expected report completeness nor report identity uniqueness; partial, unequal, or duplicate rows can diverge.",
+    "conditional_equivalence": "For a complete release population with one complete report per released period/persona run, equal-report and per-question task means coincide because each report has 5 task questions (weekly/monthly) or 10 (quarterly).",
+    "per_file_task_question_counts": {
+      "monthly:reasoning": [
+        5
+      ],
+      "monthly:recommending": [
+        5
+      ],
+      "monthly:remembering": [
+        5
+      ],
+      "quarterly:reasoning": [
+        10
+      ],
+      "quarterly:recommending": [
+        10
+      ],
+      "quarterly:remembering": [
+        10
+      ],
+      "weekly:reasoning": [
+        5
+      ],
+      "weekly:recommending": [
+        5
+      ],
+      "weekly:remembering": [
+        5
+      ]
+    }
+  },
+  "schema": "memora-aggregator-audit/1",
+  "synthetic_fixtures": {
+    "duplicate_fixture_value": 0.3333333333333333,
+    "duplicate_report_rows_retained": true,
+    "missing_fama_excluded": true,
+    "missing_period_bucket": "unknown",
+    "question_count_zero_excluded": true,
+    "unweighted_report_macro": {
+      "question_weighted_control": 0.9,
+      "report_fama": [
+        0.0,
+        1.0
+      ],
+      "report_question_counts": [
+        1,
+        9
+      ],
+      "source_aggregate": 0.5
+    },
+    "zero_fama_included": true
+  }
+}

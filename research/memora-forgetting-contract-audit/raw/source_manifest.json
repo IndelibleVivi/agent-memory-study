@@ -1,0 +1,74 @@
+{
+  "direct_parent": "e19ebbd1089465876dca11b09e70256977f9755f",
+  "head": "a6493188efc836d6511ed5e4163fe3ba87da30ff",
+  "head_tree": "2190343c1b7b34911af1067b6f2e3cddd81477f6",
+  "inspected_files": [
+    {
+      "bytes": 624,
+      "git_blob": "787a40d8852a376f0d966115cd047c0399ccfebb",
+      "path": ".gitignore",
+      "revision": "a6493188efc836d6511ed5e4163fe3ba87da30ff",
+      "sha256": "4db895b1a1598cd8f6e73f7a5f53be02807dd81a7a8c64ae06fccf506bb10031"
+    },
+    {
+      "bytes": 8667,
+      "git_blob": "2823bd86fccc07d5d44324507c677bacdef8e38a",
+      "path": "README.md",
+      "revision": "a6493188efc836d6511ed5e4163fe3ba87da30ff",
+      "sha256": "e946512d501b75c991859a3e35d69f469266a668082850b734f3fde7d970f6d7"
+    },
+    {
+      "bytes": 7399,
+      "git_blob": "69f133e6f2ba17dbc4ddcd11f42b4efa81696194",
+      "path": "evals/README.md",
+      "revision": "a6493188efc836d6511ed5e4163fe3ba87da30ff",
+      "sha256": "4dfbf7a0f16e2a9776a27b8ae237c6d5bd38b00a9f1ed007b0d729a613ee20d3"
+    },
+    {
+      "bytes": 71355,
+      "git_blob": "4ab08b3cb57018b3e89f9ca629f4f9c13c3f2462",
+      "path": "evals/model_eval/model_based_evaluator.py",
+      "revision": "a6493188efc836d6511ed5e4163fe3ba87da30ff",
+      "sha256": "b4e37dd39c2c72b91743c42180f6b07b460e519358f33c6fc1511f575dbb1bfc"
+    },
+    {
+      "bytes": 77058,
+      "git_blob": "ca02a714473e19e3f415f2d7db272ac84a46e33a",
+      "historical_direct_parent": {
+        "bytes": 72536,
+        "git_blob": "35569f18f9e33ce5985285c855fed0bb4e09e940",
+        "revision": "e19ebbd1089465876dca11b09e70256977f9755f",
+        "sha256": "40c3df42c72d4d4e5efc48649f4c75540fde36a8ac1961b33a90f8d97d109f12"
+      },
+      "path": "evals/agent_eval/memory_to_answer.py",
+      "revision": "a6493188efc836d6511ed5e4163fe3ba87da30ff",
+      "sha256": "119adf7811c2fc92f4922b1a72c6989c0a5f83350e76366b88dff137e47b4c4f"
+    },
+    {
+      "bytes": 6749,
+      "git_blob": "0cde289f3e79028d96f60c4886c1374b43f9a11a",
+      "path": "evals/model_eval/aggregate_results.py",
+      "revision": "a6493188efc836d6511ed5e4163fe3ba87da30ff",
+      "sha256": "64435c6c21f0df6f7629690e0600c94214c55197e3d537c356b59befd541c223"
+    },
+    {
+      "bytes": 4557,
+      "git_blob": "ecb3f10d65c5adb2e9b605d545d95d660a1f1bb7",
+      "path": "evals/agent_eval/test_judge_import.py",
+      "revision": "a6493188efc836d6511ed5e4163fe3ba87da30ff",
+      "sha256": "7562980589bf3f6c64e194533439f7ebdde30c3b8dd43a1f715eab9e1b521918"
+    },
+    {
+      "bytes": 2410,
+      "git_blob": "e823e9407c6f42693e45ae9eaf05c372be232a95",
+      "path": "evals/agent_eval/test_stats_initialized.py",
+      "revision": "a6493188efc836d6511ed5e4163fe3ba87da30ff",
+      "sha256": "887f465b0ccd200511365985fc216b9960a0d046b970ef3355eebcfbba91c14c"
+    }
+  ],
+  "note": "Question-file hashes are recorded in census.json; no upstream source is copied.",
+  "parent_tree": "b6e9e36a38c5e95da71d2ee7b39b203314be8ee8",
+  "repository": "https://github.com/geniesinc/Memora",
+  "schema": "memora-source-manifest/1",
+  "worktree_status": "clean"
+}

@@ -1,0 +1,78 @@
+{
+  "claim_ceiling": {
+    "allowed": [
+      "exact-revision source behavior",
+      "official offline test receipt",
+      "synthetic contract behavior",
+      "released-input geometry",
+      "one paper-authored specification tension",
+      "locked-release result boundary"
+    ],
+    "not_established": [
+      "benchmark reproduction",
+      "model or memory-system comparison",
+      "effect size or semantic prevalence",
+      "paper-production source revision",
+      "Table 3 reconstruction or paper-result invalidation"
+    ]
+  },
+  "decision_scope": "single_run_completeness",
+  "derived_result": {
+    "aggregation_contract": "Equal-report and per-question means coincide only under complete equal-question report geometry; the aggregator has no completeness or deduplication gate.",
+    "example_contract": "The James-Stewart example exposes one written mention-versus-reliance tension, not observed scorer behavior.",
+    "judge_protocol": "The repair closes Track-2 initialization cardinality only when strict mode is used; Track 1 and runtime judge failures still permit smaller valid-judge quorums.",
+    "metric_contract": "FAMA matches the reported equation when both denominators are positive and separately matches released-source zero-bucket conventions; the standalone functions do not validate counter domains or upper-clamp invalid inputs.",
+    "release_contract": "The paper/release criterion-count difference is input-census drift, not result invalidation; Table 3 cannot be reconstructed model-free from this release."
+  },
+  "gates": {
+    "aggregator_synthetic_contract_passed": true,
+    "checked_results_absent": true,
+    "clean_source_checkout": true,
+    "current_track2_import_origin_exact": true,
+    "exact_current_and_direct_parent": true,
+    "fama_evidence_domain_partition_exact": true,
+    "fama_exact_matrix_passed": true,
+    "judge_binding_matrix_complete": true,
+    "no_model_api_backend_or_network": true,
+    "official_offline_tests_5_passed": true,
+    "official_test_source_export_unchanged": true,
+    "paper_identity_and_locator_bound": true,
+    "release_census_complete": true
+  },
+  "package_acceptance_requirements": [
+    "raw/decision.json records PASS for one complete fresh run",
+    "raw/reproduction.json records byte-identical primary receipts from two fresh runs",
+    "verify_checked.py validates the installed tree, hashes, exact external evidence, and both receipts"
+  ],
+  "package_acceptance_status": "not_evaluated_within_single_run",
+  "protocol_provenance": {
+    "post_execution_amendments": [
+      "729/55 evidence-domain reporting partition and domain-separated FAMA references",
+      "fresh current Track-2 import-origin and static shadowability probes",
+      "Track-1 initialization and both runtime-valid-quorum matrices beyond the frozen Track-2 question",
+      "separate invalid direct-function probe despite the frozen valid-counter-only matrix",
+      "single-run decision versus checked-package acceptance terminology"
+    ],
+    "pretest_aggregation_hypothesis_status": "not_supported_as_exact_source_contract: current aggregate_table3 averages report-level task FAMA rows; it only coincides with a per-question mean under additional complete equal-question geometry",
+    "private_pretest_freeze_date": "2026-08-29",
+    "private_pretest_source_published": false,
+    "public_protocol_file": "PREREGISTRATION.md",
+    "public_reconstruction_scope": "Public-safe claim-level reconstruction of a privately held pretest freeze, followed by explicitly separated post-execution amendments.",
+    "public_record_timing": "post_execution",
+    "same_day_clock_times_asserted": false
+  },
+  "raw_result": {
+    "aggregation": "The exact aggregator is an unweighted mean of report-level task FAMA rows.",
+    "current_track1": "In the deterministic fake-client constructor matrix, exact Track-1 control flow raises at 0/3 and accepts 1/3, 2/3, and 3/3; no real backend client was constructed.",
+    "current_track2": "At a6493188, a fresh guarded exact-helper import resolved both api_client and OpenRouterClient to evals/model_eval/api_client.py. The helper still uses sys.path.append plus an unqualified import and is shadowable by a pre-cached or earlier-path api_client. In the deterministic fake-client constructor matrix, strict 0/1/2 raised while non-strict 0/1/2 explicitly fell back; no real backend client was constructed.",
+    "fama": "Both exact functions matched an independent Fraction oracle across 729 paper-equation-domain fixtures. A separate 55-fixture source extension matched the released zero-bucket conventions; those conventions are not paper-defined. The out-of-domain direct probe (3,2,0,0) returned 1.5 in both.",
+    "historical_track2": "At direct parent e19ebbd, the exact initialization path targeted the nonexistent evals/agent_eval/model_eval and converted ImportError into use_multi_judge=False.",
+    "paper_example": "Physical pages 23-24 contain one mention-versus-reliance specification tension.",
+    "paper_release_census": "Paper Table 2 totals 7,054 criteria; the locked release totals 6,415.",
+    "release_boundary": "The locked tree contains zero checked eval report/result population.",
+    "released_input": "30 files, 600 questions, 6,415 criteria: 2,947 presence and 3,468 forgetting-absence.",
+    "runtime_quorum": "Both tracks compute correctness by strict majority of valid judges. At one yes/one no, Track 1 labels consensus tie while Track 2 labels it no; both mark is_correct false."
+  },
+  "schema": "memora-forgetting-contract-audit-decision/3",
+  "verdict": "PASS"
+}

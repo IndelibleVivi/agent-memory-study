@@ -1,0 +1,13 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.3, pytest-8.4.2, pluggy-1.6.0 -- <PYTEST_PYTHON>
+rootdir: <SOURCE_EXPORT>
+configfile: pyproject.toml
+collecting ... collected 5 items
+
+evals/agent_eval/test_judge_import.py::test_model_eval_dir_resolves_to_existing_directory PASSED [ 20%]
+evals/agent_eval/test_judge_import.py::test_openrouter_client_imports_without_keys PASSED [ 40%]
+evals/agent_eval/test_judge_import.py::test_requested_multi_judge_does_not_silently_degrade PASSED [ 60%]
+evals/agent_eval/test_stats_initialized.py::test_stats_initialized_outside_failure_handler PASSED [ 80%]
+evals/agent_eval/test_stats_initialized.py::test_stats_contract_has_all_keys PASSED [100%]
+
+============================== 5 passed in <duration> ===============================

@@ -1,0 +1,26 @@
+{
+  "api_credentials_inherited": false,
+  "bytecode_disabled": true,
+  "cache_paths_after": [],
+  "complete": true,
+  "created_paths": [],
+  "deleted_paths": [],
+  "environment_allowlisted": true,
+  "exit_code": 0,
+  "modified_paths": [],
+  "passed": 5,
+  "pytest_cacheprovider_disabled": true,
+  "python_network_guard": {
+    "connect": "blocked",
+    "dns": "blocked"
+  },
+  "receipt_sha256": "21958a3d4bf12923018c353022fd91d01b40dca28c3b62c5ea04c77fef8897ba",
+  "schema": "memora-official-tests/1",
+  "selected_files": [
+    "evals/agent_eval/test_judge_import.py",
+    "evals/agent_eval/test_stats_initialized.py"
+  ],
+  "source_export_after_files": 27738,
+  "source_export_before_files": 27738,
+  "status": "passed"
+}

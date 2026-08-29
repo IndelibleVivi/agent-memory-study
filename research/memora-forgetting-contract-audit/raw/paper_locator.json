@@ -1,0 +1,40 @@
+{
+  "appendix_d2_example": {
+    "adjacent_expected_no_short_fragment": "reflect or mention ... James Stewart",
+    "claim_boundary": "No scorer result, judge behavior, dataset-wide semantic prevalence, or aggregate-score effect is inferred.",
+    "desired_answer_short_fragment": "leaning away from James Stewart",
+    "editorial_inference": "This is a mention-versus-reliance specification tension in one authored example.",
+    "observation": "The paper-authored desired answer uses an obsolete preference contrastively while the adjacent criterion literally asks about mention as well as reflection.",
+    "physical_pages": [
+      23,
+      24
+    ],
+    "release_criterion_locator": {
+      "checked_response_population_in_release": false,
+      "criterion_id": "pref_movies_general_2005_eval_forgetting_9",
+      "evaluation_type": "forgetting_absence",
+      "expected_answer": "no",
+      "path": "data/quarterly/academic_researcher/evaluation_questions_academic_researcher.json",
+      "question_id": "pref_movies_general_2005",
+      "task": "recommending"
+    }
+  },
+  "fama_equation": {
+    "n_forget_zero_convention_in_prose": "unspecified",
+    "physical_page": 6,
+    "reported": "FAMA = max(0, MPA - lambda * (1 - FAA))",
+    "reported_lambda": "N_forget / (N_presence + N_forget)"
+  },
+  "paper": {
+    "id": "arXiv:2604.20006v1",
+    "pdf_sha256": "683a21a6b6fa09f1a6ad270832b3d891e41ecff6e6893298d8efe0df702566b2",
+    "physical_pages": 28,
+    "url": "https://arxiv.org/abs/2604.20006v1"
+  },
+  "schema": "memora-paper-locator/1",
+  "verification": {
+    "full_pdf_or_dataset_text_copied": false,
+    "locators_preflighted_and_visually_inspected": true,
+    "pdf_identity_checked_by_runner": true
+  }
+}

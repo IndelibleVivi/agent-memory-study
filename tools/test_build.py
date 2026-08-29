@@ -86,6 +86,356 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             },
         )
 
+    def test_reader_copy_matches_canonical_delivery_counts(self):
+        total = len(self.data["materials"])
+        bundled = sum(
+            material["pdf"]["delivery"] == "bundled"
+            for material in self.data["materials"]
+        )
+        official = sum(
+            material["pdf"]["delivery"] == "official"
+            for material in self.data["materials"]
+        )
+        readme = (build.ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn(
+            f"{total} 份 canonical materials：{bundled} 份按原许可随站提供的 PDF，"
+            f"另 {official} 份从 reader 直达 official full text",
+            readme,
+        )
+        self.assertIn(
+            f"{total} 份 canonical materials 中，{bundled} 篇有明确的 `CC BY 4.0` "
+            f"或 `CC BY-NC-SA 4.0` 许可",
+            readme,
+        )
+        self.assertIn(
+            f"另 {official} 篇只链接作者、publisher、arXiv 或 institutional repository "
+            "的 official full text",
+            readme,
+        )
+
+        notice = (build.ROOT / "NOTICE.md").read_text(encoding="utf-8")
+        self.assertIn(
+            f"- {bundled} unmodified PDFs are redistributed",
+            notice,
+        )
+        self.assertIn(
+            f"- {official} other full texts are linked",
+            notice,
+        )
+
+    def test_memora_worked_essay_keeps_paper_source_and_audit_boundaries_separate(self):
+        material = next(
+            item for item in self.data["materials"]
+            if item["id"] == "memora-from-recall-to-forgetting"
+        )
+        self.assertEqual(material["noteDepth"], "worked")
+        self.assertEqual(material["doi"], "10.48550/arXiv.2604.20006")
+        self.assertEqual(material["sourceUrl"], "https://arxiv.org/abs/2604.20006v1")
+        self.assertEqual(
+            material["pdf"],
+            {
+                "delivery": "official",
+                "url": "https://arxiv.org/pdf/2604.20006v1",
+                "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 v1。",
+            },
+        )
+        self.assertEqual(set(material["categories"]), {"可靠性", "信念修正"})
+        self.assertEqual(
+            set(material["failureSurfaces"]),
+            {"write-consolidation", "justification-revision"},
+        )
+        self.assertIn("28 个 physical PDF pages", material["readingScope"])
+        self.assertIn("current official source 是 post-paper successor", material["readingScope"])
+        self.assertIn("没有重建 Table 3", material["readingScope"])
+        for field in (
+            "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
+            "sourceTensions", "editorialInferences", "openProtocols",
+        ):
+            self.assertTrue(material[field])
+        self.assertTrue(all(
+            protocol["status"] == "proposed-not-run"
+            for protocol in material["openProtocols"]
+        ))
+        self.assertTrue(any(
+            "Table 3" in limit and "source revision" in limit
+            for limit in material["evidenceLimits"]
+        ))
+        self.assertTrue(any(
+            "全部 200 个 Reasoning questions" in tension["observation"]
+            for tension in material["sourceTensions"]
+        ))
+        atlas_memberships = {
+            surface["id"]
+            for surface in self.data["atlas"]["failureSurfaces"]
+            if material["id"] in surface["materialIds"]
+        }
+        self.assertEqual(atlas_memberships, set(material["failureSurfaces"]))
+
+    def test_worked_entries_have_a_public_test_artifact(self):
+        for material in self.data["materials"]:
+            if material["noteDepth"] != "worked":
+                continue
+            self.assertTrue(
+                any(
+                    contribution["type"] == "public-test"
+                    for contribution in material.get("contributions", [])
+                ),
+                f"worked material lacks public-test artifact: {material['id']}",
+            )
+
+    def test_memora_public_audit_is_complete_checked_and_bounded(self):
+        material = next(
+            item for item in self.data["materials"]
+            if item["id"] == "memora-from-recall-to-forgetting"
+        )
+        contribution = material["contributions"][0]
+        self.assertEqual(contribution["type"], "public-test")
+        self.assertEqual(contribution["byline"], "Agent Memory Study editors")
+        self.assertIn("729 positive-denominator", contribution["method"])
+        self.assertIn("55 source-defined zero-bucket", contribution["method"])
+        self.assertIn("729 paper-equation-domain", contribution["fixture"])
+        self.assertIn("55 separately labeled source zero-bucket", contribution["fixture"])
+        self.assertIn("public-safe protocol record was derived after execution", contribution["boundary"])
+        self.assertIn("rerun twice under the amended protocol", contribution["boundary"])
+        self.assertNotIn("preregistered exact-revision", contribution["boundary"])
+        self.assertIn("fresh exact-helper probe", contribution["rawResult"])
+        self.assertIn("pre-cached or earlier-path", contribution["rawResult"])
+        self.assertIn("single-run completeness", contribution["limitations"])
+        self.assertNotIn("Fraction oracle over 784 valid", contribution["rawResult"])
+        linked_paths = {
+            link["url"].split("/blob/main/", 1)[1]
+            for link in contribution["links"]
+        }
+        self.assertEqual(
+            linked_paths,
+            {
+                "research/memora-forgetting-contract-audit/README.md",
+                "research/memora-forgetting-contract-audit/PREREGISTRATION.md",
+                "research/memora-forgetting-contract-audit/audit.py",
+                "research/memora-forgetting-contract-audit/raw/decision.json",
+                "research/memora-forgetting-contract-audit/raw/census.json",
+                "research/memora-forgetting-contract-audit/raw/judge_binding.json",
+                "research/memora-forgetting-contract-audit/raw/fama.json",
+                "research/memora-forgetting-contract-audit/raw/aggregator.json",
+                "research/memora-forgetting-contract-audit/raw/source_manifest.json",
+                "research/memora-forgetting-contract-audit/raw/reproduction.json",
+            },
+        )
+
+        artifact_root = build.ROOT / "research" / "memora-forgetting-contract-audit"
+        expected_files = {
+            "PREREGISTRATION.md",
+            "README.md",
+            "audit.py",
+            "checksums.sha256",
+            "verify_checked.py",
+            "raw/aggregator.json",
+            "raw/census.json",
+            "raw/decision.json",
+            "raw/environment.json",
+            "raw/fama.json",
+            "raw/judge_binding.json",
+            "raw/official_pytest.txt",
+            "raw/official_tests.json",
+            "raw/paper_locator.json",
+            "raw/release_boundary.json",
+            "raw/reproduction.json",
+            "raw/source_manifest.json",
+        }
+        observed_files = {
+            path.relative_to(artifact_root).as_posix()
+            for path in artifact_root.rglob("*")
+            if path.is_file()
+        }
+        self.assertEqual(observed_files, expected_files)
+        self.assertFalse(any(
+            path.name == "__pycache__" or path.suffix in {".pyc", ".pyo", ".tmp", ".log"}
+            for path in artifact_root.rglob("*")
+        ))
+
+        decision = json.loads(
+            (artifact_root / "raw" / "decision.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(decision["schema"], "memora-forgetting-contract-audit-decision/3")
+        self.assertEqual(decision["verdict"], "PASS")
+        self.assertEqual(decision["decision_scope"], "single_run_completeness")
+        self.assertEqual(
+            decision["package_acceptance_status"],
+            "not_evaluated_within_single_run",
+        )
+        self.assertEqual(len(decision["package_acceptance_requirements"]), 3)
+        self.assertTrue(decision["gates"] and all(decision["gates"].values()))
+        protocol = decision["protocol_provenance"]
+        self.assertEqual(protocol["public_protocol_file"], "PREREGISTRATION.md")
+        self.assertEqual(protocol["public_record_timing"], "post_execution")
+        self.assertFalse(protocol["private_pretest_source_published"])
+        self.assertFalse(protocol["same_day_clock_times_asserted"])
+        self.assertEqual(len(protocol["post_execution_amendments"]), 5)
+        self.assertTrue(
+            protocol["pretest_aggregation_hypothesis_status"].startswith(
+                "not_supported_as_exact_source_contract"
+            )
+        )
+        self.assertIn("benchmark reproduction", decision["claim_ceiling"]["not_established"])
+        self.assertIn("Table 3 reconstruction or paper-result invalidation", decision["claim_ceiling"]["not_established"])
+
+        official_tests = json.loads(
+            (artifact_root / "raw" / "official_tests.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(official_tests["schema"], "memora-official-tests/1")
+        self.assertEqual(official_tests["passed"], 5)
+        self.assertTrue(official_tests["complete"])
+        self.assertFalse(official_tests["api_credentials_inherited"])
+        for key in ("created_paths", "deleted_paths", "modified_paths", "cache_paths_after"):
+            self.assertEqual(official_tests[key], [])
+
+        census = json.loads(
+            (artifact_root / "raw" / "census.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            census["totals"],
+            {
+                "files": 30,
+                "questions": 600,
+                "criteria": 6415,
+                "memory_presence": 2947,
+                "forgetting_absence": 3468,
+                "zero_forgetting": 204,
+                "zero_presence": 0,
+            },
+        )
+        self.assertEqual(census["empty_buckets"]["zero_forgetting_by_task"]["reasoning"], 200)
+        self.assertEqual(census["paper_release_census_drift"]["paper_table2_total"], 7054)
+        self.assertEqual(census["paper_release_census_drift"]["difference"], 639)
+        self.assertEqual(census["identity"]["file_local_question_duplicates"], 0)
+        self.assertEqual(census["identity"]["file_local_criterion_duplicates"], 0)
+        self.assertEqual(census["identity"]["bare_question_id_collisions"]["groups"], 38)
+        self.assertEqual(census["identity"]["bare_criterion_id_collisions"]["groups"], 178)
+        self.assertEqual(
+            census["identity"]["bare_criterion_id_collisions"]["payload_different_groups"],
+            175,
+        )
+        self.assertEqual(
+            census["identity"]["bare_criterion_id_collisions"]["payload_identical_groups"],
+            3,
+        )
+
+        judges = json.loads(
+            (artifact_root / "raw" / "judge_binding.json").read_text(encoding="utf-8")
+        )
+        self.assertFalse(judges["historical_track2"]["use_multi_judge_after_import_error"])
+        current_origin = judges["current_track2_fresh_import_origin"]
+        self.assertEqual(
+            current_origin["api_client_module_file"],
+            "evals/model_eval/api_client.py",
+        )
+        self.assertEqual(
+            current_origin["openrouter_client_source_file"],
+            "evals/model_eval/api_client.py",
+        )
+        self.assertTrue(current_origin["both_origins_match_expected"])
+        self.assertFalse(current_origin["fresh_process_api_client_initially_cached"])
+        self.assertFalse(current_origin["real_client_constructed"])
+        import_mechanics = judges["current_track2_import_mechanics"]
+        self.assertEqual(import_mechanics["path_mutation"], "sys.path.append")
+        self.assertTrue(import_mechanics["unqualified_import"])
+        self.assertTrue(import_mechanics["pre_cached_api_client_can_shadow_expected_module"])
+        self.assertTrue(import_mechanics["earlier_sys_path_api_client_can_shadow_expected_module"])
+        self.assertTrue(import_mechanics["official_test_asserts_class_name_only"])
+        self.assertFalse(import_mechanics["official_test_asserts_source_origin"])
+        self.assertEqual(
+            [row["accepted"] for row in judges["current_track1_initialization_matrix"]],
+            [False, True, True, True],
+        )
+        track2 = judges["current_track2_initialization_matrix"]
+        self.assertEqual(len(track2), 8)
+        self.assertTrue(all(
+            row["accepted"] == (
+                row["requested_successful_clients"] == 3 or not row["strict"]
+            )
+            for row in track2
+        ))
+        self.assertEqual(
+            [row["num_valid_judges"] for row in judges["runtime_valid_judge_quorum"]["track1"]],
+            [0, 1, 2, 3],
+        )
+        self.assertEqual(
+            [row["num_valid_judges"] for row in judges["runtime_valid_judge_quorum"]["track2"]],
+            [0, 1, 2, 3],
+        )
+
+        fama = json.loads(
+            (artifact_root / "raw" / "fama.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(fama["schema"], "memora-fama-audit/2")
+        matrix = fama["bounded_valid_matrix"]
+        self.assertEqual(matrix["source_valid_counter_fixtures"], 784)
+        self.assertEqual(matrix["source_valid_function_comparisons"], 1568)
+        paper_domain = matrix["paper_equation_domain"]
+        self.assertEqual(paper_domain["fixtures"], 729)
+        self.assertEqual(paper_domain["function_comparisons"], 1458)
+        self.assertFalse(paper_domain["oracle_zero_division_defined"])
+        source_extensions = matrix["source_zero_bucket_extensions"]
+        self.assertEqual(source_extensions["fixtures"], 55)
+        self.assertEqual(source_extensions["function_comparisons"], 110)
+        self.assertFalse(source_extensions["paper_defined"])
+        self.assertEqual(matrix["bounds_failures"], 0)
+        self.assertEqual(matrix["monotonicity_failures"], 0)
+        self.assertLessEqual(matrix["maximum_absolute_error"], 1e-12)
+        self.assertEqual(fama["released_counter_pair_corners"]["distinct_pairs"], 156)
+        self.assertEqual(
+            fama["out_of_domain_direct_function_probe"]["track1"],
+            1.5,
+        )
+        self.assertEqual(
+            fama["out_of_domain_direct_function_probe"]["track2"],
+            1.5,
+        )
+
+        aggregator = json.loads(
+            (artifact_root / "raw" / "aggregator.json").read_text(encoding="utf-8")
+        )
+        macro = aggregator["synthetic_fixtures"]["unweighted_report_macro"]
+        self.assertEqual(macro["source_aggregate"], 0.5)
+        self.assertEqual(macro["question_weighted_control"], 0.9)
+        self.assertTrue(aggregator["synthetic_fixtures"]["duplicate_report_rows_retained"])
+
+        release = json.loads(
+            (artifact_root / "raw" / "release_boundary.json").read_text(encoding="utf-8")
+        )
+        self.assertTrue(all(value == 0 for value in release["tracked_inventory"].values()))
+        self.assertTrue(all(value == 0 for value in release["reader_checkout_inventory"].values()))
+        self.assertFalse(
+            release["derived_boundary"]["table3_reconstructable_model_free_from_locked_release"]
+        )
+
+        source_manifest = json.loads(
+            (artifact_root / "raw" / "source_manifest.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(source_manifest["head"], "a6493188efc836d6511ed5e4163fe3ba87da30ff")
+        self.assertEqual(source_manifest["direct_parent"], "e19ebbd1089465876dca11b09e70256977f9755f")
+        self.assertEqual(source_manifest["worktree_status"], "clean")
+
+        reproduction = json.loads(
+            (artifact_root / "raw" / "reproduction.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(reproduction["schema"], "memora-audit-reproduction/1")
+        self.assertEqual(reproduction["verdict"], "REPRODUCIBLE")
+        self.assertTrue(reproduction["byte_identical"])
+        self.assertEqual(reproduction["stable_files_compared"], 11)
+
+        checksum_lines = (
+            artifact_root / "checksums.sha256"
+        ).read_text(encoding="utf-8").splitlines()
+        checksummed_paths = set()
+        for line in checksum_lines:
+            expected, relative = line.split("  ", 1)
+            self.assertNotIn(relative, checksummed_paths)
+            checksummed_paths.add(relative)
+            observed = hashlib.sha256((artifact_root / relative).read_bytes()).hexdigest()
+            self.assertEqual(observed, expected)
+        self.assertEqual(checksummed_paths, expected_files - {"checksums.sha256"})
+
     def test_collection_can_grow_without_fixed_material_count(self):
         grown = copy.deepcopy(self.data)
         material = copy.deepcopy(grown["materials"][-1])

@@ -1,0 +1,40 @@
+{
+  "derived_boundary": {
+    "reason": "The locked tree includes questions, evaluators, output schemas and aggregation code, but zero checked response/report population. Reconstructing Table 3 would require new model/judge outputs or separate provenance-bearing results.",
+    "table3_reconstructable_model_free_from_locked_release": false
+  },
+  "reader_checkout_inventory": {
+    "eval_report_json_files": 0,
+    "eval_results_directories": 0,
+    "eval_results_json_files": 0
+  },
+  "schema": "memora-release-boundary/1",
+  "source_locators": {
+    ".gitignore": {
+      "ignored_result_tree": 36
+    },
+    "evals/README.md": {
+      "aggregation_command": 4,
+      "detailed_output": 116,
+      "report_output": 119,
+      "result_directory": 11
+    },
+    "evals/agent_eval/memory_to_answer.py": {
+      "report_write": 1097,
+      "result_write": 1096
+    },
+    "evals/model_eval/aggregate_results.py": {
+      "aggregation": 109,
+      "report_discovery": 35
+    },
+    "evals/model_eval/model_based_evaluator.py": {
+      "report_write": 1363,
+      "result_write": 1357
+    }
+  },
+  "tracked_inventory": {
+    "eval_report_json_files": 0,
+    "eval_results_directories_with_tracked_content": 0,
+    "eval_results_json_files": 0
+  }
+}

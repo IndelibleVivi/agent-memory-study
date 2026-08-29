@@ -1,0 +1,1208 @@
+{
+  "by_period": {
+    "monthly": {
+      "criteria": 1315,
+      "paper_minus_release": 106,
+      "paper_table2_criteria": 1421,
+      "questions": 150
+    },
+    "quarterly": {
+      "criteria": 4365,
+      "paper_minus_release": 519,
+      "paper_table2_criteria": 4884,
+      "questions": 300
+    },
+    "weekly": {
+      "criteria": 735,
+      "paper_minus_release": 14,
+      "paper_table2_criteria": 749,
+      "questions": 150
+    }
+  },
+  "by_task": {
+    "reasoning": {
+      "criteria": 287,
+      "questions": 200
+    },
+    "recommending": {
+      "criteria": 3251,
+      "questions": 200
+    },
+    "remembering": {
+      "criteria": 2877,
+      "questions": 200
+    }
+  },
+  "empty_buckets": {
+    "zero_forgetting_by_task": {
+      "reasoning": 200,
+      "remembering": 4
+    },
+    "zero_forgetting_questions": 204,
+    "zero_presence_questions": 0
+  },
+  "files": [
+    {
+      "criteria": 122,
+      "forgetting_absence": 69,
+      "memory_presence": 53,
+      "path": "data/monthly/academic_researcher/evaluation_questions_academic_researcher.json",
+      "period": "monthly",
+      "persona": "academic_researcher",
+      "questions": 15,
+      "sha256": "9118596ef7ad2010542574195dcb4577f623c83e87d339ac83b18e2ccf108e2b",
+      "tasks": [
+        {
+          "criteria": 70,
+          "forgetting_absence": 44,
+          "memory_presence": 26,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 7,
+          "forgetting_absence": 0,
+          "memory_presence": 7,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 45,
+          "forgetting_absence": 25,
+          "memory_presence": 20,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 137,
+      "forgetting_absence": 77,
+      "memory_presence": 60,
+      "path": "data/monthly/business_executive/evaluation_questions_business_executive.json",
+      "period": "monthly",
+      "persona": "business_executive",
+      "questions": 15,
+      "sha256": "4598008425e61e970c76c3f89f34d9ae8a377cd16bfcc639d53e8e47c6b590a8",
+      "tasks": [
+        {
+          "criteria": 77,
+          "forgetting_absence": 53,
+          "memory_presence": 24,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 7,
+          "forgetting_absence": 0,
+          "memory_presence": 7,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 53,
+          "forgetting_absence": 24,
+          "memory_presence": 29,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 129,
+      "forgetting_absence": 89,
+      "memory_presence": 40,
+      "path": "data/monthly/content_writer/evaluation_questions_content_writer.json",
+      "period": "monthly",
+      "persona": "content_writer",
+      "questions": 15,
+      "sha256": "c5347537eba865c6f30ecd4086453a41c69a9b6f41f5dd81a726b8ed5aa1f99e",
+      "tasks": [
+        {
+          "criteria": 70,
+          "forgetting_absence": 52,
+          "memory_presence": 18,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 7,
+          "forgetting_absence": 0,
+          "memory_presence": 7,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 52,
+          "forgetting_absence": 37,
+          "memory_presence": 15,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 139,
+      "forgetting_absence": 90,
+      "memory_presence": 49,
+      "path": "data/monthly/creative_designer/evaluation_questions_creative_designer.json",
+      "period": "monthly",
+      "persona": "creative_designer",
+      "questions": 15,
+      "sha256": "d3ceedc9b00a5b4460f278aa4a22255a08966cb35b579ea5b29324fa4404b6d2",
+      "tasks": [
+        {
+          "criteria": 84,
+          "forgetting_absence": 61,
+          "memory_presence": 23,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 7,
+          "forgetting_absence": 0,
+          "memory_presence": 7,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 48,
+          "forgetting_absence": 29,
+          "memory_presence": 19,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 129,
+      "forgetting_absence": 73,
+      "memory_presence": 56,
+      "path": "data/monthly/financial_analyst/evaluation_questions_financial_analyst.json",
+      "period": "monthly",
+      "persona": "financial_analyst",
+      "questions": 15,
+      "sha256": "9de2a925fb5ea7da9b306a1aa5168dd5134b452ccbbb53c9e69928481e603346",
+      "tasks": [
+        {
+          "criteria": 76,
+          "forgetting_absence": 47,
+          "memory_presence": 29,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 7,
+          "forgetting_absence": 0,
+          "memory_presence": 7,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 46,
+          "forgetting_absence": 26,
+          "memory_presence": 20,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 132,
+      "forgetting_absence": 68,
+      "memory_presence": 64,
+      "path": "data/monthly/management_consultant/evaluation_questions_management_consultant.json",
+      "period": "monthly",
+      "persona": "management_consultant",
+      "questions": 15,
+      "sha256": "42909e1e324b8a20e74c88efc999316a050c0738de22c0a464a18c9441b41ecd",
+      "tasks": [
+        {
+          "criteria": 76,
+          "forgetting_absence": 37,
+          "memory_presence": 39,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 7,
+          "forgetting_absence": 0,
+          "memory_presence": 7,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 49,
+          "forgetting_absence": 31,
+          "memory_presence": 18,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 116,
+      "forgetting_absence": 57,
+      "memory_presence": 59,
+      "path": "data/monthly/marketing_manager/evaluation_questions_marketing_manager.json",
+      "period": "monthly",
+      "persona": "marketing_manager",
+      "questions": 15,
+      "sha256": "d67080d9a650447e1cc6434d6767dc45912f6cb4f0328ee07e0e6b72a675f354",
+      "tasks": [
+        {
+          "criteria": 64,
+          "forgetting_absence": 31,
+          "memory_presence": 33,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 7,
+          "forgetting_absence": 0,
+          "memory_presence": 7,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 45,
+          "forgetting_absence": 26,
+          "memory_presence": 19,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 144,
+      "forgetting_absence": 80,
+      "memory_presence": 64,
+      "path": "data/monthly/sales_manager/evaluation_questions_sales_manager.json",
+      "period": "monthly",
+      "persona": "sales_manager",
+      "questions": 15,
+      "sha256": "5000a9214862301414b935a59fee4c7e029f13f573a2dd32f0677beab5dcd4cb",
+      "tasks": [
+        {
+          "criteria": 88,
+          "forgetting_absence": 48,
+          "memory_presence": 40,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 7,
+          "forgetting_absence": 0,
+          "memory_presence": 7,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 49,
+          "forgetting_absence": 32,
+          "memory_presence": 17,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 135,
+      "forgetting_absence": 89,
+      "memory_presence": 46,
+      "path": "data/monthly/software_engineer/evaluation_questions_software_engineer.json",
+      "period": "monthly",
+      "persona": "software_engineer",
+      "questions": 15,
+      "sha256": "e0ee8d0a7ab58716e6b25edb55fbefcc76475699d980cd0ce7031fab7232bfb2",
+      "tasks": [
+        {
+          "criteria": 78,
+          "forgetting_absence": 53,
+          "memory_presence": 25,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 7,
+          "forgetting_absence": 0,
+          "memory_presence": 7,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 50,
+          "forgetting_absence": 36,
+          "memory_presence": 14,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 132,
+      "forgetting_absence": 89,
+      "memory_presence": 43,
+      "path": "data/monthly/startup_founder/evaluation_questions_startup_founder.json",
+      "period": "monthly",
+      "persona": "startup_founder",
+      "questions": 15,
+      "sha256": "ecfdf38d51e8b39908a69ec799beec56c8aa71a500d91ad070bacb4cb27844f4",
+      "tasks": [
+        {
+          "criteria": 77,
+          "forgetting_absence": 57,
+          "memory_presence": 20,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 7,
+          "forgetting_absence": 0,
+          "memory_presence": 7,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 48,
+          "forgetting_absence": 32,
+          "memory_presence": 16,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 437,
+      "forgetting_absence": 263,
+      "memory_presence": 174,
+      "path": "data/quarterly/academic_researcher/evaluation_questions_academic_researcher.json",
+      "period": "quarterly",
+      "persona": "academic_researcher",
+      "questions": 30,
+      "sha256": "23ed06fce002b9dea57f0c17452fddb3e6812bd1bf5d10b1b7928f0c69e3a5f2",
+      "tasks": [
+        {
+          "criteria": 179,
+          "forgetting_absence": 106,
+          "memory_presence": 73,
+          "questions": 10,
+          "task": "remembering"
+        },
+        {
+          "criteria": 13,
+          "forgetting_absence": 0,
+          "memory_presence": 13,
+          "questions": 10,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 245,
+          "forgetting_absence": 157,
+          "memory_presence": 88,
+          "questions": 10,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 472,
+      "forgetting_absence": 277,
+      "memory_presence": 195,
+      "path": "data/quarterly/business_executive/evaluation_questions_business_executive.json",
+      "period": "quarterly",
+      "persona": "business_executive",
+      "questions": 30,
+      "sha256": "1368d664a414a5122ce117ee81935ab69d0d480ccd84bce6e8ca01ce6d87ef2e",
+      "tasks": [
+        {
+          "criteria": 188,
+          "forgetting_absence": 124,
+          "memory_presence": 64,
+          "questions": 10,
+          "task": "remembering"
+        },
+        {
+          "criteria": 12,
+          "forgetting_absence": 0,
+          "memory_presence": 12,
+          "questions": 10,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 272,
+          "forgetting_absence": 153,
+          "memory_presence": 119,
+          "questions": 10,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 425,
+      "forgetting_absence": 235,
+      "memory_presence": 190,
+      "path": "data/quarterly/content_writer/evaluation_questions_content_writer.json",
+      "period": "quarterly",
+      "persona": "content_writer",
+      "questions": 30,
+      "sha256": "9767f29b4e77139797b064bddf97317d3980d6a47f01f70cdd2b072a358f661f",
+      "tasks": [
+        {
+          "criteria": 144,
+          "forgetting_absence": 67,
+          "memory_presence": 77,
+          "questions": 10,
+          "task": "remembering"
+        },
+        {
+          "criteria": 13,
+          "forgetting_absence": 0,
+          "memory_presence": 13,
+          "questions": 10,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 268,
+          "forgetting_absence": 168,
+          "memory_presence": 100,
+          "questions": 10,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 398,
+      "forgetting_absence": 178,
+      "memory_presence": 220,
+      "path": "data/quarterly/creative_designer/evaluation_questions_creative_designer.json",
+      "period": "quarterly",
+      "persona": "creative_designer",
+      "questions": 30,
+      "sha256": "a045ab21a03f9bf6c72e77a9bd6b996e5e50066f65fcf5660e3ba72d2fe77db5",
+      "tasks": [
+        {
+          "criteria": 143,
+          "forgetting_absence": 47,
+          "memory_presence": 96,
+          "questions": 10,
+          "task": "remembering"
+        },
+        {
+          "criteria": 13,
+          "forgetting_absence": 0,
+          "memory_presence": 13,
+          "questions": 10,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 242,
+          "forgetting_absence": 131,
+          "memory_presence": 111,
+          "questions": 10,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 425,
+      "forgetting_absence": 216,
+      "memory_presence": 209,
+      "path": "data/quarterly/financial_analyst/evaluation_questions_financial_analyst.json",
+      "period": "quarterly",
+      "persona": "financial_analyst",
+      "questions": 30,
+      "sha256": "0393131495fc73c45f404f30e514bfa3e3b422acbee2e8b178d9e42337ada203",
+      "tasks": [
+        {
+          "criteria": 148,
+          "forgetting_absence": 52,
+          "memory_presence": 96,
+          "questions": 10,
+          "task": "remembering"
+        },
+        {
+          "criteria": 13,
+          "forgetting_absence": 0,
+          "memory_presence": 13,
+          "questions": 10,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 264,
+          "forgetting_absence": 164,
+          "memory_presence": 100,
+          "questions": 10,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 431,
+      "forgetting_absence": 231,
+      "memory_presence": 200,
+      "path": "data/quarterly/management_consultant/evaluation_questions_management_consultant.json",
+      "period": "quarterly",
+      "persona": "management_consultant",
+      "questions": 30,
+      "sha256": "e62395ea82103361e8d944749a46c1af62d465d19888a1d80f421b39d7a9501c",
+      "tasks": [
+        {
+          "criteria": 161,
+          "forgetting_absence": 77,
+          "memory_presence": 84,
+          "questions": 10,
+          "task": "remembering"
+        },
+        {
+          "criteria": 13,
+          "forgetting_absence": 0,
+          "memory_presence": 13,
+          "questions": 10,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 257,
+          "forgetting_absence": 154,
+          "memory_presence": 103,
+          "questions": 10,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 426,
+      "forgetting_absence": 247,
+      "memory_presence": 179,
+      "path": "data/quarterly/marketing_manager/evaluation_questions_marketing_manager.json",
+      "period": "quarterly",
+      "persona": "marketing_manager",
+      "questions": 30,
+      "sha256": "9251bff44dda5aff4f5643ee646ab37bde7314c0e1c6ee710cdd0ecbdbbc6067",
+      "tasks": [
+        {
+          "criteria": 177,
+          "forgetting_absence": 98,
+          "memory_presence": 79,
+          "questions": 10,
+          "task": "remembering"
+        },
+        {
+          "criteria": 13,
+          "forgetting_absence": 0,
+          "memory_presence": 13,
+          "questions": 10,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 236,
+          "forgetting_absence": 149,
+          "memory_presence": 87,
+          "questions": 10,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 470,
+      "forgetting_absence": 265,
+      "memory_presence": 205,
+      "path": "data/quarterly/sales_manager/evaluation_questions_sales_manager.json",
+      "period": "quarterly",
+      "persona": "sales_manager",
+      "questions": 30,
+      "sha256": "26d0fdaec7d9f1be4b9e1aea8efeec7d8ab100db48282f7713d66de092e65c31",
+      "tasks": [
+        {
+          "criteria": 190,
+          "forgetting_absence": 114,
+          "memory_presence": 76,
+          "questions": 10,
+          "task": "remembering"
+        },
+        {
+          "criteria": 13,
+          "forgetting_absence": 0,
+          "memory_presence": 13,
+          "questions": 10,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 267,
+          "forgetting_absence": 151,
+          "memory_presence": 116,
+          "questions": 10,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 441,
+      "forgetting_absence": 252,
+      "memory_presence": 189,
+      "path": "data/quarterly/software_engineer/evaluation_questions_software_engineer.json",
+      "period": "quarterly",
+      "persona": "software_engineer",
+      "questions": 30,
+      "sha256": "69d3201c58cec6c93cb9a37d4d053426ea283890d41f7e87e3c7cddcd0d3a300",
+      "tasks": [
+        {
+          "criteria": 189,
+          "forgetting_absence": 110,
+          "memory_presence": 79,
+          "questions": 10,
+          "task": "remembering"
+        },
+        {
+          "criteria": 12,
+          "forgetting_absence": 0,
+          "memory_presence": 12,
+          "questions": 10,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 240,
+          "forgetting_absence": 142,
+          "memory_presence": 98,
+          "questions": 10,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 440,
+      "forgetting_absence": 267,
+      "memory_presence": 173,
+      "path": "data/quarterly/startup_founder/evaluation_questions_startup_founder.json",
+      "period": "quarterly",
+      "persona": "startup_founder",
+      "questions": 30,
+      "sha256": "77625ae41056ef1ef6d1e9d5ec723367d501345bf5b6600d1158867a4b7f298d",
+      "tasks": [
+        {
+          "criteria": 188,
+          "forgetting_absence": 111,
+          "memory_presence": 77,
+          "questions": 10,
+          "task": "remembering"
+        },
+        {
+          "criteria": 12,
+          "forgetting_absence": 0,
+          "memory_presence": 12,
+          "questions": 10,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 240,
+          "forgetting_absence": 156,
+          "memory_presence": 84,
+          "questions": 10,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 81,
+      "forgetting_absence": 28,
+      "memory_presence": 53,
+      "path": "data/weekly/academic_researcher/evaluation_questions_academic_researcher.json",
+      "period": "weekly",
+      "persona": "academic_researcher",
+      "questions": 15,
+      "sha256": "883424951477ce965de976d4a0dd1820eb0c1d82225ba2b6db4507f0a8197774",
+      "tasks": [
+        {
+          "criteria": 49,
+          "forgetting_absence": 16,
+          "memory_presence": 33,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 9,
+          "forgetting_absence": 0,
+          "memory_presence": 9,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 23,
+          "forgetting_absence": 12,
+          "memory_presence": 11,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 65,
+      "forgetting_absence": 24,
+      "memory_presence": 41,
+      "path": "data/weekly/business_executive/evaluation_questions_business_executive.json",
+      "period": "weekly",
+      "persona": "business_executive",
+      "questions": 15,
+      "sha256": "5eb73c061d07d338cdcc4174aaebaaa33360e9508539eedf1db9e7822cc309d4",
+      "tasks": [
+        {
+          "criteria": 36,
+          "forgetting_absence": 16,
+          "memory_presence": 20,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 9,
+          "forgetting_absence": 0,
+          "memory_presence": 9,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 20,
+          "forgetting_absence": 8,
+          "memory_presence": 12,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 65,
+      "forgetting_absence": 24,
+      "memory_presence": 41,
+      "path": "data/weekly/content_writer/evaluation_questions_content_writer.json",
+      "period": "weekly",
+      "persona": "content_writer",
+      "questions": 15,
+      "sha256": "d3762a61a2624a0f8de400d917ab53f71194f368d39fa444bd7d4fad8118a18b",
+      "tasks": [
+        {
+          "criteria": 33,
+          "forgetting_absence": 16,
+          "memory_presence": 17,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 9,
+          "forgetting_absence": 0,
+          "memory_presence": 9,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 23,
+          "forgetting_absence": 8,
+          "memory_presence": 15,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 74,
+      "forgetting_absence": 27,
+      "memory_presence": 47,
+      "path": "data/weekly/creative_designer/evaluation_questions_creative_designer.json",
+      "period": "weekly",
+      "persona": "creative_designer",
+      "questions": 15,
+      "sha256": "b007e21609d212f67528c9eb189fdd1e3124b83882429a4c92b89e203ed336da",
+      "tasks": [
+        {
+          "criteria": 44,
+          "forgetting_absence": 18,
+          "memory_presence": 26,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 9,
+          "forgetting_absence": 0,
+          "memory_presence": 9,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 21,
+          "forgetting_absence": 9,
+          "memory_presence": 12,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 76,
+      "forgetting_absence": 19,
+      "memory_presence": 57,
+      "path": "data/weekly/financial_analyst/evaluation_questions_financial_analyst.json",
+      "period": "weekly",
+      "persona": "financial_analyst",
+      "questions": 15,
+      "sha256": "e5b3b2ba2e3e1346cf02d4169c290fd412d8088e2b72ea128b4f73dfa44ccde0",
+      "tasks": [
+        {
+          "criteria": 44,
+          "forgetting_absence": 8,
+          "memory_presence": 36,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 9,
+          "forgetting_absence": 0,
+          "memory_presence": 9,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 23,
+          "forgetting_absence": 11,
+          "memory_presence": 12,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 80,
+      "forgetting_absence": 34,
+      "memory_presence": 46,
+      "path": "data/weekly/management_consultant/evaluation_questions_management_consultant.json",
+      "period": "weekly",
+      "persona": "management_consultant",
+      "questions": 15,
+      "sha256": "a3ea9834ae24aa607e60ff3868ee9f35f4c83b14e0057d3fccf690100d2d4cdf",
+      "tasks": [
+        {
+          "criteria": 46,
+          "forgetting_absence": 22,
+          "memory_presence": 24,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 9,
+          "forgetting_absence": 0,
+          "memory_presence": 9,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 25,
+          "forgetting_absence": 12,
+          "memory_presence": 13,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 80,
+      "forgetting_absence": 27,
+      "memory_presence": 53,
+      "path": "data/weekly/marketing_manager/evaluation_questions_marketing_manager.json",
+      "period": "weekly",
+      "persona": "marketing_manager",
+      "questions": 15,
+      "sha256": "475750a65d4b4752e3f23c9548c38d809e67b433880d54163468e8e8b14f7ffa",
+      "tasks": [
+        {
+          "criteria": 46,
+          "forgetting_absence": 17,
+          "memory_presence": 29,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 9,
+          "forgetting_absence": 0,
+          "memory_presence": 9,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 25,
+          "forgetting_absence": 10,
+          "memory_presence": 15,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 71,
+      "forgetting_absence": 21,
+      "memory_presence": 50,
+      "path": "data/weekly/sales_manager/evaluation_questions_sales_manager.json",
+      "period": "weekly",
+      "persona": "sales_manager",
+      "questions": 15,
+      "sha256": "91fdcae7943f35fe974aed7c70cd24ff67e6bc5153d5a568c676b4116a564ca2",
+      "tasks": [
+        {
+          "criteria": 40,
+          "forgetting_absence": 8,
+          "memory_presence": 32,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 9,
+          "forgetting_absence": 0,
+          "memory_presence": 9,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 22,
+          "forgetting_absence": 13,
+          "memory_presence": 9,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 71,
+      "forgetting_absence": 27,
+      "memory_presence": 44,
+      "path": "data/weekly/software_engineer/evaluation_questions_software_engineer.json",
+      "period": "weekly",
+      "persona": "software_engineer",
+      "questions": 15,
+      "sha256": "b938ee13f8e0e43d42db5c33cda9a89c8263d0a14b19f081e4a804925f1c06c9",
+      "tasks": [
+        {
+          "criteria": 36,
+          "forgetting_absence": 16,
+          "memory_presence": 20,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 9,
+          "forgetting_absence": 0,
+          "memory_presence": 9,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 26,
+          "forgetting_absence": 11,
+          "memory_presence": 15,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    },
+    {
+      "criteria": 72,
+      "forgetting_absence": 25,
+      "memory_presence": 47,
+      "path": "data/weekly/startup_founder/evaluation_questions_startup_founder.json",
+      "period": "weekly",
+      "persona": "startup_founder",
+      "questions": 15,
+      "sha256": "5de727a4f63fa0814ff42a738af3594512a85661514dfb02f85131aead887d94",
+      "tasks": [
+        {
+          "criteria": 36,
+          "forgetting_absence": 13,
+          "memory_presence": 23,
+          "questions": 5,
+          "task": "remembering"
+        },
+        {
+          "criteria": 9,
+          "forgetting_absence": 0,
+          "memory_presence": 9,
+          "questions": 5,
+          "task": "reasoning"
+        },
+        {
+          "criteria": 27,
+          "forgetting_absence": 12,
+          "memory_presence": 15,
+          "questions": 5,
+          "task": "recommending"
+        }
+      ]
+    }
+  ],
+  "identity": {
+    "bare_criterion_id_collisions": {
+      "groups": 178,
+      "pair_relation_counts": {
+        "same_period_cross_persona": 178
+      },
+      "payload_different_groups": 175,
+      "payload_identical_groups": 3,
+      "rows": 356
+    },
+    "bare_question_id_collisions": {
+      "groups": 38,
+      "pair_relation_counts": {
+        "same_period_cross_persona": 38
+      },
+      "payload_different_groups": 38,
+      "payload_identical_groups": 0,
+      "rows": 76
+    },
+    "composite_criterion_duplicates": 0,
+    "composite_criterion_identity": "(period, persona, evaluation_question_id)",
+    "composite_question_duplicates": 0,
+    "composite_question_identity": "(period, persona, question_id)",
+    "file_local_criterion_duplicates": 0,
+    "file_local_question_duplicates": 0,
+    "three_identical_criterion_payload_path_pair_loci": [
+      {
+        "bare_id": "activity_todos_156_eval_memory_presence_0",
+        "left": {
+          "period": "weekly",
+          "persona": "financial_analyst",
+          "question_id": "activity_todos_156",
+          "task": "remembering"
+        },
+        "right": {
+          "period": "weekly",
+          "persona": "marketing_manager",
+          "question_id": "activity_todos_156",
+          "task": "remembering"
+        }
+      },
+      {
+        "bare_id": "goal_step_tracker_daily_steps_156_0_eval_memory_presence_0",
+        "left": {
+          "period": "weekly",
+          "persona": "financial_analyst",
+          "question_id": "goal_step_tracker_daily_steps_156_0",
+          "task": "reasoning"
+        },
+        "right": {
+          "period": "weekly",
+          "persona": "marketing_manager",
+          "question_id": "goal_step_tracker_daily_steps_156_0",
+          "task": "reasoning"
+        }
+      },
+      {
+        "bare_id": "pref_music_general_628_eval_forgetting_0",
+        "left": {
+          "period": "monthly",
+          "persona": "content_writer",
+          "question_id": "pref_music_general_628",
+          "task": "recommending"
+        },
+        "right": {
+          "period": "monthly",
+          "persona": "software_engineer",
+          "question_id": "pref_music_general_628",
+          "task": "recommending"
+        }
+      }
+    ]
+  },
+  "james_stewart_expected_no_locator": {
+    "checked_response_population_in_release": false,
+    "criterion_id": "pref_movies_general_2005_eval_forgetting_9",
+    "evaluation_type": "forgetting_absence",
+    "expected_answer": "no",
+    "path": "data/quarterly/academic_researcher/evaluation_questions_academic_researcher.json",
+    "question_id": "pref_movies_general_2005",
+    "task": "recommending"
+  },
+  "lexical_surface_discovery": {
+    "claim_boundary": "Mechanical lexical discovery only; not semantic reliance or prevalence.",
+    "counts": {
+      "avoid": {
+        "by_type": {
+          "memory_presence": 579
+        },
+        "criteria": 579
+      },
+      "include": {
+        "by_type": {
+          "forgetting_absence": 553,
+          "memory_presence": 912
+        },
+        "criteria": 1465
+      },
+      "listed": {
+        "by_type": {
+          "forgetting_absence": 221,
+          "memory_presence": 57
+        },
+        "criteria": 278
+      },
+      "mention": {
+        "by_type": {
+          "forgetting_absence": 2694,
+          "memory_presence": 594
+        },
+        "criteria": 3288
+      },
+      "recommend": {
+        "by_type": {
+          "forgetting_absence": 16,
+          "memory_presence": 603
+        },
+        "criteria": 619
+      },
+      "reflect": {
+        "by_type": {
+          "forgetting_absence": 1931,
+          "memory_presence": 748
+        },
+        "criteria": 2679
+      },
+      "rely": {
+        "by_type": {
+          "memory_presence": 2
+        },
+        "criteria": 2
+      },
+      "use": {
+        "by_type": {
+          "forgetting_absence": 1959,
+          "memory_presence": 1391
+        },
+        "criteria": 3350
+      }
+    },
+    "matching": "case-insensitive substring in criterion text"
+  },
+  "paper_release_census_drift": {
+    "difference": 639,
+    "interpretation": "This is paper/release input-census drift only. It does not identify the paper's production input revision or invalidate any reported result.",
+    "locked_release_total": 6415,
+    "paper_table2_total": 7054
+  },
+  "schema": "memora-release-census/1",
+  "schema_contract": {
+    "accepted_type_expected_pairs": [
+      {
+        "evaluation_type": "forgetting_absence",
+        "expected_answer": "no"
+      },
+      {
+        "evaluation_type": "memory_presence",
+        "expected_answer": "yes"
+      }
+    ],
+    "declared_counter_mismatches": 0,
+    "unknown_pairs": 0
+  },
+  "totals": {
+    "criteria": 6415,
+    "files": 30,
+    "forgetting_absence": 3468,
+    "memory_presence": 2947,
+    "questions": 600,
+    "zero_forgetting": 204,
+    "zero_presence": 0
+  }
+}

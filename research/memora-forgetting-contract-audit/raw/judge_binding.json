@@ -1,0 +1,324 @@
+{
+  "current_track1_initialization_matrix": [
+    {
+      "accepted": false,
+      "constructed_fake_clients": 3,
+      "exception": "ValueError",
+      "judges": 0,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 0
+    },
+    {
+      "accepted": true,
+      "constructed_fake_clients": 3,
+      "exception": null,
+      "judges": 1,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 1
+    },
+    {
+      "accepted": true,
+      "constructed_fake_clients": 3,
+      "exception": null,
+      "judges": 2,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 2
+    },
+    {
+      "accepted": true,
+      "constructed_fake_clients": 3,
+      "exception": null,
+      "judges": 3,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 3
+    }
+  ],
+  "current_track2_fresh_import_origin": {
+    "api_client_module_file": "evals/model_eval/api_client.py",
+    "both_origins_match_expected": true,
+    "expected_origin": "evals/model_eval/api_client.py",
+    "fresh_process_api_client_initially_cached": false,
+    "helper_resolved_directory": "evals/model_eval",
+    "network_guard": {
+      "connect": "blocked",
+      "dns": "blocked"
+    },
+    "openrouter_client_source_file": "evals/model_eval/api_client.py",
+    "real_client_constructed": false,
+    "revision": "a6493188efc836d6511ed5e4163fe3ba87da30ff",
+    "source_exact_helpers": [
+      "model_eval_dir",
+      "import_openrouter_client"
+    ]
+  },
+  "current_track2_import_mechanics": {
+    "earlier_sys_path_api_client_can_shadow_expected_module": true,
+    "import_form": "from api_client import OpenRouterClient",
+    "interpretation": "The fresh guarded probe resolves the intended in-tree file, but append plus an unqualified import remains shadowable by a pre-cached api_client or an earlier sys.path entry.",
+    "official_test": "evals/agent_eval/test_judge_import.py",
+    "official_test_asserts_class_name_only": true,
+    "official_test_asserts_source_origin": false,
+    "path_mutation": "sys.path.append",
+    "pre_cached_api_client_can_shadow_expected_module": true,
+    "unqualified_import": true
+  },
+  "current_track2_initialization_matrix": [
+    {
+      "accepted": true,
+      "constructed_fake_clients": 3,
+      "exception": null,
+      "judge_clients": 0,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 0,
+      "strict": false,
+      "use_multi_judge": false
+    },
+    {
+      "accepted": true,
+      "constructed_fake_clients": 3,
+      "exception": null,
+      "judge_clients": 1,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 1,
+      "strict": false,
+      "use_multi_judge": false
+    },
+    {
+      "accepted": true,
+      "constructed_fake_clients": 3,
+      "exception": null,
+      "judge_clients": 2,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 2,
+      "strict": false,
+      "use_multi_judge": false
+    },
+    {
+      "accepted": true,
+      "constructed_fake_clients": 3,
+      "exception": null,
+      "judge_clients": 3,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 3,
+      "strict": false,
+      "use_multi_judge": true
+    },
+    {
+      "accepted": false,
+      "constructed_fake_clients": 3,
+      "exception": "RuntimeError",
+      "judge_clients": 0,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 0,
+      "strict": true,
+      "use_multi_judge": true
+    },
+    {
+      "accepted": false,
+      "constructed_fake_clients": 3,
+      "exception": "RuntimeError",
+      "judge_clients": 1,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 1,
+      "strict": true,
+      "use_multi_judge": true
+    },
+    {
+      "accepted": false,
+      "constructed_fake_clients": 3,
+      "exception": "RuntimeError",
+      "judge_clients": 2,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 2,
+      "strict": true,
+      "use_multi_judge": true
+    },
+    {
+      "accepted": true,
+      "constructed_fake_clients": 3,
+      "exception": null,
+      "judge_clients": 3,
+      "network_guard": {
+        "connect": "blocked",
+        "dns": "blocked"
+      },
+      "requested_successful_clients": 3,
+      "strict": true,
+      "use_multi_judge": true
+    }
+  ],
+  "current_track2_path": {
+    "api_client_exists": true,
+    "api_client_sha256": "f6571f53e06e601ce1a4fe64dd58f14918fa2b5f5489a0eb8f5170349e4e233f",
+    "directory_exists": true,
+    "resolved_path": "evals/model_eval",
+    "revision": "a6493188efc836d6511ed5e4163fe3ba87da30ff",
+    "source_exact_helper": true
+  },
+  "execution_boundary": {
+    "cases_isolated_by_child_process": true,
+    "credential_environment_inherited": false,
+    "fake_api_client_only": true,
+    "initialization_matrix_scope": "Exact upstream constructor control flow with deterministic fake client constructors; not real api_client.OpenRouterClient backend construction.",
+    "network": "blocked",
+    "real_client_or_model_constructed": false,
+    "source_exact_ast": true,
+    "synthetic_fake_constructor_calls_recorded": true
+  },
+  "historical_track2": {
+    "ambient_api_client_blocked": true,
+    "exception": null,
+    "judge_clients": 0,
+    "network_guard": {
+      "connect": "blocked",
+      "dns": "blocked"
+    },
+    "resolved_path": "evals/agent_eval/model_eval",
+    "resolved_path_exists": false,
+    "revision": "e19ebbd1089465876dca11b09e70256977f9755f",
+    "source_exact_init": true,
+    "use_multi_judge_after_import_error": false
+  },
+  "runtime_valid_judge_quorum": {
+    "track1": [
+      {
+        "consensus": "error",
+        "correct_votes": 0,
+        "is_correct": false,
+        "network_guard": {
+          "connect": "blocked",
+          "dns": "blocked"
+        },
+        "num_judges": 3,
+        "num_valid_judges": 0,
+        "valid_judges": 0
+      },
+      {
+        "consensus": "yes",
+        "correct_votes": 1,
+        "is_correct": true,
+        "network_guard": {
+          "connect": "blocked",
+          "dns": "blocked"
+        },
+        "num_judges": 3,
+        "num_valid_judges": 1,
+        "valid_judges": 1
+      },
+      {
+        "consensus": "tie",
+        "correct_votes": 1,
+        "is_correct": false,
+        "network_guard": {
+          "connect": "blocked",
+          "dns": "blocked"
+        },
+        "num_judges": 3,
+        "num_valid_judges": 2,
+        "valid_judges": 2
+      },
+      {
+        "consensus": "yes",
+        "correct_votes": 2,
+        "is_correct": true,
+        "network_guard": {
+          "connect": "blocked",
+          "dns": "blocked"
+        },
+        "num_judges": 3,
+        "num_valid_judges": 3,
+        "valid_judges": 3
+      }
+    ],
+    "track2": [
+      {
+        "consensus": "error",
+        "correct_votes": 0,
+        "is_correct": false,
+        "network_guard": {
+          "connect": "blocked",
+          "dns": "blocked"
+        },
+        "num_judges": 3,
+        "num_valid_judges": 0,
+        "valid_judges": 0
+      },
+      {
+        "consensus": "yes",
+        "correct_votes": 1,
+        "is_correct": true,
+        "network_guard": {
+          "connect": "blocked",
+          "dns": "blocked"
+        },
+        "num_judges": 3,
+        "num_valid_judges": 1,
+        "valid_judges": 1
+      },
+      {
+        "consensus": "no",
+        "correct_votes": 1,
+        "is_correct": false,
+        "network_guard": {
+          "connect": "blocked",
+          "dns": "blocked"
+        },
+        "num_judges": 3,
+        "num_valid_judges": 2,
+        "valid_judges": 2
+      },
+      {
+        "consensus": "yes",
+        "correct_votes": 2,
+        "is_correct": true,
+        "network_guard": {
+          "connect": "blocked",
+          "dns": "blocked"
+        },
+        "num_judges": 3,
+        "num_valid_judges": 3,
+        "valid_judges": 3
+      }
+    ],
+    "two_valid_judge_tie_difference": {
+      "is_correct_both": false,
+      "reason": "Both use strict correct-vote majority; their yes/no tie labels differ.",
+      "track1_consensus": "tie",
+      "track2_consensus": "no"
+    }
+  },
+  "schema": "memora-judge-binding/1"
+}

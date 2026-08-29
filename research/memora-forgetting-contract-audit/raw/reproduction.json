@@ -1,0 +1,55 @@
+{
+  "boundary": "Same source, paper, Python executable, dependency environment, OS, and machine.",
+  "byte_identical": true,
+  "combined_manifest_sha256": "d04796b106ea74bb638195661a430d010857d49eb58ecd0b1eedd6c732184dbd",
+  "files": [
+    {
+      "path": "source_manifest.json",
+      "sha256": "a4eebc3ee28105d8ae658170a37b67cffdbe97cc940ad667894bed47532ddf41"
+    },
+    {
+      "path": "official_pytest.txt",
+      "sha256": "21958a3d4bf12923018c353022fd91d01b40dca28c3b62c5ea04c77fef8897ba"
+    },
+    {
+      "path": "official_tests.json",
+      "sha256": "6a9976e68610d238432889a151205644e5c67fca29010f75f5d68925e3fd8c79"
+    },
+    {
+      "path": "judge_binding.json",
+      "sha256": "ba84e45fb7b30a77a02f4ef58f3f8e1bd794410f02707e37ba7ef0736e3b0684"
+    },
+    {
+      "path": "fama.json",
+      "sha256": "632ca978871fe63f9e087ba616da8ee304cdaf0edf7ada45bb87a36e068076ae"
+    },
+    {
+      "path": "census.json",
+      "sha256": "4a0bfcf3017749875ca38f03e2fc2c41bd54b675f23235d3b6b346a6486925d3"
+    },
+    {
+      "path": "aggregator.json",
+      "sha256": "84cefc21557718c6db350bfe81ace1d0cb31abab82ec00a68f7c9a9831910544"
+    },
+    {
+      "path": "release_boundary.json",
+      "sha256": "b0474890e2e13c5a7a74c12bbadeabe07542ce32b10ffbe6bd02a894b46f1953"
+    },
+    {
+      "path": "paper_locator.json",
+      "sha256": "bf95b04106382207d48dc0b414892529c3fd2026a3ac67d4f8b044daf4f733d4"
+    },
+    {
+      "path": "environment.json",
+      "sha256": "c4fc33345f0228510504b86cf823af5f724ae3ec6d3bbb7dfd47c55904a1169d"
+    },
+    {
+      "path": "decision.json",
+      "sha256": "3808b9a0ec987a68d7740c1b7bdd9a5d093a012ac4373861c493c76c5537fc6b"
+    }
+  ],
+  "fresh_output_roots": 2,
+  "schema": "memora-audit-reproduction/1",
+  "stable_files_compared": 11,
+  "verdict": "REPRODUCIBLE"
+}
