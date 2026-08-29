@@ -1,0 +1,8 @@
+{
+  "absolute_local_path_matches": 0,
+  "api_secret_pattern_matches": 0,
+  "files_scanned_excluding_self": 15,
+  "schema": "memprobe-public-safety/1",
+  "upstream_continuous_eight_token_span_matches": 0,
+  "upstream_free_text_copied": false
+}

@@ -1,6 +1,9 @@
 import copy
 import hashlib
 import json
+import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -121,6 +124,24 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         self.assertIn(
             f"- {official} other full texts are linked",
             notice,
+        )
+
+        zotero_import = (build.ROOT / "ZOTERO-IMPORT.md").read_text(encoding="utf-8")
+        self.assertIn(
+            f"{total} top-level bibliographic items with {total} attachments",
+            zotero_import,
+        )
+        self.assertIn(
+            f"- {bundled} stored PDFs copied into Zotero storage",
+            zotero_import,
+        )
+        self.assertIn(
+            f"- {official} linked official PDF URLs",
+            zotero_import,
+        )
+        self.assertIn(
+            f"relative paths for the {bundled} bundled files",
+            zotero_import,
         )
 
     def test_memora_worked_essay_keeps_paper_source_and_audit_boundaries_separate(self):
@@ -435,6 +456,305 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             observed = hashlib.sha256((artifact_root / relative).read_bytes()).hexdigest()
             self.assertEqual(observed, expected)
         self.assertEqual(checksummed_paths, expected_files - {"checksums.sha256"})
+
+    def test_memprobe_worked_audit_keeps_fixed_artifact_and_replay_boundaries(self):
+        material = next(
+            item for item in self.data["materials"]
+            if item["id"] == "memprobe-hidden-user-state-recovery"
+        )
+        self.assertEqual(material["number"], 21)
+        self.assertEqual(material["noteDepth"], "worked")
+        self.assertEqual(material["doi"], "10.48550/arXiv.2606.24595")
+        self.assertEqual(material["sourceUrl"], "https://arxiv.org/abs/2606.24595v1")
+        self.assertEqual(
+            material["pdf"],
+            {
+                "delivery": "official",
+                "url": "https://arxiv.org/pdf/2606.24595v1",
+                "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。",
+            },
+        )
+        self.assertEqual(set(material["categories"]), {"可靠性", "记忆架构"})
+        self.assertEqual(
+            set(material["failureSurfaces"]),
+            {"state-representation", "retrieval-active-context"},
+        )
+
+        atlas_memberships = {
+            surface["id"]
+            for surface in self.data["atlas"]["failureSurfaces"]
+            if material["id"] in surface["materialIds"]
+        }
+        self.assertEqual(atlas_memberships, set(material["failureSurfaces"]))
+        answer_failure_path = next(
+            path for path in self.data["atlas"]["readingPaths"]
+            if path["id"] == "from-answer-failure"
+        )
+        self.assertIn(material["id"], answer_failure_path["materialIds"])
+
+        contribution = next(
+            item for item in material["contributions"]
+            if item["type"] == "public-test"
+        )
+        self.assertEqual(contribution["byline"], "Agent Memory Study editors")
+        self.assertIn("not a MEMPROBE benchmark rerun", contribution["boundary"])
+        self.assertRegex(
+            contribution["boundary"],
+            r"historical .*retriever.* replay",
+        )
+        self.assertIn("Historical LLM outputs remain historical artifacts", contribution["boundary"])
+
+        prefix = "research/memprobe-recovery-boundary-audit/"
+        linked_paths = {
+            link["url"].split("/blob/main/", 1)[1]
+            for link in contribution["links"]
+        }
+        self.assertTrue(all(path.startswith(prefix) for path in linked_paths))
+        self.assertTrue(
+            {
+                f"{prefix}README.md",
+                f"{prefix}PROTOCOL.md",
+                f"{prefix}audit.py",
+                f"{prefix}verify_checked.py",
+            }.issubset(linked_paths)
+        )
+        self.assertTrue(all((build.ROOT / path).is_file() for path in linked_paths))
+
+        artifact_root = build.ROOT / prefix
+        artifact_text = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in artifact_root.rglob("*")
+            if path.is_file() and path.suffix in {".py", ".md", ".json", ".jsonl"}
+        )
+        self.assertNotIn("file://", artifact_text)
+        self.assertNotIn("/Users/", artifact_text)
+        self.assertNotIn("/Volumes/", artifact_text)
+
+        checksum_lines = (artifact_root / "checksums.sha256").read_text(
+            encoding="utf-8"
+        ).splitlines()
+        checksummed_paths = set()
+        for line in checksum_lines:
+            expected, relative = line.split("  ", 1)
+            self.assertNotIn(relative, checksummed_paths)
+            checksummed_paths.add(relative)
+            observed = hashlib.sha256((artifact_root / relative).read_bytes()).hexdigest()
+            self.assertEqual(observed, expected)
+        expected_checksummed_paths = {
+            path.relative_to(artifact_root).as_posix()
+            for path in artifact_root.rglob("*")
+            if path.is_file() and path.name != "checksums.sha256"
+        }
+        self.assertEqual(checksummed_paths, expected_checksummed_paths)
+
+    def test_memprobe_checked_package_binds_decision_population_and_repeatability(self):
+        artifact_root = build.ROOT / "research" / "memprobe-recovery-boundary-audit"
+        raw = artifact_root / "raw"
+        expected_root_files = {
+            "NOTICE.md",
+            "PROTOCOL.md",
+            "README.md",
+            "audit.py",
+            "checksums.sha256",
+            "verify_checked.py",
+            "raw",
+        }
+        self.assertEqual(
+            {path.name for path in artifact_root.iterdir()},
+            expected_root_files,
+        )
+        primary_files = {
+            "arithmetic.json",
+            "attribution_rows.jsonl",
+            "cases.json",
+            "decision.json",
+            "input_manifest.json",
+            "microfixture.json",
+            "mutation_controls.json",
+            "observability.json",
+            "packet_items.jsonl",
+            "packet_rows.jsonl",
+            "paired_deltas.jsonl",
+            "public_safety.json",
+            "replay_inventory.json",
+            "store_census.json",
+            "target_joins.jsonl",
+            "target_registry.json",
+        }
+        self.assertEqual(
+            {path.name for path in raw.iterdir()},
+            primary_files | {
+                "comparison.json",
+                "environment_run_a.json",
+                "environment_run_b.json",
+            },
+        )
+
+        decision = json.loads((raw / "decision.json").read_text(encoding="utf-8"))
+        self.assertEqual(decision["schema"], "memprobe-fixed-artifact-decision/1")
+        self.assertEqual(
+            decision["source_commit"],
+            "19bb83644b082489b4e181e59f1cded1a00d0529",
+        )
+        self.assertEqual(
+            decision["fixed_artifact_gates"],
+            {
+                "aggregate_reports": True,
+                "attribution_input_linkage": True,
+                "attribution_reduction": True,
+                "checkout_immutable": True,
+                "fixed_score_arithmetic": True,
+                "mutation_controls": True,
+                "network_guard": True,
+                "packet_membership_complete": True,
+                "packet_schema": True,
+                "public_population": True,
+                "target_identity": True,
+            },
+        )
+        self.assertEqual(decision["packet_unique_binding"], "PASS")
+        self.assertEqual(
+            decision["stored_output_observability"],
+            "COMPLETE_TYPED_INVENTORY",
+        )
+        self.assertEqual(decision["attribution_input_observability"], "PARTIAL")
+        self.assertEqual(decision["source_replay_material_status"], "BLOCKED")
+        self.assertEqual(decision["historical_execution_replay"], "NOT_ATTEMPTED")
+        self.assertEqual(
+            decision["worked_fixed_artifact_audit"],
+            "SINGLE_RUN_PASS_PENDING_REPEATABILITY_AND_SOURCE_BOUND_REVALIDATION",
+        )
+        self.assertEqual(
+            decision["primary_receipt_cardinalities"],
+            {
+                "attribution_rows": 13950,
+                "packet_items": 30379,
+                "packet_rows": 6200,
+                "paired_historical_artifact_deltas": 6200,
+                "registered_targets": 1550,
+                "target_join_rows": 13950,
+            },
+        )
+
+        registry = json.loads((raw / "target_registry.json").read_text(encoding="utf-8"))
+        self.assertEqual(registry["schema"], "memprobe-target-registry/1")
+        self.assertEqual(
+            registry["categories"],
+            {
+                "assistance_preference": 5,
+                "episodic_memory": 7,
+                "knowledge_memory": 7,
+                "self_model": 5,
+                "skill_memory": 7,
+            },
+        )
+        self.assertEqual(len(registry["users"]), 50)
+        self.assertEqual(len(registry["run_registry"]), 9)
+        self.assertEqual(len(registry["targets"]), 1550)
+
+        manifest = json.loads((raw / "input_manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(set(manifest), {"inputs", "paper_sha256", "schema", "source_commit"})
+        self.assertEqual(manifest["schema"], "memprobe-input-manifest/1")
+        self.assertEqual(
+            manifest["paper_sha256"],
+            "e5b3699c00a0731cc00e165f12efb755c57886058e311c01e5643df6e56897b5",
+        )
+        self.assertEqual(manifest["source_commit"], decision["source_commit"])
+        self.assertEqual(len(manifest["inputs"]), 8980)
+        self.assertTrue(all(
+            set(row) == {"input_scope", "locator", "sha256", "size_bytes"}
+            for row in manifest["inputs"]
+        ))
+
+        comparison = json.loads((raw / "comparison.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            set(comparison),
+            {
+                "schema",
+                "combined_primary_manifest_digest",
+                "differing_primary_files",
+                "environment_bindings",
+                "primary_file_count",
+                "primary_receipts_byte_identical",
+                "run_a_primary_manifest",
+                "run_a_environment_sha256",
+                "run_b_primary_manifest",
+                "run_b_environment_sha256",
+                "runner_repeatability",
+                "seeds_distinct",
+                "source_and_input_identity",
+            },
+        )
+        self.assertEqual(comparison["schema"], "memprobe-run-comparison/1")
+        self.assertEqual(comparison["primary_file_count"], len(primary_files))
+        self.assertEqual(comparison["differing_primary_files"], [])
+        self.assertTrue(comparison["primary_receipts_byte_identical"])
+        self.assertTrue(comparison["seeds_distinct"])
+        self.assertEqual(comparison["environment_bindings"], "PASS")
+        self.assertEqual(comparison["runner_repeatability"], "PASS")
+        self.assertEqual(comparison["source_and_input_identity"], "PASS")
+        self.assertEqual(set(comparison["run_a_primary_manifest"]), primary_files)
+        self.assertEqual(
+            comparison["run_a_primary_manifest"],
+            comparison["run_b_primary_manifest"],
+        )
+
+        environment_keys = {
+            "architecture",
+            "input_manifest_sha256",
+            "locale",
+            "network_attempt_count",
+            "network_guard",
+            "operating_system",
+            "primary_manifest",
+            "primary_manifest_digest",
+            "python_hash_seed",
+            "python_implementation",
+            "python_version",
+            "runner_sha256",
+            "schema",
+            "timezone",
+        }
+        environments = [
+            json.loads((raw / name).read_text(encoding="utf-8"))
+            for name in ("environment_run_a.json", "environment_run_b.json")
+        ]
+        for environment in environments:
+            self.assertEqual(set(environment), environment_keys)
+            self.assertEqual(environment["schema"], "memprobe-audit-environment/1")
+            self.assertEqual(environment["network_guard"], "PASS")
+            self.assertEqual(environment["network_attempt_count"], 0)
+            self.assertEqual(environment["locale"], "C")
+            self.assertEqual(environment["timezone"], "UTC")
+            self.assertEqual(environment["primary_manifest"], comparison["run_a_primary_manifest"])
+        self.assertNotEqual(
+            environments[0]["python_hash_seed"],
+            environments[1]["python_hash_seed"],
+        )
+
+    def test_memprobe_checked_verifier_receipt_only_passes(self):
+        artifact_root = build.ROOT / "research" / "memprobe-recovery-boundary-audit"
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(artifact_root / "verify_checked.py"),
+                "--mode",
+                "receipt-only",
+                "--artifact-root",
+                str(artifact_root),
+            ],
+            cwd=build.ROOT,
+            env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(
+            result.stdout.strip(),
+            "PASS: receipt-only integrity; original evidence not revalidated",
+        )
+        self.assertEqual(result.stderr, "")
 
     def test_collection_can_grow_without_fixed_material_count(self):
         grown = copy.deepcopy(self.data)

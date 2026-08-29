@@ -1,0 +1,24 @@
+{
+  "designated_store_projection": {
+    "content": "fixture_alpha",
+    "id": "fixture-item-1"
+  },
+  "expected_transition": "EXACT_MEMBER",
+  "fixture_origin": "AMS-authored synthetic fixture",
+  "not_a_memprobe_record": true,
+  "not_for_benchmark_score_reproduction": true,
+  "packet": {
+    "category": "fixture_category",
+    "content": "fixture_alpha",
+    "context": "fixture_context",
+    "id": "fixture-item-1",
+    "keywords": [
+      "fixture_key"
+    ],
+    "score": 0.5,
+    "tags": [
+      "fixture_tag"
+    ]
+  },
+  "schema": "memprobe-ams-microfixture/1"
+}

@@ -1,0 +1,57 @@
+{
+  "all_declared_counts_reconcile": true,
+  "history_census": {
+    "episode_count": 7750,
+    "turn_content_states": {
+      "BOTH_NONEMPTY": 7750
+    }
+  },
+  "runs": [
+    {
+      "declared_counts_reconcile": true,
+      "maximum_items_per_user": 164,
+      "minimum_items_per_user": 81,
+      "native_raw_directories": 0,
+      "run_id": "amem_pooled_50",
+      "total_items": 5429,
+      "users": 50
+    },
+    {
+      "declared_counts_reconcile": true,
+      "maximum_items_per_user": 302,
+      "minimum_items_per_user": 106,
+      "native_raw_directories": 0,
+      "run_id": "longctx_full_pooled_50",
+      "total_items": 7770,
+      "users": 50
+    },
+    {
+      "declared_counts_reconcile": true,
+      "maximum_items_per_user": 312,
+      "minimum_items_per_user": 97,
+      "native_raw_directories": 0,
+      "run_id": "mem0_pooled_50",
+      "total_items": 10192,
+      "users": 50
+    },
+    {
+      "declared_counts_reconcile": true,
+      "maximum_items_per_user": 643,
+      "minimum_items_per_user": 320,
+      "native_raw_directories": 0,
+      "run_id": "memt_memonly_pooled_50",
+      "total_items": 23548,
+      "users": 50
+    },
+    {
+      "declared_counts_reconcile": true,
+      "maximum_items_per_user": 0,
+      "minimum_items_per_user": 0,
+      "native_raw_directories": 0,
+      "run_id": "nomem_pooled_50",
+      "total_items": 0,
+      "users": 50
+    }
+  ],
+  "schema": "memprobe-store-census/1"
+}

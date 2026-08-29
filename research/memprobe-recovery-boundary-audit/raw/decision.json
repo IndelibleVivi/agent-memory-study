@@ -1,0 +1,31 @@
+{
+  "attribution_input_observability": "PARTIAL",
+  "fixed_artifact_gates": {
+    "aggregate_reports": true,
+    "attribution_input_linkage": true,
+    "attribution_reduction": true,
+    "checkout_immutable": true,
+    "fixed_score_arithmetic": true,
+    "mutation_controls": true,
+    "network_guard": true,
+    "packet_membership_complete": true,
+    "packet_schema": true,
+    "public_population": true,
+    "target_identity": true
+  },
+  "historical_execution_replay": "NOT_ATTEMPTED",
+  "packet_unique_binding": "PASS",
+  "primary_receipt_cardinalities": {
+    "attribution_rows": 13950,
+    "packet_items": 30379,
+    "packet_rows": 6200,
+    "paired_historical_artifact_deltas": 6200,
+    "registered_targets": 1550,
+    "target_join_rows": 13950
+  },
+  "schema": "memprobe-fixed-artifact-decision/1",
+  "source_commit": "19bb83644b082489b4e181e59f1cded1a00d0529",
+  "source_replay_material_status": "BLOCKED",
+  "stored_output_observability": "COMPLETE_TYPED_INVENTORY",
+  "worked_fixed_artifact_audit": "SINGLE_RUN_PASS_PENDING_REPEATABILITY_AND_SOURCE_BOUND_REVALIDATION"
+}

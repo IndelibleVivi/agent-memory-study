@@ -1,0 +1,146 @@
+{
+  "historical_payload_binding": {
+    "judge_request_response": "UNVERIFIABLE_FROM_RELEASE",
+    "slot_fill_payload": "UNVERIFIABLE_FROM_RELEASE",
+    "slot_fill_response": "UNVERIFIABLE_FROM_RELEASE"
+  },
+  "runs": {
+    "amem_pooled_50": {
+      "judge_reason": {
+        "NONEMPTY_STRING": 1550
+      },
+      "predicted": {
+        "EXACT_LITERAL_UNKNOWN": 58,
+        "NONEMPTY_STRING": 1550
+      },
+      "score": {
+        "VALID_QUARTER_STEP": 1550
+      },
+      "slot_fill_reason": {
+        "NONEMPTY_STRING": 1550
+      }
+    },
+    "amem_pooled_50_retrieve": {
+      "judge_reason": {
+        "NONEMPTY_STRING": 1550
+      },
+      "predicted": {
+        "EXACT_LITERAL_UNKNOWN": 111,
+        "NONEMPTY_STRING": 1550
+      },
+      "score": {
+        "VALID_QUARTER_STEP": 1550
+      },
+      "slot_fill_reason": {
+        "NONEMPTY_STRING": 1550
+      }
+    },
+    "longctx_full_pooled_50": {
+      "judge_reason": {
+        "NONEMPTY_STRING": 1550
+      },
+      "predicted": {
+        "EXACT_LITERAL_UNKNOWN": 20,
+        "NONEMPTY_STRING": 1550
+      },
+      "score": {
+        "VALID_QUARTER_STEP": 1550
+      },
+      "slot_fill_reason": {
+        "NONEMPTY_STRING": 1550
+      }
+    },
+    "longctx_full_pooled_50_retrieve": {
+      "judge_reason": {
+        "NONEMPTY_STRING": 1550
+      },
+      "predicted": {
+        "EXACT_LITERAL_UNKNOWN": 152,
+        "NONEMPTY_STRING": 1550
+      },
+      "score": {
+        "VALID_QUARTER_STEP": 1550
+      },
+      "slot_fill_reason": {
+        "NONEMPTY_STRING": 1550
+      }
+    },
+    "mem0_pooled_50": {
+      "judge_reason": {
+        "NONEMPTY_STRING": 1550
+      },
+      "predicted": {
+        "EXACT_LITERAL_UNKNOWN": 36,
+        "NONEMPTY_STRING": 1550
+      },
+      "score": {
+        "VALID_QUARTER_STEP": 1550
+      },
+      "slot_fill_reason": {
+        "NONEMPTY_STRING": 1550
+      }
+    },
+    "mem0_pooled_50_retrieve": {
+      "judge_reason": {
+        "NONEMPTY_STRING": 1550
+      },
+      "predicted": {
+        "EXACT_LITERAL_UNKNOWN": 270,
+        "NONEMPTY_STRING": 1550
+      },
+      "score": {
+        "VALID_QUARTER_STEP": 1550
+      },
+      "slot_fill_reason": {
+        "NONEMPTY_STRING": 1550
+      }
+    },
+    "memt_memonly_pooled_50": {
+      "judge_reason": {
+        "NONEMPTY_STRING": 1550
+      },
+      "predicted": {
+        "EXACT_LITERAL_UNKNOWN": 1217,
+        "NONEMPTY_STRING": 1550
+      },
+      "score": {
+        "VALID_QUARTER_STEP": 1550
+      },
+      "slot_fill_reason": {
+        "EMPTY_STRING": 1209,
+        "NONEMPTY_STRING": 341
+      }
+    },
+    "memt_memonly_pooled_50_retrieve": {
+      "judge_reason": {
+        "NONEMPTY_STRING": 1550
+      },
+      "predicted": {
+        "EXACT_LITERAL_UNKNOWN": 286,
+        "NONEMPTY_STRING": 1550
+      },
+      "score": {
+        "VALID_QUARTER_STEP": 1550
+      },
+      "slot_fill_reason": {
+        "NONEMPTY_STRING": 1550
+      }
+    },
+    "nomem_pooled_50": {
+      "judge_reason": {
+        "NONEMPTY_STRING": 1550
+      },
+      "predicted": {
+        "EXACT_LITERAL_UNKNOWN": 1550,
+        "NONEMPTY_STRING": 1550
+      },
+      "score": {
+        "VALID_QUARTER_STEP": 1550
+      },
+      "slot_fill_reason": {
+        "NONEMPTY_STRING": 1550
+      }
+    }
+  },
+  "schema": "memprobe-output-observability/1"
+}

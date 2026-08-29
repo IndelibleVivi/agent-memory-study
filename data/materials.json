@@ -24,7 +24,8 @@
           "mosaic-long-term-memory",
           "memory-beyond-recall",
           "statefuse-conflict-preserving-memory",
-          "fluctlightdb-observation-binding"
+          "fluctlightdb-observation-binding",
+          "memprobe-hidden-user-state-recovery"
         ]
       },
       {
@@ -57,7 +58,8 @@
           "agentic-memory",
           "insightemb-action-intent-retrieval",
           "longmemeval-v2-experienced-colleague",
-          "fluctlightdb-observation-binding"
+          "fluctlightdb-observation-binding",
+          "memprobe-hidden-user-state-recovery"
         ]
       },
       {
@@ -124,7 +126,8 @@
           "insightemb-action-intent-retrieval",
           "longmemeval-v2-experienced-colleague",
           "continual-learning-experience-reuse",
-          "fluctlightdb-observation-binding"
+          "fluctlightdb-observation-binding",
+          "memprobe-hidden-user-state-recovery"
         ]
       },
       {
@@ -2396,6 +2399,327 @@
       },
       "editorialQuestion": "如果一个 benchmark 用 forgetting criteria 赋予旧 memory ‘不得再支配回答’的 revision authority，却没有把 empty bucket、judge quorum、criterion wording 与 exact report provenance 一起锁进 score receipt，那么同一个 FAMA 数字究竟证明系统忘掉了什么，还是只证明 evaluator 在某条未完整公开的路径上没有看见它？",
       "sourceNote": "arXiv v1，2026-04-21；ACL 2026 Findings；PDF 共 28 个 physical pages。current official repair commit a6493188… 是 post-paper successor；pre-repair defect/current repair lineage、current tests 与 30-file released-input audit均按 source/release evidence 单列，不被称为 paper-time execution。paper Table 2 的 7,054 criteria 与 current release 的 6,415 并列保留；zero checked eval reports使 Table 3 仍是 paper-reported而非本站重建。"
+    },
+    {
+      "number": 21,
+      "id": "memprobe-hidden-user-state-recovery",
+      "title": "MEMPROBE: Probing Long-Term Agent Memory via Hidden User-State Recovery",
+      "authors": [
+        "Enze Ma",
+        "Yufan Zhou",
+        "Wei-Chieh Huang",
+        "Jie Yang",
+        "Huanhuan Ma",
+        "Zixuan Wang",
+        "Chengze Li",
+        "Chunyu Miao",
+        "Philip S. Yu",
+        "Zhen Wang"
+      ],
+      "shortAuthor": "Ma 等",
+      "year": 2026,
+      "kind": "paper",
+      "noteDepth": "worked",
+      "readingScope": "完整读了 arXiv v1 的 Abstract、§§1–5、Limitations、Broader Impact、Appendix A–J、Tables 1–15、Figures 1–4 与 references，共 32 个 physical PDF pages；references 只用于 lineage 定位。PDF 通过 32-page reader preflight，并对 title page、Tables 2–4、Appendix J polarity case 与最后使用页做了 rendered visual inspection。另检查 official release commit 19bb83644b082489b4e181e59f1cded1a00d0529 的 50-user hidden bank、1,550 registered targets、task/history/final-memory/reconstruction/attribution/aggregate artifacts、scorer、failure-attribution path 与九个 released run identities，并执行 offline、standard-library、fixed released-artifact audit：13,950 target-join rows、13,950 attribution rows、6,200 retrieve-packet rows、30,379 packet-item rows、6,200 paired historical artifact deltas与16份primary receipts。没有运行 simulator、assistant、memory writer、retriever、slot filler、judge、attribution model、OpenAI endpoint 或 Mem-T/vLLM；没有重新生成 trajectory、重发 historical retrieval、重新判断任何 synthetic target 或复现 paper experiment。固定 JSON 中的 prediction、score、reason、disclosure verdict 与 attribution stage 都保留为 historical LLM artifacts。",
+      "categories": [
+        "可靠性",
+        "记忆架构"
+      ],
+      "failureSurfaces": [
+        "state-representation",
+        "retrieval-active-context"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2606.24595v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2606.24595v1",
+        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
+      },
+      "doi": "10.48550/arXiv.2606.24595",
+      "keywords": [
+        "hidden user state",
+        "memory recovery",
+        "retrieval audit",
+        "artifact provenance"
+      ],
+      "sourceNote": "arXiv v1，2026-06-23；preprint，PDF 共 32 个 physical pages。official release audit 锁定 commit 19bb83644b082489b4e181e59f1cded1a00d0529；repository 无 tag 或 GitHub Release，故 exact commit 是本站 source identity。paper-reported result、official-source observation、released historical LLM artifact、fixed-artifact recalculation 与 AMS-authored synthetic control 分层标注。top-level code 与 generated benchmark artifacts 的 CC BY 4.0 不覆盖 vendored A-Mem、Mem-T、外部 taxonomy、model weight 或 API service；本站不复制 hidden bank、task、transcript、memory content、prediction/rationale 等 upstream free text。",
+      "intro": "MEMPROBE 把长期记忆的评估对象从“agent 后来答得对不对”移到“普通协作结束后，系统究竟留下了什么可恢复的 user state”。论文的 50 个 simulated users、31 个 hidden dimensions 与 full-store / top-k 双 read mode，让 task success、written artifact 与 operational retrieval 被放在同一条 evidence-loss chain 上。它也不能被读得太快：full-store recovery 仍经过 serialization、context budget、slot filler 与 LLM judge；top-k recovery 又叠加 fixed abstract query；failure attribution 则是 stored historical LLM stages 的阈值化 reduction，不是对 write、read 或 causal cause 的直接观测。本站的 fixed released-artifact audit 因此不重新判“记住了什么”，而只检查 exact release 内哪些 joins、score reductions、packet-to-store bindings 与 attribution reductions 可由固定 bytes 机械验证，以及哪些 historical execution edges 仍没有 provenance。",
+      "whyRead": "这篇最适合从一次 answer failure 倒推，因为它明确给出三段 loss path：hidden state 是否在 interaction 中 expose、evidence 是否被 collect 成 final store、stored evidence 是否能在 recover 时进入 active context。但 close read 与 source inspection 也暴露出一个更深的 reliability lesson：benchmark 自己同样是一条 observation pipeline。只要 full-store payload、retrieved packet、slot-fill response、judge request 或 attribution input 没有 exact binding，一个低分就不能直接命名为 write failure、retrieval failure 或真实 causal cause。MEMPROBE 最有价值的地方不是替我们完成归因，而是逼 memory evaluation 把每条 inference edge 写清楚。",
+      "editorialQuestion": "当一个 hidden user-state target 在 top-k mode 下得分变低时，我们能从 released artifacts 精确确认的是 target join、stored packet membership、historical score arithmetic，还是只能看到一条经过 query、serialization、slot filling、judging 与 attribution 后的终点标签？",
+      "keyPoints": [
+        "Paper protocol：每个 simulated user 携带一个不向 agent 暴露的 31-dimension user-state bank；普通 assistance tasks 只给相关 dimension 一个自然 disclosure opening。论文把信息路径写成 hidden state u → exposed evidence e → final memory m_final → reconstruction û，并把 task success 与 post-interaction artifact recovery 分开。（§§1、3.1–3.3；Figures 1–2，physical PDF pp. 1–6）",
+        "Metric contract：slot filler 在 full-store dump_all 或 system-native top-k=5 packet 上生成 per-dimension prediction，另一个 LLM judge 给出 {0, 0.25, 0.5, 0.75, 1} score；headline B 先在五个 categories 内求均值，再对五个 category means 等权平均，不是 31 dimensions 的 micro mean。（§3.4；Appendix F；Table 9，physical PDF pp. 6、23–24）",
+        "Paper result：五个 settings 的 immediate task completion 约为 99.87%–99.94%，连 nomem 也近乎饱和；三个 context-fit systems 的 full-store B 为 0.611–0.624，top-k B 降至 0.473–0.540。Assistance Preference 最容易恢复，Episodic Memory 最难；memt full-store B=0.130 被作者单列为 serialized store 超出 reader context 的 diagnostic auditability outcome。（§§4.2–4.5；Tables 2–4，physical PDF pp. 7–9）",
+        "Paper boundary：Appendix J 的 user_022 / pushback_tolerance 表明同一种“欢迎具体纠正”的 behavior 可因 directional label 被写成 high 或 low pushback tolerance 而得到相反 verdict；作者明确把它归为 slot-label polarity boundary，不是 headline memory failure。Appendix G 的 attribution human audit 是 stratified 120-case sample，overall agreement 90/120，原 Memory row 的 exact agreement 20/30；相近 aggregate distribution 不能替代 casewise causal truth。（Appendices G、J；Tables 11–12，physical PDF pp. 24、28）",
+        "Fixed-artifact audit：exact release 注册 1,550 个 user/category/dimension targets，并将其投影为九个 runs 的 13,950 target-join rows；另检查 13,950 attribution rows、6,200 retrieve-packet rows、30,379 packet-item rows与6,200 full/retrieve paired historical artifact deltas。raw/decision.json 只记录 single-run fixed-artifact gates全部为true、packet_unique_binding=PASS、stored_output_observability=COMPLETE_TYPED_INVENTORY、attribution_input_observability=PARTIAL、source_replay_material_status=BLOCKED 与 historical_execution_replay=NOT_ATTEMPTED，并明确保留 PENDING_REPEATABILITY_AND_SOURCE_BOUND_REVALIDATION；raw/comparison.json 另行记录两份16-file primary manifests byte-identical、distinct recorded hash seeds 与 runner_repeatability=PASS；再单独执行 source-bound verifier，结果为 PASS: source-bound revalidation; worked_fixed_artifact_audit=PASS。这三种 provenance surface 不能互相冒充，也不能从 paper tables 或手工 reconnaissance 回填。"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 先把行为成功与 memory artifact 拆开",
+          "claim": "task completion 可以来自当前 context、assistant scaffold 或 lucky completion，而不要求 durable user model；MEMPROBE 因此在 trajectory 结束后直接 probe final store 能否重建 hidden dimensions。",
+          "locator": "§§1、3.1、4.2；Figure 1；Table 2，physical PDF pp. 1–4、7–8"
+        },
+        {
+          "step": "02 · 再把 artifact loss 分成 expose、collect 与 recover",
+          "claim": "论文用 u → e → m_final → û 表示三段可能的信息损失，并以 leak-controlled task、persistent memory rollout 与 reconstruction scorer 分别承接这三段；这比把一次 wrong answer 直接叫作 memory failure 更有诊断力。",
+          "locator": "§§3.1–3.5；Figure 2，physical PDF pp. 4–6"
+        },
+        {
+          "step": "03 · 用两个 read operators 暴露 stored 与 reachable 的差别",
+          "claim": "dump_all 读取 serialized final store，retrieve 读取系统对 fixed axis query 返回的 top-k=5 packet。两者的 fixed historical score gap 能提示 read-path seam，但因为 slot filler、judge、context budget 与 independent run artifacts仍在链上，它本身不能识别 retrieval path 的 causal contribution。",
+          "locator": "§§3.1、3.4、4.3–4.4；Appendix F，physical PDF pp. 5–9、23–24"
+        },
+        {
+          "step": "04 · 把 score 与 attribution 当作有版本的 measurement contracts",
+          "claim": "B 是 historical LLM judge quarter-step outputs 的 category-balanced reduction；attribution 又先用 0.75 threshold 决定哪些 cases 进入 Stage 0–2。stored label 可以与 stored stages 机械一致，却仍不能证明 stage judgment 或 final causal category为真。",
+          "locator": "§3.5；Appendices A、F–G；Tables 9–12，physical PDF pp. 6、14、23–25"
+        },
+        {
+          "step": "05 · 最后审计 release 能证明哪些 edge",
+          "claim": "本站 checker 只把 exact target/task/reconstruction identities、fixed-score arithmetic、stored packet 对 designated final dump 的 typed membership/binding、stored attribution stage reduction 与 replay-material inventory作为 model-free gates；target support、historical prompt payload、semantic correctness、causal cause 与 retriever replay保持 NOT_TESTED、UNVERIFIABLE 或 NOT_ATTEMPTED。",
+          "locator": "research/memprobe-recovery-boundary-audit/PROTOCOL.md；raw/decision.json；raw/target_registry.json；raw/target_joins.jsonl；raw/replay_inventory.json"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Hidden-bank and task construction",
+          "text": "paper 为每个 user 固定 31 个 synthetic target dimensions，按 Skill / Knowledge / Episodic 各 7、Self Model / Assistance Preference 各 5 分布；每个 dimension 配一个 indirect assistance task，并以只看 task statement 的 anti-fishing critic 拒绝直接泄露 target 的设计。hidden bank 是 benchmark scoring target，不是 psychometric claim 或 independently established real-world truth。",
+          "locator": "§3.2；Appendices C–E；Table 8，physical PDF pp. 5、16–22"
+        },
+        {
+          "label": "Simulation and memory-conditioned trajectories",
+          "text": "N=50、T=31、25-turn cap；task set、simulator prompt、assistant scaffold 与 dialogue protocol across systems 固定，只替换 memory module。memory reads 会改变 assistant replies，因此不同 systems 的 transcripts 可以分叉；paper 将这种分叉视为 memory-conditioned loop 的一部分。",
+          "locator": "§§3.3、4.1；Appendices C、E，physical PDF pp. 5–7、16–22"
+        },
+        {
+          "label": "Recovery, aggregation and access modes",
+          "text": "每个 dimension 由 slot filler 从 dump_all serialization 或 native search(query,k=5) packet 生成 label/reason，再由 separate recovery judge按五级 rubric评分。每个 user 的 B 是五个 category means 等权平均；Tables 2–3 再对 50 users 报 mean ± sample standard deviation。",
+          "locator": "§3.4；Appendix F；Tables 2–3、9，physical PDF pp. 6–8、23–24"
+        },
+        {
+          "label": "Thresholded failure-attribution pipeline",
+          "text": "score ≥0.75 直接标 ok；其余依次经过 task-design oracle、transcript disclosure judge 与 elicitation-versus-strictness subclass judge。access mode 改变 threshold-entry population，paper也提醒 retrieve rows 中的 Task/Agent/User counts不能被读成 task或simulator本身发生了变化。",
+          "locator": "§3.5；Appendix F；Tables 4、10，physical PDF pp. 6、8、23–24"
+        },
+        {
+          "label": "Frozen fixed released-artifact audit",
+          "text": "independently authored standard-library runner拒绝 wrong/dirty source，穷举1,550-target registry与九个run-bound projections，以 exact typed joins、Fraction arithmetic、四套 frozen system adapters、stored-stage truth table 与 historical-provenance inventory生成 public-safe receipts；deny-listed upstream free text仅保留 locator、count、enum 与 SHA-256。complete audit在两个 fresh processes / roots / output dirs及不同 PYTHONHASHSEED下重跑，并由 source-bound verifier重新读取 exact checkout与paper PDF。",
+          "locator": "research/memprobe-recovery-boundary-audit/README.md；PROTOCOL.md；raw/input_manifest.json；raw/comparison.json；verify_checked.py"
+        }
+      ],
+      "reportedFindings": [
+        "Paper-reported：nomem、amem、longctx_full、mem0、memt 的 task completion 为 99.871%–99.935%；nomem 的 B=0，而 amem / longctx_full / mem0 的 full-store B 分别为 0.611、0.624、0.613。near-perfect immediate assistance 因此不能区分 durable memory formation。（§4.2；Table 2，physical PDF pp. 7–8）",
+        "Paper-reported：top-k B 为 amem 0.540、longctx_full 0.503、mem0 0.473、memt 0.465；context-fit systems 的 full-store 到 top-k gap 显示 stored artifact 与 operationally reachable packet不是同一个 surface。memt full-store 0.130 是 context-overflow diagnostic，不能与其他 full-store rows直接比较。（§§4.3–4.4；Tables 2–4，physical PDF pp. 7–9）",
+        "Paper-reported：Assistance Preference 在所有 comparable rows 中最高，Episodic Memory 最低；作者把 episodic deficit解释为 event、context 与 consequence 的 binding problem，而不只是 isolated fact 没被保存。（§4.5；Table 3，physical PDF pp. 7、9）",
+        "Paper-reported human audit：satisfied end state 在 48/50 samples中被判 reasonable；failure attribution 与 human relabel 在 90/120 stratified samples中一致，但 Memory row exact agreement只有 20/30。该 audit支持“broadly reliable”这一有限措辞，不把 individual labels升级为 human gold或 causal truth。（Appendix G；Tables 11–12，physical PDF p. 24）",
+        "Fixed-artifact recalculation：formal receipts登记1,550 registered targets与13,950 run-bound target rows；fixed joins、quarter-step arithmetic、aggregate-report comparison、packet membership/binding与stored attribution reduction结果为 11项fixed-artifact gates全部为true；九个runs均INDEPENDENT_RECALCULATION_SUCCEEDED且50-user released-aggregate gates通过；30,379个packet items均adapter schema通过、EXACT_MEMBER且match_count=1；13,950个stored attribution rows均REDUCTION_CONSISTENT，同时input binding均为PARTIALLY_BOUND / HISTORICAL_INPUT_UNVERIFIED。",
+        "Replay boundary：source replay materials=BLOCKED；historical execution replay=NOT_ATTEMPTED。这条必须与 fixed-artifact result 并列展示；internal consistency 通过也不能被写成 MEMPROBE rerun。"
+      ],
+      "evidenceLimits": [
+        "paper 是 2026-06-23 的 arXiv v1 preprint；当前 material没有 peer-reviewed venue claim。实验只覆盖 50 个 U.S.-based DeepPersona synthetic users、固定 assistant scaffold、31 个被挑选为 meaningful/disclosable 的 dimensions与 everyday assistance tasks，不能外推到 multilingual、cross-cultural、privacy-protective、rapidly changing 或 real-user deployment。",
+        "hidden bank 是 generated synthetic benchmark target。exact bank/task/reconstruction join只证明 released fields相同，不证明 target真实、稳定、完整、non-stereotyped、psychometrically valid 或适合作为现实用户画像。",
+        "所有 recovery scores、slot-fill outputs、disclosure verdicts与 attribution stages 都来自 historical LLM calls。temperature=0 不提供 bit determinism；release缺少足以绑定每次 historical execution 的 exact model snapshot、raw request/response、rendered prompt hash、request ID、retry path 与 usage receipt，current source default不能补写这些 provenance。",
+        "dump_all 不是 pure write oracle。它仍经过 system-specific serialization、context window、slot filler 与 recovery judge；尤其 memt wholesale dump溢出 reader context。full-store低分不能单独定位为 evidence未写入，full-store高分也不证明 store形成了compact、authoritative user-state claim。",
+        "retrieve artifacts来自独立 released runs，且 historical native retriever state没有完整发布。stored packet-to-final-dump exact matching只建立 released membership或binding，不证明 current retriever会重现该 packet、该 packet就是 exact historical prompt payload、其中内容语义相关或不存在等价 evidence。",
+        "`memory_failure` 是 current attribution vocabulary中的 downstream-of-disclosure bucket；source明示该 pipeline不调查 read-side slot filling，并把 write与read loss聚合。stored reduction一致性不能隔离 writing、storage、serialization、retrieval、context construction、slot filling、judging 或 attribution本身。",
+        "paper Appendix J cases 是作者选取的 audited illustrations；user_022 polarity case与 user_005 geographic-knowledge case可用于解释 seam，不能估计 prevalence、severity或 system ranking。本地 rule-selected case同样只是机械选出的 illustration，不是随机样本。",
+        "本站 audit不复制 hidden bank、task、transcript、final memory、retrieved content、prediction、reason或rationale；public-safe hashes与locators允许检查 identity，但不能让读者在没有 separately obtained rights-compatible exact source checkout时进行 semantic reinspection。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "Full-store 与 write-side oracle 之间仍隔着 reader",
+          "observation": "paper 在§3.1把 dump_all / retrieve comparison写成区分 write-side与read-side failure的主要诊断，但§3.4、Appendix A和memt footnote也承认 dump_all仍须把完整store序列化给slot filler，并可能因context overflow而退化。source中的 scorer同样在两种mode后继续调用同一个slot-fill与judge path。",
+          "implication": "dump_all是forensic access condition，不是直接读取semantic truth。full/retrieve score只能被称为paired historical artifact scores；若没有exact payload与reader provenance，不能把差值直接命名为write loss或read-path causal estimate。",
+          "locators": [
+            "§§3.1、3.4、4.3；Table 2 footnote，physical PDF pp. 5–8",
+            "Appendix A、I，physical PDF pp. 14、25–26",
+            "official source 19bb8364… scorer.py"
+          ]
+        },
+        {
+          "label": "True cause 措辞强于 stored attribution evidence",
+          "observation": "§3.5称pipeline会找出 `exactly what went wrong` 并把low-score case分到 `true cause`；current failure_attribution.py 顶部却明示不调查read side并假定slot-fill正常，`memory_failure`因此聚合写入、读取与后续measurement seams。human audit又显示Memory row只有20/30 exact agreement。",
+          "implication": "public material必须把这些字段叫stored attribution labels或historical LLM verdicts。机械stage-to-label consistency可以验证control flow，不能验证causal category或把所有memory_failure计为系统write fault。",
+          "locators": [
+            "§3.5，physical PDF p. 6",
+            "Appendix G；Table 12，physical PDF p. 24",
+            "official source 19bb8364… failure_attribution.py"
+          ]
+        },
+        {
+          "label": "Paper artifact inventory 与 exact release tree 不完全吻合",
+          "observation": "Appendix C / Table 7把 `merge_50u_reports.py` 列为released analysis script，并称scoring artifacts包含slot-fill prompts；exact tree没有该named script，recon JSON保存prediction、slot-fill reason、judge score/reason等字段却没有rendered prompt field。scorer.py仍包含aggregate/save与prompt template代码，所以缺件限制的是exact historical replay，不等于aggregate不可重算。",
+          "implication": "source-replay inventory应分别报告 named-path absence、template presence、fixed JSON arithmetic与historical prompt absence；不能用AMS-authored replacement补齐后称official reproduction，也不能因一个named script缺失便夸大为all aggregates unrecomputable。",
+          "locators": [
+            "Appendix C；Table 7，physical PDF pp. 16–17",
+            "official source 19bb8364… scorer.py",
+            "official source 19bb8364… output/*/recon_judge/"
+          ]
+        },
+        {
+          "label": "Retrieve attribution 的 history identity 没有在 current path 中闭合",
+          "observation": "released retrieve outputs位于 `output/<base>_retrieve`，但release只保留五个base-run history directories；current `_load_episode(run, ...)`按传入run ID直接读取 `history/<run>/...`。因此若用retrieve run ID执行current documented attribution path，它不会自动映射回base history。",
+          "implication": "released retrieve attribution labels可以做stored reduction audit，却不能仅凭current function path被称为可重放的historical attribution。exact generation route、base-run mapping与prompt/input binding保持unverified。",
+          "locators": [
+            "official source 19bb8364… failure_attribution.py::_load_episode",
+            "official source 19bb8364… history/ and output/ run registries",
+            "research/memprobe-recovery-boundary-audit/raw/replay_inventory.json"
+          ]
+        },
+        {
+          "label": "Empty retrieve packet 没有保留 failure provenance",
+          "observation": "current scorer在 native `agent.search(query,k=5)` 抛出 broad Exception 时把retrieved_memories写成空list，合法zero-hit也使用同一empty representation；release没有为每个packet保留retriever exception/attempt receipt。",
+          "implication": "empty或short packet只能作为stored packet cardinality observation。它不能区分valid zero-hit、retriever error、fallback、timeout或historical state absence，也不能自动成为retrieval failure计数。",
+          "locators": [
+            "official source 19bb8364… scorer.py native-retrieve branch",
+            "official source 19bb8364… output/*_retrieve/recon_judge/",
+            "research/memprobe-recovery-boundary-audit/raw/packet_rows.jsonl and raw/packet_items.jsonl"
+          ]
+        },
+        {
+          "label": "Directional natural-language slots 会让 state label 本身成为 measurement surface",
+          "observation": "Appendix J 的 pushback_tolerance case里，底层behavior都指向希望assistant给出具体、坚定的纠正，但 `high pushback tolerance` 与 `low pushback tolerance` 的表述可收到相反judge verdict。paper Limitations明确承认surface form与axis polarity可能翻转score。",
+          "implication": "structured state representation需要canonical polarity、definition与counterexample，不应只给一个natural-language slot name。否则benchmark既在测memory，也在测reader与judge如何解释该label。",
+          "locators": [
+            "Appendix A，physical PDF p. 14",
+            "Appendix J Case 3，physical PDF p. 28"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "Recovery is an observation chain, not one score",
+          "text": "可恢复性至少包含target identity、disclosure opportunity、write/retain、serialization、candidate generation、retrieval ordering、active-context construction、slot filling与judging。把这些折成一个B方便比较，却会隐藏“看不见”究竟发生在哪条edge。",
+          "boundary": "这是对paper protocol、source seams与fixed-artifact audit的architecture synthesis；不是对任何system的unobserved internal cause判定。"
+        },
+        {
+          "label": "Artifact identity must include the reader contract",
+          "text": "同一final store在不同serialization、query、k、context budget、slot schema、model snapshot或judge rubric下可以产生不同reconstruction。一个可复核的memory benchmark receipt应同时绑定store bytes与reader/judge contract，而不能只版本化memory backend。",
+          "boundary": "release inspection证明若干historical binding缺失；本站没有重跑替代reader，也没有测不同reader contracts对ranking的影响。"
+        },
+        {
+          "label": "The retrieval query is part of the benchmark ontology",
+          "text": "axis-only query `What best describes the user's <dimension>?` 把concrete task evidence映射到abstract state label。user_005 geographic_knowledge case说明，query–content mismatch既可能是retriever问题，也可能是benchmark选择的abstraction seam。",
+          "boundary": "这是paper case与fixed query design支持的reading；单个case不证明某种query普遍更好，也不把stored packet miss自动归因给system。"
+        },
+        {
+          "label": "Attribution labels need causal humility",
+          "text": "一个stored decision tree可以完全自洽，却依赖错误的disclosure verdict、含混slot label或不可见prompt。可靠的attribution receipt应同时公开decision reduction与input observability，并允许`not determined`成为一等结果。",
+          "boundary": "本站只检查stored stages如何reduce；没有human re-label、semantic re-judgment或historical prompt replay。"
+        },
+        {
+          "label": "Auditability and profiling risk grow together",
+          "text": "能够从长期interaction恢复更丰富user state，有助于检查memory到底保存了什么，也同时提高profiling、unwanted personalization与privacy exposure。inspect、consent、minimization、correction与deletion authority应和recovery objective一起设计。",
+          "boundary": "paper Broader Impact支持该治理方向；synthetic benchmark与本站read-only audit没有测试任何real-user consent、deletion或legal-compliance mechanism。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "Payload-bound recovery and causal-seam protocol",
+          "status": "proposed-not-run",
+          "question": "如果每个 target 都绑定 exact final-store snapshot、retriever native state、query、candidate/ranking packet、rendered slot-fill payload、raw model response、judge request/response与attribution input，我们能否在不把historical LLM labels当ground truth的前提下，把低recovery case分成write absence、serialization/context loss、candidate miss、ranking miss、slot interpretation与judge disagreement？",
+          "method": "在authors或future release提供的immutable run bundle上，为每个(user, dimension, mode)建立content-addressed edge manifest；先做byte-level completeness与cross-edge identity verification，再由blind human panel在不看system name和headline score的条件下分别标注target support、packet relevance、slot polarity与judge agreement。对同一stored snapshot执行registered query/k/context/slot-schema perturbations，但把这些fresh treatments与historical run完全分开。",
+          "fixtures": "exact native memory/retriever snapshots；final dumps；candidate and ranked top-k packets；rendered slot-fill and judge payloads；raw responses与retry logs；paper polarity case、abstract-query/concrete-evidence case、empty-packet strata；newly authored polarity-neutral synthetic controls。",
+          "controls": "source/data/model/runtime/prompt hashes；historical-versus-fresh treatment separation；valid zero-hit与forced retriever exception；same packet with alternative serialization；same evidence under canonical/ambiguous polarity labels；judge blinding；human inter-rater agreement；no target text leaked into retrieval query；no synthetic control counted as benchmark result。",
+          "measures": "edge-complete fraction；candidate recall与rank-conditioned support；context admission rate；slot-label disagreement；model/human score agreement；attribution abstention rate；full-store/top-k delta按observable edge重新分解后的case counts；uncertainty与unresolved fraction。",
+          "limitations": "这是proposed-not-run protocol，需要current release未提供的native state、raw payloads与historical provenance；fresh reruns不会恢复historical execution，也不能从synthetic users外推real-user profiling quality、安全性或deployment benefit。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "Fixed released-artifact consistency and recovery-boundary audit",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-08-29",
+          "basis": "Paper-facing audit of arXiv:2606.24595v1 and the exact clean official MEMPROBE release at 19bb83644b082489b4e181e59f1cded1a00d0529, covering 1,550 registered hidden-bank/task targets, nine reconstruction and attribution runs, five designated final-memory stores, run reports, scorer and failure-attribution source paths.",
+          "boundary": "This is an independently authored, offline fixed released-artifact consistency audit under a frozen, non-blinded protocol. It is not a MEMPROBE benchmark rerun, historical simulator/assistant/memory/retriever/slot-fill/judge/attribution replay, semantic re-judgment, human validation, causal attribution, system-quality ranking, effect or prevalence estimate, paper-result invalidation, real-user study, privacy audit, or production evaluation. The source field `ground_truth` is treated only as a synthetic benchmark hidden target. Historical LLM outputs remain historical artifacts; current source defaults do not establish their exact model or request identity.",
+          "method": "Reject a wrong or dirty official checkout; hash the exact 32-page paper and every registered input; register the 1,550 user/category/dimension targets independently of run outputs; exhaustively join bank, task, episode, reconstruction and attribution identities using typed run-bound keys; recompute quarter-step category-balanced per-user and across-user arithmetic with Fraction and sample standard deviation; bind every non-empty retrieve-packet item to its designated released final dump through four frozen system-specific adapters; independently reduce stored attribution stages with a declarative typed truth table; inventory missing/null/blank output states and source-replay provenance; execute isolated mutation falsifiers; run the complete checker twice in fresh processes/roots/output directories with different hash seeds; then perform receipt-only and source-bound checked verification.",
+          "environment": "Darwin arm64；CPython 3.13.3；exact clean official commit 19bb83644b082489b4e181e59f1cded1a00d0529 and exact arXiv v1 PDF；Python standard library only；frozen locale/timezone；process-local DNS/socket guard；two fresh output roots and explicit distinct PYTHONHASHSEED values；no upstream environment installation and no simulator, assistant, memory backend, retriever, slot filler, judge, attribution model, OpenAI API, network endpoint or Mem-T/vLLM service called。",
+          "fixture": "50 synthetic hidden banks and 50 matched 31-task files；1,550 independently registered user/category/dimension targets；five 7/7/7/5/5 category groups per user；nine registered run identities with full-store/retrieve mode binding；five base histories/final stores；all per-user reconstruction, attribution and candidate aggregate reports；four frozen packet/store adapters；stored quarter-step scores and attribution stages；three preregistered public-safe illustration strata；AMS-authored deep-copy mutations for identity, typed equality, packet schema/membership, arithmetic and attribution-threshold controls。",
+          "controls": "Exact paper/source/tree/input hashes；clean-worktree pre/post gates；registered target/run/user/category/dimension sets；Boolean-number and integer-decimal type separation；attribution-copy recursive equality；full 7/7/7/5/5 arithmetic oracle；multiple/partial aggregate-report inventory；wrong designated-store mapping；missing, modified and duplicate packet items；required/extra packet fields；all legal and malformed attribution-stage sequences including exactly 0.75；deep-copy immutability receipts；network-attempt receipt；deny-listed upstream free-text scanner；two-run byte comparison over 16 primary receipts；complete checksum coverage；receipt-only versus source-bound verifier distinction。",
+          "rawResult": "Formal checked package records 1,550 registered targets, 13,950 target-join rows, 13,950 attribution rows, 6,200 retrieve-packet rows, 30,379 packet-item rows, 6,200 paired historical artifact deltas and 16 primary receipts. The installed decision, arithmetic, packet, attribution, observability, replay, mutation, safety and comparison receipts report: 11项fixed-artifact gates全部为true；九个runs的quarter-step per-user/across-user arithmetic均独立重算成功且canonical 50-user aggregate reports matched；Table 2的九个display cross-check中8个mean/std pairs按三位小数相符，memt full-store fixed mean=0.13054285714285715因四舍五入应为0.131而非paper显示的0.130，fixed std=0.250832166019839与0.251相符；30,379个packet items均EXACT_MEMBER且唯一绑定；13,950个stored attribution reductions均consistent但historical inputs仅partial-bound；57个mutation controls全部caught expected gate；两次16-file primary manifests byte-identical、environment/source identity bound且network attempts为0；public-safety receipt扫描其余15份primary files并记录0 local paths、secret patterns与upstream continuous eight-token spans. The registered-input manifest contains 8,980 exact paper/source inputs；mutation controls report 57 expected gates caught；source-bound verifier result is PASS: source-bound revalidation; worked_fixed_artifact_audit=PASS. These values come from checked receipts and the executed verifier, not from paper tables or reconnaissance notes.",
+          "derivedResult": "At exact revision 19bb83644b082489b4e181e59f1cded1a00d0529, the independently authored offline checker verified the 1,550-target registry and 13,950 run-bound joins, recomputed category-balanced and across-user arithmetic from stored historical quarter-step judge outputs, established exact unique binding for all 30,379 stored retrieve-packet items under frozen system-specific adapters, and checked only the deterministic reduction of stored attribution stages to stored labels. Two fresh executions produced byte-identical 16-file primary manifests and source-bound revalidation passed. This establishes fixed released-artifact consistency at one revision while source replay materials remain BLOCKED and historical execution replay remains NOT_ATTEMPTED. The strongest permitted interpretation remains exact-revision released-artifact consistency: run-bound joins, arithmetic over stored historical quarter-step judge outputs, packet-to-designated-dump matching under frozen adapters, and deterministic reduction of stored attribution stages. Only a formal packet_unique_binding PASS permits unqualified `lineage`. Neither a passing package nor same-machine byte identity establishes semantic support, historical prompt admission, replayed retrieval, causal memory failure, benchmark validity, end-to-end reproduction, cross-platform portability or real-user generalization.",
+          "limitations": "The protocol was frozen after paper/source/schema reconnaissance and Oracle review, so it is preregistered relative to runner execution but not blinded to the release. Exact membership does not establish semantic support, sufficiency or historical prompt admission. Historical native retriever state, raw model requests/responses, rendered prompt hashes, exact model snapshots and per-call receipts are incomplete or absent. Synthetic mutation controls test the checker, not the benchmark. Public receipts intentionally omit upstream free text. Two-run same-machine byte identity establishes checker repeatability only, not correctness or cross-platform reproduction. Top-level CC BY 4.0 does not relicense vendored systems, taxonomies, weights or services, and AMS-authored code/editorial prose receives no new public license grant.",
+          "links": [
+            {
+              "label": "method, results and claim ceiling",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/README.md"
+            },
+            {
+              "label": "frozen pre-execution protocol",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/PROTOCOL.md"
+            },
+            {
+              "label": "source-locked offline runner",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/audit.py"
+            },
+            {
+              "label": "bounded gate decision",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/decision.json"
+            },
+            {
+              "label": "independent 1,550-target registry",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/target_registry.json"
+            },
+            {
+              "label": "exhaustive run-bound target joins",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/target_joins.jsonl"
+            },
+            {
+              "label": "store and history census",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/store_census.json"
+            },
+            {
+              "label": "fixed historical-score arithmetic",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/arithmetic.json"
+            },
+            {
+              "label": "retrieve-packet cardinalities",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/packet_rows.jsonl"
+            },
+            {
+              "label": "packet-item to final-dump bindings",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/packet_items.jsonl"
+            },
+            {
+              "label": "stored attribution reductions and input observability",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/attribution_rows.jsonl"
+            },
+            {
+              "label": "stored-output observability inventory",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/observability.json"
+            },
+            {
+              "label": "paired historical artifact deltas",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/paired_deltas.jsonl"
+            },
+            {
+              "label": "source replay-material and historical-provenance inventory",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/replay_inventory.json"
+            },
+            {
+              "label": "complete registered-input manifest",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/input_manifest.json"
+            },
+            {
+              "label": "mutation-control receipts",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/mutation_controls.json"
+            },
+            {
+              "label": "public projection safety receipt",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/public_safety.json"
+            },
+            {
+              "label": "two-run byte comparison receipt",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/raw/comparison.json"
+            },
+            {
+              "label": "checked receipt and source-bound verifier",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/memprobe-recovery-boundary-audit/verify_checked.py"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,233 @@
+{
+  "schema": "memprobe-public-cases/1",
+  "source_commit": "19bb83644b082489b4e181e59f1cded1a00d0529",
+  "strata": [
+    {
+      "case": "user_022_pushback_tolerance",
+      "rows": [
+        {
+          "category": "assistance_preference",
+          "dimension": "pushback_tolerance",
+          "fixed_numeric_score": 0.0,
+          "label": "KNOWN_PAPER_OR_RECONNAISSANCE_CASE",
+          "packet_cardinality": null,
+          "packet_item_ids": [],
+          "reconstruction_locator": "output/amem_pooled_50/recon_judge/user_022.json#/details/30",
+          "run_id": "amem_pooled_50",
+          "scoring_mode": "dump_all",
+          "stored_attribution_label": "memory_failure",
+          "system": "amem",
+          "user_id": "user_022"
+        },
+        {
+          "category": "assistance_preference",
+          "dimension": "pushback_tolerance",
+          "fixed_numeric_score": 0.75,
+          "label": "KNOWN_PAPER_OR_RECONNAISSANCE_CASE",
+          "packet_cardinality": 5,
+          "packet_item_ids": [
+            "842c01ad-0dea-4504-8fd3-4db363f7785a",
+            "6a735f34-5673-4372-9769-5081c5aa34d1",
+            "eacb5565-3d21-485f-9117-2ff273aa84be",
+            "9b70f15b-8a8a-4706-9073-e02ad4427d6a",
+            "56834c69-28f9-4f56-a59d-a87a97c39018"
+          ],
+          "reconstruction_locator": "output/amem_pooled_50_retrieve/recon_judge/user_022.json#/details/30",
+          "run_id": "amem_pooled_50_retrieve",
+          "scoring_mode": "retrieve",
+          "stored_attribution_label": "ok",
+          "system": "amem",
+          "user_id": "user_022"
+        },
+        {
+          "category": "assistance_preference",
+          "dimension": "pushback_tolerance",
+          "fixed_numeric_score": 0.75,
+          "label": "KNOWN_PAPER_OR_RECONNAISSANCE_CASE",
+          "packet_cardinality": null,
+          "packet_item_ids": [],
+          "reconstruction_locator": "output/longctx_full_pooled_50/recon_judge/user_022.json#/details/30",
+          "run_id": "longctx_full_pooled_50",
+          "scoring_mode": "dump_all",
+          "stored_attribution_label": "ok",
+          "system": "longctx_full",
+          "user_id": "user_022"
+        },
+        {
+          "category": "assistance_preference",
+          "dimension": "pushback_tolerance",
+          "fixed_numeric_score": 0.25,
+          "label": "KNOWN_PAPER_OR_RECONNAISSANCE_CASE",
+          "packet_cardinality": 5,
+          "packet_item_ids": [],
+          "reconstruction_locator": "output/longctx_full_pooled_50_retrieve/recon_judge/user_022.json#/details/30",
+          "run_id": "longctx_full_pooled_50_retrieve",
+          "scoring_mode": "retrieve",
+          "stored_attribution_label": "memory_failure",
+          "system": "longctx_full",
+          "user_id": "user_022"
+        },
+        {
+          "category": "assistance_preference",
+          "dimension": "pushback_tolerance",
+          "fixed_numeric_score": 0.0,
+          "label": "KNOWN_PAPER_OR_RECONNAISSANCE_CASE",
+          "packet_cardinality": null,
+          "packet_item_ids": [],
+          "reconstruction_locator": "output/mem0_pooled_50/recon_judge/user_022.json#/details/30",
+          "run_id": "mem0_pooled_50",
+          "scoring_mode": "dump_all",
+          "stored_attribution_label": "memory_failure",
+          "system": "mem0",
+          "user_id": "user_022"
+        },
+        {
+          "category": "assistance_preference",
+          "dimension": "pushback_tolerance",
+          "fixed_numeric_score": 0.75,
+          "label": "KNOWN_PAPER_OR_RECONNAISSANCE_CASE",
+          "packet_cardinality": 5,
+          "packet_item_ids": [
+            "cc7c8007-925d-4ac2-902c-1975ff6cb643",
+            "7dba62a4-35ec-489f-9025-10d5f3f7899a",
+            "fc7b3c54-3077-4b9b-aff9-8e1a95af4010",
+            "28921474-4581-4a2e-91d4-cf50916fe18b",
+            "9db37eae-3e29-4b37-8501-7a91fc37c69c"
+          ],
+          "reconstruction_locator": "output/mem0_pooled_50_retrieve/recon_judge/user_022.json#/details/30",
+          "run_id": "mem0_pooled_50_retrieve",
+          "scoring_mode": "retrieve",
+          "stored_attribution_label": "ok",
+          "system": "mem0",
+          "user_id": "user_022"
+        },
+        {
+          "category": "assistance_preference",
+          "dimension": "pushback_tolerance",
+          "fixed_numeric_score": 0.0,
+          "label": "KNOWN_PAPER_OR_RECONNAISSANCE_CASE",
+          "packet_cardinality": null,
+          "packet_item_ids": [],
+          "reconstruction_locator": "output/memt_memonly_pooled_50/recon_judge/user_022.json#/details/30",
+          "run_id": "memt_memonly_pooled_50",
+          "scoring_mode": "dump_all",
+          "stored_attribution_label": "memory_failure",
+          "system": "memt",
+          "user_id": "user_022"
+        },
+        {
+          "category": "assistance_preference",
+          "dimension": "pushback_tolerance",
+          "fixed_numeric_score": 0.0,
+          "label": "KNOWN_PAPER_OR_RECONNAISSANCE_CASE",
+          "packet_cardinality": 5,
+          "packet_item_ids": [
+            "c13caf74-7ff9-422f-9b53-12228e51f3e9",
+            "aa7b42ea-48e6-428c-990a-e8951fba9f70",
+            "3b705a7d-a91b-4b30-944b-943ac0ab2ad5",
+            "8204c61b-ebc1-455b-ba0e-faca4173b106",
+            "16ec1569-8383-4d00-af7d-1ed7194e7026"
+          ],
+          "reconstruction_locator": "output/memt_memonly_pooled_50_retrieve/recon_judge/user_022.json#/details/30",
+          "run_id": "memt_memonly_pooled_50_retrieve",
+          "scoring_mode": "retrieve",
+          "stored_attribution_label": "memory_failure",
+          "system": "memt",
+          "user_id": "user_022"
+        },
+        {
+          "category": "assistance_preference",
+          "dimension": "pushback_tolerance",
+          "fixed_numeric_score": 0.0,
+          "label": "KNOWN_PAPER_OR_RECONNAISSANCE_CASE",
+          "packet_cardinality": null,
+          "packet_item_ids": [],
+          "reconstruction_locator": "output/nomem_pooled_50/recon_judge/user_022.json#/details/30",
+          "run_id": "nomem_pooled_50",
+          "scoring_mode": "dump_all",
+          "stored_attribution_label": "memory_failure",
+          "system": "nomem",
+          "user_id": "user_022"
+        }
+      ]
+    },
+    {
+      "case": "user_005_geographic_knowledge_amem",
+      "rows": [
+        {
+          "category": "knowledge_memory",
+          "dimension": "geographic_knowledge",
+          "fixed_numeric_score": 0.75,
+          "label": "KNOWN_PAPER_OR_RECONNAISSANCE_CASE",
+          "packet_cardinality": null,
+          "packet_item_ids": [],
+          "reconstruction_locator": "output/amem_pooled_50/recon_judge/user_005.json#/details/12",
+          "run_id": "amem_pooled_50",
+          "scoring_mode": "dump_all",
+          "stored_attribution_label": "ok",
+          "system": "amem",
+          "user_id": "user_005"
+        },
+        {
+          "category": "knowledge_memory",
+          "dimension": "geographic_knowledge",
+          "fixed_numeric_score": 0.0,
+          "label": "KNOWN_PAPER_OR_RECONNAISSANCE_CASE",
+          "packet_cardinality": 5,
+          "packet_item_ids": [
+            "3b00f264-5969-41d3-8760-b4cb7659fdcc",
+            "8680a0da-e4ce-448f-9e10-a87d0cdddad0",
+            "55aa5a53-a351-48ee-a7c6-243acc8c8e5a",
+            "a0a52a80-ce81-41b2-94f5-5b2de4fc2f5c",
+            "100e15c8-ac97-46d2-80b9-a47092a76579"
+          ],
+          "reconstruction_locator": "output/amem_pooled_50_retrieve/recon_judge/user_005.json#/details/12",
+          "run_id": "amem_pooled_50_retrieve",
+          "scoring_mode": "retrieve",
+          "stored_attribution_label": "memory_failure",
+          "system": "amem",
+          "user_id": "user_005"
+        }
+      ]
+    },
+    {
+      "case": "lexicographic_full_ge_075_retrieve_lt_075",
+      "rows": [
+        {
+          "category": "episodic_memory",
+          "dimension": "moment_of_clarity_event",
+          "fixed_numeric_score": 0.75,
+          "label": "RULE_SELECTED_ILLUSTRATION",
+          "packet_cardinality": null,
+          "packet_item_ids": [],
+          "reconstruction_locator": "output/amem_pooled_50/recon_judge/user_001.json#/details/17",
+          "run_id": "amem_pooled_50",
+          "scoring_mode": "dump_all",
+          "stored_attribution_label": "ok",
+          "system": "amem",
+          "user_id": "user_001"
+        },
+        {
+          "category": "episodic_memory",
+          "dimension": "moment_of_clarity_event",
+          "fixed_numeric_score": 0.25,
+          "label": "RULE_SELECTED_ILLUSTRATION",
+          "packet_cardinality": 5,
+          "packet_item_ids": [
+            "585ce29b-e65a-4815-8b4d-dd1b44763720",
+            "60e8ab15-d082-4ee5-ace8-bbb9b054678c",
+            "3f18f50e-3cfa-420d-97c7-9e18d6cd4a70",
+            "0f912dd2-f596-4f44-83e9-b022b414620b",
+            "234c61cc-6a72-4f46-86d5-f1f2d1220567"
+          ],
+          "reconstruction_locator": "output/amem_pooled_50_retrieve/recon_judge/user_001.json#/details/17",
+          "run_id": "amem_pooled_50_retrieve",
+          "scoring_mode": "retrieve",
+          "stored_attribution_label": "memory_failure",
+          "system": "amem",
+          "user_id": "user_001"
+        }
+      ]
+    }
+  ]
+}

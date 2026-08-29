@@ -1,0 +1,83 @@
+{
+  "historical_execution_replay": "NOT_ATTEMPTED",
+  "historical_provenance": {
+    "dependency_receipt": "ABSENT",
+    "endpoint": "ABSENT",
+    "exact_model_snapshot": "ABSENT",
+    "raw_requests": "ABSENT",
+    "raw_responses": "ABSENT",
+    "rendered_prompt_hashes": "ABSENT",
+    "request_ids": "ABSENT",
+    "retry_receipt": "ABSENT",
+    "runtime_receipt": "ABSENT",
+    "sampling_values_receipt": "ABSENT",
+    "usage_receipt": "ABSENT"
+  },
+  "materials": [
+    {
+      "locator": "merge_50u_reports.py",
+      "material": "Appendix C named merge script",
+      "status": "NAMED_SOURCE_PATH_ABSENT"
+    },
+    {
+      "locator": "output/*/recon_judge/*.json#/details/*",
+      "material": "rendered slot-fill or judge prompt fields",
+      "observed_field_names": [],
+      "status": "RELEASED_INPUT_ABSENT"
+    },
+    {
+      "locators": [
+        "history/amem_pooled_50_retrieve",
+        "history/longctx_full_pooled_50_retrieve",
+        "history/mem0_pooled_50_retrieve",
+        "history/memt_memonly_pooled_50_retrieve"
+      ],
+      "material": "retrieve-run histories addressed by current failure_attribution.py",
+      "present_count": 0,
+      "status": "RELEASED_INPUT_ABSENT"
+    },
+    {
+      "locator_pattern": "memory/<base-run>/<user>/raw",
+      "material": "native retriever state",
+      "present_count": 0,
+      "registered_count": 250,
+      "status": "RELEASED_INPUT_ABSENT"
+    }
+  ],
+  "schema": "memprobe-replay-inventory/1",
+  "source_files_inspected": [
+    {
+      "locator": "README.md",
+      "sha256": "fe83b3ca591fabec5a0e69784fa071b3fd6d26bad5ce46b5e30cabfd060a6ecf"
+    },
+    {
+      "locator": "scorer.py",
+      "sha256": "abbb35f240a43860b22617bc54fe0e7cbdbc5ba93b5b56a22198f4514d00797b"
+    },
+    {
+      "locator": "failure_attribution.py",
+      "sha256": "95dcfb952ab2d8b5f7b3316f93a2315e053949533e94c6117081d68782e69007"
+    },
+    {
+      "locator": "runner.py",
+      "sha256": "267636bf61ce679933e61e7dc90d7155b082d135a325dbf1c41aaa2c5d8fca90"
+    },
+    {
+      "locator": "agents/agent.py",
+      "sha256": "b29faae2effa1103e477d5db255b04d88736c0e981085473cc8a409c94ad21df"
+    },
+    {
+      "locator": "agents/agent_longctx.py",
+      "sha256": "9b2d559dc537c6d73d5f389ae8514fca874da36f8e8f3bb51305ee6275d97624"
+    },
+    {
+      "locator": "agents/agent_mem0.py",
+      "sha256": "5b6552e9cf9441d177b2b557cbc8be9092b1c7466d0aad1321cac33ce22331f6"
+    },
+    {
+      "locator": "agents/agent_memt.py",
+      "sha256": "b5bd7f4a87c198970024453b8e4f13493a4a1301039760cd97e27c4d11c01159"
+    }
+  ],
+  "source_replay_material_status": "BLOCKED"
+}

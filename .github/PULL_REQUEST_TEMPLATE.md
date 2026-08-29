@@ -54,4 +54,5 @@
 - [ ] I edited `data/materials.json`, not generated `assets/materials-data.js`.
 - [ ] `python3 tools/build.py`
 - [ ] `python3 -m unittest tools.test_build`
+- [ ] `python3 research/memprobe-recovery-boundary-audit/verify_checked.py --mode receipt-only`
 - [ ] Bundled PDF delivery and notices are unchanged, or each changed file has an explicit redistribution license and attribution.
