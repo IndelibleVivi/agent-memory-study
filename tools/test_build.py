@@ -31,6 +31,13 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             list(range(1, len(validated["materials"]) + 1)),
         )
 
+    def test_article_copy_wraps_unbroken_evidence_tokens(self):
+        css = (build.ROOT / "assets" / "styles.css").read_text(encoding="utf-8")
+        self.assertRegex(
+            css,
+            r"(?s)\.article-main\s*\{[^}]*overflow-wrap:\s*anywhere;",
+        )
+
     def test_easter_egg_copy_has_one_canonical_source(self):
         easter_egg = self.data["atlas"]["easterEgg"]
         self.assertEqual(

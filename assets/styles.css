@@ -1244,6 +1244,7 @@ a:focus-visible {
 
 .article-main {
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .material-heading {
