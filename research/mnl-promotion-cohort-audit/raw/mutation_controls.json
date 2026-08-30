@@ -1,0 +1,42 @@
+{
+  "all_detected": true,
+  "controls": [
+    {
+      "detected": true,
+      "expected_error_code": "BATCH_ORIGINAL_IDS",
+      "id": "delete_original_identity",
+      "observed_error_code": "BATCH_ORIGINAL_IDS"
+    },
+    {
+      "detected": true,
+      "expected_error_code": "BATCH_ACCEPTANCE",
+      "id": "flip_source_admission",
+      "observed_error_code": "BATCH_ACCEPTANCE"
+    },
+    {
+      "detected": true,
+      "expected_error_code": "BATCH_DISPOSITIONS",
+      "id": "relabel_unavailable_as_observed_loss",
+      "observed_error_code": "BATCH_DISPOSITIONS"
+    },
+    {
+      "detected": true,
+      "expected_error_code": "KB_REJECTED_SERIALIZED",
+      "id": "alter_rejected_serialized_poststate",
+      "observed_error_code": "KB_REJECTED_SERIALIZED"
+    },
+    {
+      "detected": true,
+      "expected_error_code": "EVAL_ENROLLED",
+      "id": "change_eval_enrolled_denominator",
+      "observed_error_code": "EVAL_ENROLLED"
+    },
+    {
+      "detected": true,
+      "expected_error_code": "KB_TOP1",
+      "id": "replace_stable_top1_with_new_entry",
+      "observed_error_code": "KB_TOP1"
+    }
+  ],
+  "schema": "mnl-mutation-controls/1"
+}

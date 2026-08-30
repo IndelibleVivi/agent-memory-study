@@ -31,6 +31,14 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             list(range(1, len(validated["materials"]) + 1)),
         )
 
+    def test_material_payload_cache_key_tracks_current_projection(self):
+        source = (build.ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(
+            source.count('assets/materials-data.js?v=20260830-mnl-1'),
+            1,
+        )
+        self.assertNotIn('assets/materials-data.js?v=20260829-memprobe-1', source)
+
     def test_article_copy_wraps_unbroken_evidence_tokens(self):
         css = (build.ROOT / "assets" / "styles.css").read_text(encoding="utf-8")
         self.assertRegex(
@@ -210,6 +218,488 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
                 ),
                 f"worked material lacks public-test artifact: {material['id']}",
             )
+
+    def test_mnl_worked_close_read_keeps_paper_and_current_source_separate(self):
+        material = next(
+            item for item in self.data["materials"]
+            if item["id"] == "mistake-notebook-learning"
+        )
+        self.assertEqual(material["number"], 7)
+        self.assertEqual(material["noteDepth"], "worked")
+        self.assertEqual(material["doi"], "10.18653/v1/2026.findings-acl.719")
+        self.assertEqual(
+            material["sourceUrl"],
+            "https://aclanthology.org/2026.findings-acl.719/",
+        )
+        self.assertEqual(
+            material["pdf"],
+            {
+                "delivery": "bundled",
+                "url": "papers/07-su-2026-mistake-notebook-learning.pdf",
+                "originalUrl": "https://aclanthology.org/2026.findings-acl.719.pdf",
+                "license": "CC BY 4.0",
+                "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+            },
+        )
+        self.assertIn("17 个 physical PDF pages", material["readingScope"])
+        self.assertIn("Appendices A–D", material["readingScope"])
+        self.assertIn(
+            "dc7de755522ad58864c62b74ab8e9959c01b7f23",
+            material["readingScope"],
+        )
+        self.assertIn("paper-production source", material["readingScope"])
+        self.assertEqual(
+            set(material["failureSurfaces"]),
+            {
+                "write-consolidation",
+                "retrieval-active-context",
+                "abstraction-experience",
+            },
+        )
+        atlas_memberships = {
+            surface["id"]
+            for surface in self.data["atlas"]["failureSurfaces"]
+            if material["id"] in surface["materialIds"]
+        }
+        self.assertEqual(atlas_memberships, set(material["failureSurfaces"]))
+        for field in (
+            "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
+            "sourceTensions", "editorialInferences", "openProtocols", "contributions",
+        ):
+            self.assertTrue(material[field])
+        self.assertTrue(all(
+            protocol["status"] == "proposed-not-run"
+            for protocol in material["openProtocols"]
+        ))
+
+        contribution = next(
+            item for item in material["contributions"]
+            if item["type"] == "public-test"
+        )
+        self.assertEqual(contribution["byline"], "Agent Memory Study editors")
+        self.assertIn("not an MNL benchmark or paper-experiment rerun", contribution["boundary"])
+        self.assertIn("Missing updated items remain unavailable observations", contribution["boundary"])
+        self.assertIn("full-cohort, per-item, subgroup, held-out", contribution["boundary"])
+        self.assertIn("source-to-paper reproduction", contribution["boundary"])
+
+        prefix = "research/mnl-promotion-cohort-audit/"
+        linked_paths = {
+            link["url"].split("/blob/main/", 1)[1]
+            for link in contribution["links"]
+        }
+        self.assertEqual(
+            linked_paths,
+            {
+                f"{prefix}README.md",
+                f"{prefix}PROTOCOL.md",
+                f"{prefix}audit.py",
+                f"{prefix}verify_checked.py",
+                f"{prefix}raw/cases.json",
+                f"{prefix}raw/run_results.jsonl",
+                f"{prefix}raw/decision.json",
+                f"{prefix}raw/source_manifest.json",
+                f"{prefix}raw/mutation_controls.json",
+                f"{prefix}raw/comparison.json",
+            },
+        )
+        self.assertTrue(all((build.ROOT / path).is_file() for path in linked_paths))
+
+    def test_mnl_checked_package_inventory_checksums_and_privacy(self):
+        artifact_root = build.ROOT / "research" / "mnl-promotion-cohort-audit"
+        expected_files = {
+            "PROTOCOL.md",
+            "README.md",
+            "audit.py",
+            "checksums.sha256",
+            "raw/cases.json",
+            "raw/comparison.json",
+            "raw/decision.json",
+            "raw/environment_run_a.json",
+            "raw/environment_run_b.json",
+            "raw/mutation_controls.json",
+            "raw/public_safety.json",
+            "raw/run_results.jsonl",
+            "raw/source_manifest.json",
+            "verify_checked.py",
+        }
+        observed_files = {
+            path.relative_to(artifact_root).as_posix()
+            for path in artifact_root.rglob("*")
+            if path.is_file()
+        }
+        self.assertEqual(observed_files, expected_files)
+
+        checksum_rows = (
+            artifact_root / "checksums.sha256"
+        ).read_text(encoding="utf-8").splitlines()
+        self.assertEqual(len(checksum_rows), 13)
+        checksums = {}
+        for row in checksum_rows:
+            digest, separator, relative_path = row.partition("  ")
+            self.assertEqual(separator, "  ")
+            self.assertEqual(len(digest), 64)
+            self.assertNotIn(relative_path, checksums)
+            checksums[relative_path] = digest
+        self.assertEqual(
+            set(checksums),
+            expected_files - {"checksums.sha256"},
+        )
+        for relative_path, expected_digest in checksums.items():
+            self.assertEqual(
+                hashlib.sha256((artifact_root / relative_path).read_bytes()).hexdigest(),
+                expected_digest,
+                relative_path,
+            )
+
+        slash = b"/"
+        denied_markers = (
+            slash + b"Users" + slash,
+            slash + b"Volumes" + slash,
+            b"file" + b"://",
+            b"Zotero" + slash + b"storage",
+            b"@" + b"chatroom",
+            b"wxid" + b"_",
+            b"BEGIN " + b"PRIVATE KEY",
+            b"sk" + b"-",
+            b"ghp" + b"_",
+            b"github" + b"_pat_",
+            b"OPENAI" + b"_API_KEY=",
+            b"ANTHROPIC" + b"_API_KEY=",
+        )
+        for relative_path in sorted(expected_files):
+            payload = (artifact_root / relative_path).read_bytes()
+            for marker in denied_markers:
+                self.assertNotIn(marker, payload, f"{relative_path}: {marker!r}")
+
+        manifest = json.loads(
+            (artifact_root / "raw" / "source_manifest.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(manifest["schema"], "mnl-source-manifest/2")
+        self.assertEqual(
+            manifest["source"]["runner_declared_source_code_read_allowlist"],
+            [
+                {
+                    "git_blob": "2a39b9d8921760476b3f2ae2f2d1397fcadb163a",
+                    "path": "mnl/trainer.py",
+                    "sha256": "398ef9fc98ef418454cc3c243c762a65ee733cf687b94c16e80b92a6b4ce6033",
+                },
+                {
+                    "git_blob": "be97b6e6da5157e1e7c3501961b6fad4b7d2a542",
+                    "path": "mnl/evaluator.py",
+                    "sha256": "47d429f2962b0423ce2a48dfaf3910d5ce2efcaacc9e69018912b3a963a90347",
+                },
+                {
+                    "git_blob": "50483b9a18d97ef743993644f657f982a95a3d59",
+                    "path": "mnl/knowledge_base.py",
+                    "sha256": "c4a62fd6b47b8ca4bd6a8265b1d218fedd3e67f5cdd52a27668ef89fd64116c5",
+                },
+            ],
+        )
+        self.assertFalse(manifest["source"]["read_access_instrumented"])
+        self.assertFalse(manifest["source"]["upstream_source_copied_into_artifact"])
+        self.assertEqual(
+            manifest["checkout_observations"],
+            {
+                "allowlisted_bytes_match_lock_after": True,
+                "allowlisted_bytes_match_lock_before": True,
+                "git_status_clean_after": True,
+                "git_status_clean_before": True,
+                "transient_or_ignored_writes_instrumented": False,
+            },
+        )
+        safety = json.loads(
+            (artifact_root / "raw" / "public_safety.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(safety["schema"], "mnl-public-safety/1")
+        self.assertTrue(safety["no_local_paths_credentials_or_upstream_source"])
+        self.assertFalse(safety["copied_upstream_source"])
+        self.assertEqual(safety["denied_content_hits"], [])
+        self.assertEqual(
+            safety["scan_scope"],
+            [
+                "cases.json",
+                "decision.json",
+                "mutation_controls.json",
+                "run_results.jsonl",
+                "source_manifest.json",
+            ],
+        )
+
+    def test_mnl_receipts_bind_cohort_conservation_and_claim_ceiling(self):
+        raw_root = (
+            build.ROOT / "research" / "mnl-promotion-cohort-audit" / "raw"
+        )
+        cases = json.loads((raw_root / "cases.json").read_text(encoding="utf-8"))
+        rows = [
+            json.loads(line)
+            for line in (raw_root / "run_results.jsonl").read_text(encoding="utf-8").splitlines()
+        ]
+        self.assertEqual(cases["schema"], "mnl-promotion-cases/1")
+        self.assertEqual(
+            [case["id"] for case in cases["batch_cases"]],
+            [
+                "complete_positive_accept",
+                "complete_balanced_reject",
+                "complete_all_ties_reject",
+                "partial_updated_none_survivor_accept",
+                "partial_empty_prompt_survivor_accept",
+                "all_updated_prompts_empty_rollback",
+                "all_updated_responses_none_rollback",
+                "net_accept_with_group_loss",
+            ],
+        )
+        self.assertEqual(
+            [probe["id"] for probe in cases["probes"]],
+            [
+                "exact_subject_equal_embedding_top1",
+                "all_failed_question_denominator",
+                "socket_network_guard",
+            ],
+        )
+        self.assertEqual(sum(len(case["items"]) for case in cases["batch_cases"]), 29)
+        self.assertEqual(len(rows), 11)
+        indexed = {
+            (row["kind"], row.get("case_id", row.get("id"))): row
+            for row in rows
+        }
+        self.assertEqual(len(indexed), len(rows))
+
+        partial_ids = {
+            "partial_updated_none_survivor_accept",
+            "partial_empty_prompt_survivor_accept",
+        }
+        all_missing_ids = {
+            "all_updated_prompts_empty_rollback",
+            "all_updated_responses_none_rollback",
+        }
+        for case in cases["batch_cases"]:
+            row = indexed[("batch_promotion", case["id"])]
+            ledger = row["identity_ledger"]
+            original_ids = [item["id"] for item in case["items"]]
+            prompt_ids = [
+                item["id"] for item in case["items"]
+                if item["updated_prompt"] == "nonempty"
+            ]
+            response_ids = [
+                item["id"] for item in case["items"]
+                if item["updated_prompt"] == "nonempty"
+                and item["updated_response"] != "none"
+            ]
+            self.assertEqual(ledger["original_ids"], original_ids)
+            self.assertEqual(ledger["baseline_valid_ids"], original_ids)
+            self.assertEqual(ledger["updated_prompt_nonempty_ids"], prompt_ids)
+            self.assertEqual(ledger["updated_generation_ids"], prompt_ids)
+            self.assertEqual(ledger["updated_response_valid_ids"], response_ids)
+            self.assertEqual(ledger["evaluated_ids"], response_ids)
+            self.assertEqual(set(ledger["dispositions"]), set(original_ids))
+            self.assertTrue(set(response_ids) <= set(prompt_ids) <= set(original_ids))
+
+            outcomes = [
+                item["observed_outcome_if_evaluated"]
+                for item in case["items"]
+                if item["id"] in response_ids
+            ]
+            wins = outcomes.count("win")
+            losses = outcomes.count("loss")
+            ties = outcomes.count("tie")
+            admission = row["admission"]
+            self.assertEqual(admission["source_observed_wins"], wins)
+            self.assertEqual(admission["source_observed_losses"], losses)
+            self.assertEqual(admission["source_observed_ties"], ties)
+            self.assertEqual(admission["source_observed_delta"], wins - losses)
+            self.assertIs(admission["source_accepted"], case["expected_source_acceptance"])
+            self.assertEqual(
+                row["missing_as_failure_sensitivity"]["missing_count"],
+                len(original_ids) - len(response_ids),
+            )
+            self.assertTrue(
+                row["missing_as_failure_sensitivity"]["not_observed_source_outcomes"]
+            )
+            if case["id"] in partial_ids:
+                self.assertTrue(admission["source_accepted"])
+                self.assertEqual(
+                    admission["full_enrolled_decision"],
+                    "UNDEFINED_FROM_OBSERVED_RESULTS",
+                )
+            if case["id"] in all_missing_ids:
+                self.assertFalse(admission["source_accepted"])
+                self.assertEqual(row["source_return"], "NONE")
+                self.assertEqual(ledger["evaluated_ids"], [])
+            if admission["source_accepted"]:
+                self.assertEqual(row["kb_state"]["in_memory_delta"], 1)
+                self.assertTrue(row["kb_state"]["accepted_entry_exact"])
+            else:
+                self.assertEqual(row["kb_state"]["in_memory_delta"], 0)
+                self.assertEqual(
+                    row["kb_state"]["in_memory_post_sha256"],
+                    row["kb_state"]["in_memory_pre_sha256"],
+                )
+                self.assertEqual(
+                    row["kb_state"]["serialized_post_sha256"],
+                    row["kb_state"]["serialized_pre_sha256"],
+                )
+
+        self.assertTrue(
+            indexed[("batch_promotion", "complete_positive_accept")]["admission"]
+            ["source_accepted"]
+        )
+        self.assertFalse(
+            indexed[("batch_promotion", "complete_balanced_reject")]["admission"]
+            ["source_accepted"]
+        )
+        self.assertFalse(
+            indexed[("batch_promotion", "complete_all_ties_reject")]["admission"]
+            ["source_accepted"]
+        )
+        subgroup = indexed[("batch_promotion", "net_accept_with_group_loss")]
+        self.assertTrue(subgroup["admission"]["source_accepted"])
+        self.assertEqual(subgroup["group_observed_deltas"], {"A": 3, "B": -1})
+
+        knowledge_base = indexed[("knowledge_base", "exact_subject_equal_embedding_top1")]
+        self.assertEqual(knowledge_base["entry_count_before"], 1)
+        self.assertEqual(knowledge_base["entry_count_after"], 2)
+        self.assertEqual(knowledge_base["exact_subject_count_after"], 2)
+        self.assertEqual(knowledge_base["top1_guidance"], "older-guidance")
+        evaluation = indexed[("evaluation_coverage", "all_failed_question_denominator")]
+        self.assertEqual(evaluation["enrolled_count"], 2)
+        self.assertEqual(evaluation["surviving_question_count"], 1)
+        self.assertEqual(evaluation["source_reported_accuracy"], 1.0)
+        self.assertEqual(evaluation["enrolled_coverage"], 0.5)
+        self.assertTrue(evaluation["all_failed_question_omitted_from_denominator"])
+        self.assertEqual(indexed[("runtime_guard", "socket_network_guard")]["attempts"], 0)
+
+        decision = json.loads((raw_root / "decision.json").read_text(encoding="utf-8"))
+        self.assertEqual(decision["schema"], "mnl-promotion-decision/1")
+        self.assertEqual(decision["batch_case_count"], 8)
+        self.assertEqual(
+            decision["incomplete_survivor_admissions"],
+            [
+                "partial_updated_none_survivor_accept",
+                "partial_empty_prompt_survivor_accept",
+            ],
+        )
+        self.assertEqual(
+            decision["full_cohort_status_for_filtered_admissions"],
+            "UNDEFINED_FROM_OBSERVED_RESULTS",
+        )
+        self.assertEqual(
+            decision["subgroup_non_regression_guarantee"],
+            "NOT_ESTABLISHED_BY_NET_BATCH_ACCEPTANCE",
+        )
+        self.assertEqual(
+            decision["paper_or_benchmark_experiment_reproduction"],
+            "NOT_ATTEMPTED",
+        )
+        self.assertEqual(decision["source_to_paper_revision_binding"], "NOT_ESTABLISHED")
+        self.assertEqual(decision["model_or_api_calls"], 0)
+        self.assertEqual(
+            decision["canonical_ams_status"],
+            {"public_note_depth": "not_assessed_by_evidence_artifact"},
+        )
+
+    def test_mnl_mutations_repeatability_and_environments_are_checked(self):
+        raw_root = (
+            build.ROOT / "research" / "mnl-promotion-cohort-audit" / "raw"
+        )
+        controls = json.loads(
+            (raw_root / "mutation_controls.json").read_text(encoding="utf-8")
+        )
+        expected_controls = {
+            "delete_original_identity": "BATCH_ORIGINAL_IDS",
+            "flip_source_admission": "BATCH_ACCEPTANCE",
+            "relabel_unavailable_as_observed_loss": "BATCH_DISPOSITIONS",
+            "alter_rejected_serialized_poststate": "KB_REJECTED_SERIALIZED",
+            "change_eval_enrolled_denominator": "EVAL_ENROLLED",
+            "replace_stable_top1_with_new_entry": "KB_TOP1",
+        }
+        self.assertEqual(controls["schema"], "mnl-mutation-controls/1")
+        self.assertTrue(controls["all_detected"])
+        self.assertEqual(
+            {control["id"] for control in controls["controls"]},
+            set(expected_controls),
+        )
+        for control in controls["controls"]:
+            self.assertTrue(control["detected"])
+            self.assertEqual(
+                control["expected_error_code"],
+                expected_controls[control["id"]],
+            )
+            self.assertEqual(
+                control["observed_error_code"],
+                expected_controls[control["id"]],
+            )
+
+        comparison = json.loads(
+            (raw_root / "comparison.json").read_text(encoding="utf-8")
+        )
+        primary_names = {
+            "cases.json",
+            "decision.json",
+            "mutation_controls.json",
+            "public_safety.json",
+            "run_results.jsonl",
+            "source_manifest.json",
+        }
+        self.assertEqual(comparison["schema"], "mnl-run-comparison/1")
+        self.assertTrue(comparison["byte_identical"])
+        self.assertEqual(comparison["primary_file_count"], 6)
+        self.assertEqual(set(comparison["primary_files"]), primary_names)
+        self.assertEqual(comparison["run_a_hash_seed"], "313")
+        self.assertEqual(comparison["run_b_hash_seed"], "727")
+        self.assertNotEqual(comparison["run_a_hash_seed"], comparison["run_b_hash_seed"])
+        for name in primary_names:
+            actual_digest = hashlib.sha256((raw_root / name).read_bytes()).hexdigest()
+            self.assertEqual(
+                comparison["primary_files"][name],
+                {
+                    "run_a_sha256": actual_digest,
+                    "run_b_sha256": actual_digest,
+                },
+            )
+
+        environment_a = json.loads(
+            (raw_root / "environment_run_a.json").read_text(encoding="utf-8")
+        )
+        environment_b = json.loads(
+            (raw_root / "environment_run_b.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(environment_a["schema"], "mnl-environment/1")
+        self.assertEqual(environment_b["schema"], "mnl-environment/1")
+        self.assertEqual(environment_a["run_label"], "A")
+        self.assertEqual(environment_b["run_label"], "B")
+        self.assertEqual(environment_a["hash_seed"], "313")
+        self.assertEqual(environment_b["hash_seed"], "727")
+        for environment in (environment_a, environment_b):
+            self.assertEqual(environment["timezone"], "UTC")
+            self.assertEqual(environment["locale"], "C.UTF-8")
+            self.assertEqual(environment["operating_system"], "Darwin")
+            self.assertEqual(environment["machine"], "arm64")
+            self.assertRegex(environment["python"], r"^3\.13\.")
+
+    def test_mnl_checked_verifier_receipt_only_passes(self):
+        verifier = (
+            build.ROOT
+            / "research"
+            / "mnl-promotion-cohort-audit"
+            / "verify_checked.py"
+        )
+        environment = os.environ.copy()
+        environment["PYTHONDONTWRITEBYTECODE"] = "1"
+        completed = subprocess.run(
+            [sys.executable, "-B", str(verifier), "--mode", "receipt-only"],
+            cwd=build.ROOT,
+            env=environment,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertEqual(completed.stderr, "")
+        self.assertEqual(
+            completed.stdout,
+            "Verified checked receipt inventory, hashes, derivations, controls, "
+            "and claim boundary.\n",
+        )
 
     def test_memora_public_audit_is_complete_checked_and_bounded(self):
         material = next(
@@ -807,7 +1297,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         self.assertEqual(pmbench["noteDepth"], "worked")
         current_skim_ids = {
             "trustmem-consolidation", "verifiable-memory", "mosaic-long-term-memory",
-            "proactive-wake-anchor", "mistake-notebook-learning",
+            "proactive-wake-anchor",
             "coala-cognitive-architecture", "storage-to-experience",
             "continual-learning-experience-reuse", "agentic-memory", "midca-dual-cycle",
             "agm-theory-change", "memory-beyond-recall",
@@ -1240,6 +1730,18 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         )
         self.assertIn(
             "research/statefuse-interpretation-contract-audit/raw/readiness.json",
+            relative_paths,
+        )
+        self.assertIn(
+            "research/mnl-promotion-cohort-audit/audit.py",
+            relative_paths,
+        )
+        self.assertIn(
+            "research/mnl-promotion-cohort-audit/raw/decision.json",
+            relative_paths,
+        )
+        self.assertIn(
+            "research/mnl-promotion-cohort-audit/raw/run_results.jsonl",
             relative_paths,
         )
         build.validate_public_copy_files()

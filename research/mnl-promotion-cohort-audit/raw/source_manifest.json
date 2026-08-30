@@ -1,0 +1,56 @@
+{
+  "checkout_observations": {
+    "allowlisted_bytes_match_lock_after": true,
+    "allowlisted_bytes_match_lock_before": true,
+    "git_status_clean_after": true,
+    "git_status_clean_before": true,
+    "transient_or_ignored_writes_instrumented": false
+  },
+  "paper": {
+    "acl_anthology_id": "2026.findings-acl.719",
+    "physical_page_count_reviewed": 17,
+    "sha256": "39137385c4e96bd83bfc0dfc4363733d0c91107a605999e074e5681065335c9c",
+    "size_bytes": 5855586
+  },
+  "schema": "mnl-source-manifest/2",
+  "source": {
+    "commit": "dc7de755522ad58864c62b74ab8e9959c01b7f23",
+    "paper_production_revision_binding": "NOT_ESTABLISHED",
+    "read_access_instrumented": false,
+    "runner_declared_source_code_read_allowlist": [
+      {
+        "git_blob": "2a39b9d8921760476b3f2ae2f2d1397fcadb163a",
+        "path": "mnl/trainer.py",
+        "sha256": "398ef9fc98ef418454cc3c243c762a65ee733cf687b94c16e80b92a6b4ce6033"
+      },
+      {
+        "git_blob": "be97b6e6da5157e1e7c3501961b6fad4b7d2a542",
+        "path": "mnl/evaluator.py",
+        "sha256": "47d429f2962b0423ce2a48dfaf3910d5ce2efcaacc9e69018912b3a963a90347"
+      },
+      {
+        "git_blob": "50483b9a18d97ef743993644f657f982a95a3d59",
+        "path": "mnl/knowledge_base.py",
+        "sha256": "c4a62fd6b47b8ca4bd6a8265b1d218fedd3e67f5cdd52a27668ef89fd64116c5"
+      }
+    ],
+    "upstream_source_copied_into_artifact": false
+  },
+  "source_methods_executed": [
+    "PromptTuner._process_batch",
+    "PromptTuner._evaluate_on_eval_set",
+    "Evaluator.evaluate_batch",
+    "Evaluator.evaluate_single",
+    "KnowledgeBase.update_entry",
+    "KnowledgeBase._save_entries",
+    "KnowledgeBase.retrieve_by_subject"
+  ],
+  "synthetic_adapters": [
+    "classification_and_generation",
+    "embedding_and_reward",
+    "jsonl_load_save",
+    "batch_splitter",
+    "minimal_vector_operations",
+    "optional_import_modules"
+  ]
+}

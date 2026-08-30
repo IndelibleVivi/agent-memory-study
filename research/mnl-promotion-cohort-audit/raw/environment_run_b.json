@@ -1,0 +1,10 @@
+{
+  "hash_seed": "727",
+  "locale": "C.UTF-8",
+  "machine": "arm64",
+  "operating_system": "Darwin",
+  "python": "3.13.3",
+  "run_label": "B",
+  "schema": "mnl-environment/1",
+  "timezone": "UTC"
+}

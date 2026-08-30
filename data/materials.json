@@ -53,6 +53,7 @@
         "materialIds": [
           "a-tma-state-aware-memory",
           "verifiable-memory",
+          "mistake-notebook-learning",
           "coala-cognitive-architecture",
           "continual-learning-experience-reuse",
           "agentic-memory",
@@ -735,18 +736,21 @@
       "shortAuthor": "Su 等",
       "year": 2026,
       "doi": "10.18653/v1/2026.findings-acl.719",
-      "noteDepth": "skim",
-      "readingScope": "Abstract、§3–§5、Limitations；附录只查到实现与 prompt 指向，未通读。",
-      "intro": "先按 subject 聚类一批失败，再抽取共享错误模式和 corrective guidance，并用可回滚 gate 决定是否接受更新。",
+      "noteDepth": "worked",
+      "readingScope": "完整读了 ACL 2026 Findings final 的 Abstract、§§1–6、Limitations、Appendices A–D、主要 tables / figures，共 17 个 physical PDF pages；references 只用于 lineage 定位。另检查 exact current official source commit dc7de755522ad58864c62b74ab8e9959c01b7f23 的 trainer、evaluator、knowledge base、LLM client 与 example caller paths；该 untagged revision 没有被证明是 paper-production source。当前 note 不把 source inspection、已执行的 synthetic contract audit 或 paper-reported benchmark 结果混成同一证据层。",
+      "intro": "MNL 先按 subject 聚类一批失败，再把共享错误模式压缩成 structured guidance；真正需要审计的不是“会不会写笔记”，而是谁进入 proposal、谁被重新比较，以及一个 net-positive batch 究竟授权了多强的 promotion claim。",
       "keyPoints": [
-        "Tuning Model 使用 retrieved guidance 执行任务，Tuner Model 分析 failures 并提出 candidate memory update；二者可以同模，也可由强模型向弱模型蒸馏。（§3.1–§3.2）",
-        "系统不逐条保存失败轨迹，而是从同一 subject 的 failures 中抽取 shared patterns，再 merge 或 append 到 structured memory。（§3.3）",
-        "candidate 只有在当前 batch 上重新生成后的净改善 ΔB > 0 时才被接受，否则回滚；多跑 epochs 反而出现 train 上升、test 下降。（§3.3；§4.3）"
+        "Tuning Model 使用 retrieved guidance 执行任务，Tuner Model 对整个 batch 先做 subject mapping，再只从 failure subsets 提炼 guidance；两者可以同模，也可由强模型向弱模型蒸馏。（§§3.1–3.3；Algorithm 1）",
+        "每条 memory 以 subject、五部分 corrective guidance 与 subject embedding 组成；相似度超过 threshold 时论文声称 fuse into existing node，否则 append。（Appendices B.1–B.3）",
+        "Eq. 5 把同一 proposal batch 中每个 item 的 updated reward 与 baseline reward 做符号比较，只有 wins − regressions > 0 才接受；tie 为零贡献，且 gate 没有 held-out 或 per-item non-regression 合同。（§3.3；Algorithm 1）",
+        "单 epoch 的 KaggleDBQA test accuracy 为 28.1%，epoch 2 的 train accuracy 升至 62.1% 而 test 降至 23.2%；论文据此承认 cross-epoch overfitting，并采用 single epoch。（§4.3；Figure 4）"
       ],
       "keywords": [
         "failure learning",
         "memory promotion",
-        "rollback"
+        "rollback",
+        "cohort conservation",
+        "batch-level abstraction"
       ],
       "categories": [
         "可靠性",
@@ -754,6 +758,7 @@
       ],
       "failureSurfaces": [
         "write-consolidation",
+        "retrieval-active-context",
         "abstraction-experience"
       ],
       "sourceUrl": "https://aclanthology.org/2026.findings-acl.719/",
@@ -764,8 +769,200 @@
         "license": "CC BY 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
-      "editorialQuestion": "如果 proposal 与验收使用同一个 batch、proxy verifier 还可能有系统偏差，怎样把 promotion signal 与 held-out generalization 分开？",
-      "sourceNote": ""
+      "editorialQuestion": "如果 promotion 只看 proposal-batch 的 surviving pairs，怎样同时保全原 cohort、coverage、subgroup harm 与 held-out generalization，避免一个绿色 aggregate 吞掉未被比较的 item？",
+      "sourceNote": "本站精读 authority 是 ACL Anthology final proceedings PDF（DOI 10.18653/v1/2026.findings-acl.719）。另行检查的 official repo current commit dc7de755522ad58864c62b74ab8e9959c01b7f23 未打 tag，也没有 provenance 把它绑定为论文出表 revision；current-source observation 不能反向改写 paper claim。",
+      "whyRead": "这篇最有价值的地方不是再证明一次 external memory 可以提升分数，而是把 mutation authority 写成一个可计算 gate：先生成 candidate，再用同一 batch 验收，失败就 rollback。也正因为 gate 足够具体，读者可以追问它的 population、denominator 与 lifecycle：某个 item 没形成 updated pair 时是否仍属于 B？一个 aggregate win 能否遮住 subgroup loss？proposal batch 通过后谁负责 held-out decline？这让“持续学习”从漂亮叙事变成一组可以逐层审计的 admission contracts。",
+      "argumentMap": [
+        {
+          "step": "01 · 把 adaptation 从 weights 移到 external memory",
+          "claim": "MNL 用 Tuning Model 执行、Tuner Model 反思与更新，把优化对象写成经 retrieval 进入 prompt 的 memory M；self-tuning 与 cross-model tuning 是同一框架的两种角色配置。",
+          "locator": "§§1、3.1–3.2；Equations 1–2，physical PDF pp. 1–3（proceedings pp. 14629–14631）"
+        },
+        {
+          "step": "02 · 先画全 batch 的 subject map，再从失败组抽象",
+          "claim": "系统先对完整 batch 做 subject clustering，再在每个 subject 内只聚合 failed trajectories，提炼五部分 structured guidance，并按 similarity 决定 merge 或 append；目标是让 shared pattern 取代逐条 failure log。",
+          "locator": "§3.3；Equations 3–4；Algorithm 1；Appendices B.1–B.3，physical PDF pp. 3–5、12（proceedings pp. 14631–14633、14640）"
+        },
+        {
+          "step": "03 · 用 proposal-batch net delta 决定 mutation authority",
+          "claim": "candidate memory 必须对同一 B 个 query 重新生成；Eq. 5 逐项比较 updated 与 baseline reward，只有 ΔB = wins − regressions 严格大于零才 commit，否则保留旧 M。这个合同是 aggregate、batch-local 且 verifier-relative。",
+          "locator": "§3.3；Equation 5；Algorithm 1 lines 23–34，physical PDF pp. 4–5（proceedings pp. 14632–14633）"
+        },
+        {
+          "step": "04 · 实验支持一种 operating point，却没有给全局单调性",
+          "claim": "六个 benchmarks、batch / if-accept ablations 与 memory-length comparisons 支持 compact guidance 的可行性；但 cross-epoch test decline、Mimo-v2 no-think 反例与 Limitations 同时限定了“stability”只能在具体 verifier、batch 与 setup 内理解。",
+          "locator": "§§4–5；Tables 1–8；Figures 3–4；Limitations，physical PDF pp. 5–9（proceedings pp. 14633–14637）"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Two model roles and two feedback regimes",
+          "text": "Tuning Model 负责生成，Tuner Model 负责 subject clustering、failure analysis、guidance extraction 与 open-ended judge；两者可共享 base model，也可由 stronger tuner 蒸馏 weaker tuning model。Math / Text-to-SQL 使用 supervised reward，agentic tasks 使用 proxy LLM judge 的 binary signal。",
+          "locator": "§§3.1–3.3；§4.1；Appendix B.3，physical PDF pp. 2–5、12"
+        },
+        {
+          "label": "Structured memory and retrieval",
+          "text": "JSONL entry 包含 subject、embedding 与五个 mandatory guidance components：corrected examples、correct approach、mistake summary、generalizable strategy、anti-patterns。Query 和 subject 使用同一 embedding model，以 threshold + top-k 进入 active context，并附 applicability assessment。",
+          "locator": "Appendices B.1–B.3、C.1–C.4，physical PDF pp. 12–15"
+        },
+        {
+          "label": "Proposal and acceptance population",
+          "text": "Algorithm 1 先在完整 batch 上生成 baseline、构造 candidate，再对同一 B 个 query 形成 Rnew；Eq. 5 只比较每项 reward 的方向，不保留改善幅度。论文没有定义 updated generation 缺失、held-out decline 或 subgroup veto。",
+          "locator": "§3.3；Equation 5；Algorithm 1，physical PDF pp. 3–5"
+        },
+        {
+          "label": "Experimental objects",
+          "text": "实验横跨 AIME 2024/2025、GSM8K、KaggleDBQA、Spider、Mind2Web 与 AppWorld；指标包括 Pass@32、execution accuracy、Task Success 与 Step Accuracy，并同时报告 memory entries 和 guidance tokens。本站没有重跑这些 datasets、models、judges 或 service-dependent agent loops。",
+          "locator": "§§4.1–4.3；Tables 1–8；Appendix D，physical PDF pp. 5–8、16–17"
+        }
+      ],
+      "reportedFindings": [
+        "Table 1 中，Qwen3-8B 的 MNL 在 AIME 2024/2025 报告 33%/30%，KaggleDBQA 报告 28%；DeepSeek-V3.2-Exp 的 KaggleDBQA 从 vanilla 24% 报告为 MNL 64%。这些是 paper-reported point estimates，不是本站复算。（§4.2；Table 1，physical PDF pp. 5–6）",
+        "Table 3 的 Qwen3-8B ablation 从 Single-Level 到 Batch Clustering，再到 Full (+ If-Accept)，在 GSM8K、KaggleDBQA 与 Mind2Web Step Accuracy 上报告更高结果与更短 memory；组件顺序同时改变，不能把最终差值全归给单一 gate。（§4.3；Table 3，physical PDF p. 7）",
+        "Figure 4 报告 KaggleDBQA epoch 1 test accuracy 28.1%、50 entries；epoch 2 train accuracy 升至 62.1%，test accuracy 降至 23.2%。作者将其解释为 cross-epoch overfitting，而不是持续单调改善。（§4.3；Figure 4，physical PDF p. 8）",
+        "Table 6 的 Mimo-v2-w/o-think 是明确反例：vanilla TS/SA 为 8.75/41.12，MNL 为 8.08/40.71；同表的 think-enabled variant 则从 10.77/47.63 升至 11.09/48.51。（§4.2；Table 6，physical PDF p. 7）"
+      ],
+      "evidenceLimits": [
+        "Eq. 5 的 gate 使用提出 candidate 的同一个 batch，没有 independent promotion set、held-out veto 或 subgroup constraint；一个 accepted update 可以包含 losing item，并且不能推出 test distribution 单调改善。",
+        "Self-Evolution 依赖 Tuner Model 充当 LLM judge。论文 Limitations 明确承认 biased / inconsistent verifier 可以把系统性错误传播进 memory，batch-level accept-if-improves 不能消除这一点。（physical PDF p. 9）",
+        "Appendix A 的 decision-stability proof sketch 假设同一 semantic cluster 内 noise independent，并调用 sub-Gaussian concentration；论文没有实证证明语义相似样本的 verifier error 独立、同分布或满足该 tail condition。（physical PDF pp. 11–12）",
+        "主表提供 point estimates，但没有给本站可据以复算的 complete per-run outputs、confidence intervals 或统一 request / model snapshot receipt。不同 benchmark 的 split、metric、judge 与 model regime 也不构成同一 statistical population。",
+        "Exact current official source 是 untagged commit dc7de755522ad58864c62b74ab8e9959c01b7f23；没有证据证明它生成 ACL final tables，故 source behavior 与 paper-time execution必须分层。",
+        "当前 source inspection 与本次 public synthetic audit都不调用模型、API 或 benchmark data，不能估计 partial failure、duplicate subject、coverage loss 的真实频率，也不能改变任何 paper headline score。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "“Prevents regressions” 强于实际 gate",
+          "observation": "Introduction 把 conservative rule 概括为 prevents regressions；Eq. 5 却允许 wins 多于 losses 时接受含有 regression 的 batch，Figure 4 又报告 epoch 2 test decline，Table 6 还出现 Mimo-v2-w/o-think 低于 vanilla。",
+          "implication": "可验证对象应写成 proposal-batch net improvement under one reward function，而不是 per-item、subgroup、held-out 或 continual-learning non-regression。",
+          "locators": [
+            "Introduction，physical PDF p. 1",
+            "§3.3；Equation 5，physical PDF p. 4",
+            "§§4.2–4.3；Table 6；Figure 4，physical PDF pp. 7–8"
+          ]
+        },
+        {
+          "label": "Paper 的 full B 与 current source 的 survivor subset",
+          "observation": "Algorithm 1 对 i=1…B 重新生成并计算 ΔB；current trainer 会在 promotion 前删除 empty updated prompts 与 updated response 为 None 的 items，只把 survivors 交给 evaluator。全部缺失时会 rollback，但 partial 缺失可以缩小 comparison population。",
+          "implication": "缺少 updated pair 时，paper-side ΔB 应记 incomplete / undefined；source-side survivor decision 与 missing-as-failure sensitivity必须分别报告，不能无声宣称 full batch improved。",
+          "locators": [
+            "Algorithm 1，physical PDF p. 5",
+            "exact current source trainer.py:482–533, 556–569"
+          ]
+        },
+        {
+          "label": "Fuse existing node 与 append duplicate 的实现张力",
+          "observation": "Appendix B.3 说 similarity 超过 threshold 时 new insight fused into existing node；current `update_entry()` 始终以 `overwrite_if_exists=False` append。Exact subject、equal embedding、stable sort、top_k=1 时，旧 entry 可继续先被取回，新 merged guidance 被遮住。",
+          "implication": "promotion audit 不只要证明 candidate 被写入，还要绑定 candidate 在 post-update prompt 中实际可达；append count 不能自动证明 refinement 生效。",
+          "locators": [
+            "Appendix B.3，physical PDF p. 12",
+            "exact current source knowledge_base.py:70–105, 279–292",
+            "exact current source example top_k configuration"
+          ]
+        },
+        {
+          "label": "Periodic evaluation 不是 held-out rollback",
+          "observation": "Current trainer 的 periodic / epoch-end eval 只记录 score 并保存 checkpoint；`best_eval_score` 初始化后没有消费，`_load_checkpoint()` 没有 caller。Class docstring 中的 rollback capability 因而没有对应 train-path behavior。",
+          "implication": "Periodic eval 是 telemetry，不是 promotion authority。它不违反只承诺 proposal batch 的 Eq. 5，但不能被描述成 best-checkpoint 或 held-out monotonic protection。",
+          "locators": [
+            "exact current source trainer.py:42, 167, 814–823, 929–955",
+            "§4.3；Figure 4，physical PDF p. 8"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "Promotion population is part of the evidence contract",
+          "text": "一个 batch gate 的 denominator 不能只是运行时 list 的当前长度；original、baseline-valid、updated-prompt-valid、updated-response-valid 与 evaluated identities都应进入 receipt，任何 shrink 都要带 reason 与 policy。",
+          "boundary": "这是由 Algorithm 1 的 full B 与 current-source filters 推出的 audit design，不是论文提出的 logging schema，也不规定 missing 必须计作 loss。"
+        },
+        {
+          "label": "Improvement authority must be layered",
+          "text": "proposal-batch net gain、per-item non-regression、subgroup protection、held-out improvement 与 deployment safety是五个不同 gate；前一个通过不能默授权后四个。",
+          "boundary": "论文只实现并讨论第一个 gate，且 Limitations承认 verifier 和 lifecycle 风险；本站没有证明哪一组额外 gate 在所有任务上最优。"
+        },
+        {
+          "label": "A promoted memory must be reachable under the reader contract",
+          "text": "Mutation receipt 应把 candidate state 与 post-update retrieval / prompt admission绑定；否则“写入成功”可能只是 store-level事实，新 guidance并未成为验收时真正影响生成的 evidence。",
+          "boundary": "Exact-subject / equal-embedding / top_k=1 是一个 bounded mechanism case，不代表所有 subject merge、retriever 或部署都会 shadow candidate。"
+        },
+        {
+          "label": "Accuracy needs coverage when execution can disappear",
+          "text": "如果 failed generation 可从 eval denominator消失，accuracy 必须与 registered-question coverage一起发布；否则 1/1 与 1/2 会共享同一个表面 score。",
+          "boundary": "这是对 current evaluation denominator 的 measurement repair direction，不证明论文表格发生过同类缺失或因此被高估。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "Failure-inclusive promotion and held-out lifecycle protocol",
+          "status": "proposed-not-run",
+          "question": "在 exact caller 与真实 service failure modes 下，cohort attrition、candidate reachability、subgroup loss 与 held-out decline 各自多常见，哪种 admission policy 能在 coverage 与 false rollback 之间形成可接受 operating point？",
+          "method": "冻结 paper-time或正式 tagged source、model / endpoint / decoding、dataset split、reward与retriever；为每次 proposal注册 immutable cohort，显式记录每个 stage outcome。并列比较 source survivor gate、abort-on-incomplete与预先声明的 missing policy，再用独立 held-out stream和versioned checkpoint评价 lifecycle。",
+          "fixtures": "完整 pairs、baseline failure、partial empty retrieval、partial transport failure、timeout、malformed response、exact-subject merge、equal-rank retrieval、mixed subgroup effects、verifier flip、跨 epoch distribution shift 与 sensitive-trace redaction。",
+          "controls": "Full-cohort positive/zero/negative controls；all-missing rollback；candidate actually admitted to prompt；stable item IDs；registered-vs-survivor denominators；verifier disagreement；clean rollback state；checkpoint restore；no private traces in public receipts。",
+          "measures": "按 caller path 报告 cohort coverage、source decision、policy sensitivity、per-item / subgroup deltas、candidate retrieval rate、eval coverage、held-out delta、rollback precision / recall 与 unresolved fraction；不把 missing 自动归类成 semantic failure。",
+          "limitations": "这是 proposed-not-run successor，需要本次未运行的 model endpoints、datasets 与 paper-time source identity。即使多 seed / 多 split 结果稳定，也不能自动证明 production safety、privacy compliance 或长期 user benefit。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "Source-bound promotion-cohort and coverage contract audit",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-08-30",
+          "basis": "Paper-facing audit of the 17-page ACL 2026 Findings final and synthetic source-bound execution against the exact clean current official MistakeNotebookLearning commit dc7de755522ad58864c62b74ab8e9959c01b7f23. The three executed source files are locked by Git blob and SHA-256; no provenance establishes this untagged commit as the paper-production revision.",
+          "boundary": "This is a deterministic, model-free synthetic contract audit under a protocol frozen after paper/current-source inspection but before formal execution. It is not an MNL benchmark or paper-experiment rerun, model evaluation, paper-score recalculation, source-to-paper reproduction, prevalence or effect estimate, security finding, production test, or real-world non-regression claim. Missing updated items remain unavailable observations; the separate missing-as-failure calculation is only an audit sensitivity. A net-positive survivor decision does not establish full-cohort, per-item, subgroup, held-out, cross-epoch or deployment improvement.",
+          "method": "Reject a wrong or dirty checkout and wrong paper/source digests; dynamically load the exact current PromptTuner, Evaluator and KnowledgeBase methods through narrow standard-library dependency stubs; execute eight fixed promotion batches with stable identity ledgers; bind accepted and rejected in-memory plus serialized KB states; execute exact-subject equal-embedding top-1 and failed-question denominator probes; rederive aggregate decisions; run six mutation falsifiers and a socket guard; execute the complete matrix twice in fresh out-of-tree roots with hash seeds 313 and 727; compare six primary receipts byte-for-byte; then run receipt-only and fresh source-bound checked verification.",
+          "environment": "Darwin arm64；CPython 3.13.3 standard library；UTC and C.UTF-8；exact clean official commit dc7de755522ad58864c62b74ab8e9959c01b7f23；17-page ACL final PDF；two fresh external run/output roots；no upstream dependency installation, dataset, model, API, embedding service, AppWorld runtime or network call。",
+          "fixture": "29 AMS-authored synthetic batch items across complete positive, balanced, all-tie, partial updated-None, partial empty-prompt, all-empty-prompt, all-None-response and mixed-subgroup cases；one exact-subject/equal-embedding knowledge-base probe；two enrolled evaluation questions with one all-failed question；stable original, baseline-valid, prompt-valid, response-valid and evaluated identity ledgers。",
+          "controls": "Exact paper, commit, Git-blob and source-file hashes；clean checkout and allowlisted bytes before/after；complete-cohort Eq. 5 sign controls；all-missing rollback controls；rejected logical/serialized prestate equality；accepted exact one-entry delta；per-stage identity conservation；missing-as-failure labeled counterfactual only；six fail-closed mutations for deleted identity, flipped admission, false observed loss, rejected-state change, enrolled-denominator change and top-1 substitution；network-attempt guard；public-path/secret/upstream-source scan；two-run primary-receipt byte comparison；receipt-only and source-bound verifier separation。",
+          "rawResult": "All eight batch cases matched the locked source behavior. Complete 3-win/1-loss accepted; 2-win/2-loss and all-tie cases rolled back. The partial updated-None and partial empty-prompt cases each evaluated 2 of 4 enrolled items and accepted on two survivor wins; their full-cohort decision remains UNDEFINED_FROM_OBSERVED_RESULTS, while the explicitly counterfactual missing-as-failure delta was 0 and would reject. Both all-missing controls rolled back. A complete 3-win/1-loss batch accepted despite subgroup B delta -1. Exact update_entry left two same-subject entries and top_k=1 returned the older guidance. Evaluation reported 1.0 accuracy over one survivor with enrolled coverage 1/2. All six mutations were caught; two fresh six-file primary receipt sets were byte-identical; recorded model/API and network calls were zero.",
+          "derivedResult": "At the locked current official revision, complete cohorts implement the strict proposal-batch wins > losses sign gate. Current source can filter partial empty retrievals or None updated responses before comparison and still accept on surviving pairs, so those admissions do not establish a full-enrolled-cohort delta. Net batch acceptance permits a losing item/subgroup. Under the exact bounded subject/equal-embedding/top_k=1 fixture, append semantics leave the older entry first; under the exact eval fixture, an all-failed question disappears from the accuracy denominator unless coverage is reported separately. These are current-source synthetic contract observations, not paper-time or benchmark findings.",
+          "limitations": "The runner uses synthetic inputs and narrow import/adaptor stubs, not the upstream environment. It establishes behavior only for exact executed methods and the locked revision; it does not show how frequently supported callers produce None, retrieval misses, duplicate exact subjects or all-failed evaluation questions. Bundled ordinary batch wrappers commonly convert request failure to an empty string, so the None seam is not attributed to every example path. Equal-embedding top-1 shadowing is a bounded mechanism case, not a universal retriever claim. Evaluation coverage findings do not show that paper tables omitted failures. Same-machine byte identity establishes deterministic repeatability, not independent correctness, cross-platform portability or causal impact.",
+          "links": [
+            {
+              "label": "method, results and claim ceiling",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mnl-promotion-cohort-audit/README.md"
+            },
+            {
+              "label": "frozen pre-execution protocol",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mnl-promotion-cohort-audit/PROTOCOL.md"
+            },
+            {
+              "label": "source-bound deterministic runner",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mnl-promotion-cohort-audit/audit.py"
+            },
+            {
+              "label": "checked receipt and source-bound verifier",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mnl-promotion-cohort-audit/verify_checked.py"
+            },
+            {
+              "label": "frozen synthetic cases",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mnl-promotion-cohort-audit/raw/cases.json"
+            },
+            {
+              "label": "exact source-executed case receipts",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mnl-promotion-cohort-audit/raw/run_results.jsonl"
+            },
+            {
+              "label": "bounded aggregate decision",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mnl-promotion-cohort-audit/raw/decision.json"
+            },
+            {
+              "label": "paper and exact current source manifest",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mnl-promotion-cohort-audit/raw/source_manifest.json"
+            },
+            {
+              "label": "mutation falsifier receipts",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mnl-promotion-cohort-audit/raw/mutation_controls.json"
+            },
+            {
+              "label": "two-run comparison receipt",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mnl-promotion-cohort-audit/raw/comparison.json"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 8,

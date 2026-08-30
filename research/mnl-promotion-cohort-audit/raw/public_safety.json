@@ -1,0 +1,13 @@
+{
+  "copied_upstream_source": false,
+  "denied_content_hits": [],
+  "no_local_paths_credentials_or_upstream_source": true,
+  "scan_scope": [
+    "cases.json",
+    "decision.json",
+    "mutation_controls.json",
+    "run_results.jsonl",
+    "source_manifest.json"
+  ],
+  "schema": "mnl-public-safety/1"
+}

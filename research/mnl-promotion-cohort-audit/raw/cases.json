@@ -1,0 +1,273 @@
+{
+  "batch_cases": [
+    {
+      "expected_source_acceptance": true,
+      "id": "complete_positive_accept",
+      "items": [
+        {
+          "group": "all",
+          "id": "cpa-01",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "cpa-02",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "cpa-03",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "cpa-04",
+          "observed_outcome_if_evaluated": "loss",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        }
+      ]
+    },
+    {
+      "expected_source_acceptance": false,
+      "id": "complete_balanced_reject",
+      "items": [
+        {
+          "group": "all",
+          "id": "cbr-01",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "cbr-02",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "cbr-03",
+          "observed_outcome_if_evaluated": "loss",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "cbr-04",
+          "observed_outcome_if_evaluated": "loss",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        }
+      ]
+    },
+    {
+      "expected_source_acceptance": false,
+      "id": "complete_all_ties_reject",
+      "items": [
+        {
+          "group": "all",
+          "id": "ctr-01",
+          "observed_outcome_if_evaluated": "tie",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "ctr-02",
+          "observed_outcome_if_evaluated": "tie",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "ctr-03",
+          "observed_outcome_if_evaluated": "tie",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        }
+      ]
+    },
+    {
+      "expected_source_acceptance": true,
+      "id": "partial_updated_none_survivor_accept",
+      "items": [
+        {
+          "group": "all",
+          "id": "pun-01",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "pun-02",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "pun-03",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "nonempty",
+          "updated_response": "none"
+        },
+        {
+          "group": "all",
+          "id": "pun-04",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "nonempty",
+          "updated_response": "none"
+        }
+      ]
+    },
+    {
+      "expected_source_acceptance": true,
+      "id": "partial_empty_prompt_survivor_accept",
+      "items": [
+        {
+          "group": "all",
+          "id": "pep-01",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "pep-02",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "all",
+          "id": "pep-03",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "empty",
+          "updated_response": "not_called"
+        },
+        {
+          "group": "all",
+          "id": "pep-04",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "empty",
+          "updated_response": "not_called"
+        }
+      ]
+    },
+    {
+      "expected_source_acceptance": false,
+      "id": "all_updated_prompts_empty_rollback",
+      "items": [
+        {
+          "group": "all",
+          "id": "ape-01",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "empty",
+          "updated_response": "not_called"
+        },
+        {
+          "group": "all",
+          "id": "ape-02",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "empty",
+          "updated_response": "not_called"
+        },
+        {
+          "group": "all",
+          "id": "ape-03",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "empty",
+          "updated_response": "not_called"
+        }
+      ]
+    },
+    {
+      "expected_source_acceptance": false,
+      "id": "all_updated_responses_none_rollback",
+      "items": [
+        {
+          "group": "all",
+          "id": "arn-01",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "nonempty",
+          "updated_response": "none"
+        },
+        {
+          "group": "all",
+          "id": "arn-02",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "nonempty",
+          "updated_response": "none"
+        },
+        {
+          "group": "all",
+          "id": "arn-03",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "nonempty",
+          "updated_response": "none"
+        }
+      ]
+    },
+    {
+      "expected_source_acceptance": true,
+      "id": "net_accept_with_group_loss",
+      "items": [
+        {
+          "group": "A",
+          "id": "ngl-01",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "A",
+          "id": "ngl-02",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "A",
+          "id": "ngl-03",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "group": "B",
+          "id": "ngl-04",
+          "observed_outcome_if_evaluated": "loss",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        }
+      ]
+    }
+  ],
+  "probes": [
+    {
+      "expected": "append_two_entries_old_entry_top1",
+      "id": "exact_subject_equal_embedding_top1",
+      "kind": "knowledge_base"
+    },
+    {
+      "expected": "source_accuracy_1_enrolled_coverage_half",
+      "id": "all_failed_question_denominator",
+      "kind": "evaluation_coverage"
+    },
+    {
+      "expected": "zero_attempts",
+      "id": "socket_network_guard",
+      "kind": "runtime_guard"
+    }
+  ],
+  "schema": "mnl-promotion-cases/1"
+}

@@ -147,6 +147,18 @@ frozen protocol、source-locked runner、完整 public-safe receipts 与分项 d
 不是 MEMPROBE benchmark rerun，也没有重发 historical retrieval 或重跑 simulator、memory system、slot filler、judge
 与 attribution model。
 
+MNL close-read 所附的 promotion-cohort / coverage audit 也可先做 receipt-only 校验：
+
+```bash
+python3 research/mnl-promotion-cohort-audit/verify_checked.py --mode receipt-only
+```
+
+frozen protocol、exact-current-source runner、synthetic identity ledgers 与 raw / derived receipts 见
+[`research/mnl-promotion-cohort-audit/`](./research/mnl-promotion-cohort-audit/)。它只验证锁定 current official source
+在公开 synthetic fixtures 上的 batch promotion、cohort filtering、exact-subject top-1 与 evaluation-denominator
+contracts；不复现 MNL paper experiments，也不把 net-positive survivor decision 解释成 full-cohort、per-item、
+subgroup、held-out 或 deployment non-regression。
+
 ## 通过 pull request 贡献
 
 这个 repo 接受 source correction / version watch、新材料 + reading note、对已有 entry 的署名 perspective / critique，以及使用 public / synthetic fixtures 的可复核 test artifact。完整 evidence、attribution、privacy 与 schema contract 见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
