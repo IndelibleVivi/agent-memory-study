@@ -2,6 +2,7 @@ import copy
 import hashlib
 import json
 import os
+import runpy
 import subprocess
 import sys
 import tempfile
@@ -34,7 +35,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260830-mnl-1'),
+            source.count('assets/materials-data.js?v=20260830-mnl-2'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260829-memprobe-1', source)
@@ -278,7 +279,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         )
         self.assertEqual(contribution["byline"], "Agent Memory Study editors")
         self.assertIn("not an MNL benchmark or paper-experiment rerun", contribution["boundary"])
-        self.assertIn("Missing updated items remain unavailable observations", contribution["boundary"])
+        self.assertIn("Missing baseline or updated items remain unavailable observations", contribution["boundary"])
         self.assertIn("full-cohort, per-item, subgroup, held-out", contribution["boundary"])
         self.assertIn("source-to-paper reproduction", contribution["boundary"])
 
@@ -292,6 +293,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             {
                 f"{prefix}README.md",
                 f"{prefix}PROTOCOL.md",
+                f"{prefix}REVIEW-AMENDMENT.md",
                 f"{prefix}audit.py",
                 f"{prefix}verify_checked.py",
                 f"{prefix}raw/cases.json",
@@ -308,6 +310,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         artifact_root = build.ROOT / "research" / "mnl-promotion-cohort-audit"
         expected_files = {
             "PROTOCOL.md",
+            "REVIEW-AMENDMENT.md",
             "README.md",
             "audit.py",
             "checksums.sha256",
@@ -332,7 +335,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         checksum_rows = (
             artifact_root / "checksums.sha256"
         ).read_text(encoding="utf-8").splitlines()
-        self.assertEqual(len(checksum_rows), 13)
+        self.assertEqual(len(checksum_rows), 14)
         checksums = {}
         for row in checksum_rows:
             digest, separator, relative_path = row.partition("  ")
@@ -374,10 +377,15 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         manifest = json.loads(
             (artifact_root / "raw" / "source_manifest.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(manifest["schema"], "mnl-source-manifest/2")
+        self.assertEqual(manifest["schema"], "mnl-source-manifest/3")
         self.assertEqual(
             manifest["source"]["runner_declared_source_code_read_allowlist"],
             [
+                {
+                    "git_blob": "f9e2b5ad3c8b487fab84dd33aad93954efc6e708",
+                    "path": "examples/example_dbqa.py",
+                    "sha256": "88c23cc5c85ea423ec85e97fd7b44f0612757a3c47cc61d77235d7af0c4775be",
+                },
                 {
                     "git_blob": "2a39b9d8921760476b3f2ae2f2d1397fcadb163a",
                     "path": "mnl/trainer.py",
@@ -397,6 +405,26 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         )
         self.assertFalse(manifest["source"]["read_access_instrumented"])
         self.assertFalse(manifest["source"]["upstream_source_copied_into_artifact"])
+        self.assertEqual(
+            manifest["source"]["repository"],
+            "Bairong-Xdynamics/MistakeNotebookLearning",
+        )
+        self.assertEqual(
+            manifest["source"]["tree"],
+            "228955a5dc283bfef28e20f869cf537214f3640c",
+        )
+        self.assertEqual(
+            manifest["runtime_module_file_bindings"],
+            {
+                "mnl.evaluator": "mnl/evaluator.py",
+                "mnl.knowledge_base": "mnl/knowledge_base.py",
+                "mnl.trainer": "mnl/trainer.py",
+            },
+        )
+        self.assertEqual(
+            manifest["source_files_inspected_statically"],
+            ["examples/example_dbqa.py"],
+        )
         self.assertEqual(
             manifest["checkout_observations"],
             {
@@ -434,7 +462,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             json.loads(line)
             for line in (raw_root / "run_results.jsonl").read_text(encoding="utf-8").splitlines()
         ]
-        self.assertEqual(cases["schema"], "mnl-promotion-cases/1")
+        self.assertEqual(cases["schema"], "mnl-promotion-cases/2")
         self.assertEqual(
             [case["id"] for case in cases["batch_cases"]],
             [
@@ -442,7 +470,9 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
                 "complete_balanced_reject",
                 "complete_all_ties_reject",
                 "partial_updated_none_survivor_accept",
+                "partial_baseline_none_survivor_accept",
                 "partial_empty_prompt_survivor_accept",
+                "partial_empty_prompt_provenance_misalignment_accept",
                 "all_updated_prompts_empty_rollback",
                 "all_updated_responses_none_rollback",
                 "net_accept_with_group_loss",
@@ -454,10 +484,11 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
                 "exact_subject_equal_embedding_top1",
                 "all_failed_question_denominator",
                 "socket_network_guard",
+                "default_vs_dbqa_source_contracts",
             ],
         )
-        self.assertEqual(sum(len(case["items"]) for case in cases["batch_cases"]), 29)
-        self.assertEqual(len(rows), 11)
+        self.assertEqual(sum(len(case["items"]) for case in cases["batch_cases"]), 37)
+        self.assertEqual(len(rows), 14)
         indexed = {
             (row["kind"], row.get("case_id", row.get("id"))): row
             for row in rows
@@ -466,7 +497,9 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
 
         partial_ids = {
             "partial_updated_none_survivor_accept",
+            "partial_baseline_none_survivor_accept",
             "partial_empty_prompt_survivor_accept",
+            "partial_empty_prompt_provenance_misalignment_accept",
         }
         all_missing_ids = {
             "all_updated_prompts_empty_rollback",
@@ -476,23 +509,46 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             row = indexed[("batch_promotion", case["id"])]
             ledger = row["identity_ledger"]
             original_ids = [item["id"] for item in case["items"]]
+            baseline_ids = [
+                item["id"] for item in case["items"]
+                if item["baseline_response"] != "none"
+            ]
             prompt_ids = [
                 item["id"] for item in case["items"]
-                if item["updated_prompt"] == "nonempty"
+                if item["id"] in baseline_ids
+                and item["updated_prompt"] == "nonempty"
             ]
             response_ids = [
                 item["id"] for item in case["items"]
-                if item["updated_prompt"] == "nonempty"
+                if item["id"] in prompt_ids
                 and item["updated_response"] != "none"
             ]
             self.assertEqual(ledger["original_ids"], original_ids)
-            self.assertEqual(ledger["baseline_valid_ids"], original_ids)
+            self.assertEqual(ledger["baseline_valid_ids"], baseline_ids)
             self.assertEqual(ledger["updated_prompt_nonempty_ids"], prompt_ids)
             self.assertEqual(ledger["updated_generation_ids"], prompt_ids)
             self.assertEqual(ledger["updated_response_valid_ids"], response_ids)
             self.assertEqual(ledger["evaluated_ids"], response_ids)
             self.assertEqual(set(ledger["dispositions"]), set(original_ids))
-            self.assertTrue(set(response_ids) <= set(prompt_ids) <= set(original_ids))
+            self.assertTrue(
+                set(response_ids) <= set(prompt_ids) <= set(baseline_ids) <= set(original_ids)
+            )
+            self.assertEqual(row["schema"], "mnl-batch-result/2")
+            self.assertEqual(
+                [item["original_index"] for item in row["item_receipts"]],
+                list(range(len(original_ids))),
+            )
+            self.assertEqual(
+                [item["question_id"] for item in row["item_receipts"]],
+                original_ids,
+            )
+            self.assertEqual(
+                [
+                    item["question_id"] for item in row["item_receipts"]
+                    if item["included_in_source_comparison"]
+                ],
+                response_ids,
+            )
 
             outcomes = [
                 item["observed_outcome_if_evaluated"]
@@ -511,6 +567,14 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             self.assertEqual(
                 row["missing_as_failure_sensitivity"]["missing_count"],
                 len(original_ids) - len(response_ids),
+            )
+            self.assertEqual(
+                row["missing_as_failure_sensitivity"]["assumption"],
+                "counterfactual_unavailable_as_loss",
+            )
+            self.assertIs(
+                row["missing_as_failure_sensitivity"]["would_accept"],
+                wins - losses - (len(original_ids) - len(response_ids)) > 0,
             )
             self.assertTrue(
                 row["missing_as_failure_sensitivity"]["not_observed_source_outcomes"]
@@ -554,29 +618,90 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         subgroup = indexed[("batch_promotion", "net_accept_with_group_loss")]
         self.assertTrue(subgroup["admission"]["source_accepted"])
         self.assertEqual(subgroup["group_observed_deltas"], {"A": 3, "B": -1})
+        baseline_partial = indexed[("batch_promotion", "partial_baseline_none_survivor_accept")]
+        self.assertEqual(
+            baseline_partial["identity_ledger"]["baseline_valid_ids"],
+            ["pbn-01", "pbn-02"],
+        )
+        self.assertEqual(
+            [item["missing_stage"] for item in baseline_partial["item_receipts"]],
+            [None, None, "baseline_response", "baseline_response"],
+        )
+        prompt_binding = indexed[
+            ("batch_promotion", "partial_empty_prompt_provenance_misalignment_accept")
+        ]["prompt_provenance"]
+        self.assertEqual(prompt_binding["source_logged_baseline_prompt_alignment"], "MISALIGNED")
+        self.assertEqual(
+            prompt_binding["negative_case_bindings"],
+            [
+                {
+                    "expected_baseline_prompt": "baseline-guidance::ppm-04",
+                    "question_id": "ppm-04",
+                    "source_logged_baseline_prompt": "baseline-guidance::ppm-03",
+                    "source_logged_updated_prompt": "updated-guidance::ppm-04",
+                }
+            ],
+        )
 
         knowledge_base = indexed[("knowledge_base", "exact_subject_equal_embedding_top1")]
+        self.assertEqual(knowledge_base["schema"], "mnl-knowledge-base-result/1")
         self.assertEqual(knowledge_base["entry_count_before"], 1)
         self.assertEqual(knowledge_base["entry_count_after"], 2)
         self.assertEqual(knowledge_base["exact_subject_count_after"], 2)
         self.assertEqual(knowledge_base["top1_guidance"], "older-guidance")
         evaluation = indexed[("evaluation_coverage", "all_failed_question_denominator")]
+        self.assertEqual(evaluation["schema"], "mnl-eval-coverage-result/1")
         self.assertEqual(evaluation["enrolled_count"], 2)
         self.assertEqual(evaluation["surviving_question_count"], 1)
         self.assertEqual(evaluation["source_reported_accuracy"], 1.0)
         self.assertEqual(evaluation["enrolled_coverage"], 0.5)
+        self.assertEqual(evaluation["unconditional_correct_over_attempted"], 0.5)
+        self.assertEqual(evaluation["attempted_question_count"], 2)
+        self.assertEqual(evaluation["eligible_question_count"], 1)
+        self.assertEqual(evaluation["failed_question_count"], 1)
         self.assertTrue(evaluation["all_failed_question_omitted_from_denominator"])
-        self.assertEqual(indexed[("runtime_guard", "socket_network_guard")]["attempts"], 0)
+        source_static = indexed[("source_static", "default_vs_dbqa_source_contracts")]
+        self.assertFalse(any(source_static["default_component_presence"].values()))
+        self.assertEqual(
+            source_static["dbqa_custom_component_presence"],
+            {
+                "anti_patterns": True,
+                "correct_approach": True,
+                "corrected_examples": True,
+                "generalizable_strategy": True,
+                "mistake_summary": True,
+            },
+        )
+        self.assertTrue(source_static["dbqa_custom_prompt_injected"])
+        self.assertTrue(source_static["dbqa_train_eval_paths_equal"])
+        runtime_guard = indexed[("runtime_guard", "socket_network_guard")]
+        self.assertEqual(runtime_guard["schema"], "mnl-runtime-guard-result/1")
+        self.assertEqual(runtime_guard["attempts"], 0)
+        self.assertEqual(runtime_guard["status"], "PASS")
 
         decision = json.loads((raw_root / "decision.json").read_text(encoding="utf-8"))
-        self.assertEqual(decision["schema"], "mnl-promotion-decision/1")
-        self.assertEqual(decision["batch_case_count"], 8)
+        self.assertEqual(decision["schema"], "mnl-promotion-decision/2")
+        self.assertEqual(decision["batch_case_count"], 10)
+        self.assertEqual(decision["original_protocol_batch_case_count"], 8)
         self.assertEqual(
             decision["incomplete_survivor_admissions"],
             [
                 "partial_updated_none_survivor_accept",
+                "partial_baseline_none_survivor_accept",
                 "partial_empty_prompt_survivor_accept",
+                "partial_empty_prompt_provenance_misalignment_accept",
             ],
+        )
+        self.assertEqual(
+            decision["post_review_amendment_batch_cases"],
+            [
+                "partial_baseline_none_survivor_accept",
+                "partial_empty_prompt_provenance_misalignment_accept",
+            ],
+        )
+        self.assertEqual(
+            decision["prompt_provenance_probe"],
+            "NEGATIVE_CASE_BASELINE_PROMPT_MISALIGNED",
         )
         self.assertEqual(
             decision["full_cohort_status_for_filtered_admissions"],
@@ -611,6 +736,8 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             "alter_rejected_serialized_poststate": "KB_REJECTED_SERIALIZED",
             "change_eval_enrolled_denominator": "EVAL_ENROLLED",
             "replace_stable_top1_with_new_entry": "KB_TOP1",
+            "relabel_baseline_missing_stage": "BATCH_ITEM_RECEIPTS",
+            "hide_prompt_provenance_misalignment": "BATCH_PROMPT_PROVENANCE",
         }
         self.assertEqual(controls["schema"], "mnl-mutation-controls/1")
         self.assertTrue(controls["all_detected"])
@@ -700,6 +827,138 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             "Verified checked receipt inventory, hashes, derivations, controls, "
             "and claim boundary.\n",
         )
+
+    def test_mnl_claim_bearing_receipt_mutations_fail_closed(self):
+        artifact_root = build.ROOT / "research" / "mnl-promotion-cohort-audit"
+        cases = json.loads(
+            (artifact_root / "raw" / "cases.json").read_text(encoding="utf-8")
+        )
+        rows = [
+            json.loads(line)
+            for line in (artifact_root / "raw" / "run_results.jsonl")
+            .read_text(encoding="utf-8")
+            .splitlines()
+            if line
+        ]
+        specs = {spec["id"]: spec for spec in cases["batch_cases"]}
+        audit = runpy.run_path(str(artifact_root / "audit.py"))
+        verifier = runpy.run_path(str(artifact_root / "verify_checked.py"))
+
+        audit_mutations = (
+            (
+                "KB_SCHEMA",
+                lambda indexed: indexed[
+                    ("knowledge_base", "exact_subject_equal_embedding_top1")
+                ].update(schema="corrupted-schema/999"),
+            ),
+            (
+                "EVAL_SCHEMA",
+                lambda indexed: indexed[
+                    ("evaluation_coverage", "all_failed_question_denominator")
+                ].update(schema="corrupted-schema/999"),
+            ),
+            (
+                "RUNTIME_GUARD_SCHEMA",
+                lambda indexed: indexed[
+                    ("runtime_guard", "socket_network_guard")
+                ].update(schema="corrupted-schema/999"),
+            ),
+            (
+                "STATIC_DBQA_COMPONENTS",
+                lambda indexed: indexed[
+                    ("source_static", "default_vs_dbqa_source_contracts")
+                ].update(dbqa_custom_component_presence={"irrelevant": True}),
+            ),
+            (
+                "BATCH_GROUP_DELTAS",
+                lambda indexed: indexed[
+                    ("batch_promotion", "net_accept_with_group_loss")
+                ].update(group_observed_deltas={"A": 4, "B": 0}),
+            ),
+            (
+                "BATCH_SENSITIVITY_ASSUMPTION",
+                lambda indexed: indexed[
+                    ("batch_promotion", "partial_baseline_none_survivor_accept")
+                ]["missing_as_failure_sensitivity"].update(assumption="observed_loss"),
+            ),
+            (
+                "BATCH_SENSITIVITY_ACCEPTANCE",
+                lambda indexed: indexed[
+                    ("batch_promotion", "partial_baseline_none_survivor_accept")
+                ]["missing_as_failure_sensitivity"].update(would_accept=True),
+            ),
+        )
+        for expected_code, mutate in audit_mutations:
+            with self.subTest(validator="source-bound", expected_code=expected_code):
+                altered = copy.deepcopy(rows)
+                mutate(audit["index_results"](altered))
+                with self.assertRaises(audit["AuditFailure"]) as raised:
+                    audit["validate_results"](cases, altered)
+                self.assertEqual(raised.exception.code, expected_code)
+
+        indexed = verifier["index_results"](rows)
+        independent_mutations = (
+            (
+                "kb-schema",
+                verifier["verify_kb_probe"],
+                indexed[("knowledge_base", "exact_subject_equal_embedding_top1")],
+                lambda row: row.update(schema="corrupted-schema/999"),
+            ),
+            (
+                "eval-schema",
+                verifier["verify_eval_probe"],
+                indexed[("evaluation_coverage", "all_failed_question_denominator")],
+                lambda row: row.update(schema="corrupted-schema/999"),
+            ),
+            (
+                "runtime-schema",
+                verifier["verify_runtime_guard"],
+                indexed[("runtime_guard", "socket_network_guard")],
+                lambda row: row.update(schema="corrupted-schema/999"),
+            ),
+            (
+                "static-components",
+                verifier["verify_source_static_probe"],
+                indexed[("source_static", "default_vs_dbqa_source_contracts")],
+                lambda row: row.update(
+                    dbqa_custom_component_presence={"irrelevant": True}
+                ),
+            ),
+        )
+        for label, verify, original, mutate in independent_mutations:
+            with self.subTest(validator="independent", mutation=label):
+                altered = copy.deepcopy(original)
+                mutate(altered)
+                with self.assertRaises(verifier["VerificationFailure"]):
+                    verify(altered)
+
+        batch_mutations = (
+            (
+                "group-deltas",
+                "net_accept_with_group_loss",
+                lambda row: row.update(group_observed_deltas={"A": 4, "B": 0}),
+            ),
+            (
+                "sensitivity-assumption",
+                "partial_baseline_none_survivor_accept",
+                lambda row: row["missing_as_failure_sensitivity"].update(
+                    assumption="observed_loss"
+                ),
+            ),
+            (
+                "sensitivity-admission",
+                "partial_baseline_none_survivor_accept",
+                lambda row: row["missing_as_failure_sensitivity"].update(
+                    would_accept=True
+                ),
+            ),
+        )
+        for label, case_id, mutate in batch_mutations:
+            with self.subTest(validator="independent", mutation=label):
+                altered = copy.deepcopy(indexed[("batch_promotion", case_id)])
+                mutate(altered)
+                with self.assertRaises(verifier["VerificationFailure"]):
+                    verifier["verify_batch"](specs[case_id], altered)
 
     def test_memora_public_audit_is_complete_checked_and_bounded(self):
         material = next(

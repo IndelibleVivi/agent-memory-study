@@ -1,5 +1,5 @@
 {
-  "batch_case_count": 8,
+  "batch_case_count": 10,
   "canonical_ams_status": {
     "public_note_depth": "not_assessed_by_evidence_artifact"
   },
@@ -13,12 +13,25 @@
   "full_cohort_status_for_filtered_admissions": "UNDEFINED_FROM_OBSERVED_RESULTS",
   "incomplete_survivor_admissions": [
     "partial_updated_none_survivor_accept",
-    "partial_empty_prompt_survivor_accept"
+    "partial_baseline_none_survivor_accept",
+    "partial_empty_prompt_survivor_accept",
+    "partial_empty_prompt_provenance_misalignment_accept"
   ],
   "model_or_api_calls": 0,
+  "original_protocol_batch_case_count": 8,
   "paper_or_benchmark_experiment_reproduction": "NOT_ATTEMPTED",
-  "schema": "mnl-promotion-decision/1",
+  "post_review_amendment_batch_cases": [
+    "partial_baseline_none_survivor_accept",
+    "partial_empty_prompt_provenance_misalignment_accept"
+  ],
+  "prompt_provenance_probe": "NEGATIVE_CASE_BASELINE_PROMPT_MISALIGNED",
+  "schema": "mnl-promotion-decision/2",
   "source_commit": "dc7de755522ad58864c62b74ab8e9959c01b7f23",
+  "source_static_contracts": {
+    "dbqa_current_train_eval_paths": "SAME_FILE",
+    "dbqa_custom_five_components": "PRESENT_AND_INJECTED",
+    "default_five_components": "NOT_REQUIRED_BY_LITERAL_PROMPT"
+  },
   "source_to_paper_revision_binding": "NOT_ESTABLISHED",
   "subgroup_non_regression_guarantee": "NOT_ESTABLISHED_BY_NET_BATCH_ACCEPTANCE"
 }

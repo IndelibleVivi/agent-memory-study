@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Deterministic source-bound audit for MNL promotion and coverage seams.
 
-The runner loads three exact files from a reader-supplied checkout while
+The runner loads three exact methods files and one static example file from a reader-supplied checkout while
 providing narrow standard-library stubs for optional dependencies.  It never
 copies upstream source into the artifact and never contacts a model or API.
 """
@@ -9,6 +9,7 @@ copies upstream source into the artifact and never contacts a model or API.
 from __future__ import annotations
 
 import argparse
+import ast
 import contextlib
 import copy
 import hashlib
@@ -33,6 +34,10 @@ EXPECTED_COMMIT = "dc7de755522ad58864c62b74ab8e9959c01b7f23"
 PAPER_SHA256 = "39137385c4e96bd83bfc0dfc4363733d0c91107a605999e074e5681065335c9c"
 PAPER_SIZE = 5_855_586
 SOURCE_FILES: dict[str, dict[str, str]] = {
+    "examples/example_dbqa.py": {
+        "sha256": "88c23cc5c85ea423ec85e97fd7b44f0612757a3c47cc61d77235d7af0c4775be",
+        "git_blob": "f9e2b5ad3c8b487fab84dd33aad93954efc6e708",
+    },
     "mnl/trainer.py": {
         "sha256": "398ef9fc98ef418454cc3c243c762a65ee733cf687b94c16e80b92a6b4ce6033",
         "git_blob": "2a39b9d8921760476b3f2ae2f2d1397fcadb163a",
@@ -60,7 +65,10 @@ RAW_FILES = set(PRIMARY_FILES) | {
     "environment_run_a.json",
     "environment_run_b.json",
 }
-ROOT_FILES = {"README.md", "PROTOCOL.md", "audit.py", "verify_checked.py", "checksums.sha256", "raw"}
+ROOT_FILES = {
+    "README.md", "PROTOCOL.md", "REVIEW-AMENDMENT.md", "audit.py",
+    "verify_checked.py", "checksums.sha256", "raw",
+}
 
 
 class AuditFailure(RuntimeError):
@@ -142,8 +150,17 @@ def is_within(child: Path, parent: Path) -> bool:
         return False
 
 
-def item(item_id: str, outcome: str, *, group: str = "all", prompt: str = "nonempty", updated: str = "value") -> dict[str, str]:
+def item(
+    item_id: str,
+    outcome: str,
+    *,
+    baseline: str = "value",
+    group: str = "all",
+    prompt: str = "nonempty",
+    updated: str = "value",
+) -> dict[str, str]:
     return {
+        "baseline_response": baseline,
         "group": group,
         "id": item_id,
         "observed_outcome_if_evaluated": outcome,
@@ -185,12 +202,39 @@ def batch_specs() -> list[dict[str, Any]]:
             ],
         },
         {
+            "id": "partial_baseline_none_survivor_accept",
+            "expected_source_acceptance": True,
+            "review_amendment": "delayed_pretest_review",
+            "items": [
+                item("pbn-01", "win"), item("pbn-02", "win"),
+                item(
+                    "pbn-03", "unavailable", baseline="none",
+                    prompt="not_called", updated="not_called",
+                ),
+                item(
+                    "pbn-04", "unavailable", baseline="none",
+                    prompt="not_called", updated="not_called",
+                ),
+            ],
+        },
+        {
             "id": "partial_empty_prompt_survivor_accept",
             "expected_source_acceptance": True,
             "items": [
                 item("pep-01", "win"), item("pep-02", "win"),
                 item("pep-03", "unavailable", prompt="empty", updated="not_called"),
                 item("pep-04", "unavailable", prompt="empty", updated="not_called"),
+            ],
+        },
+        {
+            "id": "partial_empty_prompt_provenance_misalignment_accept",
+            "expected_source_acceptance": True,
+            "review_amendment": "delayed_pretest_review",
+            "items": [
+                item("ppm-01", "win"),
+                item("ppm-02", "unavailable", prompt="empty", updated="not_called"),
+                item("ppm-03", "win"),
+                item("ppm-04", "loss"),
             ],
         },
         {
@@ -241,8 +285,13 @@ def cases_payload() -> dict[str, Any]:
                 "kind": "runtime_guard",
                 "expected": "zero_attempts",
             },
+            {
+                "id": "default_vs_dbqa_source_contracts",
+                "kind": "source_static",
+                "expected": "default_omits_fields_custom_requires_fields_train_eval_same_file",
+            },
         ],
-        "schema": "mnl-promotion-cases/1",
+        "schema": "mnl-promotion-cases/2",
     }
 
 
@@ -379,6 +428,10 @@ def loaded_exact_api(source: Path) -> Iterator[types.SimpleNamespace]:
             Evaluator=loaded["mnl.evaluator"].Evaluator,
             KnowledgeBase=loaded["mnl.knowledge_base"].KnowledgeBase,
             PromptTuner=loaded["mnl.trainer"].PromptTuner,
+            runtime_module_bindings={
+                name: Path(module.__file__).resolve().relative_to(source.resolve()).as_posix()
+                for name, module in loaded.items()
+            },
         )
     finally:
         for name, value in previous.items():
@@ -426,21 +479,30 @@ def run_batch_case(api: types.SimpleNamespace, spec: dict[str, Any], work_root: 
     class FakeLLM:
         def __init__(self) -> None:
             self.generation_logs: list[list[str]] = []
+            self.generation_outputs: list[list[Any]] = []
+            self.generation_system_prompts: list[Any] = []
             self.reward_calls: list[str] = []
+            self.reward_vectors: dict[str, list[float]] = {}
 
         def classify_subjects(self, questions: list[str]) -> list[str]:
             return [f"subject::{question}" for question in questions]
 
         def batch_generate(self, prompts: list[str], system_prompt: Any, **_kwargs: Any) -> list[Any]:
-            del system_prompt
             ids = list(prompts)
             self.generation_logs.append(ids)
+            self.generation_system_prompts.append(copy.deepcopy(system_prompt))
             if len(self.generation_logs) == 1:
-                return [f"baseline::{value}" for value in ids]
-            return [
-                None if item_by_id[value]["updated_response"] == "none" else f"updated::{value}"
-                for value in ids
-            ]
+                responses = [
+                    None if item_by_id[value]["baseline_response"] == "none" else f"baseline::{value}"
+                    for value in ids
+                ]
+            else:
+                responses = [
+                    None if item_by_id[value]["updated_response"] == "none" else f"updated::{value}"
+                    for value in ids
+                ]
+            self.generation_outputs.append(responses)
+            return responses
 
         def get_embedding(self, _subject: str) -> list[float]:
             return [1.0, 0.0]
@@ -455,12 +517,15 @@ def run_batch_case(api: types.SimpleNamespace, spec: dict[str, Any], work_root: 
         fake.reward_calls.append(question)
         outcome = item_by_id[question]["observed_outcome_if_evaluated"]
         if outcome == "win":
-            return [1, 0]
-        if outcome == "loss":
-            return [0, 1]
-        if outcome == "tie":
-            return [0.5, 0.5]
-        raise AuditFailure("UNAVAILABLE_WAS_EVALUATED", question)
+            vector = [1, 0]
+        elif outcome == "loss":
+            vector = [0, 1]
+        elif outcome == "tie":
+            vector = [0.5, 0.5]
+        else:
+            raise AuditFailure("UNAVAILABLE_WAS_EVALUATED", question)
+        fake.reward_vectors[question] = vector
+        return vector
 
     tuner = configure_tuner(api, fake, kb, reward)
     retrieval_calls = {"count": 0, "updated_nonempty_ids": []}
@@ -494,7 +559,11 @@ def run_batch_case(api: types.SimpleNamespace, spec: dict[str, Any], work_root: 
     post_serialized = adapter_load_jsonl(str(storage))
 
     original_ids = [value["id"] for value in spec["items"]]
-    baseline_valid_ids = fake.generation_logs[0] if fake.generation_logs else []
+    baseline_input_ids = fake.generation_logs[0] if fake.generation_logs else []
+    baseline_outputs = fake.generation_outputs[0] if fake.generation_outputs else []
+    baseline_valid_ids = [
+        value for value, response in zip(baseline_input_ids, baseline_outputs) if response is not None
+    ]
     prompt_nonempty_ids = list(retrieval_calls["updated_nonempty_ids"])
     updated_generation_ids = fake.generation_logs[1] if len(fake.generation_logs) > 1 else []
     updated_response_valid_ids = [
@@ -506,6 +575,8 @@ def run_batch_case(api: types.SimpleNamespace, spec: dict[str, Any], work_root: 
         fixture = item_by_id[value]
         if value in evaluated_ids:
             dispositions[value] = f"observed_{fixture['observed_outcome_if_evaluated']}"
+        elif fixture["baseline_response"] == "none":
+            dispositions[value] = "baseline_response_unavailable"
         elif fixture["updated_prompt"] == "empty":
             dispositions[value] = "filtered_empty_updated_prompt"
         elif fixture["updated_response"] == "none":
@@ -531,6 +602,59 @@ def run_batch_case(api: types.SimpleNamespace, spec: dict[str, Any], work_root: 
         ]
         group_deltas[group] = group_outcomes.count("win") - group_outcomes.count("loss")
 
+    negative_bindings = []
+    for record in tuner.negative_optimization_cases:
+        question_id = record["question"]
+        expected_baseline_prompt = f"baseline-guidance::{question_id}"
+        negative_bindings.append({
+            "expected_baseline_prompt": expected_baseline_prompt,
+            "question_id": question_id,
+            "source_logged_baseline_prompt": record["baseline_prompt"],
+            "source_logged_updated_prompt": record["updated_prompt"],
+        })
+    prompt_alignment = (
+        "MISALIGNED"
+        if any(
+            value["source_logged_baseline_prompt"] != value["expected_baseline_prompt"]
+            for value in negative_bindings
+        )
+        else "ALIGNED_OR_NO_NEGATIVE_RECORD"
+    )
+
+    item_receipts = []
+    outcome_labels = {"win": "W", "loss": "L", "tie": "T"}
+    for original_index, value in enumerate(original_ids):
+        fixture = item_by_id[value]
+        if fixture["baseline_response"] == "none":
+            missing_stage = "baseline_response"
+        elif fixture["updated_prompt"] == "empty":
+            missing_stage = "updated_prompt"
+        elif fixture["updated_response"] == "none":
+            missing_stage = "updated_response"
+        else:
+            missing_stage = None
+        item_receipts.append({
+            "baseline_prompt_state": "nonempty",
+            "baseline_response_state": fixture["baseline_response"],
+            "case_family": "batch_promotion",
+            "case_variant": spec["id"],
+            "external_group_label": fixture["group"],
+            "included_in_source_comparison": value in evaluated_ids,
+            "missing_stage": missing_stage,
+            "normalized_outcome": (
+                outcome_labels[fixture["observed_outcome_if_evaluated"]]
+                if value in evaluated_ids else "not_compared"
+            ),
+            "original_batch_id": spec["id"],
+            "original_index": original_index,
+            "question_id": value,
+            "reward_vector": fake.reward_vectors.get(value),
+            "source_effective_index": evaluated_ids.index(value) if value in evaluated_ids else None,
+            "subject": f"subject::{value}",
+            "updated_prompt_state": fixture["updated_prompt"],
+            "updated_response_state": fixture["updated_response"],
+        })
+
     return {
         "admission": {
             "full_enrolled_decision": (
@@ -555,6 +679,7 @@ def run_batch_case(api: types.SimpleNamespace, spec: dict[str, Any], work_root: 
             "updated_prompt_nonempty_ids": prompt_nonempty_ids,
             "updated_response_valid_ids": updated_response_valid_ids,
         },
+        "item_receipts": item_receipts,
         "kb_state": {
             "accepted_entry_exact": expected_entry in post_memory,
             "in_memory_delta": memory_delta,
@@ -572,7 +697,11 @@ def run_batch_case(api: types.SimpleNamespace, spec: dict[str, Any], work_root: 
             "not_observed_source_outcomes": True,
             "would_accept": wins - losses - missing_count > 0,
         },
-        "schema": "mnl-batch-result/1",
+        "prompt_provenance": {
+            "negative_case_bindings": negative_bindings,
+            "source_logged_baseline_prompt_alignment": prompt_alignment,
+        },
+        "schema": "mnl-batch-result/2",
         "source_return": "METRICS" if source_result is not None else "NONE",
     }
 
@@ -635,40 +764,186 @@ def run_eval_probe(api: types.SimpleNamespace) -> dict[str, Any]:
     surviving = 1
     return {
         "all_failed_question_omitted_from_denominator": True,
+        "attempted_question_count": len(enrolled),
+        "correct_question_count": 1,
         "enrolled_count": len(enrolled),
         "enrolled_coverage": surviving / len(enrolled),
+        "eligible_question_count": surviving,
+        "failed_question_count": len(enrolled) - surviving,
+        "generated_candidate_slot_count": len(fake.generated_ids),
         "generated_ids": fake.generated_ids,
         "id": "all_failed_question_denominator",
         "kind": "evaluation_coverage",
         "schema": "mnl-eval-coverage-result/1",
         "source_reported_accuracy": accuracy,
         "surviving_question_count": surviving,
+        "unconditional_correct_over_attempted": 1 / len(enrolled),
+    }
+
+
+def static_string_assignment(path: Path, name: str) -> str:
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=path.name)
+    matches = []
+    for node in tree.body:
+        if not isinstance(node, (ast.Assign, ast.AnnAssign)):
+            continue
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+        if any(isinstance(target, ast.Name) and target.id == name for target in targets):
+            value = ast.literal_eval(node.value)
+            require(isinstance(value, str), "STATIC_ASSIGNMENT_TYPE", name)
+            matches.append(value)
+    require(len(matches) == 1, "STATIC_ASSIGNMENT_COUNT", name)
+    return matches[0]
+
+
+def run_source_static_probe(api: types.SimpleNamespace, source: Path) -> dict[str, Any]:
+    default_prompt = api.PromptTuner._get_default_guidance_extraction_prompt(
+        object.__new__(api.PromptTuner)
+    )
+    example_path = source / "examples/example_dbqa.py"
+    custom_prompt = static_string_assignment(example_path, "guidance_extraction_prompt_template")
+    train_path = static_string_assignment(example_path, "normalized_train_path")
+    eval_path = static_string_assignment(example_path, "normalized_eval_path")
+    markers = (
+        ("anti_patterns", "ANTI-PATTERNS"),
+        ("correct_approach", "Correct Approach"),
+        ("corrected_examples", "Corrected Examples"),
+        ("generalizable_strategy", "Generalizable Strategy"),
+        ("mistake_summary", "Mistake Summary"),
+    )
+    custom_components = {name: marker in custom_prompt for name, marker in markers}
+    default_components = {name: marker in default_prompt for name, marker in markers}
+    tree = ast.parse(example_path.read_text(encoding="utf-8"), filename=example_path.name)
+    injected = any(
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "PromptTuner"
+        and any(
+            keyword.arg == "guidance_extraction_prompt_template"
+            and isinstance(keyword.value, ast.Name)
+            and keyword.value.id == "guidance_extraction_prompt_template"
+            for keyword in node.keywords
+        )
+        for node in ast.walk(tree)
+    )
+    return {
+        "dbqa_custom_component_presence": custom_components,
+        "dbqa_custom_prompt_injected": injected,
+        "dbqa_custom_prompt_sha256": sha256_bytes(custom_prompt.encode("utf-8")),
+        "dbqa_train_eval_paths_equal": train_path == eval_path,
+        "default_component_presence": default_components,
+        "default_prompt_requests_two_to_three_sentences": "max 2-3 sentences" in default_prompt,
+        "default_prompt_sha256": sha256_bytes(default_prompt.encode("utf-8")),
+        "id": "default_vs_dbqa_source_contracts",
+        "kind": "source_static",
+        "schema": "mnl-source-static-result/1",
     }
 
 
 def expected_ledger(spec: dict[str, Any]) -> dict[str, Any]:
     original = [value["id"] for value in spec["items"]]
-    prompt_valid = [value["id"] for value in spec["items"] if value["updated_prompt"] == "nonempty"]
+    baseline_valid = [
+        value["id"] for value in spec["items"] if value["baseline_response"] != "none"
+    ]
+    prompt_valid = [
+        value["id"] for value in spec["items"]
+        if value["id"] in baseline_valid and value["updated_prompt"] == "nonempty"
+    ]
     response_valid = [
         value["id"] for value in spec["items"]
-        if value["updated_prompt"] == "nonempty" and value["updated_response"] != "none"
+        if value["id"] in prompt_valid and value["updated_response"] != "none"
     ]
     dispositions = {}
     for value in spec["items"]:
         if value["id"] in response_valid:
             dispositions[value["id"]] = f"observed_{value['observed_outcome_if_evaluated']}"
+        elif value["baseline_response"] == "none":
+            dispositions[value["id"]] = "baseline_response_unavailable"
         elif value["updated_prompt"] == "empty":
             dispositions[value["id"]] = "filtered_empty_updated_prompt"
         else:
             dispositions[value["id"]] = "updated_response_unavailable"
     return {
-        "baseline_valid_ids": original,
+        "baseline_valid_ids": baseline_valid,
         "dispositions": dispositions,
         "evaluated_ids": response_valid,
         "original_ids": original,
         "updated_generation_ids": prompt_valid,
         "updated_prompt_nonempty_ids": prompt_valid,
         "updated_response_valid_ids": response_valid,
+    }
+
+
+def expected_item_receipts(spec: dict[str, Any], ledger: dict[str, Any]) -> list[dict[str, Any]]:
+    outcome_labels = {"win": "W", "loss": "L", "tie": "T"}
+    reward_vectors = {"win": [1, 0], "loss": [0, 1], "tie": [0.5, 0.5]}
+    evaluated = ledger["evaluated_ids"]
+    receipts = []
+    for original_index, value in enumerate(spec["items"]):
+        if value["baseline_response"] == "none":
+            missing_stage = "baseline_response"
+        elif value["updated_prompt"] == "empty":
+            missing_stage = "updated_prompt"
+        elif value["updated_response"] == "none":
+            missing_stage = "updated_response"
+        else:
+            missing_stage = None
+        included = value["id"] in evaluated
+        receipts.append({
+            "baseline_prompt_state": "nonempty",
+            "baseline_response_state": value["baseline_response"],
+            "case_family": "batch_promotion",
+            "case_variant": spec["id"],
+            "external_group_label": value["group"],
+            "included_in_source_comparison": included,
+            "missing_stage": missing_stage,
+            "normalized_outcome": (
+                outcome_labels[value["observed_outcome_if_evaluated"]]
+                if included else "not_compared"
+            ),
+            "original_batch_id": spec["id"],
+            "original_index": original_index,
+            "question_id": value["id"],
+            "reward_vector": (
+                reward_vectors[value["observed_outcome_if_evaluated"]] if included else None
+            ),
+            "source_effective_index": evaluated.index(value["id"]) if included else None,
+            "subject": f"subject::{value['id']}",
+            "updated_prompt_state": value["updated_prompt"],
+            "updated_response_state": value["updated_response"],
+        })
+    return receipts
+
+
+def expected_prompt_provenance(spec: dict[str, Any], ledger: dict[str, Any]) -> dict[str, Any]:
+    baseline_valid = ledger["baseline_valid_ids"]
+    prompt_valid = ledger["updated_prompt_nonempty_ids"]
+    response_valid = ledger["updated_response_valid_ids"]
+    response_indices = [prompt_valid.index(value) for value in response_valid]
+    source_baseline_prompt_ids = [baseline_valid[index] for index in response_indices]
+    baseline_id_by_question = dict(zip(response_valid, source_baseline_prompt_ids))
+    bindings = []
+    for value in spec["items"]:
+        if value["id"] not in response_valid or value["observed_outcome_if_evaluated"] != "loss":
+            continue
+        bindings.append({
+            "expected_baseline_prompt": f"baseline-guidance::{value['id']}",
+            "question_id": value["id"],
+            "source_logged_baseline_prompt": (
+                f"baseline-guidance::{baseline_id_by_question[value['id']]}"
+            ),
+            "source_logged_updated_prompt": f"updated-guidance::{value['id']}",
+        })
+    return {
+        "negative_case_bindings": bindings,
+        "source_logged_baseline_prompt_alignment": (
+            "MISALIGNED"
+            if any(
+                binding["source_logged_baseline_prompt"] != binding["expected_baseline_prompt"]
+                for binding in bindings
+            )
+            else "ALIGNED_OR_NO_NEGATIVE_RECORD"
+        ),
     }
 
 
@@ -688,13 +963,14 @@ def validate_results(cases: dict[str, Any], rows: list[dict[str, Any]]) -> None:
     expected_keys = {("batch_promotion", spec["id"]) for spec in batch_specs()} | {
         ("knowledge_base", "exact_subject_equal_embedding_top1"),
         ("evaluation_coverage", "all_failed_question_denominator"),
+        ("source_static", "default_vs_dbqa_source_contracts"),
         ("runtime_guard", "socket_network_guard"),
     }
     require(set(indexed) == expected_keys, "RESULT_SET")
 
     for spec in batch_specs():
         row = indexed[("batch_promotion", spec["id"])]
-        require(row.get("schema") == "mnl-batch-result/1", "BATCH_SCHEMA", spec["id"])
+        require(row.get("schema") == "mnl-batch-result/2", "BATCH_SCHEMA", spec["id"])
         ledger = row.get("identity_ledger")
         expected = expected_ledger(spec)
         require(isinstance(ledger, dict), "BATCH_LEDGER", spec["id"])
@@ -705,12 +981,37 @@ def validate_results(cases: dict[str, Any], rows: list[dict[str, Any]]) -> None:
         require(ledger.get("updated_response_valid_ids") == expected["updated_response_valid_ids"], "BATCH_RESPONSE_IDS", spec["id"])
         require(ledger.get("evaluated_ids") == expected["evaluated_ids"], "BATCH_EVALUATED_IDS", spec["id"])
         require(ledger.get("dispositions") == expected["dispositions"], "BATCH_DISPOSITIONS", spec["id"])
+        require(
+            row.get("item_receipts") == expected_item_receipts(spec, expected),
+            "BATCH_ITEM_RECEIPTS",
+            spec["id"],
+        )
+        require(
+            row.get("prompt_provenance") == expected_prompt_provenance(spec, expected),
+            "BATCH_PROMPT_PROVENANCE",
+            spec["id"],
+        )
 
         observed = [
             value["observed_outcome_if_evaluated"]
             for value in spec["items"] if value["id"] in expected["evaluated_ids"]
         ]
         wins, losses, ties = observed.count("win"), observed.count("loss"), observed.count("tie")
+        expected_group_deltas = {}
+        for group in sorted({value["group"] for value in spec["items"]}):
+            group_outcomes = [
+                value["observed_outcome_if_evaluated"]
+                for value in spec["items"]
+                if value["id"] in expected["evaluated_ids"] and value["group"] == group
+            ]
+            expected_group_deltas[group] = (
+                group_outcomes.count("win") - group_outcomes.count("loss")
+            )
+        require(
+            row.get("group_observed_deltas") == expected_group_deltas,
+            "BATCH_GROUP_DELTAS",
+            spec["id"],
+        )
         admission = row.get("admission", {})
         require(admission.get("source_observed_wins") == wins, "BATCH_WINS", spec["id"])
         require(admission.get("source_observed_losses") == losses, "BATCH_LOSSES", spec["id"])
@@ -721,8 +1022,34 @@ def validate_results(cases: dict[str, Any], rows: list[dict[str, Any]]) -> None:
         full_decision = ("ACCEPT" if wins - losses > 0 else "REJECT") if missing == 0 else "UNDEFINED_FROM_OBSERVED_RESULTS"
         require(admission.get("full_enrolled_decision") == full_decision, "BATCH_FULL_DECISION", spec["id"])
         sensitivity = row.get("missing_as_failure_sensitivity", {})
+        counterfactual_delta = wins - losses - missing
+        require(
+            set(sensitivity) == {
+                "assumption",
+                "counterfactual_delta",
+                "missing_count",
+                "not_observed_source_outcomes",
+                "would_accept",
+            },
+            "BATCH_SENSITIVITY_FIELDS",
+            spec["id"],
+        )
+        require(
+            sensitivity.get("assumption") == "counterfactual_unavailable_as_loss",
+            "BATCH_SENSITIVITY_ASSUMPTION",
+            spec["id"],
+        )
         require(sensitivity.get("missing_count") == missing, "BATCH_MISSING_COUNT", spec["id"])
-        require(sensitivity.get("counterfactual_delta") == wins - losses - missing, "BATCH_SENSITIVITY", spec["id"])
+        require(
+            sensitivity.get("counterfactual_delta") == counterfactual_delta,
+            "BATCH_SENSITIVITY",
+            spec["id"],
+        )
+        require(
+            sensitivity.get("would_accept") is (counterfactual_delta > 0),
+            "BATCH_SENSITIVITY_ACCEPTANCE",
+            spec["id"],
+        )
         require(sensitivity.get("not_observed_source_outcomes") is True, "BATCH_SENSITIVITY_LABEL", spec["id"])
 
         kb = row.get("kb_state", {})
@@ -740,6 +1067,7 @@ def validate_results(cases: dict[str, Any], rows: list[dict[str, Any]]) -> None:
         require(kb.get("serialized_matches_in_memory") is True, "KB_SERIALIZATION_BINDING", spec["id"])
 
     kb_row = indexed[("knowledge_base", "exact_subject_equal_embedding_top1")]
+    require(kb_row.get("schema") == "mnl-knowledge-base-result/1", "KB_SCHEMA")
     require(kb_row.get("entry_count_before") == 1 and kb_row.get("entry_count_after") == 2, "KB_APPEND_COUNT")
     require(kb_row.get("exact_subject_count_after") == 2, "KB_EXACT_SUBJECT_COUNT")
     require(kb_row.get("top1_guidance") == "older-guidance", "KB_TOP1")
@@ -747,12 +1075,55 @@ def validate_results(cases: dict[str, Any], rows: list[dict[str, Any]]) -> None:
     require(kb_row.get("serialized_matches_in_memory") is True, "KB_PROBE_SERIALIZATION")
 
     eval_row = indexed[("evaluation_coverage", "all_failed_question_denominator")]
+    require(eval_row.get("schema") == "mnl-eval-coverage-result/1", "EVAL_SCHEMA")
     require(eval_row.get("enrolled_count") == 2, "EVAL_ENROLLED")
     require(eval_row.get("surviving_question_count") == 1, "EVAL_SURVIVING")
     require(eval_row.get("source_reported_accuracy") == 1.0, "EVAL_ACCURACY")
     require(eval_row.get("enrolled_coverage") == 0.5, "EVAL_COVERAGE")
     require(eval_row.get("all_failed_question_omitted_from_denominator") is True, "EVAL_OMISSION")
+    require(eval_row.get("attempted_question_count") == 2, "EVAL_ATTEMPTED")
+    require(eval_row.get("generated_candidate_slot_count") == 2, "EVAL_GENERATED")
+    require(eval_row.get("eligible_question_count") == 1, "EVAL_ELIGIBLE")
+    require(eval_row.get("failed_question_count") == 1, "EVAL_FAILED")
+    require(eval_row.get("correct_question_count") == 1, "EVAL_CORRECT")
+    require(eval_row.get("unconditional_correct_over_attempted") == 0.5, "EVAL_UNCONDITIONAL")
+    static_row = indexed[("source_static", "default_vs_dbqa_source_contracts")]
+    require(static_row.get("schema") == "mnl-source-static-result/1", "STATIC_SCHEMA")
+    require(
+        static_row.get("default_component_presence") == {
+            "anti_patterns": False,
+            "correct_approach": False,
+            "corrected_examples": False,
+            "generalizable_strategy": False,
+            "mistake_summary": False,
+        },
+        "STATIC_DEFAULT_COMPONENTS",
+    )
+    require(
+        static_row.get("dbqa_custom_component_presence") == {
+            "anti_patterns": True,
+            "correct_approach": True,
+            "corrected_examples": True,
+            "generalizable_strategy": True,
+            "mistake_summary": True,
+        },
+        "STATIC_DBQA_COMPONENTS",
+    )
+    require(static_row.get("dbqa_custom_prompt_injected") is True, "STATIC_DBQA_INJECTION")
+    require(static_row.get("default_prompt_requests_two_to_three_sentences") is True, "STATIC_DEFAULT_LENGTH")
+    require(static_row.get("dbqa_train_eval_paths_equal") is True, "STATIC_DBQA_PATHS")
+    require(
+        static_row.get("default_prompt_sha256")
+        == "a83ea7dedcc40cfd1c63eafbe2a2f595212e6b37968d401cf5d7dbbd61b046a1",
+        "STATIC_DEFAULT_SHA",
+    )
+    require(
+        static_row.get("dbqa_custom_prompt_sha256")
+        == "370c40c3c2dbce783ab6aecd73d06689b56165d90c6d71465be174f281eb3c2d",
+        "STATIC_DBQA_SHA",
+    )
     guard = indexed[("runtime_guard", "socket_network_guard")]
+    require(guard.get("schema") == "mnl-runtime-guard-result/1", "RUNTIME_GUARD_SCHEMA")
     require(guard.get("attempts") == 0 and guard.get("status") == "PASS", "NETWORK_GUARD")
 
 
@@ -804,6 +1175,18 @@ def mutation_controls(cases: dict[str, Any], rows: list[dict[str, Any]]) -> dict
         "KB_TOP1",
         lambda idx: idx[("knowledge_base", "exact_subject_equal_embedding_top1")].update(top1_guidance="newer-guidance"),
     )
+    check(
+        "relabel_baseline_missing_stage",
+        "BATCH_ITEM_RECEIPTS",
+        lambda idx: idx[("batch_promotion", "partial_baseline_none_survivor_accept")]
+        ["item_receipts"][2].update(missing_stage="updated_response"),
+    )
+    check(
+        "hide_prompt_provenance_misalignment",
+        "BATCH_PROMPT_PROVENANCE",
+        lambda idx: idx[("batch_promotion", "partial_empty_prompt_provenance_misalignment_accept")]
+        ["prompt_provenance"].update(source_logged_baseline_prompt_alignment="ALIGNED_OR_NO_NEGATIVE_RECORD"),
+    )
     return {
         "all_detected": all(value["detected"] for value in controls),
         "controls": controls,
@@ -822,6 +1205,8 @@ def derive_decision(rows: list[dict[str, Any]], controls: dict[str, Any], manife
     group_case = indexed[("batch_promotion", "net_accept_with_group_loss")]
     eval_case = indexed[("evaluation_coverage", "all_failed_question_denominator")]
     kb_case = indexed[("knowledge_base", "exact_subject_equal_embedding_top1")]
+    prompt_case = indexed[("batch_promotion", "partial_empty_prompt_provenance_misalignment_accept")]
+    static_case = indexed[("source_static", "default_vs_dbqa_source_contracts")]
     observations = manifest.get("checkout_observations", {})
     readiness = (
         observations.get("git_status_clean_before") is True
@@ -831,16 +1216,36 @@ def derive_decision(rows: list[dict[str, Any]], controls: dict[str, Any], manife
         and controls.get("all_detected") is True
         and incomplete_accepts == [
             "partial_updated_none_survivor_accept",
+            "partial_baseline_none_survivor_accept",
             "partial_empty_prompt_survivor_accept",
+            "partial_empty_prompt_provenance_misalignment_accept",
         ]
         and group_case["group_observed_deltas"].get("B") == -1
         and eval_case.get("source_reported_accuracy") == 1.0
         and eval_case.get("enrolled_coverage") == 0.5
         and kb_case.get("top1_guidance") == "older-guidance"
+        and prompt_case.get("prompt_provenance", {}).get(
+            "source_logged_baseline_prompt_alignment"
+        ) == "MISALIGNED"
+        and static_case.get("dbqa_custom_component_presence") == {
+            "anti_patterns": True,
+            "correct_approach": True,
+            "corrected_examples": True,
+            "generalizable_strategy": True,
+            "mistake_summary": True,
+        }
+        and not any(static_case.get("default_component_presence", {}).values())
+        and static_case.get("dbqa_custom_prompt_injected") is True
+        and static_case.get("dbqa_train_eval_paths_equal") is True
         and indexed[("runtime_guard", "socket_network_guard")].get("attempts") == 0
     )
     return {
         "batch_case_count": len(batch_specs()),
+        "original_protocol_batch_case_count": 8,
+        "post_review_amendment_batch_cases": [
+            "partial_baseline_none_survivor_accept",
+            "partial_empty_prompt_provenance_misalignment_accept",
+        ],
         "canonical_ams_status": {
             "public_note_depth": "not_assessed_by_evidence_artifact",
         },
@@ -855,14 +1260,24 @@ def derive_decision(rows: list[dict[str, Any]], controls: dict[str, Any], manife
         "incomplete_survivor_admissions": incomplete_accepts,
         "model_or_api_calls": 0,
         "paper_or_benchmark_experiment_reproduction": "NOT_ATTEMPTED",
-        "schema": "mnl-promotion-decision/1",
+        "prompt_provenance_probe": "NEGATIVE_CASE_BASELINE_PROMPT_MISALIGNED",
+        "schema": "mnl-promotion-decision/2",
         "source_commit": EXPECTED_COMMIT,
+        "source_static_contracts": {
+            "dbqa_custom_five_components": "PRESENT_AND_INJECTED",
+            "dbqa_current_train_eval_paths": "SAME_FILE",
+            "default_five_components": "NOT_REQUIRED_BY_LITERAL_PROMPT",
+        },
         "source_to_paper_revision_binding": "NOT_ESTABLISHED",
         "subgroup_non_regression_guarantee": "NOT_ESTABLISHED_BY_NET_BATCH_ACCEPTANCE",
     }
 
 
-def source_manifest(source: Path, paper_pdf: Path) -> dict[str, Any]:
+def source_manifest(
+    source: Path,
+    paper_pdf: Path,
+    runtime_module_bindings: dict[str, str],
+) -> dict[str, Any]:
     files = []
     for relative, expected in SOURCE_FILES.items():
         path = source / relative
@@ -886,22 +1301,29 @@ def source_manifest(source: Path, paper_pdf: Path) -> dict[str, Any]:
             "sha256": sha256_path(paper_pdf),
             "size_bytes": paper_pdf.stat().st_size,
         },
-        "schema": "mnl-source-manifest/2",
+        "runtime_module_file_bindings": runtime_module_bindings,
+        "schema": "mnl-source-manifest/3",
         "source": {
             "commit": EXPECTED_COMMIT,
             "paper_production_revision_binding": "NOT_ESTABLISHED",
             "read_access_instrumented": False,
+            "repository": "Bairong-Xdynamics/MistakeNotebookLearning",
             "runner_declared_source_code_read_allowlist": files,
+            "tree": git_output(source, "rev-parse", "HEAD^{tree}"),
             "upstream_source_copied_into_artifact": False,
         },
         "source_methods_executed": [
             "PromptTuner._process_batch",
             "PromptTuner._evaluate_on_eval_set",
+            "PromptTuner._get_default_guidance_extraction_prompt",
             "Evaluator.evaluate_batch",
             "Evaluator.evaluate_single",
             "KnowledgeBase.update_entry",
             "KnowledgeBase._save_entries",
             "KnowledgeBase.retrieve_by_subject",
+        ],
+        "source_files_inspected_statically": [
+            "examples/example_dbqa.py",
         ],
         "synthetic_adapters": [
             "classification_and_generation",
@@ -973,7 +1395,7 @@ def read_primary(root: Path) -> tuple[dict[str, Any], list[dict[str, Any]], dict
 def validate_primary(root: Path) -> None:
     cases, rows, decision, manifest, controls, safety = read_primary(root)
     validate_results(cases, rows)
-    require(manifest.get("schema") == "mnl-source-manifest/2", "MANIFEST_SCHEMA")
+    require(manifest.get("schema") == "mnl-source-manifest/3", "MANIFEST_SCHEMA")
     require(manifest.get("source", {}).get("commit") == EXPECTED_COMMIT, "MANIFEST_COMMIT")
     require(manifest.get("paper", {}).get("sha256") == PAPER_SHA256, "MANIFEST_PAPER_SHA")
     require(manifest.get("paper", {}).get("size_bytes") == PAPER_SIZE, "MANIFEST_PAPER_SIZE")
@@ -1022,11 +1444,14 @@ def run_once(source: Path, paper_pdf: Path, output: Path, run_label: str) -> Non
     raw.mkdir()
     work.mkdir()
     cases = cases_payload()
+    runtime_module_bindings: dict[str, str] = {}
     with loaded_exact_api(source) as api:
+        runtime_module_bindings = api.runtime_module_bindings
         with blocked_network() as network:
             rows = [run_batch_case(api, spec, work) for spec in batch_specs()]
             rows.append(run_knowledge_base_probe(api, work))
             rows.append(run_eval_probe(api))
+            rows.append(run_source_static_probe(api, source))
         rows.append({
             "attempts": network["count"],
             "id": "socket_network_guard",
@@ -1037,7 +1462,7 @@ def run_once(source: Path, paper_pdf: Path, output: Path, run_label: str) -> Non
     require(git_output(source, "status", "--porcelain") == "", "SOURCE_DIRTY_POST")
     for relative, expected in SOURCE_FILES.items():
         require(sha256_path(source / relative) == expected["sha256"], "SOURCE_FILE_SHA_POST", relative)
-    manifest = source_manifest(source, paper_pdf)
+    manifest = source_manifest(source, paper_pdf, runtime_module_bindings)
     validate_results(cases, rows)
     controls = mutation_controls(cases, rows)
     require(controls["all_detected"] is True, "MUTATION_GATE")
@@ -1059,7 +1484,10 @@ def run_once(source: Path, paper_pdf: Path, output: Path, run_label: str) -> Non
     save_json(raw / "public_safety.json", scan_public_payloads(public_payloads))
     save_json(raw / "environment.json", environment_receipt(run_label))
     validate_primary(output)
-    print(f"Run {run_label}: 8 batch cases + KB/eval probes PASS; zero network attempts.")
+    print(
+        f"Run {run_label}: 10 batch cases + KB/eval/static probes PASS; "
+        "zero guarded Python socket attempts."
+    )
 
 
 def compare_runs(run_a: Path, run_b: Path, output: Path) -> None:
@@ -1087,7 +1515,13 @@ def compare_runs(run_a: Path, run_b: Path, output: Path) -> None:
 
 def artifact_paths(root: Path) -> list[Path]:
     return sorted(
-        [root / name for name in ("README.md", "PROTOCOL.md", "audit.py", "verify_checked.py")]
+        [
+            root / name
+            for name in (
+                "README.md", "PROTOCOL.md", "REVIEW-AMENDMENT.md",
+                "audit.py", "verify_checked.py",
+            )
+        ]
         + [root / "raw" / name for name in sorted(RAW_FILES)],
         key=lambda path: path.relative_to(root).as_posix(),
     )
@@ -1120,7 +1554,7 @@ def install_runs(run_a: Path, run_b: Path, comparison: Path, artifact_root: Path
     shutil.copyfile(comparison, raw / "comparison.json")
     write_checksums(artifact_root)
     verify_installed(artifact_root)
-    print("Installed the 9 public-safe raw receipts and complete 13-file checksum manifest.")
+    print("Installed the 9 public-safe raw receipts and complete 14-file checksum manifest.")
 
 
 def verify_checksum_manifest(root: Path) -> None:

@@ -36,6 +36,18 @@
       "expected_error_code": "KB_TOP1",
       "id": "replace_stable_top1_with_new_entry",
       "observed_error_code": "KB_TOP1"
+    },
+    {
+      "detected": true,
+      "expected_error_code": "BATCH_ITEM_RECEIPTS",
+      "id": "relabel_baseline_missing_stage",
+      "observed_error_code": "BATCH_ITEM_RECEIPTS"
+    },
+    {
+      "detected": true,
+      "expected_error_code": "BATCH_PROMPT_PROVENANCE",
+      "id": "hide_prompt_provenance_misalignment",
+      "observed_error_code": "BATCH_PROMPT_PROVENANCE"
     }
   ],
   "schema": "mnl-mutation-controls/1"

@@ -5,6 +5,7 @@
       "id": "complete_positive_accept",
       "items": [
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "cpa-01",
           "observed_outcome_if_evaluated": "win",
@@ -12,6 +13,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "cpa-02",
           "observed_outcome_if_evaluated": "win",
@@ -19,6 +21,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "cpa-03",
           "observed_outcome_if_evaluated": "win",
@@ -26,6 +29,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "cpa-04",
           "observed_outcome_if_evaluated": "loss",
@@ -39,6 +43,7 @@
       "id": "complete_balanced_reject",
       "items": [
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "cbr-01",
           "observed_outcome_if_evaluated": "win",
@@ -46,6 +51,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "cbr-02",
           "observed_outcome_if_evaluated": "win",
@@ -53,6 +59,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "cbr-03",
           "observed_outcome_if_evaluated": "loss",
@@ -60,6 +67,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "cbr-04",
           "observed_outcome_if_evaluated": "loss",
@@ -73,6 +81,7 @@
       "id": "complete_all_ties_reject",
       "items": [
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "ctr-01",
           "observed_outcome_if_evaluated": "tie",
@@ -80,6 +89,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "ctr-02",
           "observed_outcome_if_evaluated": "tie",
@@ -87,6 +97,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "ctr-03",
           "observed_outcome_if_evaluated": "tie",
@@ -100,6 +111,7 @@
       "id": "partial_updated_none_survivor_accept",
       "items": [
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "pun-01",
           "observed_outcome_if_evaluated": "win",
@@ -107,6 +119,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "pun-02",
           "observed_outcome_if_evaluated": "win",
@@ -114,6 +127,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "pun-03",
           "observed_outcome_if_evaluated": "unavailable",
@@ -121,6 +135,7 @@
           "updated_response": "none"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "pun-04",
           "observed_outcome_if_evaluated": "unavailable",
@@ -131,9 +146,49 @@
     },
     {
       "expected_source_acceptance": true,
+      "id": "partial_baseline_none_survivor_accept",
+      "items": [
+        {
+          "baseline_response": "value",
+          "group": "all",
+          "id": "pbn-01",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "baseline_response": "value",
+          "group": "all",
+          "id": "pbn-02",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "baseline_response": "none",
+          "group": "all",
+          "id": "pbn-03",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "not_called",
+          "updated_response": "not_called"
+        },
+        {
+          "baseline_response": "none",
+          "group": "all",
+          "id": "pbn-04",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "not_called",
+          "updated_response": "not_called"
+        }
+      ],
+      "review_amendment": "delayed_pretest_review"
+    },
+    {
+      "expected_source_acceptance": true,
       "id": "partial_empty_prompt_survivor_accept",
       "items": [
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "pep-01",
           "observed_outcome_if_evaluated": "win",
@@ -141,6 +196,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "pep-02",
           "observed_outcome_if_evaluated": "win",
@@ -148,6 +204,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "pep-03",
           "observed_outcome_if_evaluated": "unavailable",
@@ -155,6 +212,7 @@
           "updated_response": "not_called"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "pep-04",
           "observed_outcome_if_evaluated": "unavailable",
@@ -164,10 +222,50 @@
       ]
     },
     {
+      "expected_source_acceptance": true,
+      "id": "partial_empty_prompt_provenance_misalignment_accept",
+      "items": [
+        {
+          "baseline_response": "value",
+          "group": "all",
+          "id": "ppm-01",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "baseline_response": "value",
+          "group": "all",
+          "id": "ppm-02",
+          "observed_outcome_if_evaluated": "unavailable",
+          "updated_prompt": "empty",
+          "updated_response": "not_called"
+        },
+        {
+          "baseline_response": "value",
+          "group": "all",
+          "id": "ppm-03",
+          "observed_outcome_if_evaluated": "win",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        },
+        {
+          "baseline_response": "value",
+          "group": "all",
+          "id": "ppm-04",
+          "observed_outcome_if_evaluated": "loss",
+          "updated_prompt": "nonempty",
+          "updated_response": "value"
+        }
+      ],
+      "review_amendment": "delayed_pretest_review"
+    },
+    {
       "expected_source_acceptance": false,
       "id": "all_updated_prompts_empty_rollback",
       "items": [
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "ape-01",
           "observed_outcome_if_evaluated": "unavailable",
@@ -175,6 +273,7 @@
           "updated_response": "not_called"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "ape-02",
           "observed_outcome_if_evaluated": "unavailable",
@@ -182,6 +281,7 @@
           "updated_response": "not_called"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "ape-03",
           "observed_outcome_if_evaluated": "unavailable",
@@ -195,6 +295,7 @@
       "id": "all_updated_responses_none_rollback",
       "items": [
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "arn-01",
           "observed_outcome_if_evaluated": "unavailable",
@@ -202,6 +303,7 @@
           "updated_response": "none"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "arn-02",
           "observed_outcome_if_evaluated": "unavailable",
@@ -209,6 +311,7 @@
           "updated_response": "none"
         },
         {
+          "baseline_response": "value",
           "group": "all",
           "id": "arn-03",
           "observed_outcome_if_evaluated": "unavailable",
@@ -222,6 +325,7 @@
       "id": "net_accept_with_group_loss",
       "items": [
         {
+          "baseline_response": "value",
           "group": "A",
           "id": "ngl-01",
           "observed_outcome_if_evaluated": "win",
@@ -229,6 +333,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "A",
           "id": "ngl-02",
           "observed_outcome_if_evaluated": "win",
@@ -236,6 +341,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "A",
           "id": "ngl-03",
           "observed_outcome_if_evaluated": "win",
@@ -243,6 +349,7 @@
           "updated_response": "value"
         },
         {
+          "baseline_response": "value",
           "group": "B",
           "id": "ngl-04",
           "observed_outcome_if_evaluated": "loss",
@@ -267,7 +374,12 @@
       "expected": "zero_attempts",
       "id": "socket_network_guard",
       "kind": "runtime_guard"
+    },
+    {
+      "expected": "default_omits_fields_custom_requires_fields_train_eval_same_file",
+      "id": "default_vs_dbqa_source_contracts",
+      "kind": "source_static"
     }
   ],
-  "schema": "mnl-promotion-cases/1"
+  "schema": "mnl-promotion-cases/2"
 }

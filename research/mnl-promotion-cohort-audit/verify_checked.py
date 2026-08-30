@@ -24,21 +24,35 @@ PRIMARY = (
     "source_manifest.json", "mutation_controls.json", "public_safety.json",
 )
 RAW_SET = set(PRIMARY) | {"comparison.json", "environment_run_a.json", "environment_run_b.json"}
-ROOT_SET = {"README.md", "PROTOCOL.md", "audit.py", "verify_checked.py", "checksums.sha256", "raw"}
+ROOT_SET = {
+    "README.md", "PROTOCOL.md", "REVIEW-AMENDMENT.md", "audit.py",
+    "verify_checked.py", "checksums.sha256", "raw",
+}
 SOURCE_HASHES = {
+    "examples/example_dbqa.py": "88c23cc5c85ea423ec85e97fd7b44f0612757a3c47cc61d77235d7af0c4775be",
     "mnl/trainer.py": "398ef9fc98ef418454cc3c243c762a65ee733cf687b94c16e80b92a6b4ce6033",
     "mnl/evaluator.py": "47d429f2962b0423ce2a48dfaf3910d5ce2efcaacc9e69018912b3a963a90347",
     "mnl/knowledge_base.py": "c4a62fd6b47b8ca4bd6a8265b1d218fedd3e67f5cdd52a27668ef89fd64116c5",
 }
 SOURCE_BLOBS = {
+    "examples/example_dbqa.py": "f9e2b5ad3c8b487fab84dd33aad93954efc6e708",
     "mnl/trainer.py": "2a39b9d8921760476b3f2ae2f2d1397fcadb163a",
     "mnl/evaluator.py": "be97b6e6da5157e1e7c3501961b6fad4b7d2a542",
     "mnl/knowledge_base.py": "50483b9a18d97ef743993644f657f982a95a3d59",
 }
 
 
-def frozen_item(item_id: str, outcome: str, *, group: str = "all", prompt: str = "nonempty", updated: str = "value") -> dict[str, str]:
+def frozen_item(
+    item_id: str,
+    outcome: str,
+    *,
+    baseline: str = "value",
+    group: str = "all",
+    prompt: str = "nonempty",
+    updated: str = "value",
+) -> dict[str, str]:
     return {
+        "baseline_response": baseline,
         "group": group,
         "id": item_id,
         "observed_outcome_if_evaluated": outcome,
@@ -79,11 +93,37 @@ def frozen_cases() -> dict[str, Any]:
             ],
         },
         {
+            "id": "partial_baseline_none_survivor_accept", "expected_source_acceptance": True,
+            "review_amendment": "delayed_pretest_review",
+            "items": [
+                frozen_item("pbn-01", "win"), frozen_item("pbn-02", "win"),
+                frozen_item(
+                    "pbn-03", "unavailable", baseline="none",
+                    prompt="not_called", updated="not_called",
+                ),
+                frozen_item(
+                    "pbn-04", "unavailable", baseline="none",
+                    prompt="not_called", updated="not_called",
+                ),
+            ],
+        },
+        {
             "id": "partial_empty_prompt_survivor_accept", "expected_source_acceptance": True,
             "items": [
                 frozen_item("pep-01", "win"), frozen_item("pep-02", "win"),
                 frozen_item("pep-03", "unavailable", prompt="empty", updated="not_called"),
                 frozen_item("pep-04", "unavailable", prompt="empty", updated="not_called"),
+            ],
+        },
+        {
+            "id": "partial_empty_prompt_provenance_misalignment_accept",
+            "expected_source_acceptance": True,
+            "review_amendment": "delayed_pretest_review",
+            "items": [
+                frozen_item("ppm-01", "win"),
+                frozen_item("ppm-02", "unavailable", prompt="empty", updated="not_called"),
+                frozen_item("ppm-03", "win"),
+                frozen_item("ppm-04", "loss"),
             ],
         },
         {
@@ -130,8 +170,13 @@ def frozen_cases() -> dict[str, Any]:
                 "id": "socket_network_guard",
                 "kind": "runtime_guard",
             },
+            {
+                "expected": "default_omits_fields_custom_requires_fields_train_eval_same_file",
+                "id": "default_vs_dbqa_source_contracts",
+                "kind": "source_static",
+            },
         ],
-        "schema": "mnl-promotion-cases/1",
+        "schema": "mnl-promotion-cases/2",
     }
 
 
@@ -170,7 +215,7 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
 
 def verify_checksums() -> None:
     expected = sorted(
-        ["README.md", "PROTOCOL.md", "audit.py", "verify_checked.py"]
+        ["README.md", "PROTOCOL.md", "REVIEW-AMENDMENT.md", "audit.py", "verify_checked.py"]
         + [f"raw/{name}" for name in sorted(RAW_SET)]
     )
     observed: dict[str, str] = {}
@@ -195,32 +240,123 @@ def index_results(rows: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str,
 
 def verify_batch(spec: dict[str, Any], row: dict[str, Any]) -> None:
     original = [item["id"] for item in spec["items"]]
-    prompt_valid = [item["id"] for item in spec["items"] if item["updated_prompt"] == "nonempty"]
+    baseline_valid = [
+        item["id"] for item in spec["items"] if item["baseline_response"] != "none"
+    ]
+    prompt_valid = [
+        item["id"] for item in spec["items"]
+        if item["id"] in baseline_valid and item["updated_prompt"] == "nonempty"
+    ]
     response_valid = [
         item["id"] for item in spec["items"]
-        if item["updated_prompt"] == "nonempty" and item["updated_response"] != "none"
+        if item["id"] in prompt_valid and item["updated_response"] != "none"
     ]
     dispositions = {}
     for item in spec["items"]:
         if item["id"] in response_valid:
             dispositions[item["id"]] = f"observed_{item['observed_outcome_if_evaluated']}"
+        elif item["baseline_response"] == "none":
+            dispositions[item["id"]] = "baseline_response_unavailable"
         elif item["updated_prompt"] == "empty":
             dispositions[item["id"]] = "filtered_empty_updated_prompt"
         else:
             dispositions[item["id"]] = "updated_response_unavailable"
     ledger = row["identity_ledger"]
+    require(row["schema"] == "mnl-batch-result/2", f"batch schema drift: {spec['id']}")
     require(ledger["original_ids"] == original, f"original cohort drift: {spec['id']}")
-    require(ledger["baseline_valid_ids"] == original, f"baseline cohort drift: {spec['id']}")
+    require(ledger["baseline_valid_ids"] == baseline_valid, f"baseline cohort drift: {spec['id']}")
     require(ledger["updated_prompt_nonempty_ids"] == prompt_valid, f"prompt cohort drift: {spec['id']}")
     require(ledger["updated_generation_ids"] == prompt_valid, f"generation cohort drift: {spec['id']}")
     require(ledger["updated_response_valid_ids"] == response_valid, f"response cohort drift: {spec['id']}")
     require(ledger["evaluated_ids"] == response_valid, f"evaluated cohort drift: {spec['id']}")
     require(ledger["dispositions"] == dispositions, f"disposition drift: {spec['id']}")
 
+    outcome_labels = {"win": "W", "loss": "L", "tie": "T"}
+    reward_vectors = {"win": [1, 0], "loss": [0, 1], "tie": [0.5, 0.5]}
+    expected_items = []
+    for original_index, item in enumerate(spec["items"]):
+        if item["baseline_response"] == "none":
+            missing_stage = "baseline_response"
+        elif item["updated_prompt"] == "empty":
+            missing_stage = "updated_prompt"
+        elif item["updated_response"] == "none":
+            missing_stage = "updated_response"
+        else:
+            missing_stage = None
+        included = item["id"] in response_valid
+        expected_items.append({
+            "baseline_prompt_state": "nonempty",
+            "baseline_response_state": item["baseline_response"],
+            "case_family": "batch_promotion",
+            "case_variant": spec["id"],
+            "external_group_label": item["group"],
+            "included_in_source_comparison": included,
+            "missing_stage": missing_stage,
+            "normalized_outcome": (
+                outcome_labels[item["observed_outcome_if_evaluated"]]
+                if included else "not_compared"
+            ),
+            "original_batch_id": spec["id"],
+            "original_index": original_index,
+            "question_id": item["id"],
+            "reward_vector": (
+                reward_vectors[item["observed_outcome_if_evaluated"]] if included else None
+            ),
+            "source_effective_index": response_valid.index(item["id"]) if included else None,
+            "subject": f"subject::{item['id']}",
+            "updated_prompt_state": item["updated_prompt"],
+            "updated_response_state": item["updated_response"],
+        })
+    require(row["item_receipts"] == expected_items, f"item receipt drift: {spec['id']}")
+
+    response_indices = [prompt_valid.index(value) for value in response_valid]
+    source_baseline_ids = [baseline_valid[index] for index in response_indices]
+    source_baseline_by_question = dict(zip(response_valid, source_baseline_ids))
+    bindings = []
+    for item in spec["items"]:
+        if item["id"] in response_valid and item["observed_outcome_if_evaluated"] == "loss":
+            bindings.append({
+                "expected_baseline_prompt": f"baseline-guidance::{item['id']}",
+                "question_id": item["id"],
+                "source_logged_baseline_prompt": (
+                    f"baseline-guidance::{source_baseline_by_question[item['id']]}"
+                ),
+                "source_logged_updated_prompt": f"updated-guidance::{item['id']}",
+            })
+    expected_prompt_provenance = {
+        "negative_case_bindings": bindings,
+        "source_logged_baseline_prompt_alignment": (
+            "MISALIGNED"
+            if any(
+                binding["source_logged_baseline_prompt"] != binding["expected_baseline_prompt"]
+                for binding in bindings
+            )
+            else "ALIGNED_OR_NO_NEGATIVE_RECORD"
+        ),
+    }
+    require(
+        row["prompt_provenance"] == expected_prompt_provenance,
+        f"prompt provenance drift: {spec['id']}",
+    )
+
     outcomes = [
         item["observed_outcome_if_evaluated"] for item in spec["items"] if item["id"] in response_valid
     ]
     wins, losses, ties = outcomes.count("win"), outcomes.count("loss"), outcomes.count("tie")
+    expected_group_deltas = {}
+    for group in sorted({item["group"] for item in spec["items"]}):
+        group_outcomes = [
+            item["observed_outcome_if_evaluated"]
+            for item in spec["items"]
+            if item["id"] in response_valid and item["group"] == group
+        ]
+        expected_group_deltas[group] = (
+            group_outcomes.count("win") - group_outcomes.count("loss")
+        )
+    require(
+        row["group_observed_deltas"] == expected_group_deltas,
+        f"group delta drift: {spec['id']}",
+    )
     missing = len(original) - len(response_valid)
     admission = row["admission"]
     require(admission["source_observed_wins"] == wins, f"win count drift: {spec['id']}")
@@ -231,8 +367,27 @@ def verify_batch(spec: dict[str, Any], row: dict[str, Any]) -> None:
     expected_full = ("ACCEPT" if wins - losses > 0 else "REJECT") if missing == 0 else "UNDEFINED_FROM_OBSERVED_RESULTS"
     require(admission["full_enrolled_decision"] == expected_full, f"full decision drift: {spec['id']}")
     sensitivity = row["missing_as_failure_sensitivity"]
+    counterfactual_delta = wins - losses - missing
+    require(
+        set(sensitivity) == {
+            "assumption",
+            "counterfactual_delta",
+            "missing_count",
+            "not_observed_source_outcomes",
+            "would_accept",
+        },
+        f"sensitivity field drift: {spec['id']}",
+    )
+    require(
+        sensitivity["assumption"] == "counterfactual_unavailable_as_loss",
+        f"sensitivity assumption drift: {spec['id']}",
+    )
     require(sensitivity["missing_count"] == missing, f"missing count drift: {spec['id']}")
-    require(sensitivity["counterfactual_delta"] == wins - losses - missing, f"sensitivity drift: {spec['id']}")
+    require(sensitivity["counterfactual_delta"] == counterfactual_delta, f"sensitivity drift: {spec['id']}")
+    require(
+        sensitivity["would_accept"] is (counterfactual_delta > 0),
+        f"sensitivity admission drift: {spec['id']}",
+    )
     require(sensitivity["not_observed_source_outcomes"] is True, f"sensitivity label drift: {spec['id']}")
 
     kb = row["kb_state"]
@@ -250,6 +405,7 @@ def verify_batch(spec: dict[str, Any], row: dict[str, Any]) -> None:
 
 
 def verify_kb_probe(row: dict[str, Any]) -> None:
+    require(row["schema"] == "mnl-knowledge-base-result/1", "KB probe schema changed")
     require(row["entry_count_before"] == 1 and row["entry_count_after"] == 2, "exact-subject append count changed")
     require(row["exact_subject_count_after"] == 2, "same-subject count changed")
     require(row["top1_guidance"] == "older-guidance" and row["top1_similarity"] == 1.0, "stable top-1 result changed")
@@ -257,10 +413,60 @@ def verify_kb_probe(row: dict[str, Any]) -> None:
 
 
 def verify_eval_probe(row: dict[str, Any]) -> None:
+    require(row["schema"] == "mnl-eval-coverage-result/1", "eval probe schema changed")
     require(row["enrolled_count"] == 2 and row["surviving_question_count"] == 1, "eval counts changed")
     require(row["source_reported_accuracy"] == 1.0, "source accuracy changed")
     require(row["enrolled_coverage"] == 0.5, "enrolled coverage changed")
+    require(row["attempted_question_count"] == 2, "attempted question count changed")
+    require(row["generated_candidate_slot_count"] == 2, "candidate slot count changed")
+    require(row["eligible_question_count"] == 1, "eligible question count changed")
+    require(row["failed_question_count"] == 1, "failed question count changed")
+    require(row["correct_question_count"] == 1, "correct question count changed")
+    require(row["unconditional_correct_over_attempted"] == 0.5, "unconditional accuracy changed")
     require(row["all_failed_question_omitted_from_denominator"] is True, "eval omission label changed")
+
+
+def verify_source_static_probe(row: dict[str, Any]) -> None:
+    require(row["schema"] == "mnl-source-static-result/1", "source static schema changed")
+    require(
+        row["default_component_presence"] == {
+            "anti_patterns": False,
+            "correct_approach": False,
+            "corrected_examples": False,
+            "generalizable_strategy": False,
+            "mistake_summary": False,
+        },
+        "default component contract changed",
+    )
+    require(
+        row["dbqa_custom_component_presence"] == {
+            "anti_patterns": True,
+            "correct_approach": True,
+            "corrected_examples": True,
+            "generalizable_strategy": True,
+            "mistake_summary": True,
+        },
+        "DBQA component contract changed",
+    )
+    require(row["dbqa_custom_prompt_injected"] is True, "DBQA prompt injection changed")
+    require(row["default_prompt_requests_two_to_three_sentences"] is True, "default length contract changed")
+    require(row["dbqa_train_eval_paths_equal"] is True, "DBQA path relation changed")
+    require(
+        row["default_prompt_sha256"]
+        == "a83ea7dedcc40cfd1c63eafbe2a2f595212e6b37968d401cf5d7dbbd61b046a1",
+        "default prompt hash changed",
+    )
+    require(
+        row["dbqa_custom_prompt_sha256"]
+        == "370c40c3c2dbce783ab6aecd73d06689b56165d90c6d71465be174f281eb3c2d",
+        "DBQA custom prompt hash changed",
+    )
+
+
+def verify_runtime_guard(row: dict[str, Any]) -> None:
+    require(row["schema"] == "mnl-runtime-guard-result/1", "runtime guard schema changed")
+    require(row["attempts"] == 0, "network attempt recorded")
+    require(row["status"] == "PASS", "runtime guard status changed")
 
 
 def independent_mutation_detection(cases: dict[str, Any], rows: list[dict[str, Any]]) -> set[str]:
@@ -296,6 +502,18 @@ def independent_mutation_detection(cases: dict[str, Any], rows: list[dict[str, A
         "complete_balanced_reject",
         lambda row: row["kb_state"].update(serialized_post_sha256="0" * 64),
     )
+    batch_mutation(
+        "relabel_baseline_missing_stage",
+        "partial_baseline_none_survivor_accept",
+        lambda row: row["item_receipts"][2].update(missing_stage="updated_response"),
+    )
+    batch_mutation(
+        "hide_prompt_provenance_misalignment",
+        "partial_empty_prompt_provenance_misalignment_accept",
+        lambda row: row["prompt_provenance"].update(
+            source_logged_baseline_prompt_alignment="ALIGNED_OR_NO_NEGATIVE_RECORD"
+        ),
+    )
 
     altered_eval = copy.deepcopy(rows)
     eval_row = index_results(altered_eval)[("evaluation_coverage", "all_failed_question_denominator")]
@@ -322,7 +540,9 @@ def independently_derived_decision(indexed: dict[tuple[str, str], dict[str, Any]
             "complete_balanced_reject",
             "complete_all_ties_reject",
             "partial_updated_none_survivor_accept",
+            "partial_baseline_none_survivor_accept",
             "partial_empty_prompt_survivor_accept",
+            "partial_empty_prompt_provenance_misalignment_accept",
             "all_updated_prompts_empty_rollback",
             "all_updated_responses_none_rollback",
             "net_accept_with_group_loss",
@@ -333,7 +553,7 @@ def independently_derived_decision(indexed: dict[tuple[str, str], dict[str, Any]
     ]
     evaluation = indexed[("evaluation_coverage", "all_failed_question_denominator")]
     return {
-        "batch_case_count": 8,
+        "batch_case_count": 10,
         "canonical_ams_status": {"public_note_depth": "not_assessed_by_evidence_artifact"},
         "complete_cohort_controls": "PASS",
         "evaluation_denominator_probe": {
@@ -345,9 +565,20 @@ def independently_derived_decision(indexed: dict[tuple[str, str], dict[str, Any]
         "full_cohort_status_for_filtered_admissions": "UNDEFINED_FROM_OBSERVED_RESULTS",
         "incomplete_survivor_admissions": incomplete,
         "model_or_api_calls": 0,
+        "original_protocol_batch_case_count": 8,
         "paper_or_benchmark_experiment_reproduction": "NOT_ATTEMPTED",
-        "schema": "mnl-promotion-decision/1",
+        "post_review_amendment_batch_cases": [
+            "partial_baseline_none_survivor_accept",
+            "partial_empty_prompt_provenance_misalignment_accept",
+        ],
+        "prompt_provenance_probe": "NEGATIVE_CASE_BASELINE_PROMPT_MISALIGNED",
+        "schema": "mnl-promotion-decision/2",
         "source_commit": COMMIT,
+        "source_static_contracts": {
+            "dbqa_custom_five_components": "PRESENT_AND_INJECTED",
+            "dbqa_current_train_eval_paths": "SAME_FILE",
+            "default_five_components": "NOT_REQUIRED_BY_LITERAL_PROMPT",
+        },
         "source_to_paper_revision_binding": "NOT_ESTABLISHED",
         "subgroup_non_regression_guarantee": "NOT_ESTABLISHED_BY_NET_BATCH_ACCEPTANCE",
     }
@@ -363,7 +594,7 @@ def verify_receipts() -> None:
     rows = load_jsonl(ROOT / "raw/run_results.jsonl")
     require(cases == frozen_cases(), "frozen case payload changed")
     indexed = index_results(rows)
-    require(len(rows) == 11, "result row count changed")
+    require(len(rows) == 14, "result row count changed")
     for spec in cases["batch_cases"]:
         verify_batch(spec, indexed[("batch_promotion", spec["id"])])
 
@@ -371,17 +602,24 @@ def verify_receipts() -> None:
     verify_kb_probe(kb)
     evaluation = indexed[("evaluation_coverage", "all_failed_question_denominator")]
     verify_eval_probe(evaluation)
-    require(indexed[("runtime_guard", "socket_network_guard")]["attempts"] == 0, "network attempt recorded")
+    source_static = indexed[("source_static", "default_vs_dbqa_source_contracts")]
+    verify_source_static_probe(source_static)
+    verify_runtime_guard(indexed[("runtime_guard", "socket_network_guard")])
 
     manifest = load_json(ROOT / "raw/source_manifest.json")
     require(
-        set(manifest) == {"checkout_observations", "paper", "schema", "source", "source_methods_executed", "synthetic_adapters"},
+        set(manifest) == {
+            "checkout_observations", "paper", "runtime_module_file_bindings", "schema",
+            "source", "source_files_inspected_statically", "source_methods_executed",
+            "synthetic_adapters",
+        },
         "source manifest field set changed",
     )
     require(
         set(manifest["source"]) == {
             "commit", "paper_production_revision_binding", "read_access_instrumented",
-            "runner_declared_source_code_read_allowlist", "upstream_source_copied_into_artifact",
+            "repository", "runner_declared_source_code_read_allowlist", "tree",
+            "upstream_source_copied_into_artifact",
         },
         "source manifest source field set changed",
     )
@@ -395,16 +633,39 @@ def verify_receipts() -> None:
         },
         "paper identity changed",
     )
-    require(manifest["schema"] == "mnl-source-manifest/2", "source manifest schema changed")
+    require(manifest["schema"] == "mnl-source-manifest/3", "source manifest schema changed")
     allowlist = manifest["source"]["runner_declared_source_code_read_allowlist"]
     expected_allowlist = [
         {"git_blob": SOURCE_BLOBS[path], "path": path, "sha256": SOURCE_HASHES[path]}
-        for path in ("mnl/trainer.py", "mnl/evaluator.py", "mnl/knowledge_base.py")
+        for path in (
+            "examples/example_dbqa.py", "mnl/trainer.py", "mnl/evaluator.py",
+            "mnl/knowledge_base.py",
+        )
     ]
     require(allowlist == expected_allowlist, "source allowlist changed")
     require(manifest["source"]["read_access_instrumented"] is False, "source read instrumentation boundary changed")
+    require(
+        manifest["source"]["repository"] == "Bairong-Xdynamics/MistakeNotebookLearning",
+        "source repository changed",
+    )
+    require(
+        manifest["source"]["tree"] == "228955a5dc283bfef28e20f869cf537214f3640c",
+        "source tree changed",
+    )
     require(manifest["source"]["paper_production_revision_binding"] == "NOT_ESTABLISHED", "source/paper binding changed")
     require(manifest["source"]["upstream_source_copied_into_artifact"] is False, "upstream source copy boundary changed")
+    require(
+        manifest["runtime_module_file_bindings"] == {
+            "mnl.evaluator": "mnl/evaluator.py",
+            "mnl.knowledge_base": "mnl/knowledge_base.py",
+            "mnl.trainer": "mnl/trainer.py",
+        },
+        "runtime module binding changed",
+    )
+    require(
+        manifest["source_files_inspected_statically"] == ["examples/example_dbqa.py"],
+        "static source inventory changed",
+    )
     observations = manifest["checkout_observations"]
     require(
         observations == {
@@ -420,6 +681,7 @@ def verify_receipts() -> None:
         manifest["source_methods_executed"] == [
             "PromptTuner._process_batch",
             "PromptTuner._evaluate_on_eval_set",
+            "PromptTuner._get_default_guidance_extraction_prompt",
             "Evaluator.evaluate_batch",
             "Evaluator.evaluate_single",
             "KnowledgeBase.update_entry",
@@ -448,6 +710,8 @@ def verify_receipts() -> None:
         ("alter_rejected_serialized_poststate", "KB_REJECTED_SERIALIZED"),
         ("change_eval_enrolled_denominator", "EVAL_ENROLLED"),
         ("replace_stable_top1_with_new_entry", "KB_TOP1"),
+        ("relabel_baseline_missing_stage", "BATCH_ITEM_RECEIPTS"),
+        ("hide_prompt_provenance_misalignment", "BATCH_PROMPT_PROVENANCE"),
     ]
     expected_controls_payload = {
         "all_detected": True,
