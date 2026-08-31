@@ -5,10 +5,10 @@
 3. In Zotero Desktop, choose `File → Import… → A file` and select `agent-memory-study.rdf`.
 4. Keep Zotero's default **Copy files** behavior. Do not choose **Link to files**, unless you intentionally want attachments tied to the unzip location.
 
-The expected result for current `main` is 21 top-level bibliographic items with 21 attachments:
+The expected result for current `main` is 22 top-level bibliographic items with 22 attachments:
 
 - 10 stored PDFs copied into Zotero storage;
-- 11 linked official PDF URLs;
+- 12 linked official PDF URLs;
 - no tags, private notes, local Zotero keys, local filesystem paths, or OCR derivative.
 
 The Cambridge full-text link may require institutional access. Doyle 1979 links the official MIT DSpace scan; the locally generated searchable OCR edition is deliberately absent.

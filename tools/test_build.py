@@ -35,10 +35,10 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260830-mnl-2'),
+            source.count('assets/materials-data.js?v=20260831-faulty-memory-1'),
             1,
         )
-        self.assertNotIn('assets/materials-data.js?v=20260829-memprobe-1', source)
+        self.assertNotIn('assets/materials-data.js?v=20260830-mnl-2', source)
 
     def test_article_copy_wraps_unbroken_evidence_tokens(self):
         css = (build.ROOT / "assets" / "styles.css").read_text(encoding="utf-8")
@@ -207,6 +207,139 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             if material["id"] in surface["materialIds"]
         }
         self.assertEqual(atlas_memberships, set(material["failureSurfaces"]))
+
+    def test_faulty_memory_worked_close_read_keeps_evidence_layers_separate(self):
+        material = next(
+            item for item in self.data["materials"]
+            if item["id"] == "useful-memories-become-faulty"
+        )
+        self.assertEqual(material["number"], 22)
+        self.assertEqual(material["noteDepth"], "worked")
+        self.assertEqual(material["doi"], "10.48550/arXiv.2605.12978")
+        self.assertEqual(material["sourceUrl"], "https://arxiv.org/abs/2605.12978v1")
+        self.assertEqual(
+            material["pdf"],
+            {
+                "delivery": "official",
+                "url": "https://arxiv.org/pdf/2605.12978v1",
+                "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。",
+            },
+        )
+        self.assertIn("69 个 physical PDF pages", material["readingScope"])
+        self.assertIn("两份 chronology-preserving post-review amendments", material["readingScope"])
+        self.assertIn("没有重跑论文实验", material["readingScope"])
+        self.assertEqual(
+            set(material["failureSurfaces"]),
+            {
+                "write-consolidation",
+                "abstraction-experience",
+                "justification-revision",
+            },
+        )
+        atlas_memberships = {
+            surface["id"]
+            for surface in self.data["atlas"]["failureSurfaces"]
+            if material["id"] in surface["materialIds"]
+        }
+        self.assertEqual(atlas_memberships, set(material["failureSurfaces"]))
+        self.assertTrue(all(
+            protocol["status"] == "proposed-not-run"
+            for protocol in material["openProtocols"]
+        ))
+        contribution = next(
+            item for item in material["contributions"]
+            if item["type"] == "public-test"
+        )
+        self.assertIn("two explicit chronology-preserving post-review amendments", contribution["boundary"])
+        self.assertIn("does not attest historical process identity", contribution["boundary"])
+        self.assertIn("PROCEDURAL_NOT_RECEIPT_PROVEN", contribution["rawResult"])
+        self.assertIn("only final receipts are installed", contribution["limitations"])
+        prefix = "research/faulty-memory-release-boundary-audit/"
+        linked_paths = {
+            link["url"].split("/blob/main/", 1)[1]
+            for link in contribution["links"]
+        }
+        self.assertEqual(
+            linked_paths,
+            {
+                f"{prefix}README.md",
+                f"{prefix}PROTOCOL.md",
+                f"{prefix}REVIEW-AMENDMENT.md",
+                f"{prefix}REVIEW-AMENDMENT-2.md",
+                f"{prefix}audit.py",
+                f"{prefix}verify_checked.py",
+                f"{prefix}raw/audit.json",
+                f"{prefix}raw/mutation-controls.json",
+                f"{prefix}raw/repeatability.json",
+            },
+        )
+        self.assertTrue(all((build.ROOT / path).is_file() for path in linked_paths))
+
+    def test_faulty_memory_checked_package_is_exact_and_receipt_only_passes(self):
+        artifact_root = build.ROOT / "research" / "faulty-memory-release-boundary-audit"
+        expected_files = {
+            "PROTOCOL.md",
+            "REVIEW-AMENDMENT.md",
+            "REVIEW-AMENDMENT-2.md",
+            "README.md",
+            "audit.py",
+            "verify_checked.py",
+            "raw/audit.json",
+            "raw/environment_run_a.json",
+            "raw/environment_run_b.json",
+            "raw/mutation-controls.json",
+            "raw/repeatability.json",
+            "checksums.sha256",
+        }
+        observed_files = {
+            path.relative_to(artifact_root).as_posix()
+            for path in artifact_root.rglob("*")
+            if path.is_file()
+        }
+        self.assertEqual(observed_files, expected_files)
+        self.assertFalse(any(path.is_symlink() for path in artifact_root.rglob("*")))
+
+        listed = {}
+        for line in (artifact_root / "checksums.sha256").read_text(encoding="utf-8").splitlines():
+            digest, relative = line.split("  ", 1)
+            listed[relative] = digest
+        self.assertEqual(set(listed), expected_files - {"checksums.sha256"})
+        for relative, expected in listed.items():
+            observed = hashlib.sha256((artifact_root / relative).read_bytes()).hexdigest()
+            self.assertEqual(observed, expected, relative)
+
+        audit = json.loads((artifact_root / "raw/audit.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            audit["membership"]["totals"],
+            {
+                "experiments": 6,
+                "arms": 762,
+                "rows": 55_075,
+                "valid_rows": 54_771,
+                "invalid_rows": 304,
+            },
+        )
+        comparison = json.loads(
+            (artifact_root / "raw/repeatability.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            comparison["fresh_process_identity"],
+            "PROCEDURAL_NOT_RECEIPT_PROVEN",
+        )
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(artifact_root / "verify_checked.py"),
+                "--mode",
+                "receipt-only",
+            ],
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("source and paper were not reopened", result.stdout)
 
     def test_worked_entries_have_a_public_test_artifact(self):
         for material in self.data["materials"]:

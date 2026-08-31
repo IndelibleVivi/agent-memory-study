@@ -41,7 +41,8 @@
           "agentic-memory",
           "memory-beyond-recall",
           "statefuse-conflict-preserving-memory",
-          "memora-from-recall-to-forgetting"
+          "memora-from-recall-to-forgetting",
+          "useful-memories-become-faulty"
         ]
       },
       {
@@ -88,7 +89,8 @@
           "truth-maintenance-system",
           "memory-beyond-recall",
           "insightemb-action-intent-retrieval",
-          "longmemeval-v2-experienced-colleague"
+          "longmemeval-v2-experienced-colleague",
+          "useful-memories-become-faulty"
         ]
       },
       {
@@ -111,7 +113,8 @@
           "truth-maintenance-system",
           "agm-theory-change",
           "statefuse-conflict-preserving-memory",
-          "memora-from-recall-to-forgetting"
+          "memora-from-recall-to-forgetting",
+          "useful-memories-become-faulty"
         ]
       }
     ],
@@ -128,7 +131,8 @@
           "longmemeval-v2-experienced-colleague",
           "continual-learning-experience-reuse",
           "fluctlightdb-observation-binding",
-          "memprobe-hidden-user-state-recovery"
+          "memprobe-hidden-user-state-recovery",
+          "useful-memories-become-faulty"
         ]
       },
       {
@@ -142,7 +146,8 @@
           "a-tma-state-aware-memory",
           "trustmem-consolidation",
           "memory-beyond-recall",
-          "statefuse-conflict-preserving-memory"
+          "statefuse-conflict-preserving-memory",
+          "useful-memories-become-faulty"
         ]
       },
       {
@@ -2932,6 +2937,288 @@
           ]
         }
       ]
+    },
+    {
+      "number": 22,
+      "id": "useful-memories-become-faulty",
+      "kind": "paper",
+      "title": "Useful Memories Become Faulty When Continuously Updated by LLMs",
+      "authors": [
+        "Dylan Zhang",
+        "Yanshan Lin",
+        "Zhengkun Wu",
+        "Yihang Sun",
+        "Bingxuan Li",
+        "Dianqi Li",
+        "Hao Peng"
+      ],
+      "shortAuthor": "Zhang 等",
+      "year": 2026,
+      "doi": "10.48550/arXiv.2605.12978",
+      "noteDepth": "worked",
+      "readingScope": "完整读了 arXiv:2605.12978v1 的 Abstract、§§1–9、Limitations、Appendix A–I、Tables 1–9、Figures 1–16 与 references，共 69 个 physical PDF pages；references 只用于 method / benchmark lineage。另检查 exact current official public source commit adf347f67a81a19fc71d2529d09108c71a1f9712、六个 released experiment surfaces、selected AppWorld pool fixtures、upstream verifier/demo/test suite，并按 frozen protocol、两份 chronology-preserving post-review amendments 与 final two-root checker执行 model-free exact-current-release audit。没有调用 model、API、agent environment 或 benchmark runtime，没有重跑论文实验；计划中的 external second-model pretest 因无法确认指定 Pro model 而在发送前 fail closed，没有 second-model answer进入本条判断。",
+      "intro": "这篇把 continual memory consolidation 从默认的 self-improvement primitive 改写成一种需要被证明安全的 lossy state transition：同一批 useful episodes 在 repeated LLM rewrite 后，utility 可以先升后降，schedule/grouping 也会改变 end state。它最重要的主张不是 raw memory 永远优于 abstraction，而是 episodic evidence 与 derived lesson 不能共享同一 authority；consolidation 应显式 gated、可回到来源、可撤销，并与 denominator、task pairing、schedule identity 一起被评价。",
+      "whyRead": "Agent memory 很容易把 compact、reusable 与 authoritative 混成同一个词。这篇给出具体 counterexamples，说明 continuously updated textual lessons 会删细节、添伪规则、跨任务覆盖；但 close read 也发现 headline fraction、raw-trajectory wording、Mind2Web scope、missing-outcome denominator 与 paper-to-release provenance 都需要收窄。把 paper、69-page PDF、August expanded release 与55,075 released rows分层后，真正留下的是一套 evidence-preserving consolidation contract，而不是一句 anti-summary slogan。",
+      "keyPoints": [
+        "Memory objects：episodic traces保存单次发生了什么；consolidated abstractions跨 episodes提取 reusable lesson。论文测试 repeated textual rewrite 是否保持 utility，而不是把两者当作同一存储格式。（Abstract；§§1–2，PDF pp. 1–3）",
+        "Non-monotonic utility：在 trajectories有用甚至来自 ground-truth solutions时，memory utility仍可先升、plateau、再下降到 no-memory baseline 以下；作者把损失归于 detail deletion、spurious rules、cross-task overwrite与 abstraction drift。（§§1、4–5；Figures 1–10，PDF pp. 2–8）",
+        "Schedule as treatment：Static-All、streaming batches、order permutations与 repeated near-duplicates可从同一 episode collection形成不同 end states；update operator因此不能默认 exchangeable。（§§4.2–4.4；Figures 3、8–10；Appendix F，PDF pp. 5–7、44–52）",
+        "Gated consolidation：controlled ARC-AGI Stream让 agent选择 Retain/Delete/Consolidate；auto regime偏向保留 episodes，并约为 forced-consolidation accuracy的两倍，episodic-only与 auto相当。它支持显式 action gate，不证明所有 agents都会学到正确 retention policy。（§§5–6；Figures 11–12，PDF pp. 8–10）",
+        "Headline tension：19-task ARC treatment在同一v1中出现 failure 54%、failure 46%、accuracy 54%与Figure 2的10/19=52.6% accuracy四种不兼容写法；Static又被称为at the ceiling但画成18/19=94.7%。public prose必须回到exact fraction与locator。",
+        "Comparator wording：AppWorld所谓raw trajectory control实际使用Qwen3.5-27B对完整ReAct trajectory的episode-level prose summaries；安全名称是episode-level summarized records with no cross-trajectory lesson abstraction，而不是byte-raw histories everywhere。（Tables 2–3；Appendix F.4，PDF pp. 7、15、48–49）",
+        "Exact-current audit：762个arm summaries与55,075 released rows全部内部一致；official 675 numeric assertions只resolve到335 arms，304 missing outcomes影响40 arms，selected current/A/B/succdrop pools保持同一200-record canonical-JSON multiset但historical run lineage未被digest封存。（public checked artifact）"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 先区分 episode evidence 与 derived abstraction",
+          "claim": "作者把 append-only/retained episode records 与 repeatedly rewritten textual lesson bank设成不同 memory forms，避免只用最终QA score把 evidence retention与abstraction utility混在一起。",
+          "locator": "Abstract；§§1–3，PDF pp. 1–4"
+        },
+        {
+          "step": "02 · 在useful-input条件下寻找consolidation regression",
+          "claim": "ScienceWorld、ALFWorld、WebShop、AppWorld与ARC settings刻意使用agent已解或ground-truth experiences，使 observed regression更难被输入噪声单独解释。",
+          "locator": "§§3–4；Figures 1–3；Tables 1–3，PDF pp. 3–7"
+        },
+        {
+          "step": "03 · 用size/checkpoint curves展示utility非单调",
+          "claim": "多种methods在memory增长过程中出现early gain、plateau或later decline；作者据此反驳更多consolidated experience必然更有用的monotonic assumption。",
+          "locator": "§4；Figures 1、4–10，PDF pp. 2、5–7、32–47"
+        },
+        {
+          "step": "04 · 用schedule与memory surgery提出机制",
+          "claim": "同一pool的order/grouping会改变memory end state，删除/替换selected harmful content有时恢复performance；这些是mechanism clues，不是prevalence或significance estimate。",
+          "locator": "§§4.2–4.4、7；Appendix F、I.1，PDF pp. 5–7、10、44–52、61–62"
+        },
+        {
+          "step": "05 · 让agent选择memory action",
+          "claim": "ARC Stream把Retain/Delete/Consolidate暴露为actions；auto与episodic-only优于forced consolidation，使‘每轮必压缩’从默认流程降为可比较treatment。",
+          "locator": "§§5–6；Figures 11–12，PDF pp. 8–10"
+        },
+        {
+          "step": "06 · 把practical recommendation收窄为evidence-first gate",
+          "claim": "作者建议raw episodes作为first-class evidence、consolidation显式gated；paper limitations又把结论限制在textual abstractions、current models、few repeats与point estimates。",
+          "locator": "§§8–9；Limitations，PDF pp. 10–11"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Cross-environment descriptive surfaces",
+          "text": "paper组合ScienceWorld、ALFWorld、WebShop、AppWorld与ARC-AGI/controlled Stream；method、model、task count、trajectory representation与metric不同，因此跨panel共同支持failure mode existence，不形成统一effect size或system ranking。",
+          "locator": "§§3–6；Tables 1–3；Figures 1–12，PDF pp. 3–10"
+        },
+        {
+          "label": "Ground-truth ARC isolation",
+          "text": "先筛选no-memory可解的19个ARC tasks，再以ground-truth solutions形成memory，试图把input-side trajectory error与consolidation error分开；v1 headline数字内部冲突，因此只能按exact fraction/figure逐项署名。",
+          "locator": "§4.1；Figures 2–3；Appendix C，PDF pp. 3、5、23–31"
+        },
+        {
+          "label": "Controlled memory actions",
+          "text": "ARC Stream显式提供Retain、Delete、Consolidate，并比较auto、forced-consolidation与episodic-only regimes；它观察policy/action-space interaction，不等于production agent的owner authority或长期retention governance。",
+          "locator": "§§5–6；Figures 11–12，PDF pp. 8–10"
+        },
+        {
+          "label": "Current-release membership and denominator audit",
+          "text": "standard-library checker独立读取六个arms.csv与merged JSONL，按environment-specific row identity、Boolean success、metadata、aggregate与ARC rectangular grid重算762 arms/55,075 rows，并同时保留task-denominator与valid-only rates。",
+          "locator": "research/faulty-memory-release-boundary-audit/PROTOCOL.md；REVIEW-AMENDMENT.md；REVIEW-AMENDMENT-2.md；raw/audit.json"
+        },
+        {
+          "label": "Official-verifier coverage instrumentation",
+          "text": "先运行exact upstream verifier，再对锁定的13张mapper tables独立枚举675 assertions、requested/actual arm与fallback；coverage unit分别报告assertions、335 unique arms、associated raw/valid rows以及27张unmapped tables。",
+          "locator": "official results/verify_numbers.py；public raw/audit.json"
+        },
+        {
+          "label": "Schedule fixture and receipt-chain validation",
+          "text": "selected pools比较完整canonical JSON objects与ordered IDs，exceptions单列；final checker用17 negative/2 positive production controls、两个fresh seeds、exact section/whole-audit digests、exact JSON types、canonical receipt bytes与no-extra-file inventory区分current source-bound revalidation、producer-recorded comparison和offline package consistency。",
+          "locator": "research/faulty-memory-release-boundary-audit/audit.py；raw/mutation-controls.json；raw/repeatability.json"
+        }
+      ],
+      "reportedFindings": [
+        "paper-reported：ScienceWorld中若干methods随memory size先改善后下降；WebShop AWM随examples增加而success下降，episode-level summarized control更稳。Figure 1同时展示binary success与parenthesized average score，不能把两种metric互换。（Figure 1，PDF p. 2）",
+        "paper-reported：controlled ARC Stream里auto与episodic-only约为forced consolidation accuracy的两倍；作者观察auto agent多数保留episodes，而非持续consolidate。（§§5–6；Figures 11–12，PDF pp. 8–10）",
+        "paper-reported：WebShop W8 memory surgery在50 tasks的single run中删除/替换selected content后performance变化；作者明确没有significance test，因此属于mechanism hypothesis与case evidence。（§7；Appendix I.1，PDF pp. 10、61–62）",
+        "released-row audit：exact current release有762 arms、55,075 rows、54,771 valid outcomes与304 invalid/refusal/skipped rows；所有arm sets、row identities、metadata、count summaries与ARC grids内部一致。（public raw/audit.json）",
+        "official-scope audit：upstream 675 assertions PASS，但只resolve到335/762 arms；这些arms关联33,956/55,075 raw rows。40张number tables中27张、511 data rows未被mapper打开，arms.csv也不在official numeric verifier中。（public raw/audit.json）",
+        "schedule fixture audit：natural/A/B/succdrop各200 records且full canonical-record multiset相同；A/B/succdrop移动196/199/199个positions。N25的B result arm只有49 task identities，N50/N100/N150/N200四schedules才完全paired。（public raw/audit.json）"
+      ],
+      "evidenceLimits": [
+        "论文自己限定text-only、natural-language abstraction、current model capability、few repeats、point estimates与缺少formal error bars；embodied、multimodal、structured与parametric memory不在证据范围。（Limitations，PDF p. 11）",
+        "WebShop W8 surgery是n=50、single run、no significance test；case recovery不能估计failure prevalence、跨task effect或universal causal law。（Appendix I.1，PDF pp. 61–62）",
+        "paper panels使用不同models、methods、task sizes、metrics与trajectory representations；跨environment相似curve支持counterexample family，不支持一个pooled consolidation effect size。",
+        "episode control在AppWorld是model-generated prose summary而非raw token trajectory；representation、retrieval/context budget与cross-episode abstraction同时变化，不能只用raw-vs-summary二元标签解释结果。",
+        "August public source晚于May paper且没有production-revision binding；current released-row consistency不能选择paper headline真值、恢复historical run或替代paper experiment reproduction。",
+        "selected pool bytes相同不证明historical result arm实际消费该pool；arms.csv没有pool digest，缺少model/environment/request receipt与runtime lineage。",
+        "304 missing outcomes改变40个arms的observed level，部分ScienceWorld curve direction也随denominator改变；invalid/refusal不是自动observed failure，task coverage与conditional-valid performance必须并列。",
+        "17 negative/2 positive controls测试AMS checker。stored comparison只验证producer-recorded internal bindings，不自证两次historical processes；fresh source-bound invocation才在当次调用中执行两棵roots并匹配stable bytes。Checksums不是external signature，receipt-only不重新打开source/PDF，也不证明cross-platform reproducibility或security。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "19-task headline有四种互斥读法",
+          "observation": "Abstract说fails on 54%，Introduction说fails on 46%，§4.1说accuracy down to 54%，Figure 2画Stream R10为10/19=52.6% accuracy，即9/19=47.4% failure；Static同时被称at the ceiling但图上是18/19=94.7%。",
+          "implication": "public prose应给exact fraction与locator，并把Static写成near the ceiling。current release不能反向决定May historical run的正确headline。",
+          "locators": [
+            "Abstract，PDF p. 1",
+            "Introduction，PDF p. 2",
+            "Figure 2，PDF p. 3",
+            "§4.1，PDF p. 5"
+          ]
+        },
+        {
+          "label": "Raw trajectory control实际是episode summary",
+          "observation": "Table 2 heading写Trajectory Logs (Summarized)，caption又称raw；Table 3使用summarized rollouts；Appendix F.4说明AppWorld datapoint是Qwen3.5-27B对full ReAct trajectory的prose summary。",
+          "implication": "control只排除cross-trajectory lesson abstraction，不排除episode内compression或summary-model error；rawness、abstraction level与context budget应拆开。",
+          "locators": [
+            "Tables 2–3，PDF pp. 7、15",
+            "Appendix F.4，PDF pp. 48–49"
+          ]
+        },
+        {
+          "label": "Mind2Web点名但没有result surface",
+          "observation": "§3与Limitations点名Mind2Web，却没有setting row、result table、figure或appendix experiment；current release转而宣传PropWorld与ARC-AGI。",
+          "implication": "Mind2Web保持paper-scope unresolved；PropWorld是later release surface，不是缺失paper result的replacement或synonym。",
+          "locators": [
+            "§3，PDF p. 4",
+            "Limitations，PDF p. 11",
+            "exact current source README/CITATION.cff"
+          ]
+        },
+        {
+          "label": "Official 675 cells不是full-release verification",
+          "observation": "upstream verifier的cell是13 selected CSV mappers产生的numeric assertion；675 assertions含重复arm checks并经两个allowlisted ALFWorld fallbacks只resolve到335 unique arms。27/40 number tables与arms.csv不进入该path。",
+          "implication": "675只能描述specific arithmetic surface。完整release membership、denominator、row identity与unmapped tables需要独立gate，不能从0 mismatched外推。",
+          "locators": [
+            "official results/verify_numbers.py",
+            "public raw/audit.json"
+          ]
+        },
+        {
+          "label": "Paper与current release不是同一denominator object",
+          "observation": "paper setting counts与current releasedarm rows多处不同；current interactive release还有304 missing outcomes。ScienceWorld mem0在task denominator下单调下降，在valid-only denominator下非单调。",
+          "implication": "curve claim必须绑定source revision、attempted/valid denominator与paired identity sets；current released curves不替代paper-time estimand。",
+          "locators": [
+            "paper settings/appendices",
+            "public raw/audit.json denominators/registered_curves"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "Consolidation is a candidate, not evidence authority",
+          "text": "跨episodes抽出的lesson是对evidence的可反驳解释。它应有独立identity、support links、schedule/prompt/model receipt与rollback，而不应静默覆盖supporting episodes。",
+          "boundary": "这是paper failure cases与evidence-preservation recommendation的architecture synthesis；不是论文已实现的promotion protocol或对任何production system的failure判定。"
+        },
+        {
+          "label": "Schedule belongs in memory identity",
+          "text": "若同一input multiset因order/batching产生不同lesson，schedule不是无关execution detail，而是derived state provenance的一部分；comparison必须content-lock pool并seal treatment lineage。",
+          "boundary": "selected shipped fixtures证明content conservation，未证明historical runs的pool consumption或causal order effect。"
+        },
+        {
+          "label": "Denominator observability is memory observability",
+          "text": "refusal/error/skipped改变的不只sample size，还会改变curve shape。attempted-task coverage与conditional-valid utility回答不同问题，应同时进入memory evaluation receipt。",
+          "boundary": "current release提供一个exact denominator sensitivity case；它不宣布某个universal missing-data estimator或对paper historical runs重新计分。"
+        },
+        {
+          "label": "Episodic-first does not mean context-dump everything",
+          "text": "first-class episode evidence可以存于durable、可定位层，由retrieval按需进入active context；保留evidence与无限token replay是两个设计决定。",
+          "boundary": "paper比较若干episode controls与consolidators，但没有验证一种production-gradestorage/retrieval architecture或最优context budget。"
+        },
+        {
+          "label": "A pass can coexist with a revise verdict",
+          "text": "current released rows可以在内部完全一致，同时paper/public wording仍因headline、representation与provenance tension需要revision。numeric gate与editorial claim gate保护的是不同truth layers。",
+          "boundary": "PASS只属于exact-current released-row contract；它不提升paper-time identity、causal inference或semantic outcome truth。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "Evidence-preserving consolidation candidate protocol",
+          "status": "proposed-not-run",
+          "question": "当Static-All、fixed-order stream、reversed stream、shuffled batches与episodic-only treatments共享exact episode multiset时，derived lesson能否在保留claim-to-episode lineage与owner correction authority的同时，提高held-out utility，并对schedule变化保持可解释稳定？",
+          "method": "Owner-seal 24–48组public/synthetic episode bundles与atomic support/obsolete/conflict labels；content-address每个input multiset与schedule；consolidator只生成独立candidate，不写canonical state；由blind human/rule-grounded adjudication分别评价support preservation、unsupported addition、obsolete resurrection与legitimate abstraction，再用matched context budget测held-out task utility。",
+          "fixtures": "exact episode IDs/revisions；support facts；legitimate correction；obsolete fact；cross-episode pattern；contradictory/ambiguous controls；Static-All、forward/reverse/shuffled streams；episodic-only与lossless extractive-index controls；candidate claim-to-source links与raw request/response receipts。",
+          "controls": "source/model/prompt/schedule/context-budget hashes；same-multiset pairing；generator与judge separation；owner-authority cases；no-memory and episodic controls；forced unsupported-addition/deletion mutations；abstention allowed；three-run schedule/model repeat；candidate never receivescanonical write authority。",
+          "measures": "support-preservation recall；unsupported-addition and obsolete-resurrection rates；legitimate-abstraction false rejection；claim-level source recoverability；cross-schedule semantic variance；held-out utility with attempted/valid denominators；compression ratio；abstention；cost/latency/egress separately。",
+          "limitations": "这是proposed-not-run protocol，需要另行sealed gold、model/provider/privacy/budget与owner acceptance。它不会恢复paper historical runs，也不授权external model call、Tilia mutation、production promotion或从small synthetic bundles外推real-world prevalence。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "Exact-current released-row, verifier-coverage, denominator and schedule-fixture audit",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-08-31",
+          "basis": "Paper-facing audit of arXiv:2605.12978v1 and exact clean official DylanZSZ/Memory-Collapse-Eval commit adf347f67a81a19fc71d2529d09108c71a1f9712, covering all six released arms.csv/merged JSONL surfaces, all 762 arms and 55,075 rows, the upstream 675-assertion verifier, 40 number tables, selected AppWorld pool fixtures and registered ScienceWorld/AppWorld curves.",
+          "boundary": "This is an independently authored, deterministic, model-free exact-current-release consistency audit under a frozen non-blinded protocol and two explicit chronology-preserving post-review amendments. It is not a paper experiment reproduction, paper-time source identification, model/agent/environment/benchmark run, semantic outcome validation, historical execution replay, causal schedule estimate, significance test, system ranking, prevalence/harm estimate, security audit, production reliability claim or real-user generalization. The stored comparison validates producer-recorded internal bindings but does not attest historical process identity. The evidence artifact does not itself assign canonical AMS reading depth.",
+          "method": "Reject a wrong/dirty checkout or wrong paper; discover and lock the six exact experiment surfaces, source tree/origin, selected input blobs and paper digest; independently validate environment-specific arm/row membership, Boolean outcomes, metadata, aggregates and ARC grids; preserve task and valid denominators; execute then instrument the upstream mapper for assertion/arm/row/table coverage; compare full canonical JSON pool multisets and registered exceptions; build exact ordered curve registries and shared-checkpoint pairing receipts; execute 17 production-path negative and two positive controls; run two fresh roots with distinct hash/traversal seeds; bind checker/source/paper/stable-file hashes through compare/install; require exact JSON types, canonical receipt bytes, whole-audit digest and exact no-extra-file inventory; verify package integrity separately from fresh source-bound stable-byte matching.",
+          "environment": "Darwin arm64；CPython standard library；exact clean official commit adf347f67a81a19fc71d2529d09108c71a1f9712 and exact 69-page arXiv v1 PDF；fresh external-storage roots；PYTHONHASHSEED/traversal seeds 313 and 727；no model, API, agent environment, benchmark runtime, credential, private data or network-dependent experiment called。",
+          "fixture": "Six arms.csv files；six merged per-task JSONL files；762 arms；55,075 rows；54,771 valid and 304 invalid/refusal/skipped outcomes；13 official-mapped and 27 unmapped number tables；natural/A/B/succdrop selected 200-record pools plus D/drop50/replay2 exceptions；seven ScienceWorld curves and four AppWorld schedule curves；exact paper/source manifests；two fresh run roots and installed public receipts。",
+          "controls": "Exact commit/tree/origin/paper/input locks；actual experiment discovery；clean pre/post status；unique environment-specific row identities；all-row Boolean success；metadata/count/grid recomputation；675-assertion and 259 mapped-row freeze；fallback allowlist；assertion-versus-arm unit validator；missing-outcome semantics；non-empty pool IDs and full-object multiset equality；exact curve key/checkpoint registry and CSV-order invariance；17 negative plus two positive production controls；stable section and whole-audit digests；exact JSON scalar types and canonical raw receipt bytes；checker/run/comparison/install bindings；exact eleven-file checksums with no ignored extras；bounded public package path/credential/payload-key scan；adversarial type/serialization/file-set regression fixtures。",
+          "rawResult": "Final formal receipts report PASS for 762 arms and 55,075 rows, including 54,771 valid outcomes and 304 invalid/refusal/skipped rows across 40 affected interactive arms. The exact upstream verifier reproduced 675 assertions with zero mismatches/no-row cases; instrumentation resolved them to 335 unique arms, 33,956 associated raw rows and 33,658 associated valid rows, while 27/40 number tables containing 511 data rows were unmapped. The maximum denominator delta was ScienceWorld eval/letta_N400 at 20.25 percentage points. Selected A/B/succdrop pools preserved the natural 200-record canonical-JSON multiset while moving 196/199/199 positions; pool_D/drop50/replay2 remained explicit exceptions and result-to-pool cryptographic run lineage was false. N25 B used a distinct 49-task set; the four schedules were paired at shared N50/N100/N150/N200, while B-only N85 was not cross-schedule comparable. In the recorded local procedure both fresh runs detected 17/17 negative controls, passed 2/2 positive controls and produced two byte-identical stable receipts bound to exact checker/source/paper metadata; the stored comparison labels historical process identity PROCEDURAL_NOT_RECEIPT_PROVEN. Receipt-only package consistency and a separate fresh source-bound two-root stable-byte match passed. These are executed checked-receipt results, not paper-reported numbers or reconnaissance claims.",
+          "derivedResult": "At exact current public commit adf347f67a81a19fc71d2529d09108c71a1f9712, all 762 released arm summaries are internally consistent with 55,075 released rows under the registered identity, missingness and aggregate rules. The official 675 assertions are a partial arithmetic surface reaching 335 arms, not complete-release verification. The selected current/A/B/succdrop shipped pool files conserve one 200-record full-content multiset while changing order, but their historical result-to-pool binding and causal schedule effects remain unestablished. The audit therefore supports released-row consistency PASS and narrower paper/public wording REVISE at separate evidence layers.",
+          "limitations": "The protocol was frozen after full paper/source reconnaissance and official gates, so it is registered relative to independent checker execution but not blinded. One review rejected preliminary receipts; REVIEW-AMENDMENT.md was frozen before corrected execution. A second adversarial review rejected those corrected receipts before installation; REVIEW-AMENDMENT-2.md was frozen before final execution, and only final receipts are installed. Membership/aggregate agreement does not prove stored-outcome semantics or historical environment behavior. Missing paper-time revision/run/model/pool bindings remain missing. Synthetic controls test the checker. Stored run labels, seeds and environment hashes are producer metadata rather than execution attestation; same-machine byte identity and local package digests are not external signatures, cross-platform reproduction or correctness proofs. Source code/data licensing and third-party benchmark/model terms remain distinct; this AMS-authored artifact receives no new license grant pending owner choice.",
+          "links": [
+            {
+              "label": "method, results and claim ceiling",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/faulty-memory-release-boundary-audit/README.md"
+            },
+            {
+              "label": "frozen original protocol",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/faulty-memory-release-boundary-audit/PROTOCOL.md"
+            },
+            {
+              "label": "frozen post-review amendment",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/faulty-memory-release-boundary-audit/REVIEW-AMENDMENT.md"
+            },
+            {
+              "label": "frozen second post-review amendment",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/faulty-memory-release-boundary-audit/REVIEW-AMENDMENT-2.md"
+            },
+            {
+              "label": "source-locked corrected checker",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/faulty-memory-release-boundary-audit/audit.py"
+            },
+            {
+              "label": "complete stable audit receipt",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/faulty-memory-release-boundary-audit/raw/audit.json"
+            },
+            {
+              "label": "production-path control receipt",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/faulty-memory-release-boundary-audit/raw/mutation-controls.json"
+            },
+            {
+              "label": "producer-recorded stable-byte comparison",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/faulty-memory-release-boundary-audit/raw/repeatability.json"
+            },
+            {
+              "label": "receipt-only and source-bound verifier",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/faulty-memory-release-boundary-audit/verify_checked.py"
+            }
+          ]
+        }
+      ],
+      "keywords": [
+        "memory consolidation",
+        "episodic evidence",
+        "schedule sensitivity",
+        "missingness",
+        "provenance"
+      ],
+      "categories": [
+        "记忆架构",
+        "可靠性",
+        "持续学习"
+      ],
+      "failureSurfaces": [
+        "write-consolidation",
+        "abstraction-experience",
+        "justification-revision"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2605.12978v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2605.12978v1",
+        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
+      },
+      "editorialQuestion": "如果同一批useful episodes只因update order或batch grouping不同就生成不同lesson，consolidated memory凭什么覆盖它所依赖的evidence，而不是先作为一份可撤销、可反驳、带schedule lineage的candidate存在？",
+      "sourceNote": "arXiv v1，2026-05-13；PDF共69页。official public audit锁定August expanded release commit adf347f…，不是paper-time production source；final model-free audit覆盖762 arms/55,075 released rows、upstream verifier scope、denominator sensitivity与selected schedule fixtures。paper-reported、exact-current-source、official-source execution与released-row audit保持分层。"
     }
   ]
 }
