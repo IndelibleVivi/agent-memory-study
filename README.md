@@ -11,7 +11,7 @@
 - 可按主题、failure surface、depth、标题或作者进入材料；
 - 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；达到 `read` 的 entry 进一步展示 argument map、方法与监督、原文内部张力、为什么值得读，以及明确标成 `proposed-not-run` 的公开 protocol；已经执行的 public / synthetic test 则保留署名、method、environment、raw / derived result、controls、limitations 与可复核 artifact links；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 一个没有 backend、继续由 GitHub Pages 托管的静态 reader；唯一 analytics 是 Cloudflare Web Analytics 的 aggregate beacon，不使用 cookie 或 localStorage 识别、画像访客；
-- 21 份 canonical materials：10 份按原许可随站提供的 PDF，另 11 份从 reader 直达 official full text；
+- 22 份 canonical materials：10 份按原许可随站提供的 PDF，另 12 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
 
 这些札记是阅读导航，不是逐篇全文批注，也不代替原文。转述、问题和编辑判断不能冒充作者主张；需要引用时，请回到每条记录链接的 official source。
@@ -35,7 +35,7 @@ Constellation 是同一 canonical data 的 semantic projection：failure surface
 
 ## PDF 怎样分发
 
-这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。21 份 canonical materials 中，10 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；另 11 篇只链接作者、publisher、arXiv 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
+这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。22 份 canonical materials 中，10 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；另 12 篇只链接作者、publisher、arXiv 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
 
 不要单独下载 `agent-memory-study.rdf`：其中 10 个 attachment 使用相对路径。请下载 `main` branch ZIP、解压后再导入 RDF；具体步骤与导入后应出现的结构见 [ZOTERO-IMPORT.md](./ZOTERO-IMPORT.md)。tagged Zotero ZIP 只在显式发版时更新，可能暂时落后于 `main`。Doyle 1979 只链接 MIT DSpace 的 official scan，本地 OCR derivative 不在 repo 或分享包里。
 
@@ -158,6 +158,32 @@ frozen protocol、exact-current-source runner、synthetic identity ledgers 与 r
 在公开 synthetic fixtures 上的 batch promotion、cohort filtering、exact-subject top-1 与 evaluation-denominator
 contracts；不复现 MNL paper experiments，也不把 net-positive survivor decision 解释成 full-cohort、per-item、
 subgroup、held-out 或 deployment non-regression。
+
+*Useful Memories Become Faulty When Continuously Updated by LLMs* close-read 所附的 exact-current released-row /
+verifier-coverage / denominator / schedule-fixture audit 同样先做 receipt-only 校验：
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 \
+python3 research/faulty-memory-release-boundary-audit/verify_checked.py \
+  --mode receipt-only
+```
+
+若要重新建立当前 invocation 的 source-bound evidence，需要 exact clean source commit 与 reviewed arXiv v1 PDF，
+并把 fresh work root 放在有足够空间的位置：
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 \
+python3 research/faulty-memory-release-boundary-audit/verify_checked.py \
+  --mode source-bound \
+  --source /path/to/Memory-Collapse-Eval \
+  --paper-pdf /path/to/useful-memories-become-faulty-arxiv-2605.12978v1.pdf \
+  --work-root /external-disk/faulty-memory-source-bound-fresh
+```
+
+完整 protocol、两份 chronology-preserving review amendments、final receipts 与 claim ceiling 见
+[`research/faulty-memory-release-boundary-audit/`](./research/faulty-memory-release-boundary-audit/)。它不调用 model、
+API 或 agent environment，也不重跑论文实验；receipt-only 只证明 package/internal consistency，stored
+comparison 不自证历史上的两次 process，fresh source-bound invocation 才执行自己的两棵 roots。
 
 ## 通过 pull request 贡献
 

@@ -3,7 +3,7 @@
 This repository is a hybrid reading index.
 
 - 10 unmodified PDFs are redistributed under their own file-level Creative Commons licenses. Their authors, canonical sources, license URLs, and public filenames are listed in [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
-- 11 other full texts are linked from official author, publisher, arXiv, or institutional-repository endpoints and are not copied into this repository or its Zotero package.
+- 12 other full texts are linked from official author, publisher, arXiv, or institutional-repository endpoints and are not copied into this repository or its Zotero package.
 - The Doyle OCR derivative is local-only. Only the official MIT DSpace scan is linked.
 - The reading notes are editorial paraphrases, evidence boundaries, questions, and explicitly labeled inferences produced during a human-machine collaborative reading workflow. Every entry states its actual `noteDepth` and reading scope; `read` is used only where the richer evidence layers have actually been prepared. No entry may be represented as a source quotation, a complete reading beyond its stated scope, a reproduced experiment, or an author claim.
 - Public research tests must be paper-facing, system-agnostic, independently understandable, and based on public or synthetic fixtures. Each states method, environment, controls, raw versus derived results, limitations, and a reproducible artifact link. The Doyle static oracle is a bounded editorial reconstruction, not the original TMS implementation or a reproduction of the paper.
