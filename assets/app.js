@@ -46,6 +46,7 @@
   }));
   let route = readRoute();
   let articleObserver = null;
+  let constellationMeasurer = null;
 
   const refs = {
     atlasView: document.querySelector("#atlas-view"),
@@ -341,6 +342,101 @@
     return positions;
   }
 
+  function constellationMaterialLabel(material) {
+    return `${String(material.number).padStart(2, "0")} ${material.shortAuthor || material.authors[0]}`;
+  }
+
+  function measureConstellationText(text, fontSize) {
+    if (!constellationMeasurer) {
+      const uiFont = getComputedStyle(document.documentElement).getPropertyValue("--ui").trim();
+      constellationMeasurer = {
+        context: document.createElement("canvas").getContext("2d"),
+        fontFamily: uiFont || "sans-serif",
+      };
+    }
+    constellationMeasurer.context.font = `${fontSize}px ${constellationMeasurer.fontFamily}`;
+    return constellationMeasurer.context.measureText(text).width;
+  }
+
+  function constellationLabelRect(x, y, textAnchor, width) {
+    const left = textAnchor === "end" ? x - width : textAnchor === "middle" ? x - width / 2 : x;
+    return { x: left - 3, y: y - 14, width: width + 6, height: 19 };
+  }
+
+  function rectsOverlap(left, right) {
+    return left.x < right.x + right.width
+      && left.x + left.width > right.x
+      && left.y < right.y + right.height
+      && left.y + left.height > right.y;
+  }
+
+  function circleOverlapsRect(cx, cy, radius, rect) {
+    const nearX = Math.max(rect.x, Math.min(cx, rect.x + rect.width));
+    const nearY = Math.max(rect.y, Math.min(cy, rect.y + rect.height));
+    return Math.hypot(cx - nearX, cy - nearY) < radius;
+  }
+
+  function resolveMaterialLabelPlacements(positions) {
+    const placements = new Map();
+    const obstacles = [];
+    data.atlas.failureSurfaces.forEach((surface) => {
+      const anchor = constellationAnchors.get(surface.id);
+      const [primary, secondary] = surface.label.split(" / ");
+      const width = Math.max(
+        measureConstellationText(`${surface.number} ${primary}`, 13),
+        secondary ? measureConstellationText(secondary, 11) : 0,
+      );
+      const left = anchor.textAnchor === "end"
+        ? anchor.labelX - width
+        : anchor.textAnchor === "middle"
+          ? anchor.labelX - width / 2
+          : anchor.labelX;
+      obstacles.push({ x: left - 3, y: anchor.labelY - 16, width: width + 6, height: 37 });
+    });
+
+    const collides = (rect) => {
+      if (
+        rect.x < 6
+        || rect.y < 6
+        || rect.x + rect.width > constellationViewBox.width - 6
+        || rect.y + rect.height > constellationViewBox.height - 6
+      ) return true;
+      if (obstacles.some((obstacle) => rectsOverlap(rect, obstacle))) return true;
+      return data.atlas.failureSurfaces.some((surface) => {
+        const anchor = constellationAnchors.get(surface.id);
+        return circleOverlapsRect(anchor.x, anchor.y, 17, rect);
+      });
+    };
+
+    positions.forEach((point, materialId) => {
+      const width = measureConstellationText(constellationMaterialLabel(materialsById.get(materialId)), 11);
+      const pointsRight = Math.cos(point.angle) >= 0;
+      const sideCandidate = (right, dy) => ({
+        x: point.x + (right ? 13 : -13),
+        y: point.y + dy,
+        textAnchor: right ? "start" : "end",
+      });
+      const candidates = [
+        sideCandidate(pointsRight, 4),
+        sideCandidate(!pointsRight, 4),
+        sideCandidate(pointsRight, -10),
+        sideCandidate(!pointsRight, -10),
+        sideCandidate(pointsRight, 16),
+        sideCandidate(!pointsRight, 16),
+        sideCandidate(pointsRight, 30),
+        sideCandidate(!pointsRight, 30),
+        { x: point.x, y: point.y - 14, textAnchor: "middle" },
+        { x: point.x, y: point.y + 22, textAnchor: "middle" },
+      ];
+      const chosen = candidates.find(
+        (candidate) => !collides(constellationLabelRect(candidate.x, candidate.y, candidate.textAnchor, width)),
+      ) || candidates[0];
+      placements.set(materialId, chosen);
+      obstacles.push(constellationLabelRect(chosen.x, chosen.y, chosen.textAnchor, width));
+    });
+    return placements;
+  }
+
   function constellationContext() {
     const matches = matchingMaterials();
     const activePath = pathsById.get(route.path);
@@ -450,7 +546,7 @@
     setConstellationReading(kind, kind === "material" ? materialsById.get(id) : surfacesById.get(id));
   }
 
-  function renderConstellationPlot(positions, context) {
+  function renderConstellationPlot(positions, context, labelPlacements) {
     const svg = createSvgElement("svg", {
       viewBox: `0 0 ${constellationViewBox.width} ${constellationViewBox.height}`,
       role: "img",
@@ -526,8 +622,7 @@
       if (context.hasEmphasis && !materialIsEmphasized(material, context)) link.classList.add("is-dimmed");
       if (context.hasEmphasis && materialIsEmphasized(material, context)) link.classList.add("is-emphasized");
 
-      const pointsRight = Math.cos(point.angle) >= 0;
-      const label = `${String(material.number).padStart(2, "0")} ${material.shortAuthor || material.authors[0]}`;
+      const labelPlacement = labelPlacements.get(material.id);
       link.append(
         createSvgElement("circle", { cx: point.x, cy: point.y, r: 22, class: "constellation-hit" }),
         createSvgElement("circle", { cx: point.x, cy: point.y, r: 4.7, class: "constellation-star" }),
@@ -536,11 +631,11 @@
         link.append(createSvgElement("circle", { cx: point.x, cy: point.y, r: 10.5, class: "constellation-depth-ring" }));
       }
       link.append(createSvgElement("text", {
-        x: point.x + (pointsRight ? 13 : -13),
-        y: point.y + 4,
-        "text-anchor": pointsRight ? "start" : "end",
+        x: labelPlacement.x,
+        y: labelPlacement.y,
+        "text-anchor": labelPlacement.textAnchor,
         class: "constellation-material-label",
-      }, label));
+      }, constellationMaterialLabel(material)));
       link.addEventListener("mouseenter", () => setConstellationHover("material", material.id, true));
       link.addEventListener("focus", () => setConstellationHover("material", material.id, true));
       link.addEventListener("mouseleave", () => setConstellationHover("material", material.id, false));
@@ -640,8 +735,9 @@
     const bridgeCount = data.materials.filter((material) => material.failureSurfaces.length > 1).length;
     refs.constellationStats.textContent = `${data.materials.length} materials · ${data.atlas.failureSurfaces.length} surfaces · ${bridgeCount} bridges`;
     const positions = constellationPositions();
+    const labelPlacements = resolveMaterialLabelPlacements(positions);
     const context = constellationContext();
-    renderConstellationPlot(positions, context);
+    renderConstellationPlot(positions, context, labelPlacements);
     renderConstellationMatrix(context);
     setConstellationReading();
   }
