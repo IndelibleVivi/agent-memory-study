@@ -1,0 +1,44 @@
+{
+  "source": "https://arxiv.org/abs/2606.25161v1",
+  "scope": "Manually transcribed rounded values, visually checked in the bundled original PDF; not raw model outputs.",
+  "headline_differences": {
+    "memalpha_validation": {
+      "locator": "Table 1, PDF p. 7",
+      "trustmem": "66.3",
+      "comparator": "61.9",
+      "comparator_name": "Mem-alpha"
+    },
+    "memoryagentbench": {
+      "locator": "Table 2, PDF p. 7",
+      "trustmem": "65.7",
+      "comparator": "59.2",
+      "comparator_name": "Mem-alpha"
+    },
+    "halumem_extraction_f1": {
+      "locator": "Table 3, PDF p. 7",
+      "trustmem": "69.45",
+      "comparator": "57.31",
+      "comparator_name": "Mem0"
+    }
+  },
+  "figure_2": {
+    "omission": {
+      "locator": "Figure 2(a), PDF p. 3",
+      "baseline": "13.48",
+      "trustmem": "8.08",
+      "baseline_name": "Mem-T"
+    },
+    "corruption": {
+      "locator": "Figure 2(b), PDF p. 3",
+      "baseline": "0.67",
+      "trustmem": "0.14",
+      "baseline_name": "MemAgent"
+    },
+    "hallucination": {
+      "locator": "Figure 2(c), PDF p. 3",
+      "baseline": "0.02",
+      "trustmem": "0.01",
+      "baseline_name": "AtomMem"
+    }
+  }
+}

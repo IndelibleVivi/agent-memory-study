@@ -1,0 +1,239 @@
+{
+  "provenance": "AMS original synthetic fixtures, authored 2026-09-08; no private or benchmark records. Every chunk fact is required, all unaffected prior facts remain valid, and explicit withdrawals are authoritative by construction.",
+  "cases": [
+    {
+      "id": "legitimate-correction",
+      "explanation": "只更新被明确更正的 deadline，保留 timezone。",
+      "prompt": {
+        "instruction": "Preserve all valid facts. Apply explicit corrections and withdrawals.",
+        "contract": "exact-key-atomic-v1",
+        "pre": {
+          "deadline": "Tuesday",
+          "timezone": "UTC"
+        },
+        "chunk": {
+          "facts": {
+            "deadline": "Friday"
+          },
+          "withdraw": []
+        }
+      },
+      "actions": [
+        {
+          "op": "revise",
+          "key": "deadline",
+          "value": "Friday"
+        }
+      ]
+    },
+    {
+      "id": "drops-valid-condition",
+      "explanation": "新 deadline 正确，但删掉仍有效的 timezone。",
+      "prompt": {
+        "instruction": "Preserve all valid facts. Apply explicit corrections and withdrawals.",
+        "contract": "exact-key-atomic-v1",
+        "pre": {
+          "deadline": "Tuesday",
+          "timezone": "UTC"
+        },
+        "chunk": {
+          "facts": {
+            "deadline": "Friday"
+          },
+          "withdraw": []
+        }
+      },
+      "actions": [
+        {
+          "op": "revise",
+          "key": "deadline",
+          "value": "Friday"
+        },
+        {
+          "op": "prune",
+          "key": "timezone"
+        }
+      ]
+    },
+    {
+      "id": "unsupported-addition",
+      "explanation": "新 deadline 正确，同时凭空添加 room。",
+      "prompt": {
+        "instruction": "Preserve all valid facts. Apply explicit corrections and withdrawals.",
+        "contract": "exact-key-atomic-v1",
+        "pre": {
+          "deadline": "Tuesday",
+          "timezone": "UTC"
+        },
+        "chunk": {
+          "facts": {
+            "deadline": "Friday"
+          },
+          "withdraw": []
+        }
+      },
+      "actions": [
+        {
+          "op": "revise",
+          "key": "deadline",
+          "value": "Friday"
+        },
+        {
+          "op": "write",
+          "key": "room",
+          "value": "Blue"
+        }
+      ]
+    },
+    {
+      "id": "equivalent-correction",
+      "explanation": "在本 toy 的原子动作序列中，另一条等效更正；不代表真实 executor 支持原子事务。",
+      "prompt": {
+        "instruction": "Preserve all valid facts. Apply explicit corrections and withdrawals.",
+        "contract": "exact-key-atomic-v1",
+        "pre": {
+          "deadline": "Tuesday",
+          "timezone": "UTC"
+        },
+        "chunk": {
+          "facts": {
+            "deadline": "Friday"
+          },
+          "withdraw": []
+        }
+      },
+      "actions": [
+        {
+          "op": "prune",
+          "key": "deadline"
+        },
+        {
+          "op": "write",
+          "key": "deadline",
+          "value": "Friday"
+        }
+      ]
+    },
+    {
+      "id": "already-stored",
+      "explanation": "所需事实已存在，no-op 保持完整。",
+      "prompt": {
+        "instruction": "Preserve all valid facts. Apply explicit corrections and withdrawals.",
+        "contract": "exact-key-atomic-v1",
+        "pre": {
+          "deadline": "Friday"
+        },
+        "chunk": {
+          "facts": {
+            "deadline": "Friday"
+          },
+          "withdraw": []
+        }
+      },
+      "actions": []
+    },
+    {
+      "id": "missing-noop",
+      "explanation": "同一 chunk，但旧记忆为空；同一 no-op 遗漏必要事实。",
+      "prompt": {
+        "instruction": "Preserve all valid facts. Apply explicit corrections and withdrawals.",
+        "contract": "exact-key-atomic-v1",
+        "pre": {},
+        "chunk": {
+          "facts": {
+            "deadline": "Friday"
+          },
+          "withdraw": []
+        }
+      },
+      "actions": []
+    },
+    {
+      "id": "write-new",
+      "explanation": "与 missing-noop 共享全部 prompt 输入，写入缺失事实。",
+      "prompt": {
+        "instruction": "Preserve all valid facts. Apply explicit corrections and withdrawals.",
+        "contract": "exact-key-atomic-v1",
+        "pre": {},
+        "chunk": {
+          "facts": {
+            "deadline": "Friday"
+          },
+          "withdraw": []
+        }
+      },
+      "actions": [
+        {
+          "op": "write",
+          "key": "deadline",
+          "value": "Friday"
+        }
+      ]
+    },
+    {
+      "id": "legitimate-prune",
+      "explanation": "明确撤回 room 后删除它，保留 timezone。",
+      "prompt": {
+        "instruction": "Preserve all valid facts. Apply explicit corrections and withdrawals.",
+        "contract": "exact-key-atomic-v1",
+        "pre": {
+          "room": "Blue",
+          "timezone": "UTC"
+        },
+        "chunk": {
+          "facts": {},
+          "withdraw": [
+            "room"
+          ]
+        }
+      },
+      "actions": [
+        {
+          "op": "prune",
+          "key": "room"
+        }
+      ]
+    },
+    {
+      "id": "keeps-retracted",
+      "explanation": "撤回后仍把 room 留作当前事实；toy 不设历史视图。",
+      "prompt": {
+        "instruction": "Preserve all valid facts. Apply explicit corrections and withdrawals.",
+        "contract": "exact-key-atomic-v1",
+        "pre": {
+          "room": "Blue",
+          "timezone": "UTC"
+        },
+        "chunk": {
+          "facts": {},
+          "withdraw": [
+            "room"
+          ]
+        }
+      },
+      "actions": []
+    },
+    {
+      "id": "invalid-revise",
+      "explanation": "目标不存在，toy executor 拒绝整次动作序列。",
+      "prompt": {
+        "instruction": "Preserve all valid facts. Apply explicit corrections and withdrawals.",
+        "contract": "exact-key-atomic-v1",
+        "pre": {},
+        "chunk": {
+          "facts": {
+            "deadline": "Friday"
+          },
+          "withdraw": []
+        }
+      },
+      "actions": [
+        {
+          "op": "revise",
+          "key": "deadline",
+          "value": "Friday"
+        }
+      ]
+    }
+  ]
+}

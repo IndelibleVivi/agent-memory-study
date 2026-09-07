@@ -1,0 +1,255 @@
+{
+  "study": "trustmem-transition-study",
+  "boundary": "Original deterministic fixtures and arithmetic on rounded paper values; no official code, LLM judge, training, or benchmark reproduction.",
+  "transitions": [
+    {
+      "id": "legitimate-correction",
+      "post": {
+        "deadline": "Friday",
+        "timezone": "UTC"
+      },
+      "executable": true,
+      "coverage_ok": true,
+      "preservation_ok": true,
+      "faithfulness_ok": true,
+      "missing_new": [],
+      "lost_prior": [],
+      "unsupported": [],
+      "score": "1"
+    },
+    {
+      "id": "drops-valid-condition",
+      "post": {
+        "deadline": "Friday"
+      },
+      "executable": true,
+      "coverage_ok": true,
+      "preservation_ok": false,
+      "faithfulness_ok": true,
+      "missing_new": [],
+      "lost_prior": [
+        "timezone"
+      ],
+      "unsupported": [],
+      "score": "2/3"
+    },
+    {
+      "id": "unsupported-addition",
+      "post": {
+        "deadline": "Friday",
+        "timezone": "UTC",
+        "room": "Blue"
+      },
+      "executable": true,
+      "coverage_ok": true,
+      "preservation_ok": true,
+      "faithfulness_ok": false,
+      "missing_new": [],
+      "lost_prior": [],
+      "unsupported": [
+        "room"
+      ],
+      "score": "2/3"
+    },
+    {
+      "id": "equivalent-correction",
+      "post": {
+        "timezone": "UTC",
+        "deadline": "Friday"
+      },
+      "executable": true,
+      "coverage_ok": true,
+      "preservation_ok": true,
+      "faithfulness_ok": true,
+      "missing_new": [],
+      "lost_prior": [],
+      "unsupported": [],
+      "score": "1"
+    },
+    {
+      "id": "already-stored",
+      "post": {
+        "deadline": "Friday"
+      },
+      "executable": true,
+      "coverage_ok": true,
+      "preservation_ok": true,
+      "faithfulness_ok": true,
+      "missing_new": [],
+      "lost_prior": [],
+      "unsupported": [],
+      "score": "1"
+    },
+    {
+      "id": "missing-noop",
+      "post": {},
+      "executable": true,
+      "coverage_ok": false,
+      "preservation_ok": true,
+      "faithfulness_ok": true,
+      "missing_new": [
+        "deadline"
+      ],
+      "lost_prior": [],
+      "unsupported": [],
+      "score": "2/3"
+    },
+    {
+      "id": "write-new",
+      "post": {
+        "deadline": "Friday"
+      },
+      "executable": true,
+      "coverage_ok": true,
+      "preservation_ok": true,
+      "faithfulness_ok": true,
+      "missing_new": [],
+      "lost_prior": [],
+      "unsupported": [],
+      "score": "1"
+    },
+    {
+      "id": "legitimate-prune",
+      "post": {
+        "timezone": "UTC"
+      },
+      "executable": true,
+      "coverage_ok": true,
+      "preservation_ok": true,
+      "faithfulness_ok": true,
+      "missing_new": [],
+      "lost_prior": [],
+      "unsupported": [],
+      "score": "1"
+    },
+    {
+      "id": "keeps-retracted",
+      "post": {
+        "room": "Blue",
+        "timezone": "UTC"
+      },
+      "executable": true,
+      "coverage_ok": true,
+      "preservation_ok": true,
+      "faithfulness_ok": false,
+      "missing_new": [],
+      "lost_prior": [],
+      "unsupported": [
+        "room"
+      ],
+      "score": "2/3"
+    },
+    {
+      "id": "invalid-revise",
+      "post": {},
+      "executable": false,
+      "coverage_ok": false,
+      "preservation_ok": true,
+      "faithfulness_ok": true,
+      "missing_new": [
+        "deadline"
+      ],
+      "lost_prior": [],
+      "unsupported": [],
+      "score": "0"
+    }
+  ],
+  "pairing": {
+    "different-prior-same-noop": {
+      "candidate_ids": [
+        "already-stored",
+        "missing-noop"
+      ],
+      "chunk_only_control": {
+        "status": "paired",
+        "preferred": "already-stored",
+        "rejected": "missing-noop",
+        "gap": "1/3",
+        "same_prompt": false,
+        "same_actions": true
+      },
+      "same_prompt": {
+        "status": "incomparable-prompt"
+      }
+    },
+    "shared-prior-write-vs-noop": {
+      "candidate_ids": [
+        "write-new",
+        "missing-noop"
+      ],
+      "chunk_only_control": {
+        "status": "paired",
+        "preferred": "write-new",
+        "rejected": "missing-noop",
+        "gap": "1/3",
+        "same_prompt": true,
+        "same_actions": false
+      },
+      "same_prompt": {
+        "status": "paired",
+        "preferred": "write-new",
+        "rejected": "missing-noop",
+        "gap": "1/3",
+        "same_prompt": true,
+        "same_actions": false
+      }
+    },
+    "shared-prior-correction-vs-omission": {
+      "candidate_ids": [
+        "legitimate-correction",
+        "drops-valid-condition"
+      ],
+      "chunk_only_control": {
+        "status": "paired",
+        "preferred": "legitimate-correction",
+        "rejected": "drops-valid-condition",
+        "gap": "1/3",
+        "same_prompt": true,
+        "same_actions": false
+      },
+      "same_prompt": {
+        "status": "paired",
+        "preferred": "legitimate-correction",
+        "rejected": "drops-valid-condition",
+        "gap": "1/3",
+        "same_prompt": true,
+        "same_actions": false
+      }
+    },
+    "shared-prior-tie": {
+      "candidate_ids": [
+        "legitimate-correction",
+        "equivalent-correction"
+      ],
+      "chunk_only_control": {
+        "status": "insufficient-gap",
+        "gap": "0"
+      },
+      "same_prompt": {
+        "status": "insufficient-gap",
+        "gap": "0"
+      }
+    }
+  },
+  "paper_arithmetic": {
+    "headline_differences": {
+      "memalpha_validation": "22/5",
+      "memoryagentbench": "13/2",
+      "halumem_extraction_f1": "607/50"
+    },
+    "figure_2": {
+      "omission": {
+        "relative_reduction_percent": 40.059,
+        "absolute_percentage_point_drop": "27/5"
+      },
+      "corruption": {
+        "relative_reduction_percent": 79.104,
+        "absolute_percentage_point_drop": "53/100"
+      },
+      "hallucination": {
+        "relative_reduction_percent": 50.0,
+        "absolute_percentage_point_drop": "1/100"
+      }
+    }
+  }
+}

@@ -371,13 +371,14 @@
       "shortAuthor": "Yang 等",
       "year": 2026,
       "doi": null,
-      "noteDepth": "skim",
-      "readingScope": "Abstract、§3–§5、Limitations；未逐项复核 benchmark 或训练实现。",
-      "intro": "把 memory consolidation 看作一连串可检查的状态转换，在错误成为持久状态之前检查遗漏、破坏和无依据新增。",
+      "noteDepth": "worked",
+      "readingScope": "完整阅读 arXiv v1 的 Abstract、§§1–5、Limitations、Appendices A–D、Tables 1–6、Figures 1–5 的图注；视觉复核 Figure 2、Figure 5、核心结果表与 Appendix D prompt。PDF 共 18 页，pdfinfo 与 pdftotext 分页一致，关键定位页另行渲染核对；pypdf preflight 因依赖未安装为 advisory unavailable，不记 PASS。References 只作来源定位，没有逐项验证。另执行 AMS 原创的 10 个结构化 transition、4 组候选配对控制与论文已舍入数值的算术复核；没有执行官方实现、LLM judge、RL 训练或 benchmark 复现。",
+      "intro": "TRUSTMEM 把记忆构造写成一连串状态转换：每次处理新 chunk 后，检查新证据是否遗漏、有效旧事实是否受损、修改是否有依据。它将这类局部监督与终端任务奖励结合，并在同一旧状态和 chunk 下对候选编辑建立偏好，训练能够构造紧凑、有用记忆的 policy。",
       "keyPoints": [
-        "policy 按时间顺序处理 chunk，对累计 memory 执行 Write、Revise、Prune；terminal memory 交给固定 retriever 与 answer model，因此训练重点是写入与更新策略。（§3.1）",
-        "Memory Transition Verifier 只查看当前 chunk、编辑动作和受影响的局部 memory，分别检查 coverage、preservation 与 faithfulness。（§3.2）",
-        "训练把 downstream utility、compactness、action executability、specificity 与 transition trustworthiness 合并；去掉 verifier reward 后，论文报告的总体分数从 66.3 降到 58.7。（§3.3–§4.4）"
+        "状态转换单位：policy 按时间顺序处理 chunk，对累计 memory 选择 Write、Revise、Prune 或不作编辑；deterministic executor 得到新状态，terminal memory 再交给固定 retriever 与 answer model。训练目标是构造有用且紧凑的记忆。（§3.1，PDF pp. 4–5）",
+        "局部监督：frozen LLM verifier 查看 chunk、动作以及被触及或检索的记忆，分别评估 coverage、preservation、faithfulness；Figure 5 允许合法压缩、更正与“事实已存好”的 no-op。（§3.2；Figure 5，PDF pp. 5、16）",
+        "两路优化：task / compactness 的 sample reward 与 executability / specificity / verifier 的 transition reward 汇合；TR-GRPO 再对同一旧状态、同一 chunk 下的最高/最低 verifier 候选建立偏好对。绝对 score 未必校准；ranking 也依赖比较条件成立。（§§3.3–3.4，Eqs. 1–4，PDF pp. 5–7）",
+        "评测口径：66.3 与 65.7 是不同 benchmark 的 task macro-average；8.08% / 0.14% / 0.01% 是 GPT-4o-mini 标记 major 错误的 transition 比例，不是逐事实错误率或真实用户长期系统的故障率。（Tables 1–2；Figure 2；§4.5；Appendix D）"
       ],
       "keywords": [
         "memory consolidation",
@@ -390,7 +391,7 @@
       "failureSurfaces": [
         "write-consolidation"
       ],
-      "sourceUrl": "https://arxiv.org/abs/2606.25161",
+      "sourceUrl": "https://arxiv.org/abs/2606.25161v1",
       "pdf": {
         "delivery": "bundled",
         "url": "papers/02-yang-2026-trustmem.pdf",
@@ -398,18 +399,136 @@
         "license": "CC BY 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
-      "editorialQuestion": "核心 verifier 和关键 reliability 数字都依赖 LLM judge；怎样证明它测到的不只是 rubric adherence，而是独立、可复核的事实可靠性？",
+      "editorialQuestion": "在共享完整前态的候选池中，verifier 排序与独立人工判定的分歧落在哪里；局部视图遗漏哪些信息时，正确的更正或 no-op 会被误罚？",
       "sourceNote": "",
       "designTransfer": {
         "byline": "Agent Memory Study editors",
         "date": "2026-09-08",
-        "when": "系统会自动改写、合并或删除长期笔记，需要检查一次更新到底损失了什么。",
-        "move": "把一次候选编辑和它影响的旧内容放在一起，分别检查遗漏、原有事实被破坏、无依据新增。先让结果可比较，再决定是否接纳。",
-        "check": "选一条合法更正、一条漏掉仍有效条件的摘要和一条凭空新增；比较你的现有检查是否把它们分开，同时检查 verifier 自己判错的情况。",
-        "boundary": "这是 skim 范围内的初读线索，待全文和实现核验；这组试验未执行，LLM verifier 通过也不是独立事实证明。",
-        "basis": "既有札记 “关键抓手”：§§3.1–3.3；“继续追问”：LLM judge 的独立可靠性。",
+        "when": "现有系统会自动改写长期笔记，或你正在比较、训练几种记忆编辑策略。",
+        "move": "保留同一份实际输入、候选动作与执行后状态；分别检查新事实遗漏、有效旧条件损伤和无依据新增，再在相同输入下比较候选。",
+        "check": "把真实更新器与 judge 放在冻结前态的合法更正、压缩、no-op 和证据缺失样例上，加入独立人工判断；检查其排序是否错误惩罚了合法更新。",
+        "boundary": "公开的 10 个结构化 transition 和 4 组配对控制已经执行；这里提出的真实更新器 / LLM judge / 人工对照尚未执行，不能由 toy 结果代替。",
+        "basis": "本次完整精读 §§3.1–3.4、Figure 5、Appendix D；本条公开 synthetic test。",
         "status": "proposed-not-run"
-      }
+      },
+      "whyRead": "这篇最有价值的转向，是把一次记忆修改变成独立的研究对象：最终问答成功可以掩盖中途删掉的条件，也不能说明一条无依据新增从未留下。它让 coverage、preservation 与 faithfulness 获得不同的检查位置，又用同状态下的候选差异连接训练。读者可以借走这种比较方法，同时保留三个未闭合的问题：verifier 看到了多少证据、它自己的错误如何独立衡量、采样后是否真的在比较同一个输入。",
+      "argumentMap": [
+        {
+          "step": "从最终正确转向中途编辑",
+          "claim": "终端失败无法唯一归因到某次编辑，终端成功也可能掩盖未被当前问题触发的错误；因此监督单位移到 chunk-level transition。",
+          "locator": "§1；§3.2，PDF pp. 1–2、5"
+        },
+        {
+          "step": "让可执行编辑接受局部语义检查",
+          "claim": "显式动作定义状态变化，三维 verifier 对遗漏、旧事实损伤和无依据新增提供局部信号；紧凑性和下游任务效用仍保留在奖励中。",
+          "locator": "§§3.1–3.3，PDF pp. 4–6"
+        },
+        {
+          "step": "在相同条件下比较候选",
+          "claim": "同一旧状态与 chunk 的候选共享 prompt；top-1 / bottom-1 分差超过 margin 后，length-normalized policy/reference log-probability margin 形成 ranking loss。",
+          "locator": "§3.4，Eqs. 2–4，PDF pp. 6–7"
+        },
+        {
+          "step": "分别展示任务效用与编辑可靠性",
+          "claim": "validation、MemoryAgentBench、HaluMem 与 major-transition judge 衡量不同对象；平均表现和 ablation 提供支持，但不构成所有子任务支配或 verifier 的独立正确性证明。",
+          "locator": "§§4.1–4.7；Tables 1–4；Figure 2；Appendices A–D"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Training and data split",
+          "text": "从 Mem-α 的 4,139-instance training pool 取平衡的 562 个实例，463 个 held-out validation instances；Qwen3-4B 在 32 H100 上训练约两天，报告 step-85 checkpoint，训练与评测关闭 thinking。作者说明没有用 MemoryAgentBench / HaluMem examples 训练。",
+          "locator": "§4.1，PDF pp. 7–8"
+        },
+        {
+          "label": "Reward and candidate conditioning",
+          "text": "实现说明给出 Rtask + Ract + 0.1Rver + 0.05Reff + 0.1Rtype，8 rollouts、learning rate 1e-6、KL coefficient 0.001；偏好 margin 0.15，每 batch 最多 256 pairs，ranking weight 0.05、βrank 0.1。Eq. 3 要求正负候选共享 prompt。",
+          "locator": "§3.4；§4.1，PDF pp. 6、8"
+        },
+        {
+          "label": "Different metrics and comparators",
+          "text": "Validation / MemoryAgentBench 使用各任务原有指标后取 task macro-average；HaluMem-Medium 有 20 users、30,073 dialogue turns、14,948 memory points 与 3,467 QA pairs，分别测 extraction / updating / QA。基线模型和系统并不统一：Table 6 列出 4B、7B、8B、32B 与 backbone 未固定的 infrastructures。",
+          "locator": "§4.1；Tables 1–3、6，PDF pp. 7–8、15"
+        },
+        {
+          "label": "Evaluation judge is not the training verifier contract",
+          "text": "§3.2 的训练 verifier 仅说明 frozen LLM 与紧凑 transition 视图；§4.5 / Appendix D 则明确以 GPT-4o-mini、temperature 0 判断 major omission / corruption / hallucination。后者只计 major，一个 transition 可同时命中多类，不能把训练三维 score 与评测三种 error flags 当成同一量。",
+          "locator": "§3.2；§4.5；Figure 5；Appendix D，PDF pp. 5、9–10、16–18"
+        }
+      ],
+      "reportedFindings": [
+        "Mem-α validation 平均 66.3，对 Mem-α 61.9 提高 4.4 分；MemoryAgentBench 平均 65.7，对 59.2 提高 6.5 分。它没有赢下每个 task，例如 MemoryAgentBench Multi-Doc 为 64.0，Mem-α 为 68.0。（Tables 1–2，PDF p. 7）",
+        "HaluMem extraction F1 为 69.45，对 Mem0 的 57.31 提高 12.14 分；updating correctness 46.84 低于 Zep 47.28，QA correctness 55.22 低于 Mem-T 59.43。最佳 extraction F1 不等于每个阶段或指标都最佳。（Table 3，PDF p. 7；Appendix C）",
+        "去掉 Ract、Reff、Rver 时，validation Overall 分别为 54.0、61.8、58.7；PRM-style GRPO 为 60.3，完整方法为 66.3。表内没有提供跨 seed 区间，也没有逐项给出消融训练的完整采样轨迹。（Table 4；§4.4，PDF p. 9）",
+        "Figure 2 报告 omission 8.08%、corruption 0.14%、hallucination 0.01%。逐类最佳基线分别是 Mem-T 13.48%、MemAgent 0.67%、AtomMem 0.02%；据舍入值计算的相对下降约 40.1%、79.1%、50.0%，绝对下降为 5.40、0.53、0.01 个百分点。（Figure 2；§4.5，PDF pp. 3、10）"
+      ],
+      "evidenceLimits": [
+        "本次在原文、arXiv record、作者主页和定向 GitHub 搜索范围内没有定位可归属于该论文的官方实现、训练 checkpoint 或逐 transition 原始判定。不能证明这些 artifacts 在所有渠道都不存在；同名 PyPI 项目不能替代来源身份。",
+        "可靠性 headline 依赖 LLM judge 与 major/minor 阈值；原文未提供独立人工标注对照、judge agreement、逐方法 transition 总数或足够恢复整数计数的 raw outputs。温度为零不等于判断没有偏差。（§4.5；Appendix D）",
+        "§3.4 明确要求同旧状态候选，但如何在多条完整 rollout 分叉后建立同状态候选池，公开文字没有充分展开。本站只验证必要的比较条件，没有证据指认作者训练违反它。",
+        "方法给出学习目标、verifier reward 和 ranking，不足以确认部署时逐次拒绝不合格写入、回滚或原子提交的执行路径。训练后的改进不能自动称为 runtime admission guarantee。",
+        "Table 3 的 QA correctness / hallucination / omission 不能在缺少原始计数与明确共同分母时自行补成百分比分布：例如 TRUSTMEM 三格之和为 73.75。本站保留各原始数值，不推断缺失部分、不重算 benchmark 排名。",
+        "公开 synthetic test 采用显式重要性、权威更正和精确键值事实；不能检验自然语言 verifier 的误判、局部视图完整性、实际训练收益、真实用户效用或长期安全。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "评测说明中的 updated memory 与展示的 prompt 不完全对应",
+          "observation": "Appendix D 的正文说 judge 接收 updated memory，且 record 包含更新后状态；其展示的 Inputs 却只列 dataset group、sample ID、chunk index、prior memory、input chunk 与 memory operations，Rules 也只列 prior/chunk/operations。Figure 5 的训练 verifier prompt 则显式包含 post_memory。",
+          "implication": "复核者需要真实 serialization 或代码才能确认评测究竟看见什么。动作可能足以按已知 executor 推导后态，因此这个文字差异不证明 judge 实际缺失证据，也不能据此判定结果无效。",
+          "locators": [
+            "Appendix D, PDF pp. 17–18",
+            "Figure 5, PDF p. 16"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "比较条件本身是实验输入",
+          "text": "做记忆编辑 A/B 比较时，应保存并复用实际 conditioning snapshot。任务相同、chunk 序号相同都不能替代同一旧状态；本次 no-op 反例展示了错误归因如何出现。",
+          "boundary": "这是从 §3.4 提炼并由原创结构化反例支持的设计判断，不是对官方 rollout 实现的审计。完整 prompt 相同也不证明 judge 正确。"
+        },
+        {
+          "label": "把候选编辑和执行后的状态一起保留下来",
+          "text": "读者可以先给现有更新器加可检查的前态、动作与后态记录，再分别检查新证据遗漏、有效条件损伤和无依据新增；这样一次“答对”不会覆盖所有中间事实。",
+          "boundary": "论文支持 transition-level inspection 的研究方向；本站没有验证这种记录方式在真实项目中的收益或代价。"
+        },
+        {
+          "label": "排序改进不能代替评测独立性",
+          "text": "使用相对偏好可以减弱绝对分数校准的要求，却仍会学习 verifier 的系统性误判。值得单独构造 verifier 容易错判的合法压缩、更正和证据缺失例，而不是只看下游平均分。",
+          "boundary": "这是待真实 judge 对照检验的建议；本次未调用模型，没有测 judge error rate 或 training effect。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "同一条编辑，面对的是同一份记忆吗？",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-08",
+          "basis": "TRUSTMEM arXiv:2606.25161v1 §§3.1–3.4、Figure 5、Appendix D；Tables 1–3、Figure 2 的舍入值。公开 artifact 使用 AMS 原创 synthetic fixtures。",
+          "boundary": "有限结构化语义下的教学实验与算术复核；不是 TRUSTMEM 官方实现、LLM verifier 或 benchmark 复现。",
+          "method": "以一个确定性的 exact-key executor 执行 10 个 transition，分别计算显式 coverage / preservation / faithfulness；四组候选对比粗分组与完整 prompt 检查，另复核论文 headline 算术。",
+          "environment": "macOS arm64；Python 3.13.3 标准库；无网络、第三方依赖、模型、训练或 API 调用。",
+          "fixture": "原创 deadline、timezone 与 room 键值场景；包含合法更正、遗漏条件、无依据新增、等效编辑、no-op、明确撤回与无效动作；每条重要性与更正权威均由 fixture 明示。",
+          "controls": "同状态 write/no-op 正控制、同状态更正/遗漏正控制、不同前态相同 no-op 反例、等分不配对；8 项测试另检查 chunk/contract 差异、严格 margin、fixture 不变性与原子执行。",
+          "rawResult": "10 个 transition 与 4 组双路径配对已保存。不同前态的相同 no-op 分别得 1 与 2/3；粗分组生成相同动作的优劣 pair，完整 prompt 检查拒绝。两组同状态正控制正常配对，等效更正不形成偏好。",
+          "derivedResult": "候选分差可能来自旧状态，而非动作；比较前先冻结实际输入。按 Figure 2 的已舍入数值，50% 相对 hallucination 降幅对应 0.01 个百分点绝对下降。",
+          "limitations": "没有推断自然语言重要性或更正权威；等权三维分数与原子执行规则为 AMS 自定。未观察官方采样行为、LLM 误判、训练效果或真实任务效用。",
+          "links": [
+            {
+              "label": "方法、反例与复跑命令",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/trustmem-transition-study/README.md"
+            },
+            {
+              "label": "公开 runner",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/trustmem-transition-study/audit.py"
+            },
+            {
+              "label": "逐项执行结果",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/trustmem-transition-study/results.json"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 3,

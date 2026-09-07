@@ -12,6 +12,7 @@
 - 可按主题、failure surface、depth、标题或作者进入材料；
 - 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；达到 `read` 的 entry 展示 argument map 与为什么值得读，并按实际证据补充方法与监督、原文内部张力；尚未执行的公开 protocol 明确标成 `proposed-not-run`；已经执行的 public / synthetic test 则保留署名、method、environment、raw / derived result、controls、limitations 与可复核 artifact links；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 每篇现有材料都有“读完，可以怎样借用”：适用情境、可借用的做法、尚未执行的迁移对照、依据与边界；`skim` / `abstract` 显示初读线索提示，编者建议不改变阅读深度或历史测试结论；
+- 阅读可以继续形成公开、可复跑的研究材料，例如 [TRUSTMEM 的同状态候选比较](research/trustmem-transition-study/README.md)：10 个原创结构化 transition、4 组配对控制和论文数字复核；它单独记录已执行结果，真实更新器 / LLM judge 的迁移对照仍是未执行建议，不把教学实验算作论文效果复现；
 - 一个没有 backend、继续由 GitHub Pages 托管的静态 reader；唯一 analytics 是 Cloudflare Web Analytics 的 aggregate beacon，不使用 cookie 或 localStorage 识别、画像访客；
 - 23 份 canonical materials：10 份按原许可随站提供的 PDF，另 13 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
