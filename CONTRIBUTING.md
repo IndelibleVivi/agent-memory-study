@@ -65,6 +65,14 @@ Project-specific 评价可以进入，但被评价的 project、版本与证据�
 
 修改现有场景或规则后，重建 browser payload，运行 `node --test tools/test_revision_study.cjs`，并用 `node research/correction-scope-study/run.js` 更新逐场景结果。保持新的 source / assumption / evidence 与结论可区分。
 
+### 6. 把阅读带进设计
+
+可在 material 的可选 `designTransfer` 中整理有依据的编者迁移建议：`byline`、`date`、`status`、`when`、`move`、`check`、`boundary`、`basis`。分别记录署名 / 整理日期、状态、适用情境、借用的做法、一个能反驳做法的对照、证据上限与已有札记 / 原文定位。不要复制一套通用项目清单到所有材料。
+
+`status` 只允许 `proposed-not-run`。栏目里的 `check` 是新场景建议，已有论文结果和 public test 仍在原有证据层；真正执行后应按 `public-test` 合同独立提交结果，不能把这个栏目改成一份无方法的 PASS。整理日期不是重读全文、重新验证 upstream 或重新执行历史实验的日期。
+
+栏目允许从 `skim` 形成待核验线索，但页面会明确提示该阅读范围。没有足够依据时可以不提供此字段，栏目隐藏；不能为了补齐页面而升级 depth。共读连接的借鉴点 / 边界直接取自 `studies.readings`，不在 material 再复制一份。
+
 ## 声音与证据怎样分开
 
 - quotation、source-backed paraphrase、paper-reported result、source audit 与 editorial inference 必须可区分；逐字引用必须有精确 locator；

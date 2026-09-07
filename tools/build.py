@@ -477,6 +477,17 @@ def load_and_validate(path: Path) -> dict[str, Any]:
                     tension["locators"], f"{paper['id']}.sourceTensions[{index}].locators"
                 )
 
+        if "designTransfer" in paper:
+            transfer = paper["designTransfer"]
+            assert_exact_text_object(
+                transfer, {"byline", "date", "status", "when", "move", "check", "boundary", "basis"},
+                f"{paper['id']}.designTransfer",
+            )
+            if transfer["status"] != "proposed-not-run":
+                raise ValueError(f"{paper['id']}.designTransfer must be proposed-not-run")
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", transfer["date"]):
+                raise ValueError(f"{paper['id']}.designTransfer.date must be YYYY-MM-DD")
+
         if "editorialInferences" in paper:
             inferences = paper["editorialInferences"]
             if not isinstance(inferences, list) or not inferences:

@@ -39,6 +39,22 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             with self.subTest(mutation=mutate), self.assertRaises(ValueError):
                 self.validate_copy(invalid)
 
+    def test_design_transfer_requires_attribution_basis_and_unrun_boundary(self):
+        for field in ("byline", "date", "status", "when", "move", "check", "boundary", "basis"):
+            invalid = copy.deepcopy(self.data)
+            invalid["materials"][0]["designTransfer"].pop(field)
+            with self.subTest(missing=field), self.assertRaises(ValueError):
+                self.validate_copy(invalid)
+
+    def test_design_transfer_cannot_claim_an_executed_result(self):
+        invalid = copy.deepcopy(self.data)
+        invalid["materials"][0]["designTransfer"]["status"] = "passed"
+        with self.assertRaisesRegex(ValueError, "proposed-not-run"):
+            self.validate_copy(invalid)
+        without_transfer = copy.deepcopy(self.data)
+        without_transfer["materials"][0].pop("designTransfer")
+        self.validate_copy(without_transfer)
+
     def test_current_public_data_validates(self):
         validated = build.load_and_validate(self.data_path)
         self.assertGreater(len(validated["materials"]), 0)
@@ -50,7 +66,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260908-studies-1'),
+            source.count('assets/materials-data.js?v=20260908-transfers-1'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260830-mnl-2', source)

@@ -344,7 +344,17 @@
         "accessNote": "arXiv v2 preprint"
       },
       "editorialQuestion": "transition view 本身没有被直接作为问答目标充分测试；在含糊、并存或带条件例外的状态里，query-view 与 state-role classifier 会不会只是新的错误入口？",
-      "sourceNote": "arXiv v2；本站链接官方 PDF，不在 repo 内重新分发。"
+      "sourceNote": "arXiv v2；本站链接官方 PDF，不在 repo 内重新分发。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "同一事实有现值、旧值和变更过程，而系统常在“问现在”与“问当时”之间混用证据。",
+        "move": "先给可核验的状态变化保留角色与关联，在检索结果里同时说明此次问题要看的时间视角。",
+        "check": "保留同一份旧值 / 现值证据，分别问现在、过去和如何变化；再故意错标一个角色，检查错误是否被更有把握地写进回答。",
+        "boundary": "这组对照是编者建议，尚未执行。显式角色会放大错误标注；不能从可解释 trace 直接推定因果定位。",
+        "basis": "既有札记 “关键抓手”：§§4.1–4.6；“编者判断”：Read-side label amplification。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 2,
@@ -389,7 +399,17 @@
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
       "editorialQuestion": "核心 verifier 和关键 reliability 数字都依赖 LLM judge；怎样证明它测到的不只是 rubric adherence，而是独立、可复核的事实可靠性？",
-      "sourceNote": ""
+      "sourceNote": "",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "系统会自动改写、合并或删除长期笔记，需要检查一次更新到底损失了什么。",
+        "move": "把一次候选编辑和它影响的旧内容放在一起，分别检查遗漏、原有事实被破坏、无依据新增。先让结果可比较，再决定是否接纳。",
+        "check": "选一条合法更正、一条漏掉仍有效条件的摘要和一条凭空新增；比较你的现有检查是否把它们分开，同时检查 verifier 自己判错的情况。",
+        "boundary": "这是 skim 范围内的初读线索，待全文和实现核验；这组试验未执行，LLM verifier 通过也不是独立事实证明。",
+        "basis": "既有札记 “关键抓手”：§§3.1–3.3；“继续追问”：LLM judge 的独立可靠性。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 3,
@@ -431,7 +451,17 @@
         "url": "https://arxiv.org/pdf/2608.03137v1"
       },
       "editorialQuestion": "如果 persistent state 从未跨 episode 延续，这套结果能在多会话、冲突或隐私敏感的长期记忆中保持吗？",
-      "sourceNote": ""
+      "sourceNote": "",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "长任务有严格 context 上限，但退出 prompt 的证据仍可能在后续步骤中需要。",
+        "move": "区分持久保存的 episode 与当前可见的 active context，让“移出上下文”后仍存在明确的回取路径。",
+        "check": "让同一条必要证据先离开 active context，再在后续问题中需要它；比较只摘要、可回取 episode 两种路径，并检查跨会话时证据是否真的保留。",
+        "boundary": "这是 skim 范围下的设计线索，试验未执行。原文逐 episode reset 的设定不能证明跨会话持久性。",
+        "basis": "既有札记 “关键抓手”：§§3.1–3.2、4–5。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 4,
@@ -474,7 +504,17 @@
         "url": "https://arxiv.org/pdf/2607.16211v1"
       },
       "editorialQuestion": "正文对 LSH 与 HNSW 的描述并不完全一致，且 0.58 秒只计 search latency；完整 extraction、conflict check 与 write path 的准确率—延迟权衡究竟怎样？",
-      "sourceNote": ""
+      "sourceNote": "",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "已有结构化记忆图，而更新一条事实会触发大量无关节点重算。",
+        "move": "先沿实际依赖标出受影响邻居，只对它们重算；把写入前冲突检查的成本也计入更新流程。",
+        "check": "修改一条局部依赖，比较局部重算与完整重算的最终状态和端到端耗时；再改一条跨区域依赖，检查是否漏更新。",
+        "boundary": "这是 skim 范围内的候选做法，未验证实现或延迟；是否值得采用取决于你的图是否具有局部依赖，不能直接套用论文 search latency。",
+        "basis": "既有札记 “关键抓手”：§§3.2–3.6、3.9；“继续追问”：完整 write path 成本。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 5,
@@ -522,7 +562,17 @@
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
       "editorialQuestion": "证据来自 text-serialized activity stream 与 offline reward-model judge；接入原生事件后，触发校准和真实 interruption cost 是否仍成立？",
-      "sourceNote": ""
+      "sourceNote": "",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "主动助手需要决定何时打扰，以及这次打扰应该依据哪些事件或实体。",
+        "move": "分别记录触发决定与依据选择；即使保持同一种语言生成器，也能定位“叫醒错了”还是“带来的依据错了”。",
+        "check": "固定一段公开事件流，分别改变 trigger threshold 与依据选择；同时记录漏提醒、误提醒和读者对打扰的评价。",
+        "boundary": "这是 skim 范围下的迁移线索，尚未执行。离线活动流上的模型分数不能替代原生事件接入和真实 interruption cost。",
+        "basis": "既有札记 “关键抓手”：§§3–5；阅读范围 与 “继续追问”。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 6,
@@ -729,7 +779,17 @@
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
       "editorialQuestion": "全部 aggregate conclusions 来自同一个 generated week；这些 scaffold 在不同日程结构、seed 与真实干扰成本下是否稳定？",
-      "sourceNote": "已列入 COLM 2026 Accepted Papers；arXiv author comment 标注 conference publication。公开 arXiv 仍为 v1（2026-07-14）；截至 2026-08-14，atlas 暂不记录 proceedings DOI。"
+      "sourceNote": "已列入 COLM 2026 Accepted Papers；arXiv author comment 标注 conference publication。公开 arXiv 仍为 v1（2026-07-14）；截至 2026-08-14，atlas 暂不记录 proceedings DOI。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "提醒、日程或 agent 意图会被取消、改期和覆盖，动作可能在更新后才到达。",
+        "move": "给动作保留它所针对的意图版本，并分别记录触发依据、执行时刻与当前有效版本。",
+        "check": "构造旧版按时、新版迟到、取消后重放三种动作；检查现有 scorer 是否区分目标版本，再观察增加 heartbeat 带来的误触和查询成本。",
+        "boundary": "这些迁移对照尚未执行。已有 audit 验证了特定 scorer / log 边界，没有证明 agent 的真实意图或真实用户打扰成本。",
+        "basis": "既有札记 公开测试 与 “编者判断”：Intention identity、observation provenance；原文 §3.3、Appendix A.4。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 7,
@@ -987,7 +1047,17 @@
             }
           ]
         }
-      ]
+      ],
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "系统会根据失败生成经验，并准备把“这一批总体变好”当成自动更新依据。",
+        "move": "保留更新前后的同一组任务身份、缺失原因和实际进入 prompt 的经验；把提出候选的任务与检验泛化的任务分开。",
+        "check": "在一组候选对照里故意放入一个缺失输出、一个退步任务和一条写入但检索不到的经验，检查 aggregate 是否仍掩盖它们。",
+        "boundary": "这组迁移试验未执行。已有 audit 支持特定过滤、检索与计分路径的边界；不能由 batch net gain 推出逐项不退步或部署安全。",
+        "basis": "既有札记 §3.3、Algorithm 1 与 公开测试；“编者判断”：promotion population、retrieval reachability。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 8,
@@ -1032,7 +1102,17 @@
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
       "editorialQuestion": "框架主要用 controllability 与 coupling 划 internal/external boundary；如何加入 provenance、authority 与 reversibility，避免“可写”被误当成“有权写”？",
-      "sourceNote": ""
+      "sourceNote": "",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "agent 的 prompt、缓存、工具操作与长期规则混在一起，难以说明某次调用读写了什么。",
+        "move": "用 working / episodic / semantic / procedural memory 和内外部 action 画出实际读写路径；在会修改长期规则的路径上标明谁能批准变化。",
+        "check": "沿一件真实但可匿名化的任务，逐次标出读取对象、写入对象和留下的状态；找出“数据可写”却没有清楚授权语义的地方。",
+        "boundary": "这是 skim 范围内的架构梳理建议，未测试效果。CoALA 提供组件语言，不直接提供适合你项目的 provenance 或授权实现。",
+        "basis": "既有札记 “关键抓手”：§§4.1、4.3–4.5；“继续追问”。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 9,
@@ -1081,7 +1161,17 @@
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
       "editorialQuestion": "跨 trajectory 的 universal rule 如果失去到具体来源的可追溯路径，来源被纠正后要怎样让高层抽象同步失效？",
-      "sourceNote": ""
+      "sourceNote": "",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "准备把大量经历压成反思或跨场景经验，却还不清楚希望保留哪种信息。",
+        "move": "先按单次记录、单次反思、跨经历归纳区分产物，再为派生经验保留回到具体来源的路径。",
+        "check": "用同一组经历各做一种表示，分别问一个具体细节和一个跨场景问题；再更正一条来源，检查哪些派生产物需要重算。",
+        "boundary": "这是 skim 范围下的阅读线索与未执行对照。survey 没有跨方法 quantitative comparison，三个阶段也不是质量或成熟度排名。",
+        "basis": "既有札记 “关键抓手”：§§2.2、4、6 与 Limitations。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 10,
@@ -1126,7 +1216,17 @@
         "licenseUrl": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       },
       "editorialQuestion": "结论只来自两个 environment、各一个 task pair、单一 BM25 retriever 与两次 runs；retrieval dilution 能否跨 retriever 和任务结构复现？",
-      "sourceNote": ""
+      "sourceNote": "",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "记忆库越来越大，旧经验仍在，但取回结果越来越重复或无关。",
+        "move": "把存储保留率与检索覆盖率分开看；在固定 context 预算下检查重复命中、相关经验被挤出和困难任务的表现。",
+        "check": "固定问题与目标经验，逐步加入相似无关条目；比较当前 retriever 与一个简单 lexical 对照，记录实际进入 context 的条目。",
+        "boundary": "这是 skim 范围下的试验建议，未执行。原文只有有限环境与 retriever 条件，不能把 dilution 当成所有记忆系统的通用解释。",
+        "basis": "既有札记 “关键抓手”：§§2.2–2.3、3–4、Appendix D。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 11,
@@ -1174,7 +1274,17 @@
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
       "editorialQuestion": "在关键质量指标依赖 LLM judge、实验尚未覆盖长期真实用户互动的情况下，怎样识别某一次具体 memory mutation 是帮助还是伤害了结果？",
-      "sourceNote": ""
+      "sourceNote": "",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "准备让同一 agent policy 同时回答问题、删改长期记忆和整理当前 context。",
+        "move": "先观察单次 memory mutation 的输入、动作和下游使用，避免仅凭任务最终成功就认定此前每次编辑都有益。",
+        "check": "把必要信息写入长期层后清空 active context，再加入干扰信息；比较是否能真正回取。对一项编辑做有 / 无对照，看具体行为是否改变。",
+        "boundary": "这是 skim 范围内的线索，试验未执行。共享 terminal advantage 不能提供每次 mutation 的独立因果贡献。",
+        "basis": "既有札记 “关键抓手”：§§3.1–3.4；“继续追问”。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 12,
@@ -1217,7 +1327,17 @@
         "url": "https://ojs.aaai.org/index.php/AAAI/article/view/9886/9745"
       },
       "editorialQuestion": "论文仍未解决何时运行 metacognitive layer、监控哪些 expectation、如何裁剪长 trace；怎样避免每个 discrepancy 都自动扩张成新 goal？",
-      "sourceNote": ""
+      "sourceNote": "",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "agent 卡在规划或重复失败中，需要检查自己的过程，但不想每个异常都扩张成新任务。",
+        "move": "先记录一个预期与实际结果的差异，让监控指出具体 phase，再单独决定是否替换规划策略。",
+        "check": "保留一次 planner impasse 与一次可自行恢复的偏差，比较持续启用 meta-loop 和只在该类卡点介入时的行为与成本。",
+        "boundary": "这是 skim 范围内的候选设计，尚未执行。原文 meta-level 评价范围很窄，不能推出所有任务都值得增加 metacognitive layer。",
+        "basis": "既有札记：Figures 1–2；pp. 3714–3716。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 13,
@@ -1400,7 +1520,17 @@
         "url": "https://dspace.mit.edu/server/api/core/bitstreams/4fdf6aa2-170b-45e6-ae88-8f10d61e1c6d/content"
       },
       "editorialQuestion": "如果 support graph 只能维护“给定 reasons 下当前成立”，谁来声明 derived summary 的 retain / recompute / retire policy，又怎样让 source authority、actor scope 与 authorized revision 不被一次形式上有效的 edge 静默替代？",
-      "sourceNote": "本站只链接 MIT DSpace 的官方扫描；本地生成的 OCR 衍生版不公开分发。"
+      "sourceNote": "本站只链接 MIT DSpace 的官方扫描；本地生成的 OCR 衍生版不公开分发。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "一条派生结论有多个理由，来源又可能被撤回、更正或限制在不同范围。",
+        "move": "为结论保留独立的支持关系，并明确来源变化后哪些派生结论保留、重算或退出。先从少量可人工核对的关系开始。",
+        "check": "给同一结论两份独立支持，只撤回其中一份；再撤回最后一份，检查状态与解释是否一起改变。专题可先演示这个问题，再用自己的语义检验。",
+        "boundary": "项目迁移试验未执行。现有 static oracle 与专题只是各自声明范围内的重建；支持有效不等于来源真实或修订已获授权。",
+        "basis": "既有札记 AIM-521 §§2–3、5–7 与 “编者判断”；共读专题 alternative-support / withdrawn。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 14,
@@ -1441,7 +1571,17 @@
         "accessNote": "可能需要机构访问"
       },
       "editorialQuestion": "selection function 可以在形式上挑选“最佳” remainders，但重要性从何而来？若选择由 opaque model 作出，逻辑 postulates 如何与 provenance 和授权结合？",
-      "sourceNote": ""
+      "sourceNote": "",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "遇到新旧说法冲突，需要讲清楚系统做的是添加、放弃还是接受新说法后的调整。",
+        "move": "先用 expansion / contraction / revision 区分变更意图，并把选择保留哪些理由的规则写出来。",
+        "check": "在一个可手工检查的小命题集里加入冲突，比较两个不同保留策略会丢掉什么；检查选择依据能否向读者说明。",
+        "boundary": "这是 skim 范围下的形式化思考线索，尚未逐行复核证明或执行对照。postulates 不会替你决定何种来源、偏好或主体具有权威。",
+        "basis": "既有札记 “关键抓手”：§§1–2；“继续追问”：selection function 的依据。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 15,
@@ -1486,7 +1626,17 @@
         "url": "https://arxiv.org/pdf/2606.09483v1"
       },
       "editorialQuestion": "cross-domain core schema 的阈值在特定 held-out split 上调整、主要收益也集中于同一 benchmark；它是在稳定追踪变化，还是在生成适配 benchmark 的高层推断？",
-      "sourceNote": ""
+      "sourceNote": "",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "系统同时保存原始输入、事实与高层偏好推断，后两者会随时间修订。",
+        "move": "把 raw input 与派生事实、schema 分开保留；显式更正与后台归纳走可区分的路径，并为高层结论留下来源引用。",
+        "check": "对照长期偏好改变、临时状态和带条件例外三类输入，检查是否都被错误写成稳定 revision；再更正来源，观察高层结论如何变化。",
+        "boundary": "这是 skim 范围下的未执行建议。保留 evidence reference 不保证自动失效传播正确，也不证明高层推断值得永久保留。",
+        "basis": "既有札记 “关键抓手”：§§2.1–2.3、3.4 与 Limitations。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 16,
@@ -1650,7 +1800,17 @@
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
       "editorialQuestion": "最有用的 partial-trajectory anchors 仍继承 problem-level label，而且每个 insight–problem pair 只验证一次；如果当前 goal 或 state label 本身不可靠，action-intent retrieval 会不会只是更有方向地注入错误？",
-      "sourceNote": "arXiv v2；PDF 共 29 页。"
+      "sourceNote": "arXiv v2；PDF 共 29 页。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "相似度检索常找回同主题却帮不上当前动作的经验，或漏掉精确名称与标识。",
+        "move": "把当前目标、最近动作与观测作为一种 query 表示，同时保留精确词匹配路径；让候选生成与 rerank 各自可检查。",
+        "check": "选一个精确 identifier 问题和一个动作卡点问题，在相同候选 / context 预算下比较 lexical、intent 与组合方案；加入错误 goal，查看其影响。",
+        "boundary": "这组迁移对照未执行。原文反例支持保留 literal lane，但没有验证完整 query router，不能预设 intent 或 hybrid 必胜。",
+        "basis": "既有札记 §3.1、Appendix E Table 17；“编者判断”：Hybrid routing、goal assumptions。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 17,
@@ -1892,7 +2052,17 @@
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
       "editorialQuestion": "当 query controller 能读取 benchmark-derived routing hints、生成 answer-like narrative、决定 evidence order 并优先占据 token budget 时，什么 contract 才能证明 fixed reader 得到的是 trajectory-supported experience，而不是一个更会写答案的中间层？",
-      "sourceNote": "arXiv v1 work-in-progress preprint；PDF 共 32 页。paper-day release、August query-boundary fix 与 current source 分开标注；两组 public tests 分别停在 built-context contract 与 model-free selection/intervention feasibility，不执行 controller、fixed reader 或 benchmark reproduction。"
+      "sourceNote": "arXiv v1 work-in-progress preprint；PDF 共 32 页。paper-day release、August query-boundary fix 与 current source 分开标注；两组 public tests 分别停在 built-context contract 与 model-free selection/intervention feasibility，不执行 controller、fixed reader 或 benchmark reproduction。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "agent 会把历史轨迹改写成供另一个 reader 使用的 evidence packet。",
+        "move": "让每段派生叙述可回到具体来源，并把“找到一个有效 span”和“该 span 真支持这段话”分开检查；记录 context 截断位置。",
+        "check": "固定同一 packet，分别提供有效支持、无效位置和指向反值的 decoy；检查现有接收路径会不会把无支持叙述直接交给 reader。",
+        "boundary": "这是迁移检查建议，未运行新的 reader 或 controller。已有 synthetic contract test 证明特定 postprocessing 接收边界，不能说明实际生成频率或 benchmark gain。",
+        "basis": "既有札记 §3.3、Appendix E、public synthetic artifact 与 “编者判断”：authored evidence object。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 18,
@@ -2117,7 +2287,17 @@
         "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
       },
       "editorialQuestion": "如果 operations 已经 byte-identical，但 replicas 没有共同绑定 predicate registry、claim-ref derivation 与 detector implementation identity，我们究竟是在复制同一份 memory，还是只复制了同一份待解释的历史？",
-      "sourceNote": "arXiv v1，2026-07-07；PDF 共 18 页，essay locators 使用 printed PDF page numbers。official source audit 锁定 commit 79a6229… / StateFuse 0.3.0。repository paper/main.tex 是标题与实验叙述不同的 unpublished successor manuscript，已与 arXiv v1 分层；139-test receipt 与 428-row synthetic audit 只支持 current-source contract claims。"
+      "sourceNote": "arXiv v1，2026-07-07；PDF 共 18 页，essay locators 使用 printed PDF page numbers。official source audit 锁定 commit 79a6229… / StateFuse 0.3.0。repository paper/main.tex 是标题与实验叙述不同的 unpublished successor manuscript，已与 arXiv v1 分层；139-test receipt 与 428-row synthetic audit 只支持 current-source contract claims。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "同一份操作历史要在多个副本上解释，或撤回操作需要区分一次断言与一类语义主张。",
+        "move": "同时记录 operation identity 与解释规则的版本；在设计撤回接口时说清它针对 assertion、语义内容还是具体事件实例。",
+        "check": "把同一组 operations 交给不同 normalizer / detector 配置，比较 active 与 conflict view；再加入内容相同但时间不同的断言，检查撤回范围。",
+        "boundary": "迁移到你的项目的对照未执行。已有 synthetic audit 限于锁定实现与 fixtures，不是 OpSet merge law 的反例，也未验证分布式 rollout。",
+        "basis": "既有札记 §§3.2–3.4、Appendix A.1/A.3–A.4；公开测试 H1/H2。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 19,
@@ -2347,7 +2527,17 @@
         "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
       },
       "editorialQuestion": "如果 query 没有指明 intended observation，而 scope filter 之后的 helper 又能重新插入别的 agent 的 row，那么 provenance-aware top-1 究竟在排序可信证据，还是替 scorer 猜 target、替 pipeline 猜 permission？",
-      "sourceNote": "arXiv v1，2026-08-17；PDF 共 16 页。paper-time 0.5.9、current-main source/build failure 与 official repair-descendant 0.5.10 分层标注；paper headline 99.0% 与 successor official correction 96.8% 也保持版本边界。public audit 的 1,140 normalized rows只支持 conditional ceiling、official-format paired control 与 exact local `agent_id` output-scope claims。"
+      "sourceNote": "arXiv v1，2026-08-17；PDF 共 16 页。paper-time 0.5.9、current-main source/build failure 与 official repair-descendant 0.5.10 分层标注；paper headline 99.0% 与 successor official correction 96.8% 也保持版本边界。public audit 的 1,140 normalized rows只支持 conditional ceiling、official-format paired control 与 exact local `agent_id` output-scope claims。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "检索有 agent / workspace 等范围约束，同时存在过滤后的补充、提升或扩展逻辑。",
+        "move": "把范围检查放到完整输出路径来观察，检查每个返回对象的实际归属；query 也要足以区分此次真正要找的记录。",
+        "check": "用一个库内不存在的范围发起普通 query 和会触发 helper 的 query；再加入能区分目标记录的线索，检查错范围返回与目标绑定。",
+        "boundary": "新项目的检查未执行。已有本地 audit 只支持指定 agent_id / helper 路径结论，不等于 tenant 隔离、安全认证或 provenance 单变量效果。",
+        "basis": "既有札记 公开测试：scope closure、identity-bearing controls；“编者判断”。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 20,
@@ -2620,7 +2810,17 @@
         "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 v1。"
       },
       "editorialQuestion": "如果一个 benchmark 用 forgetting criteria 赋予旧 memory ‘不得再支配回答’的 revision authority，却没有把 empty bucket、judge quorum、criterion wording 与 exact report provenance 一起锁进 score receipt，那么同一个 FAMA 数字究竟证明系统忘掉了什么，还是只证明 evaluator 在某条未完整公开的路径上没有看见它？",
-      "sourceNote": "arXiv v1，2026-04-21；ACL 2026 Findings；PDF 共 28 个 physical pages。current official repair commit a6493188… 是 post-paper successor；pre-repair defect/current repair lineage、current tests 与 30-file released-input audit均按 source/release evidence 单列，不被称为 paper-time execution。paper Table 2 的 7,054 criteria 与 current release 的 6,415 并列保留；zero checked eval reports使 Table 3 仍是 paper-reported而非本站重建。"
+      "sourceNote": "arXiv v1，2026-04-21；ACL 2026 Findings；PDF 共 28 个 physical pages。current official repair commit a6493188… 是 post-paper successor；pre-repair defect/current repair lineage、current tests 与 30-file released-input audit均按 source/release evidence 单列，不被称为 paper-time execution。paper Table 2 的 7,054 criteria 与 current release 的 6,415 并列保留；zero checked eval reports使 Table 3 仍是 paper-reported而非本站重建。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "记忆评估需要同时回答“新信息是否保留”与“旧信息是否仍污染回答”。",
+        "move": "分别写出应出现与不应再出现的事实，并记录每类 criteria 的数量和实际 judge 参与情况；区分回答中的遗忘与存储层删除。",
+        "check": "用一个包含更新 / 删除的例子和一个没有 forgetting criterion 的例子，手算子指标后再比较总分；模拟少一个 judge 的返回，检查 quorum 如何报告。",
+        "boundary": "这是迁移建议，未产生新的 judge 或模型结果。已有 audit 验证发布的输入与计分合同；回答不提旧信息不证明数据已被删除。",
+        "basis": "既有札记 §4.2、Appendix B.5–C.2；released-contract result 与 “编者判断”。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 21,
@@ -2941,7 +3141,17 @@
             }
           ]
         }
-      ]
+      ],
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "任务看起来已经完成，却不清楚长期保存的信息能否被后续 reader 正确恢复。",
+        "move": "固定目标身份，分别检查保存内容、序列化、检索 packet 与读出判断；在解释低分前先确认抽象标签的含义。",
+        "check": "用同一份可公开的 store 比较 full-store 与检索 packet 的读出，保留预算差异；再把一个含混标签改写成具体行为描述，观察判断是否翻转。",
+        "boundary": "这组迁移试验未执行。已有 fixed-artifact audit 未重判语义；不能用恢复得分直接诊断 write failure，也不能据此扩大真实用户画像采集。",
+        "basis": "既有札记 §§3.3–3.4、Appendices G/J 与 “编者判断”：reader contract、label polarity。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 22,
@@ -3223,7 +3433,17 @@
         "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
       },
       "editorialQuestion": "如果同一批useful episodes只因update order或batch grouping不同就生成不同lesson，consolidated memory凭什么覆盖它所依赖的evidence，而不是先作为一份可撤销、可反驳、带schedule lineage的candidate存在？",
-      "sourceNote": "arXiv v1，2026-05-13；PDF共69页。official public audit锁定August expanded release commit adf347f…，不是paper-time production source；final model-free audit覆盖762 arms/55,075 released rows、upstream verifier scope、denominator sensitivity与selected schedule fixtures。paper-reported、exact-current-source、official-source execution与released-row audit保持分层。"
+      "sourceNote": "arXiv v1，2026-05-13；PDF共69页。official public audit锁定August expanded release commit adf347f…，不是paper-time production source；final model-free audit覆盖762 arms/55,075 released rows、upstream verifier scope、denominator sensitivity与selected schedule fixtures。paper-reported、exact-current-source、official-source execution与released-row audit保持分层。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "系统反复把经历重写成经验，希望记忆越积累越有用。",
+        "move": "把派生 lesson 作为可撤回的候选保留，同时保存其 supporting episodes 和更新顺序；在实际使用时说明适用条件。",
+        "check": "固定同一组公开经历，比较一次性、逐批和反序归纳，保留 episode 对照；再更正来源，看 lesson 是否仍可解释。分别记录完成、失败与缺失。",
+        "boundary": "这组模型迁移对照未执行。已有 released-row audit 与专题的规则演示都不能证明真实 consolidation 的因果效果，也不支持“原始记录永远更好”。",
+        "basis": "既有札记 §§4–6、Appendix F.4、公开测试；“编者判断”：candidate / schedule / denominator。",
+        "status": "proposed-not-run"
+      }
     },
     {
       "number": 23,
@@ -3395,7 +3615,17 @@
         "accessNote": "arXiv v1 official PDF；本站不重新分发。"
       },
       "editorialQuestion": "一条经验通过了上次验证，并在这次正确时机被调用：我们还需要什么证据，才能相信它仍适用于这次的工具版本和任务？",
-      "sourceNote": "Source authority：arXiv v1，2026-08-25；阅读依据为 official HTML 正文、附录与表格。official code：github.com/Gen-Verse/Recuris；本札记不将当前代码或原创演示当成 paper-time experiment。"
+      "sourceNote": "Source authority：arXiv v1，2026-08-25；阅读依据为 official HTML 正文、附录与表格。official code：github.com/Gen-Verse/Recuris；本札记不将当前代码或原创演示当成 paper-time experiment。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-08",
+        "when": "经验已经写入库，但长任务中未必在需要时进入行动，完成状态也可能只来自语言声明。",
+        "move": "先让未完成目标与执行事件组织经验调用，并把工具回执与“已经完成”的状态更新分开。",
+        "check": "保留一件需要写操作的任务，分别检查经验入库、被选中、进入调用前 context、动作成功回执；再加入失败回执，检查是否仍错误标成完成。",
+        "boundary": "这是基于精读的迁移建议，尚未在新项目执行。原文不同 benchmark 启用的组件不同；专题没有模拟 automatic evolution 或验证 gate。",
+        "basis": "既有札记 §§2.2–2.3、Table 2、Appendix E；“编者判断”。",
+        "status": "proposed-not-run"
+      }
     }
   ],
   "studies": [

@@ -2601,3 +2601,17 @@ noscript {
   .study-lesson { font-size: 19px; }
   .study-output-heading { align-items: start; }
 }
+
+
+/* A reading outcome stays distinct from paper findings and executed tests. */
+.design-transfer dl { display: grid; grid-template-columns: 130px minmax(0, 1fr); margin: 24px 0; border-top: 1px solid var(--hairline); }
+.design-transfer dt, .design-transfer dd { margin: 0; padding: 18px 0; border-bottom: 1px solid var(--hairline-soft); font-size: 16px; line-height: 1.9; }
+.design-transfer dt { padding-right: 22px; color: var(--tide); font-size: 14px; }
+.transfer-disclosure { color: var(--tide); border-left: 2px solid var(--hairline); padding-left: 16px; line-height: 1.85; }
+.transfer-meta, .transfer-basis { color: var(--muted); font-size: 13px; line-height: 1.8; }
+.material-study-connection { margin-bottom: 24px; }
+@media (max-width: 700px) {
+  .design-transfer dl { grid-template-columns: minmax(0, 1fr); }
+  .design-transfer dt { padding: 18px 0 3px; border: 0; }
+  .design-transfer dd { padding: 0 0 18px; }
+}

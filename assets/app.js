@@ -887,8 +887,13 @@
     const studies = data.studies.filter(study => study.readings.some(reading => reading.materialId === material.id));
     document.querySelector("#paper-studies").hidden = !studies.length;
     document.querySelector("#material-studies").replaceChildren(...studies.map(study => {
-      const block = createTextElement("p", "");
-      block.append(createRouteLink("study", study.id, `${study.title} →`), createTextElement("span", ` · ${study.subtitle}`));
+      const reading = study.readings.find(item => item.materialId === material.id);
+      const block = createTextElement("section", "", "material-study-connection");
+      const heading = createTextElement("h3", "");
+      heading.append(createRouteLink("study", study.id, `${study.title} →`));
+      block.append(heading, createTextElement("p", reading.takeaway),
+        createTextElement("p", reading.limit, "inference-boundary"),
+        createTextElement("p", `串读定位：${reading.locator}`, "research-note-locator"));
       return block;
     }));
     refs.materialNumber.textContent = String(material.number).padStart(2, "0");
@@ -898,6 +903,21 @@
       const surface = surfacesById.get(surfaceId);
       return createRouteLink("thread", surface.id, `${surface.number} ${surface.label}`);
     }));
+    const transfer = material.designTransfer;
+    document.querySelector("#paper-transfer").hidden = !transfer;
+    const transferFields = document.querySelector("#material-transfer");
+    transferFields.replaceChildren();
+    if (transfer) {
+      const earlyReading = ["abstract", "skim"].includes(material.noteDepth);
+      document.querySelector("#transfer-disclosure").textContent = earlyReading
+        ? "初读线索 · 基于本条已标注的阅读范围，仍待全文与实现核验。下面的迁移对照尚未执行。"
+        : "基于既有精读与本条明确标注的证据范围整理；下面针对新场景的迁移对照尚未执行。";
+      document.querySelector("#transfer-meta").textContent = `${transfer.byline} · ${transfer.date}`;
+      for (const [field, label] of [["when", "什么时候有用"], ["move", "可以借哪一步"], ["check", "先做什么对照"], ["boundary", "带走时的边界"]]) {
+        transferFields.append(createTextElement("dt", label), createTextElement("dd", transfer[field]));
+      }
+      document.querySelector("#transfer-basis").textContent = `阅读依据：${transfer.basis}`;
+    }
     refs.materialIntro.textContent = material.intro;
     refs.materialPoints.replaceChildren(...material.keyPoints.map((point) => createTextElement("li", point)));
 
