@@ -66,7 +66,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260908-trustmem-1'),
+            source.count('assets/materials-data.js?v=20260908-vermem-1'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260830-mnl-2', source)
@@ -1731,8 +1731,21 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             for link in trustmem["contributions"][0]["links"]
         ))
         self.assertEqual(trustmem["designTransfer"]["status"], "proposed-not-run")
+        vermem = by_id["verifiable-memory"]
+        self.assertEqual(vermem["noteDepth"], "worked")
+        for field in (
+            "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
+            "sourceTensions", "editorialInferences", "contributions",
+        ):
+            self.assertTrue(vermem[field])
+        self.assertEqual(vermem["contributions"][0]["type"], "public-test")
+        self.assertTrue(any(
+            link["url"].endswith("/research/vermem-verifier-boundary-audit/results.json")
+            for link in vermem["contributions"][0]["links"]
+        ))
+        self.assertEqual(vermem["designTransfer"]["status"], "proposed-not-run")
         current_skim_ids = {
-            "verifiable-memory", "mosaic-long-term-memory",
+            "mosaic-long-term-memory",
             "proactive-wake-anchor",
             "coala-cognitive-architecture", "storage-to-experience",
             "continual-learning-experience-reuse", "agentic-memory", "midca-dual-cycle",

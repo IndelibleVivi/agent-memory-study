@@ -13,6 +13,7 @@
 - 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；达到 `read` 的 entry 展示 argument map 与为什么值得读，并按实际证据补充方法与监督、原文内部张力；尚未执行的公开 protocol 明确标成 `proposed-not-run`；已经执行的 public / synthetic test 则保留署名、method、environment、raw / derived result、controls、limitations 与可复核 artifact links；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 每篇现有材料都有“读完，可以怎样借用”：适用情境、可借用的做法、尚未执行的迁移对照、依据与边界；`skim` / `abstract` 显示初读线索提示，编者建议不改变阅读深度或历史测试结论；
 - 阅读可以继续形成公开、可复跑的研究材料，例如 [TRUSTMEM 的同状态候选比较](research/trustmem-transition-study/README.md)：10 个原创结构化 transition、4 组配对控制和论文数字复核；它单独记录已执行结果，真实更新器 / LLM judge 的迁移对照仍是未执行建议，不把教学实验算作论文效果复现；
+- [VerMem 的历史恢复与 verifier 边界](research/vermem-verifier-boundary-audit/README.md)直接执行固定官方代码的 12 个函数级样例：候选内 ID、合法长度与规则 `pass` 仍不足以单独证明任务归属或语义忠实；原始输入、返回值和外部源码复跑命令均公开，结论不扩展到完整 executor 或模型效果；
 - 一个没有 backend、继续由 GitHub Pages 托管的静态 reader；唯一 analytics 是 Cloudflare Web Analytics 的 aggregate beacon，不使用 cookie 或 localStorage 识别、画像访客；
 - 23 份 canonical materials：10 份按原许可随站提供的 PDF，另 13 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
@@ -197,6 +198,17 @@ python3 research/faulty-memory-release-boundary-audit/verify_checked.py \
 [`research/faulty-memory-release-boundary-audit/`](./research/faulty-memory-release-boundary-audit/)。它不调用 model、
 API 或 agent environment，也不重跑论文实验；receipt-only 只证明 package/internal consistency，stored
 comparison 不自证历史上的两次 process，fresh source-bound invocation 才执行自己的两棵 roots。
+
+### VerMem 规则 verifier 的固定源码复跑
+
+先按[实验说明](research/vermem-verifier-boundary-audit/README.md)在 repo 外准备固定 commit 的官方 checkout，再运行：
+
+```bash
+python3 -B research/vermem-verifier-boundary-audit/audit.py \
+  --upstream /path/to/VerMem --check
+```
+
+该命令实际调用上游 `LocalVerifier`，比较 12 个 public synthetic cases 与已保存结果。它不执行 memory 状态更新、LLM 语义 verifier 或论文训练；五个接受反例不能换算为系统错误率。
 
 ## 通过 pull request 贡献
 

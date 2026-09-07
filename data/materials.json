@@ -544,13 +544,14 @@
       "shortAuthor": "Sun 等",
       "year": 2026,
       "doi": null,
-      "noteDepth": "skim",
-      "readingScope": "Abstract、§3–§6；只定位 supplementary 结构，未完整读完。",
-      "intro": "用同一个 policy 管理 persistent memory、active context 与 episodic history，并把单次 transition 与整段任务结果分别交给 local/global verifier。",
+      "noteDepth": "worked",
+      "readingScope": "完整阅读 arXiv v1 的 Abstract、§§1–6、Appendices A–F、Tables 1–27 与 Figures 1–4 图注。PDF 共 29 页，pdfinfo / pdftotext 分页一致，另渲染核对 PDF pp. 8、13、25、27 的结果表、工具与 verifier 约束；pypdf preflight 因缺少依赖为 advisory unavailable，不记 PASS。References 只用于定位，没有逐项验证。另阅读官方 repo 固定 commit 4782751 的相关 schemas、STM rule verifier 与 reward projection，直接执行 12 个原创函数级样例；没有运行 memory executor、LLM verifier、RL 训练或 benchmark。",
+      "intro": "VerMem 用同一 memory policy 协调长期条目、当前 active context 与同一任务的 episodic history。训练时，它把单次可执行操作的局部评价与整条轨迹的复合反馈结合；历史恢复提供一条从旧观察回到当前 context 的独立路径。",
       "keyPoints": [
-        "policy 面对的是不超过 8,192 tokens 的 active serialization；信息离开 active context 后仍可保留在 episodic record，而不是无界拼接 history。（§3.1）",
-        "七个 atomic tools 覆盖 LTM 的 Add、Update、soft-Delete，以及 STM 的 Retrieve、Filter、SelectEpisode、Summarize；SelectEpisode 可恢复已经退出 active context 的证据。（§3.2）",
-        "policy 只在 HotpotQA 上训练，再转移到多个环境；但每个 episode 后所有 memory state 都会重置，实验测到的是 within-episode persistence 与 policy transfer。（§4–§5）"
+        "三个状态，两条回取路径：Retrieve 从长期条目 M 取回，SelectEpisode 从当前任务的历史 H 取回。8,192-token policy serialization 与 active context C 的预算分开；H 不是无界拼进 prompt 的聊天记录。（§§3.1–3.2；Appendix A；PDF pp. 3–4、12–14）",
+        "执行与监督分开：七个工具加 null；失败操作保持 M/C 不变并记录原因，null 仍计入 memory-decision horizon。结构/来源/预算约束与语义 verifier 不同，local/global verifier 仅用于训练。（§§3.1–3.5；Appendices A.4、F）",
+        "local advantage 按操作类型归一化，global advantage 在同任务 K=8 条完整轨迹内归一化；两者与约束成本汇合。只有 memory-command tokens 受该训练目标监督，task-solver 输出与环境观察不在 loss mask 内。（§§3.3–3.5；Appendices B、F.4–F.6）",
+        "只用构造的 HotpotQA 状态训练，然后评测五种任务；每个评测 episode 都重置 M/C/H。结果支持任务内持续记忆与 policy transfer，不能证明跨会话或跨用户保留。（§§4–5；Appendices C.1–C.3）"
       ],
       "keywords": [
         "active context",
@@ -564,23 +565,149 @@
         "write-consolidation",
         "retrieval-active-context"
       ],
-      "sourceUrl": "https://arxiv.org/abs/2608.03137",
+      "sourceUrl": "https://arxiv.org/abs/2608.03137v1",
       "pdf": {
         "delivery": "official",
         "url": "https://arxiv.org/pdf/2608.03137v1"
       },
-      "editorialQuestion": "如果 persistent state 从未跨 episode 延续，这套结果能在多会话、冲突或隐私敏感的长期记忆中保持吗？",
+      "editorialQuestion": "历史恢复的 task scope、原始正文、来源与预算分别由哪个组件验证；公开 rule verifier 的 pass 还依赖哪些未在本函数建立的前提？",
       "sourceNote": "",
       "designTransfer": {
         "byline": "Agent Memory Study editors",
         "date": "2026-09-08",
-        "when": "长任务有严格 context 上限，但退出 prompt 的证据仍可能在后续步骤中需要。",
-        "move": "区分持久保存的 episode 与当前可见的 active context，让“移出上下文”后仍存在明确的回取路径。",
-        "check": "让同一条必要证据先离开 active context，再在后续问题中需要它；比较只摘要、可回取 episode 两种路径，并检查跨会话时证据是否真的保留。",
-        "boundary": "这是 skim 范围下的设计线索，试验未执行。原文逐 episode reset 的设定不能证明跨会话持久性。",
-        "basis": "既有札记 “关键抓手”：§§3.1–3.2、4–5。",
-        "status": "proposed-not-run"
-      }
+        "status": "proposed-not-run",
+        "when": "长任务有 context 上限，已经移出的证据稍后又要使用；系统准备接入历史恢复或摘要组件。",
+        "move": "将当前 context 与同任务原始历史分开；policy 选择引用，由掌握历史的 executor 回查正文、归属与来源，检查预算后恢复。",
+        "check": "在真实任务里让必要证据先离开 context，再比较只摘要与可回取历史两条路径；加入旧版本与同 ID 改写对照，观察最终回答和实际提交内容。若要跨会话，再单独验证保存与恢复。",
+        "boundary": "本条 12 个规则 verifier 样例已执行；这里的真实 executor / 模型恢复、摘要效用与跨会话对照仍未执行。论文按 episode reset，不能提供跨会话结论。",
+        "basis": "完整精读 §§3–5、Appendices A、C.2、F；固定官方规则 verifier 的公开边界测试。"
+      },
+      "whyRead": "这篇值得借走的，是给“证据暂时不在眼前”安排明确的去处与回来方式。长期存储、当下可见内容和任务历史不承担同一工作；恢复成功也要继续问，回来的是否仍是有来源的那条证据。论文把执行约束、局部质量与终端结果分开讨论；本次公开代码测试进一步表明，接入项目时必须确认这些责任实际落在哪个组件，不能让一个 verifier 名称代替整个保证。",
+      "argumentMap": [
+        {
+          "step": "先区分保存与可见",
+          "claim": "信息离开 C 后可以仍在 H；未写入 M 的旧观察需要 SelectEpisode，单靠 LTM retrieval 无法回取。",
+          "locator": "§3.1；Appendices A.1–A.3、F.8；PDF pp. 3、12–13、27"
+        },
+        {
+          "step": "让不同操作共同服务任务",
+          "claim": "SFT 学习可执行命令，Phase A/B/C 依次训练 LTM、STM 和联合协调。跨阶段只传 policy parameters，初始 memory states 独立构造。",
+          "locator": "§3.3；Appendix D；PDF pp. 4–5、18–20"
+        },
+        {
+          "step": "分别回答这一步与这一程是否有用",
+          "claim": "局部语义分数、复合 global 分数与硬约束保留各自来源；被拒绝命令没有 local semantic advantage，但仍获得轨迹 credit 与直接约束成本。",
+          "locator": "§§3.4–3.5；Appendices F.1–F.6；PDF pp. 5–6、22–26"
+        },
+        {
+          "step": "用任务迁移和预算对照提供证据",
+          "claim": "双 backbone、多 benchmark 与消融支持整套方法的效用；任务重置、混合指标及训练期成本限制了这些数字能回答的问题。",
+          "locator": "§§4–5；Tables 2–5；Appendices C、E；PDF pp. 7–9、14–22"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Data and curriculum",
+          "text": "SFT train/dev 为 32,000/4,000，八类决策平衡；HotpotQA training question IDs 按 90/10 切分，再构造有冲突、重复、遗忘与历史恢复需要的状态。RL 三阶段为 1,000/1,000/1,500 updates，每 update 八个任务、每任务八条独立 rollout；真实评测 episode 与构造训练状态不可混同。",
+          "locator": "Tables 8、13–14；Appendices D.1–D.5；PDF pp. 15、18–20"
+        },
+        {
+          "label": "Different judges and different inputs",
+          "text": "冻结 DeepSeek-V3.2 负责 teacher 与 local/global 语义评分。local 看当前有限视图和已实现 transition，不看未来；global 在结束后只返回 evidence coherence 与 terminal-memory consistency，正确率、support recall、效率由程序计算。HotpotQA 另由 qwen-max-2025-01-25 给 Jjudge / MQ，不参与训练或 checkpoint 选择。",
+          "locator": "§3.5；Appendices C.6、F.1–F.3；PDF pp. 6、16–17、22–25"
+        },
+        {
+          "label": "Credit is not a runtime admission gate",
+          "text": "local 按操作类型使用当前 update 或 phase-specific running statistics；global 在同任务候选组归一化。两路 advantage 先各自 clip 至 [-5,5] 再汇合，因此局部正分不保证最终更新为正。论文的失败拒绝由 executor 约束处理；inference 移除 verifier 不等于移除执行检查。",
+          "locator": "Eqs. 5、9–11；Appendices A.4、F.4–F.6；PDF pp. 3、5、14、25–26"
+        },
+        {
+          "label": "What the efficiency frontier counts",
+          "text": "三种交互环境的 SR 等权平均，预算为 1,000–5,000 online tokens、每 500 一档；重复输入也重复计费。TN@40 是邻接点线性插值，不是直接测得的精确运行成本；offline embedding/index、训练、verifier 与评测 judge 成本被排除。",
+          "locator": "§4.2；Appendix C.7；Tables 3、12；PDF pp. 7–8、17"
+        }
+      ],
+      "reportedFindings": [
+        "Table 2 的 Average：Qwen2.5-7B 为 48.01，对 AgeMem 41.96 增加 6.05 分；Qwen3-4B 为 59.85，对 54.31 增加 5.54 分。Average 等权混合 SR、PDDL Progress Rate 与 HotpotQA 100Jjudge，不能称为整体成功率。（PDF p. 8；Appendix C.5）",
+        "Qwen2.5-7B 的 PDDL 是完整方法没有胜过 matched noVerify 的一项：22.06 对 22.41；完整方法仍高于该项最强 external baseline A-Mem 18.39。其余四项与 Qwen3-4B 的五项都高于 noVerify。（Tables 2、16；PDF pp. 8、22）",
+        "在三个交互环境的预算对照中，TN@40 为 2,080 对 AgeMem 2,600，下降 20%；2,500-token budget 下 macro SR 为 44.30 对 39.00，提高 5.30 分。这是指定模型与预算协议下的 online 比较。（Table 3；PDF p. 8）",
+        "HotpotQA reward ablation：All-Returns 的 Jjudge 0.628 对 0.531，MQ 0.673 对 0.491，TN 2,184 对 2,352，但 memory-tool calls 5.63 高于 4.47。它没有仅靠减少所有调用省 token，也不能由这些汇总数推断某一种工具的独立贡献。（Tables 5、20；PDF pp. 9、24）"
+      ],
+      "evidenceLimits": [
+        "§5 / Appendix C.2 明确每个 episode 释放 M/C/H，所有 external baseline 的相关存储也清空。没有跨会话保留、跨用户隔离、真实私人数据或 adversarial memory 的结果。",
+        "三次 seed 的均值支持报告内比较；主要表格未给每格不确定区间。Figure 4 的两条 reward 曲线采用不同 monitoring 定义，其绝对高度不能直接比作策略优劣。",
+        "部分 output limits、active-context budgets、verifier 截断与 malformed-output fallback 只写 configured protocol；仅凭 PDF 不能补出完整可复现配置。Qwen-Max 专有 snapshot 与 DeepSeek 离线调用也限制独立复现。",
+        "本次执行的官方 rule verifier 接收 proposal/result，不执行 M/C/H 状态变化。12 个定向 synthetic cases 不能估计模型误判率、完整 reward、历史恢复效用、真实部署安全或论文 benchmark 的有效性。",
+        "没有下载模型或训练数据、没有运行 SFT/GRPO、LLM judge、完整任务环境或跨会话持久化。源码阅读范围明确列在 readingScope；没有宣称完成官方 repo 全量审计。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "论文的语义 verifier 与公开规则组件不是同一证据对象",
+          "observation": "Appendix F.1–F.3 描述冻结 DeepSeek-V3.2 的语义维度；固定公开 commit 的 LocalVerifier 则明确为纯规则、只读函数。memory_operations.py 自述只定义 registry/schema，不修改存储。",
+          "implication": "公开规则层可直接测试，但跑通它不等于复现论文的语义监督。需要实际 evaluator/config/执行链对应关系才能把它连接到论文数字；此差异本身不证明报告结果无效。",
+          "locators": [
+            "Appendix F.1–F.3，PDF pp. 22–25",
+            "Sun-SYSU-24/VerMem @ 4782751：00_verifiers/local_verifier.py、memory_operations.py；research/vermem-verifier-boundary-audit/README.md"
+          ]
+        },
+        {
+          "label": "Null 的论文 contract 与公开 action alphabet 仍需对齐",
+          "observation": "正文与 Appendix F.6 明确 null 可训练且计入 horizon；公开 action_protocol.py 的 ALLOWED_ACTIONS 只有七个非空动作，而 LocalVerifier 的 dispatch 能处理 NO_OP。",
+          "implication": "训练数据、parser 与 verifier 并非仅凭相同项目名称就能视作同一条已对齐路径。本次仅静态核对该差异，没有跑 null 的完整训练/解析链。",
+          "locators": [
+            "§3.1；Appendix F.6，PDF pp. 3、26",
+            "Sun-SYSU-24/VerMem @ 4782751：01_protocol/action_protocol.py；00_verifiers/local_verifier.py"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "恢复引用之后，由谁回查原文",
+          "text": "同 ID 的选中内容改写、混入候选的另一任务条目、被省掉的保护字段都可通过本次规则检查。接入时可以让 policy 只选引用，再由拥有当前任务历史的 executor 回查正文、来源和保护标记，并在预算允许时提交。",
+          "boundary": "这是基于五个函数级反例提出的设计建议；没有实现该 executor，不能声称实际跨任务泄漏或完整系统已经接受错误写入。"
+        },
+        {
+          "label": "移出 context 应有明确的保存期限",
+          "text": "读者可以分别决定当前可见内容与原始记录的保存期限，并把回取路径写进系统行为。论文支持任务内历史恢复的动机；跨会话是否保留，需要另做持久化决定与验证。",
+          "boundary": "没有把 H 自动升级为无限长期 store。本站尚未执行真实模型在证据移出后恢复的成功率对照。"
+        },
+        {
+          "label": "把 verifier 的 pass 翻译成具体已检查条件",
+          "text": "一个来源 ID 与合法长度可以通过规则检查，仍不足以说明摘要没有把 17:00 改成 19:00。评估组件时应分别列出结构检查、来源绑定、语义忠实与终端效用所依赖的证据。",
+          "boundary": "这是一条受本次反例支持的阅读判断；不是要求每次调用追加 LLM judge，也不声称 deterministic checks 可以解决全部语义问题。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "回来的还是原来那条证据吗？",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-08",
+          "basis": "VerMem arXiv:2608.03137v1 Appendices A、F；官方 repo commit 4782751c79faa08421a27c23b4d02c591bc3357d 的 LocalVerifier；AMS 原创 public fixtures。",
+          "boundary": "实际调用官方规则函数的有限边界测试；不是完整 memory executor、论文语义 verifier 或 benchmark 复现。",
+          "method": "固定上游 commit，直接调用 SelectEpisode / Summarize / Filter 对应的 LocalVerifier 分支，保存 synthetic proposal/result/context 与原始返回。仅移除每次随机 verification_id，比较复跑结果并检查输入不变性。",
+          "environment": "macOS arm64；Python 3.13.3 标准库；无第三方安装、模型、GPU、API 或测试期网络调用。上游源码在外部 checkout，公开 artifact 不再分发它。",
+          "fixture": "12 个原创书房通知样例；task-a/task-b 显式区分归属，17:00/19:00 区分原文与改写，priority 0.9 指定受保护条目。item run_id 是 fixture 标记，不冒充上游承诺支持的 scope schema。",
+          "controls": "7 个控制覆盖合法选择/摘要、表外 ID、数量上限、缺失 scores、超长摘要与带保护标记的删除；5 个反例分别改变候选归属、正文、空候选条件、摘要数字与返回项保护字段。",
+          "rawResult": "12 个 fresh verdict 与保存结果一致；7 个控制按预期 pass/fail/revise，5 个反例均得到 pass。17:00 的忠实摘要与改成 19:00 的同长度摘要都为 1.0；原输入 priority 0.9 保持不变，仅省掉结果项该字段，Filter 从 fail 变为 pass。",
+          "derivedResult": "此函数的 pass 不能单独保证同任务归属、正文不变或摘要忠实；保护字段的权威来源也需要回查。输入均未改变，说明本测试没有执行存储更新，不能把 verdict 当成实际写入结果。",
+          "limitations": "定向反例不是随机错误率；未证明完整调用链可达、部署泄漏、paper result 无效或迁移方案有效。候选构造、真正执行、模型语义评价及额外 reward checks 均未在此运行。",
+          "links": [
+            {
+              "label": "方法、逐例解释与复跑命令",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/vermem-verifier-boundary-audit/README.md"
+            },
+            {
+              "label": "公开 runner",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/vermem-verifier-boundary-audit/audit.py"
+            },
+            {
+              "label": "实际输入与返回值",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/vermem-verifier-boundary-audit/results.json"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 4,

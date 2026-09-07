@@ -1,0 +1,724 @@
+{
+  "upstream": "https://github.com/Sun-SYSU-24/VerMem",
+  "commit": "4782751c79faa08421a27c23b4d02c591bc3357d",
+  "executedModules": [
+    "00_verifiers/memory_operations.py",
+    "00_verifiers/memory_schemas.py",
+    "00_verifiers/local_verifier.py"
+  ],
+  "method": "Direct LocalVerifier calls; synthetic proposal/result pairs; no executor or model.",
+  "normalization": "Only each random verification_id is omitted from the returned report.",
+  "results": [
+    {
+      "id": "select-valid",
+      "role": "control",
+      "input": {
+        "proposal": {
+          "operation_id": "select-valid",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-valid",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "scores": [
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "select-valid",
+        "verifier_type": "local",
+        "verdict": "pass",
+        "score": 1.0,
+        "reason": "STM_SELECT_EPISODE_CONTEXT looks sane",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": null,
+        "metadata": {}
+      },
+      "expectedVerdict": "pass",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    },
+    {
+      "id": "select-outside-candidates",
+      "role": "control",
+      "input": {
+        "proposal": {
+          "operation_id": "select-outside-candidates",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-outside-candidates",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-b:notice",
+                "content": "The reading room closes at 19:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-b"
+                }
+              }
+            ],
+            "scores": [
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "select-outside-candidates",
+        "verifier_type": "local",
+        "verdict": "fail",
+        "score": 0.0,
+        "reason": "selected_item_not_in_candidates: task-b:notice",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": "task-b:notice",
+        "metadata": {}
+      },
+      "expectedVerdict": "fail",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    },
+    {
+      "id": "select-foreign-in-candidates",
+      "role": "counterexample",
+      "input": {
+        "proposal": {
+          "operation_id": "select-foreign-in-candidates",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              },
+              {
+                "item_id": "task-b:notice",
+                "content": "The reading room closes at 19:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-b"
+                }
+              }
+            ],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-foreign-in-candidates",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-b:notice",
+                "content": "The reading room closes at 19:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-b"
+                }
+              }
+            ],
+            "scores": [
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "select-foreign-in-candidates",
+        "verifier_type": "local",
+        "verdict": "pass",
+        "score": 1.0,
+        "reason": "STM_SELECT_EPISODE_CONTEXT looks sane",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": null,
+        "metadata": {}
+      },
+      "expectedVerdict": "pass",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    },
+    {
+      "id": "select-rewritten-same-id",
+      "role": "counterexample",
+      "input": {
+        "proposal": {
+          "operation_id": "select-rewritten-same-id",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-rewritten-same-id",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 19:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "scores": [
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "select-rewritten-same-id",
+        "verifier_type": "local",
+        "verdict": "pass",
+        "score": 1.0,
+        "reason": "STM_SELECT_EPISODE_CONTEXT looks sane",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": null,
+        "metadata": {}
+      },
+      "expectedVerdict": "pass",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    },
+    {
+      "id": "select-empty-candidates",
+      "role": "counterexample",
+      "input": {
+        "proposal": {
+          "operation_id": "select-empty-candidates",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-empty-candidates",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-b:notice",
+                "content": "The reading room closes at 19:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-b"
+                }
+              }
+            ],
+            "scores": [
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "select-empty-candidates",
+        "verifier_type": "local",
+        "verdict": "pass",
+        "score": 1.0,
+        "reason": "STM_SELECT_EPISODE_CONTEXT looks sane",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": null,
+        "metadata": {}
+      },
+      "expectedVerdict": "pass",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    },
+    {
+      "id": "select-too-many",
+      "role": "control",
+      "input": {
+        "proposal": {
+          "operation_id": "select-too-many",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              },
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "max_items": 1
+          }
+        },
+        "result": {
+          "operation_id": "select-too-many",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              },
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "scores": [
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "select-too-many",
+        "verifier_type": "local",
+        "verdict": "fail",
+        "score": 0.0,
+        "reason": "selected_exceeds_max_items: 2 > 1",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": null,
+        "metadata": {}
+      },
+      "expectedVerdict": "fail",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    },
+    {
+      "id": "select-missing-scores",
+      "role": "control",
+      "input": {
+        "proposal": {
+          "operation_id": "select-missing-scores",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-missing-scores",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "select-missing-scores",
+        "verifier_type": "local",
+        "verdict": "revise",
+        "score": 0.5,
+        "reason": "missing_scores",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": null,
+        "metadata": {}
+      },
+      "expectedVerdict": "revise",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    },
+    {
+      "id": "summary-faithful",
+      "role": "control",
+      "input": {
+        "proposal": {
+          "operation_id": "summary-faithful",
+          "operation_type": "STM_SUMMARIZE",
+          "run_id": "task-a",
+          "payload": {
+            "items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "result": {
+          "operation_id": "summary-faithful",
+          "success": true,
+          "output_payload": {
+            "summary": "Friday closing: 17:00.",
+            "source_item_ids": [
+              "task-a:notice"
+            ],
+            "compression_ratio": 0.5116279069767442
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "summary-faithful",
+        "verifier_type": "local",
+        "verdict": "pass",
+        "score": 1.0,
+        "reason": "STM_SUMMARIZE looks sane",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": null,
+        "metadata": {}
+      },
+      "expectedVerdict": "pass",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    },
+    {
+      "id": "summary-contradictory",
+      "role": "counterexample",
+      "input": {
+        "proposal": {
+          "operation_id": "summary-contradictory",
+          "operation_type": "STM_SUMMARIZE",
+          "run_id": "task-a",
+          "payload": {
+            "items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "result": {
+          "operation_id": "summary-contradictory",
+          "success": true,
+          "output_payload": {
+            "summary": "Friday closing: 19:00.",
+            "source_item_ids": [
+              "task-a:notice"
+            ],
+            "compression_ratio": 0.5116279069767442
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "summary-contradictory",
+        "verifier_type": "local",
+        "verdict": "pass",
+        "score": 1.0,
+        "reason": "STM_SUMMARIZE looks sane",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": null,
+        "metadata": {}
+      },
+      "expectedVerdict": "pass",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    },
+    {
+      "id": "summary-oversize",
+      "role": "control",
+      "input": {
+        "proposal": {
+          "operation_id": "summary-oversize",
+          "operation_type": "STM_SUMMARIZE",
+          "run_id": "task-a",
+          "payload": {
+            "items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "result": {
+          "operation_id": "summary-oversize",
+          "success": true,
+          "output_payload": {
+            "summary": "The reading room closes at 17:00 on Friday. The same notice is repeated again.",
+            "source_item_ids": [
+              "task-a:notice"
+            ],
+            "compression_ratio": 1.813953488372093
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "summary-oversize",
+        "verifier_type": "local",
+        "verdict": "revise",
+        "score": 0.3,
+        "reason": "compression_ratio_out_of_range: 1.813953488372093",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": null,
+        "metadata": {}
+      },
+      "expectedVerdict": "revise",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    },
+    {
+      "id": "filter-protected",
+      "role": "control",
+      "input": {
+        "proposal": {
+          "operation_id": "filter-protected",
+          "operation_type": "STM_FILTER",
+          "run_id": "task-a",
+          "payload": {
+            "items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                },
+                "priority": 0.9
+              },
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "result": {
+          "operation_id": "filter-protected",
+          "success": true,
+          "output_payload": {
+            "retained_items": [
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "dropped_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                },
+                "priority": 0.9
+              }
+            ],
+            "dropped_reasons": {
+              "task-a:notice": "Remove older notice."
+            }
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "filter-protected",
+        "verifier_type": "local",
+        "verdict": "fail",
+        "score": 0.0,
+        "reason": "high_priority_item_dropped",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": "task-a:notice",
+        "metadata": {}
+      },
+      "expectedVerdict": "fail",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    },
+    {
+      "id": "filter-stripped-protection",
+      "role": "counterexample",
+      "input": {
+        "proposal": {
+          "operation_id": "filter-stripped-protection",
+          "operation_type": "STM_FILTER",
+          "run_id": "task-a",
+          "payload": {
+            "items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                },
+                "priority": 0.9
+              },
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "result": {
+          "operation_id": "filter-stripped-protection",
+          "success": true,
+          "output_payload": {
+            "retained_items": [
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "dropped_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "dropped_reasons": {
+              "task-a:notice": "Remove older notice."
+            }
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      },
+      "report": {
+        "operation_id": "filter-stripped-protection",
+        "verifier_type": "local",
+        "verdict": "pass",
+        "score": 1.0,
+        "reason": "STM_FILTER looks sane",
+        "suggested_revision": null,
+        "earliest_bad_input_ref": null,
+        "metadata": {}
+      },
+      "expectedVerdict": "pass",
+      "expectationMatched": true,
+      "inputUnchanged": true
+    }
+  ],
+  "summary": {
+    "cases": 12,
+    "controls": 7,
+    "counterexamplesAccepted": 5,
+    "allExpectationsMatched": true,
+    "allInputsUnchanged": true
+  }
+}

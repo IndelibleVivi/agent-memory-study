@@ -1,0 +1,579 @@
+{
+  "byline": "Agent Memory Study editors",
+  "date": "2026-09-08",
+  "scope": "Original public synthetic examples. Expected verdicts characterize this code, not desired system behavior. No real tasks, memories, or benchmark data.",
+  "cases": [
+    {
+      "id": "select-valid",
+      "role": "control",
+      "question": "同任务、原内容、候选内且未超数量上限。",
+      "expectedVerdict": "pass",
+      "inputs": {
+        "proposal": {
+          "operation_id": "select-valid",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-valid",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "scores": [
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    },
+    {
+      "id": "select-outside-candidates",
+      "role": "control",
+      "question": "有非空候选表时，表外 ID 被拒绝。",
+      "expectedVerdict": "fail",
+      "inputs": {
+        "proposal": {
+          "operation_id": "select-outside-candidates",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-outside-candidates",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-b:notice",
+                "content": "The reading room closes at 19:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-b"
+                }
+              }
+            ],
+            "scores": [
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    },
+    {
+      "id": "select-foreign-in-candidates",
+      "role": "counterexample",
+      "question": "若调用者把 task-b 的条目放进候选表，此函数能否依据当前 run_id 拒绝？run_id 是本 fixture 的显式归属标记，不声称它是上游 item schema 的受支持 scope 字段。",
+      "expectedVerdict": "pass",
+      "inputs": {
+        "proposal": {
+          "operation_id": "select-foreign-in-candidates",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              },
+              {
+                "item_id": "task-b:notice",
+                "content": "The reading room closes at 19:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-b"
+                }
+              }
+            ],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-foreign-in-candidates",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-b:notice",
+                "content": "The reading room closes at 19:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-b"
+                }
+              }
+            ],
+            "scores": [
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    },
+    {
+      "id": "select-rewritten-same-id",
+      "role": "counterexample",
+      "question": "ID 不变、正文由 17:00 改为 19:00，是否校验恢复内容与候选一致？",
+      "expectedVerdict": "pass",
+      "inputs": {
+        "proposal": {
+          "operation_id": "select-rewritten-same-id",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-rewritten-same-id",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 19:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "scores": [
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    },
+    {
+      "id": "select-empty-candidates",
+      "role": "counterexample",
+      "question": "候选表为空时，还能否以选中条目不属于候选集为由拒绝？",
+      "expectedVerdict": "pass",
+      "inputs": {
+        "proposal": {
+          "operation_id": "select-empty-candidates",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-empty-candidates",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-b:notice",
+                "content": "The reading room closes at 19:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-b"
+                }
+              }
+            ],
+            "scores": [
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    },
+    {
+      "id": "select-too-many",
+      "role": "control",
+      "question": "仅把 max_items 降到 1，触发数量检查。",
+      "expectedVerdict": "fail",
+      "inputs": {
+        "proposal": {
+          "operation_id": "select-too-many",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              },
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "max_items": 1
+          }
+        },
+        "result": {
+          "operation_id": "select-too-many",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              },
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "scores": [
+              1.0,
+              1.0
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    },
+    {
+      "id": "select-missing-scores",
+      "role": "control",
+      "question": "不提供 scores，触发补全提示。",
+      "expectedVerdict": "revise",
+      "inputs": {
+        "proposal": {
+          "operation_id": "select-missing-scores",
+          "operation_type": "STM_SELECT_EPISODE_CONTEXT",
+          "run_id": "task-a",
+          "payload": {
+            "candidates": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "max_items": 2
+          }
+        },
+        "result": {
+          "operation_id": "select-missing-scores",
+          "success": true,
+          "output_payload": {
+            "selected_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    },
+    {
+      "id": "summary-faithful",
+      "role": "control",
+      "question": "短摘要保留原来的时间。",
+      "expectedVerdict": "pass",
+      "inputs": {
+        "proposal": {
+          "operation_id": "summary-faithful",
+          "operation_type": "STM_SUMMARIZE",
+          "run_id": "task-a",
+          "payload": {
+            "items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "result": {
+          "operation_id": "summary-faithful",
+          "success": true,
+          "output_payload": {
+            "summary": "Friday closing: 17:00.",
+            "source_item_ids": [
+              "task-a:notice"
+            ],
+            "compression_ratio": 0.5116279069767442
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    },
+    {
+      "id": "summary-contradictory",
+      "role": "counterexample",
+      "question": "与忠实摘要同长度、同来源 ID，但改变一个数字。",
+      "expectedVerdict": "pass",
+      "inputs": {
+        "proposal": {
+          "operation_id": "summary-contradictory",
+          "operation_type": "STM_SUMMARIZE",
+          "run_id": "task-a",
+          "payload": {
+            "items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "result": {
+          "operation_id": "summary-contradictory",
+          "success": true,
+          "output_payload": {
+            "summary": "Friday closing: 19:00.",
+            "source_item_ids": [
+              "task-a:notice"
+            ],
+            "compression_ratio": 0.5116279069767442
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    },
+    {
+      "id": "summary-oversize",
+      "role": "control",
+      "question": "报告真实字符长度比；过长摘要触发结构检查。",
+      "expectedVerdict": "revise",
+      "inputs": {
+        "proposal": {
+          "operation_id": "summary-oversize",
+          "operation_type": "STM_SUMMARIZE",
+          "run_id": "task-a",
+          "payload": {
+            "items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "result": {
+          "operation_id": "summary-oversize",
+          "success": true,
+          "output_payload": {
+            "summary": "The reading room closes at 17:00 on Friday. The same notice is repeated again.",
+            "source_item_ids": [
+              "task-a:notice"
+            ],
+            "compression_ratio": 1.813953488372093
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    },
+    {
+      "id": "filter-protected",
+      "role": "control",
+      "question": "dropped item 保留原 priority 0.9，拒绝删除。",
+      "expectedVerdict": "fail",
+      "inputs": {
+        "proposal": {
+          "operation_id": "filter-protected",
+          "operation_type": "STM_FILTER",
+          "run_id": "task-a",
+          "payload": {
+            "items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                },
+                "priority": 0.9
+              },
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "result": {
+          "operation_id": "filter-protected",
+          "success": true,
+          "output_payload": {
+            "retained_items": [
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "dropped_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                },
+                "priority": 0.9
+              }
+            ],
+            "dropped_reasons": {
+              "task-a:notice": "Remove older notice."
+            }
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    },
+    {
+      "id": "filter-stripped-protection",
+      "role": "counterexample",
+      "question": "proposal 原条目仍有 priority 0.9，只移除 result 中同 ID 条目的 priority，检查能否回查原条目。",
+      "expectedVerdict": "pass",
+      "inputs": {
+        "proposal": {
+          "operation_id": "filter-stripped-protection",
+          "operation_type": "STM_FILTER",
+          "run_id": "task-a",
+          "payload": {
+            "items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                },
+                "priority": 0.9
+              },
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ]
+          }
+        },
+        "result": {
+          "operation_id": "filter-stripped-protection",
+          "success": true,
+          "output_payload": {
+            "retained_items": [
+              {
+                "item_id": "task-a:weather",
+                "content": "The sky is cloudy.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "dropped_items": [
+              {
+                "item_id": "task-a:notice",
+                "content": "The reading room closes at 17:00 on Friday.",
+                "metadata": {
+                  "run_id": "task-a"
+                }
+              }
+            ],
+            "dropped_reasons": {
+              "task-a:notice": "Remove older notice."
+            }
+          }
+        },
+        "context": {
+          "run_id": "task-a"
+        }
+      }
+    }
+  ]
+}
