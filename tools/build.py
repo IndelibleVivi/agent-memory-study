@@ -41,6 +41,7 @@ PUBLIC_COPY_PATHS = (
     "index.html",
     "site.webmanifest",
     "assets/app.js",
+    "assets/revision-study.js",
     "assets/styles.css",
     "assets/materials-data.js",
     "data/materials.json",
@@ -64,7 +65,7 @@ MANIFEST_ICONS = {
     "assets/icons/ams-icon-192.png": "192x192",
     "assets/icons/ams-icon-512.png": "512x512",
 }
-PUBLIC_RESEARCH_SUFFIXES = {".csv", ".json", ".jsonl", ".md", ".py", ".sha256", ".txt"}
+PUBLIC_RESEARCH_SUFFIXES = {".csv", ".js", ".json", ".jsonl", ".md", ".py", ".sha256", ".txt"}
 NS = {
     "bib": "http://purl.org/net/biblio#",
     "dc": "http://purl.org/dc/elements/1.1/",
@@ -240,6 +241,71 @@ def validate_bundled_files(data: dict[str, Any]) -> None:
             header = pdf_file.read(4)
         if header != b"%PDF":
             raise ValueError(f"bundled file does not start with %PDF: {relative_path}")
+
+
+def validate_studies(data: dict[str, Any], material_ids: set[str]) -> None:
+    studies = data.get("studies")
+    if not isinstance(studies, list):
+        raise ValueError("data.studies must be a list")
+    seen = set()
+    text_fields = {"id", "number", "title", "subtitle", "byline", "date", "kind", "intro", "labTitle", "labIntro", "boundary", "closing", "artifactUrl"}
+    for study in studies:
+        if not isinstance(study, dict) or not text_fields.issubset(study):
+            raise ValueError("study missing text fields")
+        assert_exact_text_object({k: study[k] for k in text_fields}, text_fields, "study")
+        if not re.fullmatch(r"[a-z0-9-]+", study["id"]) or study["id"] in seen:
+            raise ValueError("invalid or duplicate study id")
+        seen.add(study["id"])
+        if study["kind"] != "editorial-synthesis-with-deterministic-demo":
+            raise ValueError("unsupported study kind")
+        artifact = PurePosixPath(study["artifactUrl"])
+        if artifact.is_absolute() or ".." in artifact.parts or artifact.parts[0] != "research" or not (ROOT / artifact).is_file():
+            raise ValueError("study artifact must be an existing public research file")
+        for field, keys in [("sections", {"title", "text"}), ("takeaways", {"title", "text"}),
+                            ("readings", {"materialId", "label", "locator", "takeaway", "limit"}),
+                            ("policies", {"id", "label", "description"})]:
+            if not isinstance(study.get(field), list) or not study[field]:
+                raise ValueError(f"study {field} must be non-empty")
+            for item in study[field]:
+                assert_exact_text_object(item, keys, f"study {field}")
+        if any(item["materialId"] not in material_ids for item in study["readings"]):
+            raise ValueError("study references unknown material")
+        if [p["id"] for p in study["policies"]] != ["none", "frozen", "latest", "scoped"]:
+            raise ValueError("study policies differ from supported engine")
+        if not isinstance(study.get("scenarios"), list) or not study["scenarios"]:
+            raise ValueError("study scenarios must be non-empty")
+        scenario_ids = set()
+        for scenario in study["scenarios"]:
+            keys = {"id", "title", "description", "target", "lesson"}
+            if not isinstance(scenario, dict) or not keys.issubset(scenario):
+                raise ValueError("study scenario missing text")
+            assert_exact_text_object({k: scenario[k] for k in keys}, keys, "scenario")
+            if not re.fullmatch(r"[a-z0-9-]+", scenario["id"]) or scenario["id"] in scenario_ids:
+                raise ValueError("invalid or duplicate study scenario id")
+            scenario_ids.add(scenario["id"])
+            change = scenario.get("change")
+            if not isinstance(change, dict) or set(change) != {"label", "adds", "retracts"}:
+                raise ValueError("scenario change must declare label, adds, retracts")
+            assert_exact_text_object({"label": change["label"]}, {"label"}, "change")
+            assert_string_list(change["retracts"], "change retracts", allow_empty=True)
+            sources = []
+            for values in [scenario.get("initial"), change["adds"]]:
+                if not isinstance(values, list):
+                    raise ValueError("scenario sources must be lists")
+                for source in values:
+                    assert_exact_text_object(source, {"id", "scope", "flag"}, "scenario source")
+                    if source["flag"] not in {"--format", "--output"}:
+                        raise ValueError("unsupported synthetic source flag")
+                sources.extend(values)
+            source_ids = [source["id"] for source in sources]
+            if len(set(source_ids)) != len(source_ids):
+                raise ValueError("duplicate scenario source id")
+            if not set(change["retracts"]).issubset({source["id"] for source in scenario["initial"]}):
+                raise ValueError("scenario retracts unknown initial source")
+            env = scenario.get("environment")
+            assert_exact_text_object(env, {"before", "after"}, "environment")
+            if any(flag not in {"--format", "--output"} for flag in env.values()):
+                raise ValueError("unsupported synthetic environment flag")
 
 
 def load_and_validate(path: Path) -> dict[str, Any]:
@@ -557,6 +623,7 @@ def load_and_validate(path: Path) -> dict[str, Any]:
             raise ValueError(
                 f"reading path {reading_path['id']} references unknown materials: {sorted(unknown_materials)}"
             )
+    validate_studies(data, ids)
     bundled_paths = bundled_pdf_paths(data)
     if len(set(bundled_paths)) != delivery_counts["bundled"]:
         raise ValueError("each bundled material must use a distinct PDF path")

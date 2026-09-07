@@ -24,6 +24,21 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
             return build.load_and_validate(path)
 
+    def test_study_references_and_event_identity_are_validated(self):
+        mutations = [
+            lambda s: s['readings'][0].update(materialId='unknown-paper'),
+            lambda s: s['scenarios'][0]['change']['retracts'].append('unknown-source'),
+            lambda s: s['scenarios'][0]['change']['adds'].append(s['scenarios'][0]['initial'][0]),
+            lambda s: s['scenarios'][0]['initial'][0].update(scope=''),
+            lambda s: s['policies'][0].update(id='unknown-policy'),
+            lambda s: s.update(artifactUrl='../private.md'),
+        ]
+        for mutate in mutations:
+            invalid = copy.deepcopy(self.data)
+            mutate(invalid['studies'][0])
+            with self.subTest(mutation=mutate), self.assertRaises(ValueError):
+                self.validate_copy(invalid)
+
     def test_current_public_data_validates(self):
         validated = build.load_and_validate(self.data_path)
         self.assertGreater(len(validated["materials"]), 0)
@@ -35,7 +50,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260831-faulty-memory-1'),
+            source.count('assets/materials-data.js?v=20260908-studies-1'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260830-mnl-2', source)

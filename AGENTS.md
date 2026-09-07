@@ -4,7 +4,7 @@
 
 ## Canonical 与 generated surfaces
 
-- `data/materials.json` 是公开材料、阅读深度、failure-surface membership 与 evidence metadata 的 canonical source。
+- `data/materials.json` 是公开材料、阅读深度、failure-surface membership、evidence metadata 与 `studies` 共读专题的 canonical source。
 - `assets/materials-data.js` 和 `agent-memory-study.rdf` 是 generated projections；不要手工编辑。
 - 需要重建 browser / Zotero artifacts 时，运行：
 
@@ -65,3 +65,10 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 - Stage 前检查 generated diff，确认公开 RDF 不含 `file://`、本地绝对路径、private Zotero keys、private notes
   或未经选择的 tags。
 - 只 stage 本次公开变更需要的明确路径；private working continuity 与临时 Zotero source 留在 repo 外。
+
+## 共读专题
+
+- `studies` 提供公共跨源文章、材料引用、scenario 与明确的演示边界；不要用专题自动提升 material `noteDepth`。
+- `assets/revision-study.js` 是 browser 与 Node runner 共用的唯一规则实现。规则选择不得接收 `environment` 答案；工具检查发生在建议形成之后。
+- 场景、policy 或 engine 变化时，运行 `node --test tools/test_revision_study.cjs` 与 `node research/correction-scope-study/run.js`，同步已执行的 `research/correction-scope-study/results.json`。
+- 修改 routes / renderer 后实际验证 desktop / mobile、直接打开 study URL、scenario / phase、history 与旧 material / atlas 路径。共读是公开阅读入口，不接入 private project mapping、账号或持久化访客记录。

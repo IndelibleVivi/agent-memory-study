@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f6f7f4" />
-    <meta name="description" content="一个沿 agent memory failure surfaces 组织的公开研究地图与 annotated reading room。" />
+    <meta name="description" content="一个沿 agent memory failure surfaces 组织的公开书房：研究地图、精读札记与可亲手比较的共读专题。" />
     <title>Agent Memory Study</title>
     <link rel="icon" type="image/png" sizes="48x48" href="assets/icons/favicon-48.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
-    <link rel="stylesheet" href="assets/styles.css?v=20260813-easter-2" />
+    <link rel="stylesheet" href="assets/styles.css?v=20260908-studies-1" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -27,6 +27,7 @@
         <a href="./#research-map" data-route="home" data-scroll-target="research-map">研究地图</a>
         <a href="./#constellation" data-route="home" data-scroll-target="constellation">研究星图</a>
         <a href="./#reading-paths" data-route="home" data-scroll-target="reading-paths">阅读路径</a>
+        <a href="./#studies" data-route="home" data-scroll-target="studies">共读专题</a>
         <a href="./#library" data-route="home" data-scroll-target="library">全部材料</a>
         <a href="./#about" data-route="home" data-scroll-target="about">About</a>
       </nav>
@@ -101,6 +102,14 @@
           <div class="path-focus" id="path-focus" hidden tabindex="-1"></div>
         </section>
 
+        <section class="studies-home" id="studies" aria-labelledby="studies-title">
+          <div class="section-heading">
+            <h2 id="studies-title">共读专题</h2>
+            <p>把几篇论文放到同一张桌上。带着一个问题读，也亲手改动一个条件。</p>
+          </div>
+          <div id="study-index"></div>
+        </section>
+
         <section class="library" id="library" aria-labelledby="library-title">
           <div class="library-heading">
             <div>
@@ -151,6 +160,8 @@
           </button>
         </section>
       </div>
+
+      <article class="study-view" id="study-view" hidden></article>
 
       <article class="material-view" id="material-view" hidden>
         <a class="back-link" href="./" data-route="home">← 回到研究地图</a>
@@ -237,6 +248,12 @@
               <div id="material-contributions"></div>
             </section>
 
+            <section class="article-section" id="paper-studies" data-toc-label="放到一起读" hidden>
+              <p class="content-kind editorial-kind">Shared readings</p>
+              <h2>放到一起读</h2>
+              <div id="material-studies"></div>
+            </section>
+
             <section class="article-section source-delivery-mobile" id="paper-source-mobile" data-toc-label="来源与交付"></section>
           </div>
 
@@ -256,8 +273,9 @@
 
     <p class="sr-only" id="route-status" aria-live="polite"></p>
     <noscript>这个 reading room 需要 JavaScript 来读取同 repo 的 public canonical data。材料与许可说明仍可在 GitHub repository 中查看。</noscript>
-    <script src="assets/materials-data.js?v=20260831-faulty-memory-1"></script>
-    <script src="assets/app.js?v=20260904-constellation-labels-1"></script>
+    <script src="assets/materials-data.js?v=20260908-studies-1"></script>
+    <script src="assets/revision-study.js?v=20260908-studies-1"></script>
+    <script src="assets/app.js?v=20260908-studies-1"></script>
     <!-- Cloudflare Web Analytics -->
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"4e0929eca0504d43aca1cc1a1f30ffaf"}'></script>
     <!-- End Cloudflare Web Analytics -->

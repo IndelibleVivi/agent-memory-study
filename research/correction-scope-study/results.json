@@ -1,0 +1,1205 @@
+{
+  "study": "after-a-correction",
+  "boundary": "原创 synthetic 规则演示；不是论文复现、LLM benchmark 或真实项目效果评估。范围与撤回均由 fixture 明确提供，没有测试从自然语言识别这些信息的能力。不合并成总分，不测 token、延迟或成本。",
+  "results": [
+    {
+      "scenario": "unchanged",
+      "phase": "before",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "unchanged",
+      "phase": "before",
+      "policy": "frozen",
+      "flag": "--format",
+      "supports": [
+        "manual-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "unchanged",
+      "phase": "before",
+      "policy": "latest",
+      "flag": "--format",
+      "supports": [
+        "manual-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "unchanged",
+      "phase": "before",
+      "policy": "scoped",
+      "flag": "--format",
+      "supports": [
+        "manual-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "unchanged",
+      "phase": "after",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "unchanged",
+      "phase": "after",
+      "policy": "frozen",
+      "flag": "--format",
+      "supports": [
+        "manual-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "unchanged",
+      "phase": "after",
+      "policy": "latest",
+      "flag": "--format",
+      "supports": [
+        "example-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "unchanged",
+      "phase": "after",
+      "policy": "scoped",
+      "flag": "--format",
+      "supports": [
+        "manual-v1",
+        "example-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "corrected",
+      "phase": "before",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "corrected",
+      "phase": "before",
+      "policy": "frozen",
+      "flag": "--format",
+      "supports": [
+        "draft-v2"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "corrected",
+      "phase": "before",
+      "policy": "latest",
+      "flag": "--format",
+      "supports": [
+        "draft-v2"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "corrected",
+      "phase": "before",
+      "policy": "scoped",
+      "flag": "--format",
+      "supports": [
+        "draft-v2"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "corrected",
+      "phase": "after",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": false
+        },
+        {
+          "id": "correction-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "corrected",
+      "phase": "after",
+      "policy": "frozen",
+      "flag": "--format",
+      "supports": [
+        "draft-v2"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": false
+        },
+        {
+          "id": "correction-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "corrected",
+      "phase": "after",
+      "policy": "latest",
+      "flag": "--output",
+      "supports": [
+        "correction-v2"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": false
+        },
+        {
+          "id": "correction-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "corrected",
+      "phase": "after",
+      "policy": "scoped",
+      "flag": "--output",
+      "supports": [
+        "correction-v2"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": false
+        },
+        {
+          "id": "correction-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "legacy",
+      "phase": "before",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "legacy",
+      "phase": "before",
+      "policy": "frozen",
+      "flag": "--format",
+      "supports": [
+        "manual-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "legacy",
+      "phase": "before",
+      "policy": "latest",
+      "flag": "--format",
+      "supports": [
+        "manual-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "legacy",
+      "phase": "before",
+      "policy": "scoped",
+      "flag": "--format",
+      "supports": [
+        "manual-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "legacy",
+      "phase": "after",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "legacy",
+      "phase": "after",
+      "policy": "frozen",
+      "flag": "--format",
+      "supports": [
+        "manual-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "legacy",
+      "phase": "after",
+      "policy": "latest",
+      "flag": "--output",
+      "supports": [
+        "manual-v2"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "legacy",
+      "phase": "after",
+      "policy": "scoped",
+      "flag": "--format",
+      "supports": [
+        "manual-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "withdrawn",
+      "phase": "before",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "withdrawn",
+      "phase": "before",
+      "policy": "frozen",
+      "flag": "--format",
+      "supports": [
+        "draft-v2"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "withdrawn",
+      "phase": "before",
+      "policy": "latest",
+      "flag": "--format",
+      "supports": [
+        "draft-v2"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "withdrawn",
+      "phase": "before",
+      "policy": "scoped",
+      "flag": "--format",
+      "supports": [
+        "draft-v2"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "withdrawn",
+      "phase": "after",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": false
+        }
+      ]
+    },
+    {
+      "scenario": "withdrawn",
+      "phase": "after",
+      "policy": "frozen",
+      "flag": "--format",
+      "supports": [
+        "draft-v2"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": false
+        }
+      ]
+    },
+    {
+      "scenario": "withdrawn",
+      "phase": "after",
+      "policy": "latest",
+      "flag": null,
+      "supports": [],
+      "reason": "no-support",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": false
+        }
+      ]
+    },
+    {
+      "scenario": "withdrawn",
+      "phase": "after",
+      "policy": "scoped",
+      "flag": null,
+      "supports": [],
+      "reason": "no-support",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": false
+        }
+      ]
+    },
+    {
+      "scenario": "alternative-support",
+      "phase": "before",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "alternative-support",
+      "phase": "before",
+      "policy": "frozen",
+      "flag": "--format",
+      "supports": [
+        "manual-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "alternative-support",
+      "phase": "before",
+      "policy": "latest",
+      "flag": "--format",
+      "supports": [
+        "example-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "alternative-support",
+      "phase": "before",
+      "policy": "scoped",
+      "flag": "--format",
+      "supports": [
+        "manual-v1",
+        "example-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "alternative-support",
+      "phase": "after",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": false
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "alternative-support",
+      "phase": "after",
+      "policy": "frozen",
+      "flag": "--format",
+      "supports": [
+        "manual-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": false
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "alternative-support",
+      "phase": "after",
+      "policy": "latest",
+      "flag": "--format",
+      "supports": [
+        "example-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": false
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "alternative-support",
+      "phase": "after",
+      "policy": "scoped",
+      "flag": "--format",
+      "supports": [
+        "example-v1"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--format",
+      "evidence": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": false
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "conflict",
+      "phase": "before",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "conflict",
+      "phase": "before",
+      "policy": "frozen",
+      "flag": "--output",
+      "supports": [
+        "manual-v2"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "conflict",
+      "phase": "before",
+      "policy": "latest",
+      "flag": "--output",
+      "supports": [
+        "manual-v2"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "conflict",
+      "phase": "before",
+      "policy": "scoped",
+      "flag": "--output",
+      "supports": [
+        "manual-v2"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "conflict",
+      "phase": "after",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        },
+        {
+          "id": "disputed-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "conflict",
+      "phase": "after",
+      "policy": "frozen",
+      "flag": "--output",
+      "supports": [
+        "manual-v2"
+      ],
+      "reason": "supported",
+      "verdict": "accepted",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        },
+        {
+          "id": "disputed-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "conflict",
+      "phase": "after",
+      "policy": "latest",
+      "flag": "--format",
+      "supports": [
+        "disputed-v2"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        },
+        {
+          "id": "disputed-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "conflict",
+      "phase": "after",
+      "policy": "scoped",
+      "flag": null,
+      "supports": [
+        "manual-v2",
+        "disputed-v2"
+      ],
+      "reason": "conflict",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output",
+          "active": true
+        },
+        {
+          "id": "disputed-v2",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "mislabelled-scope",
+      "phase": "before",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": []
+    },
+    {
+      "scenario": "mislabelled-scope",
+      "phase": "before",
+      "policy": "frozen",
+      "flag": null,
+      "supports": [],
+      "reason": "no-support",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": []
+    },
+    {
+      "scenario": "mislabelled-scope",
+      "phase": "before",
+      "policy": "latest",
+      "flag": null,
+      "supports": [],
+      "reason": "no-support",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": []
+    },
+    {
+      "scenario": "mislabelled-scope",
+      "phase": "before",
+      "policy": "scoped",
+      "flag": null,
+      "supports": [],
+      "reason": "no-support",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": []
+    },
+    {
+      "scenario": "mislabelled-scope",
+      "phase": "after",
+      "policy": "none",
+      "flag": null,
+      "supports": [],
+      "reason": "no-memory",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "mislabelled-manual",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "mislabelled-scope",
+      "phase": "after",
+      "policy": "frozen",
+      "flag": null,
+      "supports": [],
+      "reason": "no-support",
+      "verdict": "abstained",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "mislabelled-manual",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "mislabelled-scope",
+      "phase": "after",
+      "policy": "latest",
+      "flag": "--format",
+      "supports": [
+        "mislabelled-manual"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "mislabelled-manual",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    },
+    {
+      "scenario": "mislabelled-scope",
+      "phase": "after",
+      "policy": "scoped",
+      "flag": "--format",
+      "supports": [
+        "mislabelled-manual"
+      ],
+      "reason": "supported",
+      "verdict": "mismatch",
+      "expected": "--output",
+      "evidence": [
+        {
+          "id": "mislabelled-manual",
+          "scope": "v2",
+          "flag": "--format",
+          "active": true
+        }
+      ]
+    }
+  ]
+}

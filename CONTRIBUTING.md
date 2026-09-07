@@ -57,6 +57,14 @@ Project-specific 评价可以进入，但被评价的 project、版本与证据�
 
 不提交以 private runtime、private data、内部 project 或不可检查实现为被测对象的结果。只提交“我们本地试过、看起来有效”不构成 public test artifact。
 
+### 5. 共读专题与反例
+
+`studies` 是有署名的公开跨源论述，不代替单篇札记。每个阅读连接要给 material ID、locator、借鉴点与边界；读者应能直接回原文，也能从材料页回专题。专题不要求服务特定项目，不因新增演示而提升关联材料的 depth。
+
+首题“一条更正之后”的场景定义见 [`research/correction-scope-study/README.md`](research/correction-scope-study/README.md)。可提交使某条规则失败的公开 synthetic 反例；区分规则可见来源与独立工具 contract，不为制造胜者改写答案。新增演示机制需要相应的公开方法与可复跑实现，不能只填一份看起来已运行的结果。
+
+修改现有场景或规则后，重建 browser payload，运行 `node --test tools/test_revision_study.cjs`，并用 `node research/correction-scope-study/run.js` 更新逐场景结果。保持新的 source / assumption / evidence 与结论可区分。
+
 ## 声音与证据怎样分开
 
 - quotation、source-backed paraphrase、paper-reported result、source audit 与 editorial inference 必须可区分；逐字引用必须有精确 locator；

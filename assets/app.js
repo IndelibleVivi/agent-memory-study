@@ -8,6 +8,7 @@
     || data.materials.length === 0
     || !data.atlas
     || !Array.isArray(data.atlas.failureSurfaces)
+    || !Array.isArray(data.studies)
     || !Array.isArray(data.atlas.readingPaths)
   ) {
     document.body.textContent = "阅读室的 public data 缺失或不完整。";
@@ -17,7 +18,8 @@
   const materialsById = new Map(data.materials.map((material) => [material.id, material]));
   const surfacesById = new Map(data.atlas.failureSurfaces.map((surface) => [surface.id, surface]));
   const pathsById = new Map(data.atlas.readingPaths.map((path) => [path.id, path]));
-  const routeKeys = ["material", "thread", "path", "q", "topic", "surface", "depth"];
+  const studiesById = new Map(data.studies.map((study) => [study.id, study]));
+  const routeKeys = ["material", "study", "scenario", "phase", "thread", "path", "q", "topic", "surface", "depth"];
   const depthOrder = ["abstract", "skim", "read", "worked"];
   const svgNamespace = "http://www.w3.org/2000/svg";
   const constellationViewBox = { width: 1200, height: 680 };
@@ -51,6 +53,8 @@
   const refs = {
     atlasView: document.querySelector("#atlas-view"),
     materialView: document.querySelector("#material-view"),
+    studyView: document.querySelector("#study-view"),
+    studyIndex: document.querySelector("#study-index"),
     atlasTitle: document.querySelector("#atlas-title"),
     atlasDek: document.querySelector("#atlas-dek"),
     atlasLabel: document.querySelector("#atlas-label"),
@@ -120,6 +124,10 @@
   function readRoute() {
     const params = new URLSearchParams(window.location.search);
     const material = materialsById.has(params.get("material")) ? params.get("material") : null;
+    const study = !material && studiesById.has(params.get("study")) ? params.get("study") : null;
+    const scenarios = study ? studiesById.get(study).scenarios : [];
+    const scenario = scenarios.some(item => item.id === params.get("scenario")) ? params.get("scenario") : null;
+    const phase = params.get("phase") === "after" ? "after" : "before";
     const thread = surfacesById.has(params.get("thread")) ? params.get("thread") : null;
     const path = pathsById.has(params.get("path")) ? params.get("path") : null;
     const topic = data.filters.includes(params.get("topic")) ? params.get("topic") : "";
@@ -127,6 +135,9 @@
     const depth = depthOrder.includes(params.get("depth")) ? params.get("depth") : "";
     return {
       material,
+      study,
+      scenario,
+      phase,
       thread,
       path,
       q: params.get("q") || "",
@@ -140,6 +151,11 @@
     const url = new URL(window.location.href);
     routeKeys.forEach((key) => url.searchParams.delete(key));
     if (nextRoute.material) url.searchParams.set("material", nextRoute.material);
+    if (nextRoute.study) {
+      url.searchParams.set("study", nextRoute.study);
+      if (nextRoute.scenario) url.searchParams.set("scenario", nextRoute.scenario);
+      if (nextRoute.phase === "after") url.searchParams.set("phase", "after");
+    }
     if (nextRoute.thread) url.searchParams.set("thread", nextRoute.thread);
     if (nextRoute.path) url.searchParams.set("path", nextRoute.path);
     if (nextRoute.q) url.searchParams.set("q", nextRoute.q);
@@ -168,8 +184,9 @@
   }
 
   function routeHref(type, id) {
-    const next = { ...route, material: null, thread: null, path: null };
+    const next = { ...route, material: null, study: null, scenario: null, phase: "before", thread: null, path: null };
     if (type === "material") next.material = id;
+    if (type === "study") next.study = id;
     if (type === "thread") {
       next.thread = id;
       next.surface = id;
@@ -245,6 +262,7 @@
     renderSurfaces();
     renderConstellation();
     renderPaths();
+    renderStudyIndex();
     syncControls();
     renderLibrary();
   }
@@ -866,6 +884,13 @@
   }
 
   function renderMaterial(material) {
+    const studies = data.studies.filter(study => study.readings.some(reading => reading.materialId === material.id));
+    document.querySelector("#paper-studies").hidden = !studies.length;
+    document.querySelector("#material-studies").replaceChildren(...studies.map(study => {
+      const block = createTextElement("p", "");
+      block.append(createRouteLink("study", study.id, `${study.title} →`), createTextElement("span", ` · ${study.subtitle}`));
+      return block;
+    }));
     refs.materialNumber.textContent = String(material.number).padStart(2, "0");
     refs.materialTitle.textContent = material.title;
     refs.materialMeta.textContent = `${material.authors.join(", ")} · ${material.year}`;
@@ -1090,15 +1115,150 @@
       });
   }
 
+  function renderStudyIndex() {
+    refs.studyIndex.replaceChildren(...data.studies.map(study => {
+      const entry = createTextElement("div", "", "study-entry");
+      entry.append(createTextElement("span", study.number, "study-entry-number"));
+      const text = createTextElement("div", "");
+      const title = createTextElement("h3", "");
+      title.append(createRouteLink("study", study.id, `${study.title} ↗`));
+      text.append(createTextElement("p", "Shared reading · 共同的问题", "content-kind"), title,
+        createTextElement("p", study.subtitle, "study-subtitle"), createTextElement("p", study.intro));
+      const note = createTextElement("div", "", "study-entry-note");
+      note.append(createTextElement("p", `${study.readings.length} 份材料 / ${study.scenarios.length} 个可切换场景`),
+        createTextElement("p", "原文 · 串读 · 亲手比较 · 带走判断"),
+        createRouteLink("study", study.id, "进入共读专题 →", "study-enter"));
+      entry.append(text, note);
+      return entry;
+    }));
+  }
+
+  function renderStudy(study) {
+    const el = createTextElement;
+    const fragment = document.createDocumentFragment();
+    const back = createRouteLink("home", "", "← 回到公开书房", "back-link");
+    const header = el("header", "", "study-heading");
+    const title = el("h1", study.title); title.id = "study-title"; title.tabIndex = -1;
+    header.append(el("p", `共读专题 ${study.number} / Shared reading`, "content-kind"), title,
+      el("p", study.subtitle, "study-subtitle"), el("p", study.intro, "study-dek"),
+      el("p", `${study.byline} · ${study.date} · 跨源编者论述`, "study-byline"));
+    const jump = el("nav", "", "study-jump"); jump.setAttribute("aria-label", "共读专题目录");
+    for (const [id, text] of [["study-reading","一起读"],["study-lab","亲手比较"],["study-takeaways","带走判断"]]) {
+      const link = el("a", text); link.href = `#${id}`; jump.append(link);
+    }
+    fragment.append(back, header, jump);
+    const reading = el("section", "", "study-reading"); reading.id = "study-reading";
+    const essay = el("div", "", "study-essay");
+    study.sections.forEach(section => essay.append(el("h2", section.title), el("p", section.text)));
+    const sources = el("div", "", "study-sources");
+    sources.append(el("p", "桌上的材料", "content-kind"));
+    study.readings.forEach((reading, index) => {
+      const material = materialsById.get(reading.materialId);
+      const row = el("section", "", "study-source");
+      const heading = el("h3", `${index + 1}. `);
+      heading.append(createRouteLink("material", material.id, reading.label));
+      const sourceLink = createExternalLink(material.sourceUrl, "回原文 ↗");
+      row.append(heading, el("p", reading.takeaway), el("p", reading.limit, "study-source-limit"),
+        el("p", reading.locator, "study-locator"), sourceLink);
+      sources.append(row);
+    });
+    reading.append(essay, sources); fragment.append(reading);
+
+    const lab = el("section", "", "study-lab"); lab.id = "study-lab";
+    lab.append(el("p", "Reading experiment / 原创规则演示", "content-kind"), el("h2", study.labTitle),
+      el("p", study.labIntro, "study-lab-intro"), el("p", study.boundary, "study-boundary"));
+    const scenario = study.scenarios.find(item => item.id === route.scenario) || study.scenarios.find(item => item.id === "corrected") || study.scenarios[0];
+    const phase = route.phase || "before";
+    const controls = el("div", "", "study-controls");
+    const label = el("label", "选择一个场景"); label.htmlFor = "study-scenario";
+    const select = el("select", ""); select.id = "study-scenario";
+    study.scenarios.forEach(item => { const option = el("option", item.title); option.value = item.id; select.append(option); });
+    select.value = scenario.id;
+    select.addEventListener("change", () => {
+      navigate({scenario: select.value}, {focus: false});
+      document.querySelector("#study-scenario").focus({preventScroll: true});
+    });
+    const picker = el("div", ""); picker.append(label, select);
+    const phases = el("div", "", "study-phases"); phases.setAttribute("role", "group"); phases.setAttribute("aria-label", "事件阶段");
+    for (const [id, text] of [["before","事件前"],["after","应用事件后"]]) {
+      const button = el("button", text); button.type = "button"; button.id = `study-phase-${id}`;
+      button.setAttribute("aria-pressed", String(phase === id));
+      button.addEventListener("click", () => {
+        navigate({scenario: scenario.id, phase: id}, {focus: false});
+        document.querySelector(`#study-phase-${id}`).focus({preventScroll: true});
+      });
+      phases.append(button);
+    }
+    controls.append(picker, phases); lab.append(controls);
+    const live = el("div", ""); live.setAttribute("role", "group"); live.setAttribute("aria-label", "场景与结果");
+    live.append(el("p", scenario.description, "study-scenario-description"));
+    const experiment = el("div", "", "study-experiment");
+    const evidence = el("div", "", "study-evidence");
+    const result = window.RevisionStudy.run(scenario, "scoped", phase);
+    evidence.append(el("h3", `当前任务 / export-json ${scenario.target}`),
+      el("p", `${phase === "after" ? "已应用" : "尚未应用"}：${scenario.change.label}`, "study-event"));
+    const list = el("ul", "", "study-evidence-list");
+    result.evidence.forEach(item => {
+      const row = el("li", "");
+      row.append(el("span", item.active ? "有效" : "已撤回", item.active ? "evidence-active" : "evidence-withdrawn"),
+        el("code", item.id), el("p", `${item.scope} → ${item.flag} json`));
+      list.append(row);
+    });
+    evidence.append(list);
+    if (!result.evidence.length) evidence.append(el("p", "当前没有来源记录。"));
+    evidence.append(el("p", "来源顺序表示收到的先后；有效 / 撤回、版本标签均由场景提供。", "study-locator"));
+    const outputs = el("div", "", "study-outputs");
+    const verdicts = {accepted: "工具接受", mismatch: "工具拒绝 · 参数不符", abstained: "未执行 · 任务未完成"};
+    const reasons = {supported: "形成单一建议", conflict: "当前范围内存在冲突", "no-support": "没有可用支持", "no-memory": "未读取经验"};
+    study.policies.forEach(policy => {
+      const r = window.RevisionStudy.run(scenario, policy.id, phase);
+      const row = el("section", "", `study-output verdict-${r.verdict}`);
+      const heading = el("div", "", "study-output-heading");
+      heading.append(el("h3", policy.label), el("span", verdicts[r.verdict], "study-verdict"));
+      row.append(heading, el("p", policy.description, "study-policy-description"),
+        el("code", r.flag ? `export-json ${r.flag} json` : "暂不建议执行", "study-command"),
+        el("p", `${reasons[r.reason]} · 依据：${r.supports.join("、") || "无"}`, "study-locator"));
+      outputs.append(row);
+    });
+    experiment.append(evidence, outputs); live.append(experiment,
+      el("p", `独立工具 contract：${scenario.target} 接受 ${result.expected} json。这个答案只用于执行后的检查，不交给规则选取。`, "study-contract"),
+      el("p", scenario.lesson, "study-lesson"));
+    lab.append(live);
+    const artifacts = el("p", "复跑与反驳：", "study-artifacts");
+    const artifactLink = createExternalLink(`https://github.com/IndelibleVivi/agent-memory-study/blob/main/${study.artifactUrl}`, "方法、源码与逐场景结果 ↗");
+    artifacts.append(artifactLink); lab.append(artifacts); fragment.append(lab);
+
+    const takeaways = el("section", "", "study-takeaways"); takeaways.id = "study-takeaways";
+    takeaways.append(el("p", "Take it with you / 编者设计判断", "content-kind"), el("h2", "读完之后，带走什么"));
+    const items = el("div", "", "study-takeaway-grid");
+    study.takeaways.forEach(item => { const section = el("section", ""); section.append(el("h3", item.title), el("p", item.text)); items.append(section); });
+    takeaways.append(items, el("p", study.closing, "study-closing"));
+    const contribute = createExternalLink("https://github.com/IndelibleVivi/agent-memory-study/blob/main/CONTRIBUTING.md", "带着来源或反例参与共读 ↗");
+    takeaways.append(contribute); fragment.append(takeaways);
+    refs.studyView.replaceChildren(fragment);
+    refs.routeStatus.textContent = `${study.title}，${scenario.title}，${phase === "after" ? "应用事件后" : "事件前"}。${study.policies.map(policy => `${policy.label}：${verdicts[window.RevisionStudy.run(scenario, policy.id, phase).verdict]}`).join("；")}。`;
+  }
+
   function render(options = {}) {
     const { focus = false, hash = window.location.hash } = options;
     const material = materialsById.get(route.material);
     const showingMaterial = Boolean(material);
-    refs.atlasView.hidden = showingMaterial;
+    const study = !material && studiesById.get(route.study);
+    refs.studyView.hidden = !study;
+    refs.atlasView.hidden = showingMaterial || Boolean(study);
     refs.materialView.hidden = !showingMaterial;
-    document.body.classList.toggle("is-reading", showingMaterial);
+    document.body.classList.toggle("is-reading", showingMaterial || Boolean(study));
     closeMenu();
 
+    if (study) {
+      renderStudy(study);
+      document.title = `${study.title} · Agent Memory Study`;
+      if (focus) {
+        window.scrollTo({top: 0, behavior: "auto"});
+        document.querySelector("#study-title").focus({preventScroll: true});
+      }
+      return;
+    }
     if (showingMaterial) {
       renderMaterial(material);
       refs.routeStatus.textContent = `已打开 ${material.title}`;
@@ -1135,7 +1295,7 @@
   }
 
   function updateFilters(changes) {
-    navigate({ ...changes, material: null }, { replace: true, focus: false });
+    navigate({ ...changes, material: null, study: null, scenario: null, phase: "before" }, { replace: true, focus: false });
   }
 
   function closeMenu() {
@@ -1164,21 +1324,25 @@
   function activateRouteLink(link) {
     const type = link.dataset.route;
     const id = link.dataset.routeId;
+    if (type === "study") {
+      navigate({material: null, study: id, scenario: null, phase: "before", thread: null, path: null}, {focus: true});
+      return;
+    }
     if (type === "material") {
-      navigate({ material: id, thread: null, path: null }, { focus: true });
+      navigate({ material: id, study: null, scenario: null, phase: "before", thread: null, path: null }, { focus: true });
       return;
     }
     if (type === "thread") {
-      navigate({ material: null, thread: id, path: null, surface: id }, { focus: true });
+      navigate({ material: null, study: null, scenario: null, phase: "before", thread: id, path: null, surface: id }, { focus: true });
       return;
     }
     if (type === "path") {
-      navigate({ material: null, thread: null, path: id }, { focus: true });
+      navigate({ material: null, study: null, scenario: null, phase: "before", thread: null, path: id }, { focus: true });
       return;
     }
     if (type === "home") {
       const scrollTarget = link.dataset.scrollTarget || "";
-      navigate({ material: null, thread: null, path: null }, {
+      navigate({ material: null, study: null, scenario: null, phase: "before", thread: null, path: null }, {
         focus: true,
         hash: scrollTarget ? `#${scrollTarget}` : "",
       });

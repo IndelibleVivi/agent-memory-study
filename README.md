@@ -8,10 +8,11 @@
 
 - 一组从唯一 canonical public data 生长的 source-linked materials；
 - 一张 failure-surface 研究地图、一幅 data-driven research constellation，以及三条可自由进入和离开的 reading paths；
+- 面向所有读者的共读专题：原文与精读互链、跨源论述、可亲手切换的场景对照、适用条件与失败反例；首题为[一条更正之后](https://indeliblevivi.github.io/agent-memory-study/?study=after-a-correction)，不要求读者有私人项目或把每次阅读转成代码；
 - 可按主题、failure surface、depth、标题或作者进入材料；
-- 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；达到 `read` 的 entry 进一步展示 argument map、方法与监督、原文内部张力、为什么值得读，以及明确标成 `proposed-not-run` 的公开 protocol；已经执行的 public / synthetic test 则保留署名、method、environment、raw / derived result、controls、limitations 与可复核 artifact links；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
+- 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；达到 `read` 的 entry 展示 argument map 与为什么值得读，并按实际证据补充方法与监督、原文内部张力；尚未执行的公开 protocol 明确标成 `proposed-not-run`；已经执行的 public / synthetic test 则保留署名、method、environment、raw / derived result、controls、limitations 与可复核 artifact links；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 一个没有 backend、继续由 GitHub Pages 托管的静态 reader；唯一 analytics 是 Cloudflare Web Analytics 的 aggregate beacon，不使用 cookie 或 localStorage 识别、画像访客；
-- 22 份 canonical materials：10 份按原许可随站提供的 PDF，另 12 份从 reader 直达 official full text；
+- 23 份 canonical materials：10 份按原许可随站提供的 PDF，另 13 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
 
 这些札记是阅读导航，不是逐篇全文批注，也不代替原文。转述、问题和编辑判断不能冒充作者主张；需要引用时，请回到每条记录链接的 official source。
@@ -20,13 +21,14 @@
 
 GitHub Pages 没有 SPA rewrite，所以 reader 使用 query URL，而不是伪装成目录的 client-only path：
 
+- 共读专题：`?study=after-a-correction`；场景可分享为 `?study=after-a-correction&scenario=legacy&phase=after`
 - material：`?material=a-tma-state-aware-memory`
 - failure-surface thread：`?thread=retrieval-active-context`
 - reading path：`?path=from-revision`
 
-搜索与筛选也写入 query parameters；material、thread、path 使用 browser history，back / forward 可以恢复对应视图。
+搜索与筛选也写入 query parameters；material、study、scenario / phase、thread、path 使用 browser history，back / forward 可以恢复对应视图。
 
-Cloudflare Web Analytics 只用于了解 visits、page views、referrers、国家/设备类别和 Web Vitals 等站点级信号。它不记录 query string，也没有接入 custom events，因此 `?material=`、`?thread=`、`?path=` 和筛选参数不会成为阅读行为追踪；当前 analytics 不能回答访客具体读了哪个 material 或 failure surface。
+Cloudflare Web Analytics 只用于了解 visits、page views、referrers、国家/设备类别和 Web Vitals 等站点级信号。它不记录 query string，也没有接入 custom events，因此 `?material=`、`?study=`、`?scenario=`、`?phase=`、`?thread=`、`?path=` 和筛选参数不会成为阅读行为追踪；当前 analytics 不能回答访客具体读了哪个 material 或 failure surface。
 
 Constellation 是同一 canonical data 的 semantic projection：failure surfaces 使用固定语义 anchors，material
 位置由它的 `failureSurfaces` membership 与 stable ID 派生；没有逐篇维护的第二份 layout truth。新增 material
@@ -35,7 +37,7 @@ Constellation 是同一 canonical data 的 semantic projection：failure surface
 
 ## PDF 怎样分发
 
-这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。22 份 canonical materials 中，10 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；另 12 篇只链接作者、publisher、arXiv 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
+这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。23 份 canonical materials 中，10 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；另 13 篇只链接作者、publisher、arXiv 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
 
 不要单独下载 `agent-memory-study.rdf`：其中 10 个 attachment 使用相对路径。请下载 `main` branch ZIP、解压后再导入 RDF；具体步骤与导入后应出现的结构见 [ZOTERO-IMPORT.md](./ZOTERO-IMPORT.md)。tagged Zotero ZIP 只在显式发版时更新，可能暂时落后于 `main`。Doyle 1979 只链接 MIT DSpace 的 official scan，本地 OCR derivative 不在 repo 或分享包里。
 
@@ -48,6 +50,15 @@ python3 -m http.server 8080
 ```
 
 然后访问 `http://localhost:8080/`。
+
+共读专题的 deterministic 演示可以无依赖复跑：
+
+```bash
+node research/correction-scope-study/run.js
+node --test tools/test_revision_study.cjs
+```
+
+[方法、逐场景结果与反例](./research/correction-scope-study/README.md)说明全部前提。它演示规则如何消费来源与范围，不模拟 LLM、不计算总排名，也不改变各篇的 reading depth。浏览器与本地 runner 使用同一份 engine；页面不保存访客的阅读记录，场景由 URL 恢复。
 
 Doyle 1979 close-read 所附的 public / synthetic static oracle 可直接复跑：
 

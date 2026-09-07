@@ -25,7 +25,8 @@
           "memory-beyond-recall",
           "statefuse-conflict-preserving-memory",
           "fluctlightdb-observation-binding",
-          "memprobe-hidden-user-state-recovery"
+          "memprobe-hidden-user-state-recovery",
+          "recuris-memory-evolution"
         ]
       },
       {
@@ -61,7 +62,8 @@
           "insightemb-action-intent-retrieval",
           "longmemeval-v2-experienced-colleague",
           "fluctlightdb-observation-binding",
-          "memprobe-hidden-user-state-recovery"
+          "memprobe-hidden-user-state-recovery",
+          "recuris-memory-evolution"
         ]
       },
       {
@@ -90,7 +92,8 @@
           "memory-beyond-recall",
           "insightemb-action-intent-retrieval",
           "longmemeval-v2-experienced-colleague",
-          "useful-memories-become-faulty"
+          "useful-memories-become-faulty",
+          "recuris-memory-evolution"
         ]
       },
       {
@@ -100,7 +103,8 @@
         "question": "系统何时监控自己的过程，并把 discrepancy 升级为行动？",
         "tension": "发现异常不等于获准继续；监控、解释、生成 goal 与执行需要保持可区分。",
         "materialIds": [
-          "midca-dual-cycle"
+          "midca-dual-cycle",
+          "recuris-memory-evolution"
         ]
       },
       {
@@ -159,7 +163,8 @@
           "pm-bench",
           "proactive-wake-anchor",
           "midca-dual-cycle",
-          "insightemb-action-intent-retrieval"
+          "insightemb-action-intent-retrieval",
+          "recuris-memory-evolution"
         ]
       }
     ]
@@ -3219,6 +3224,473 @@
       },
       "editorialQuestion": "如果同一批useful episodes只因update order或batch grouping不同就生成不同lesson，consolidated memory凭什么覆盖它所依赖的evidence，而不是先作为一份可撤销、可反驳、带schedule lineage的candidate存在？",
       "sourceNote": "arXiv v1，2026-05-13；PDF共69页。official public audit锁定August expanded release commit adf347f…，不是paper-time production source；final model-free audit覆盖762 arms/55,075 released rows、upstream verifier scope、denominator sensitivity与selected schedule fixtures。paper-reported、exact-current-source、official-source execution与released-row audit保持分层。"
+    },
+    {
+      "number": 23,
+      "id": "recuris-memory-evolution",
+      "title": "Recursive Experiential–Working Memory Evolution for Long-Horizon Agent Harnesses",
+      "authors": [
+        "Zhaochen Yu",
+        "Yingcheng Wu",
+        "Zhenfei Yin",
+        "Kaiyuan Chen",
+        "Zhe Zhao",
+        "Mengdi Wang",
+        "Shuicheng Yan",
+        "Ling Yang"
+      ],
+      "year": 2026,
+      "doi": "10.48550/arXiv.2608.24876",
+      "noteDepth": "read",
+      "readingScope": "精读 arXiv:2608.24876v1 official HTML 的正文 §§1–5、Appendices A–E、Tables 1–13 与 figure captions。未从图形内部读取额外数值；未复现模型、benchmark 或自动 evolution。共读专题的原创 deterministic 演示有独立范围，不提升本篇为 worked。",
+      "intro": "长任务里，经验可能存在却没有在需要时进入行动。Recuris 用 working state 对齐技能调用，再把状态、调用、观测与校验连成 trace，供固定 Meta-Agent 定位可修补的记忆组件。它改变外部 memory-control 层，基础模型与外层改进程序保持固定；不同 benchmark 实际启用的组件并不相同。",
+      "whyRead": "它把“经验内容好不好”推进到“经验何时被调用、执行后凭什么认定完成”。最值得借用的是这组可区分的接口；最需要谨慎的是把局部修补效果、广义递归叙事与不同预算下的成绩混成一个结论。",
+      "keyPoints": [
+        "§§2.1–2.2：可变对象包括 experiential skills E、working-state schema / update proposal W、invocation policy ρ 与 checker predicates C。当前状态和执行事件决定取用经验；执行尝试与已验证完成分开。",
+        "§2.3：结构化 trace 用来定位值得修补的位置。每项 edit 限于其诊断组件，一轮可以涉及多个组件；这不是每轮只改一个组件，也不是识别真实因果责任。",
+        "§§2.2–2.3：checker 提供证据，固定 commit kernel 决定状态提交；candidate patch 经 repair / regression 检查才可能进入下一轮。门控的有限测试证据不等于永久不退化。",
+        "§3.5 与 Appendix E：跨任务经验、同任务重试适应和一次性模板注入是不同 treatment。阅读总表时必须先确认具体运行了哪一种。"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 状态成为查询",
+          "claim": "历史会混入完成事项与执行噪声；让未完成目标、证据与 blockers 组织技能需求。",
+          "locator": "§§1、2.2.1–2.2.2"
+        },
+        {
+          "step": "02 · 行动产生可定位证据",
+          "claim": "把 selected skill、tool action、observation、proposed state、checker 与 committed state 连起来，区分未调用、错误执行和错误完成标记。",
+          "locator": "§§2.2.3、2.3.1"
+        },
+        {
+          "step": "03 · 修补对象有边界",
+          "claim": "Meta-Agent 提议局部更新，基础模型与外层程序不变；下一轮行为产生新的 trace，构成作者所称 bounded recursion。",
+          "locator": "§§2.3.2–2.3.4"
+        },
+        {
+          "step": "04 · 效果必须回到实验单位",
+          "claim": "总表提供多数配对方向为正；组件 ablation、实际 admission history 与 matched-budget retry controls 才回答更窄的归因问题。",
+          "locator": "Tables 1–5、8–9；Appendices C–E"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Invocation 与完成状态分离",
+          "text": "τ² 的 PRE_WRITE 可在拟执行写操作前退回 NOT_EXECUTED 并注入相关经验；终端任务在首轮边界注入。工具回执再参与状态校验，语言上的“做了”不直接等于完成。",
+          "locator": "§2.2；Appendix E"
+        },
+        {
+          "label": "Split 与统计单位",
+          "text": "τ² 的 evolve / dev / held-out test 分离；重复 rollout 以任务为 cluster 做 bootstrap。SkillFlow family template 使用同族任务，不具备该 held-out-task 设计。",
+          "locator": "Appendices A、C、E"
+        },
+        {
+          "label": "诊断与修补不是因果识别",
+          "text": "fault localization 实验只保留 E / W / ρ 三类可靠注入，每类 9 cases、两次诊断；checker fault 没能稳定诱发预期效果而被排除。",
+          "locator": "§3.4.1；Table 4"
+        },
+        {
+          "label": "重试预算本身是 treatment",
+          "text": "Terminal-Bench 的 seed / adapted memory 要在相同四次机会下比较；同任务 verifier bit 与 retry 不提供跨任务泛化证据。",
+          "locator": "§3.5；Tables 8–9"
+        },
+        {
+          "label": "成本口径有缺口",
+          "text": "Appendix D 报告 context 与 tokens per success，但逐轮 injected skill payload 没有持久记录，不能从现有表格恢复精确的注入 token 对照。",
+          "locator": "Appendix D"
+        }
+      ],
+      "reportedFindings": [
+        "Table 1：37 个已完成 model–benchmark pairs 中 35 个点估计提升；这不等于 35 个 statistically significant improvements。",
+        "Table 2（retail）：WM-only 82.0%，full 83.6%；增量 +1.5 pp 的 CI [−2.4, +5.7] 包含零。相对较大整体提升并不证明 EM 在该设定下有已分辨的独立增益。",
+        "Table 4：结构化 trace 的三类定位准确率为 64.8%，raw trace 37.0%，仅 outcome 13.0%；范围是人工注入后保留的三类诊断。",
+        "§3.4.4：被接受的更新仍使 42 个 anchor 中 4 个跌出原稳定标准；9.5% 不是零回归。baseline rerun 的对应波动为 25.9%，小 dev set 限制了判断精度。",
+        "Table 8：87 个终端任务里，single-budget baseline 解出 30，四次机会 seed memory 解出 51，adapted memory 解出 53；matched-budget 的 +2.3 pp，p = 0.774。",
+        "Table 9：87 tasks 的 avg@4 为 46.1% → 48.9%，差值 CI [−0.6, +6.3] 包含零；一次挑选的强 case 不能代替总体证据。"
+      ],
+      "evidenceLimits": [
+        "未运行 Recuris 模型、任务环境、evolution 或 benchmark；上面数字全部是 paper-reported。",
+        "各 domain ablation 回答不同问题。airline 的 Table 2 intervals 均覆盖零，不能把 retail 的组件解释通用化。",
+        "required-read action recall 测量发出了必需查询，不直接测量模型理解了观测；injection ablation 同时改变选择和 context 体量。",
+        "未拒绝两种 Meta-Agent 的差异不构成等价检验；p = 0.72 与宽 CI 不足以证明实现可互换。",
+        "SkillFlow 的同族 template 提升不证明 held-out task transfer，也不证明完整 EM–WM / checker evolution 的效果。",
+        "小 dev gate、anchor 波动与重试预算都限制“安全持续变好”的叙述；这些实验没有验证无限轮自我改进。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "总架构与实例不是同一层",
+          "observation": "正文用四组件 memory loop 组织方法；Appendix E 明确 SkillFlow 无 runtime WM / invocation controller / checker，也不运行这些组件的 evolution。",
+          "implication": "为每个 benchmark 单独标出启用组件，不能让统一名称替代 treatment identity。",
+          "locators": [
+            "§§2–3",
+            "Appendix E · SkillFlow"
+          ]
+        },
+        {
+          "label": "候选表现与实际接纳需要分开",
+          "observation": "Table 5 的 Run A / B 包含 post-hoc candidate evaluation，只有 Run C 在循环内接纳 patch；Run B 一轮到达 0/86，Run C 也不是单调上涨。",
+          "implication": "候选分数不等于 live admission history；门控应被审查，而非从标题推定有效。",
+          "locators": [
+            "§3.4.2",
+            "Table 5"
+          ]
+        },
+        {
+          "label": "四类 caption，三类实际判定",
+          "observation": "Table 4 caption 列 E / W / ρ / C，正文说明 C 类未进入最终比较。",
+          "implication": "64.8% 的 denominator 属于三类、54 次判断，不能描述为四组件可靠归因。",
+          "locators": [
+            "§3.4.1",
+            "Table 4"
+          ]
+        },
+        {
+          "label": "Headline budget 与学习贡献",
+          "observation": "Table 8 的大幅总增益跨越一次与四次执行预算；相同四次机会时 seed 与 adapted 只差两题。",
+          "implication": "先比较同预算，再讨论 memory adaptation；目前总体增量尚未分辨。",
+          "locators": [
+            "§3.5",
+            "Tables 8–9"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "把任务状态当作经验的入口",
+          "text": "经验库需要回答此刻哪个未完成目标需要它；为“取到”和“用上”分别留下证据，才有机会诊断失效。",
+          "boundary": "这是对方法接口的借鉴，不承诺某个产品接入后就提升成功率。"
+        },
+        {
+          "label": "修补位置比责任标签更实用",
+          "text": "一次失败可能由多个环节共同形成。先测试一项局部修补能否改变该行为，避免把诊断标签写成真实因果。",
+          "boundary": "论文自己限制了 localization 的含义；工程干预仍须对照。"
+        },
+        {
+          "label": "调用绑定还需要生命周期",
+          "text": "调用到相关经验后，还要问其来源是否仍有效、当前版本是否属于其适用范围。共读专题把这个尚未由本篇验证的问题展开。",
+          "boundary": "专题是跨源 editorial synthesis 与原创规则演示，不是 Recuris 复现或新增 benchmark evidence。"
+        }
+      ],
+      "keywords": [
+        "working memory",
+        "skill invocation",
+        "recursive evolution",
+        "validation gate"
+      ],
+      "categories": [
+        "记忆架构",
+        "可靠性",
+        "持续学习"
+      ],
+      "failureSurfaces": [
+        "state-representation",
+        "retrieval-active-context",
+        "abstraction-experience",
+        "metacognitive-control"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2608.24876v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2608.24876v1",
+        "accessNote": "arXiv v1 official PDF；本站不重新分发。"
+      },
+      "editorialQuestion": "一条经验通过了上次验证，并在这次正确时机被调用：我们还需要什么证据，才能相信它仍适用于这次的工具版本和任务？",
+      "sourceNote": "Source authority：arXiv v1，2026-08-25；阅读依据为 official HTML 正文、附录与表格。official code：github.com/Gen-Verse/Recuris；本札记不将当前代码或原创演示当成 paper-time experiment。"
+    }
+  ],
+  "studies": [
+    {
+      "id": "after-a-correction",
+      "number": "01",
+      "title": "一条更正之后",
+      "subtitle": "旧经验该退出哪里，又应该留在哪里？",
+      "byline": "Agent Memory Study editors",
+      "date": "2026-09-08",
+      "kind": "editorial-synthesis-with-deterministic-demo",
+      "intro": "经验被写下来之后，还有一段生活：工具换了版本，来源被撤回，旧任务仍在继续。一条“更新后的记忆”能不能同时照顾这些变化？我们把四份材料放到同一张桌上，读完之后，亲手改动一个条件。",
+      "sections": [
+        {
+          "title": "经验不是读完就封存的答案",
+          "text": "一个 agent 曾成功使用 --format，便留下经验“导出 JSON 要用这个参数”。后来 v2 改用 --output。把经验冻住，会误导新任务；只保留最新说法，又可能误导仍在 v1 上的旧任务。需要追问的不是一句话够不够聪明，而是这句话依赖什么、在哪里仍然成立。"
+        },
+        {
+          "title": "让四篇材料互相追问",
+          "text": "Doyle 帮我们问“结论靠什么支持”；StateFuse 让冲突与状态变化不被一句摘要抹平；Faulty Memories 追问反复压缩为什么会损伤原有证据；Recuris 则把经验放回正在进行的任务，问它有没有在需要时真正被调用。这是编者组织的对话，并不表示四篇论文提出或验证了同一个系统。"
+        }
+      ],
+      "readings": [
+        {
+          "materialId": "truth-maintenance-system",
+          "label": "Doyle · 支持如何变化",
+          "locator": "TMS justification 与 dependency-directed revision；见材料的 argument map",
+          "takeaway": "一条结论可以有多份支持。撤回某个支持，不自动消灭所有其他理由。",
+          "limit": "符号依赖结构不会自行判断自然语言来源是否真实。"
+        },
+        {
+          "materialId": "statefuse-conflict-preserving-memory",
+          "label": "StateFuse · 冲突留在哪里",
+          "locator": "状态 / conflict-preserving representation；见材料的 method notes 与 public audit",
+          "takeaway": "将冲突状态保留为可检查对象，读者才能知道系统为什么没有给出单一结论。",
+          "limit": "本演示不实现 StateFuse 的算子或声称通过其 reference semantics。"
+        },
+        {
+          "materialId": "useful-memories-become-faulty",
+          "label": "Faulty Memories · 压缩会失去什么",
+          "locator": "§4.1、Tables 2–3、Appendix F.4；见材料的 source tensions",
+          "takeaway": "派生经验不能凭“总结过了”取得覆盖其原始证据的权威。",
+          "limit": "论文的 model-generated consolidation 与这里的 typed rule 更新不是同一 treatment。"
+        },
+        {
+          "materialId": "recuris-memory-evolution",
+          "label": "Recuris · 经验何时进入行动",
+          "locator": "§§2.2–2.3；Table 2；Appendix E",
+          "takeaway": "当前未完成目标可以组织经验调用；取用之后仍要确认执行反馈。",
+          "limit": "本演示没有 Meta-Agent、LLM、自动诊断、验证 gate 或 recursive evolution。"
+        }
+      ],
+      "labTitle": "把一个条件改掉",
+      "labIntro": "这是一个虚构的 export-json 工具。v1 / v2 是任务范围，--format / --output 是可选参数。下方同时显示四种规则；切换事件前后，观察证据、建议与工具检查。所有数据公开，运行只在本页进行。",
+      "policies": [
+        {
+          "id": "none",
+          "label": "不读取经验",
+          "description": "不给参数建议；本演示没有能凭先验自行补全的语言模型。"
+        },
+        {
+          "id": "frozen",
+          "label": "冻结首次经验",
+          "description": "沿用最初第一条说明，不处理后续事件或适用范围。"
+        },
+        {
+          "id": "latest",
+          "label": "取全局最近经验",
+          "description": "处理撤回，选择最后一条仍有效的说明，不按版本筛选。"
+        },
+        {
+          "id": "scoped",
+          "label": "按范围与支持重建",
+          "description": "处理撤回，只读当前版本的有效来源；一致才建议，冲突或无支持时停止。"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "unchanged",
+          "title": "01 · 没有发生更正",
+          "description": "v1 说明始终有效；事件只补充一份同版本、同内容的独立说明。",
+          "target": "v1",
+          "initial": [
+            {
+              "id": "manual-v1",
+              "scope": "v1",
+              "flag": "--format"
+            }
+          ],
+          "change": {
+            "label": "补充独立说明",
+            "adds": [
+              {
+                "id": "example-v1",
+                "scope": "v1",
+                "flag": "--format"
+              }
+            ],
+            "retracts": []
+          },
+          "environment": {
+            "before": "--format",
+            "after": "--format"
+          },
+          "lesson": "稳定环境里，固定经验就足够。维护来源和范围未必增加这次任务的收益。"
+        },
+        {
+          "id": "corrected",
+          "title": "02 · 更正了当前版本",
+          "description": "v2 最初误记沿用 --format；更正撤回该说明，明确 v2 使用 --output。",
+          "target": "v2",
+          "initial": [
+            {
+              "id": "draft-v2",
+              "scope": "v2",
+              "flag": "--format"
+            }
+          ],
+          "change": {
+            "label": "撤回错误说明，加入 v2 更正",
+            "adds": [
+              {
+                "id": "correction-v2",
+                "scope": "v2",
+                "flag": "--output"
+              }
+            ],
+            "retracts": [
+              "draft-v2"
+            ]
+          },
+          "environment": {
+            "before": "--output",
+            "after": "--output"
+          },
+          "lesson": "固定经验继续执行过期建议；按事件更新能够修正它。环境本来就要求 --output，改变的是记忆证据。"
+        },
+        {
+          "id": "legacy",
+          "title": "03 · 新版本来了，旧任务还在",
+          "description": "v2 新增 --output；此刻任务仍使用 v1。v1 的说明从未被撤回。",
+          "target": "v1",
+          "initial": [
+            {
+              "id": "manual-v1",
+              "scope": "v1",
+              "flag": "--format"
+            }
+          ],
+          "change": {
+            "label": "发布 v2 说明",
+            "adds": [
+              {
+                "id": "manual-v2",
+                "scope": "v2",
+                "flag": "--output"
+              }
+            ],
+            "retracts": []
+          },
+          "environment": {
+            "before": "--format",
+            "after": "--format"
+          },
+          "lesson": "全局最近经验误把新版本当成普遍更正；新鲜度不能代替适用范围。"
+        },
+        {
+          "id": "withdrawn",
+          "title": "04 · 唯一支持被撤回",
+          "description": "v2 草稿的唯一说明被撤回，尚无可用替代。任务仍存在，但当前记忆无法判断参数。",
+          "target": "v2",
+          "initial": [
+            {
+              "id": "draft-v2",
+              "scope": "v2",
+              "flag": "--format"
+            }
+          ],
+          "change": {
+            "label": "撤回未经确认的草稿",
+            "adds": [],
+            "retracts": [
+              "draft-v2"
+            ]
+          },
+          "environment": {
+            "before": "--output",
+            "after": "--output"
+          },
+          "lesson": "缺少支持时停止建议能避免这次误用，但也没有完成任务。拒答不是成功，需要重新取得证据。"
+        },
+        {
+          "id": "alternative-support",
+          "title": "05 · 撤回一份，另一份仍有效",
+          "description": "两份独立来源都支持 v1 使用 --format；只撤回第一份。",
+          "target": "v1",
+          "initial": [
+            {
+              "id": "manual-v1",
+              "scope": "v1",
+              "flag": "--format"
+            },
+            {
+              "id": "example-v1",
+              "scope": "v1",
+              "flag": "--format"
+            }
+          ],
+          "change": {
+            "label": "只撤回第一份来源",
+            "adds": [],
+            "retracts": [
+              "manual-v1"
+            ]
+          },
+          "environment": {
+            "before": "--format",
+            "after": "--format"
+          },
+          "lesson": "结论可以有替代支持。删除一条 support link 不等于删除结论，更不等于让旧来源重新有效。"
+        },
+        {
+          "id": "conflict",
+          "title": "06 · 当前范围里出现冲突",
+          "description": "v2 的两份有效说明给出不同参数；没有更高 authority 的裁决。后来的那份恰好是错的。",
+          "target": "v2",
+          "initial": [
+            {
+              "id": "manual-v2",
+              "scope": "v2",
+              "flag": "--output"
+            }
+          ],
+          "change": {
+            "label": "收到尚未裁决的冲突说明",
+            "adds": [
+              {
+                "id": "disputed-v2",
+                "scope": "v2",
+                "flag": "--format"
+              }
+            ],
+            "retracts": []
+          },
+          "environment": {
+            "before": "--output",
+            "after": "--output"
+          },
+          "lesson": "保留冲突的策略停止推荐；固定经验这次反而正确。保留冲突保护解释诚实，却不保证更高完成率。"
+        },
+        {
+          "id": "mislabelled-scope",
+          "title": "07 · 范围标签本身错了",
+          "description": "一份实际属于 v1 的说明被错误标成 v2；系统看到的 typed metadata 与真实工具不一致。",
+          "target": "v2",
+          "initial": [],
+          "change": {
+            "label": "加入错误标注的来源",
+            "adds": [
+              {
+                "id": "mislabelled-manual",
+                "scope": "v2",
+                "flag": "--format"
+              }
+            ],
+            "retracts": []
+          },
+          "environment": {
+            "before": "--output",
+            "after": "--output"
+          },
+          "lesson": "按范围重建也会采纳错误建议。可追溯不等于来源真实；这里故意保留它的失败，不能拿 provenance 自证正确。"
+        }
+      ],
+      "boundary": "原创 synthetic 规则演示；不是论文复现、LLM benchmark 或真实项目效果评估。范围与撤回均由 fixture 明确提供，没有测试从自然语言识别这些信息的能力。不合并成总分，不测 token、延迟或成本。",
+      "takeaways": [
+        {
+          "title": "给经验一个适用范围",
+          "text": "若你的工具、规则或流程存在并行版本，经验应能回答“适用于哪一个”。若环境稳定，先不要为不存在的变化增加复杂度。"
+        },
+        {
+          "title": "保留能回到的支持",
+          "text": "若来源会更正，给派生结论保留来源链接与撤回状态。多份独立支持不应被压成一个不可解释的覆盖值。"
+        },
+        {
+          "title": "让暂缓保持可见",
+          "text": "有冲突或没有支持时，说明缺什么证据。一次拒绝误用可能牺牲完成率；需要另行测试恢复证据的成本与用户体验。"
+        },
+        {
+          "title": "用你的任务反驳这个设计",
+          "text": "挑一件真实、可匿名化的任务，写下旧版仍正确、新版更正、来源撤回和错误标签四种情况；先比较现有做法，再决定哪一个接口值得改。真正的借鉴要接受“不值得增加复杂度”这个结果。"
+        }
+      ],
+      "closing": "读完之后，可以回原文质疑这次串读，可以把场景带进自己的项目，也可以补一个使这些规则失效的反例。书房不要求每次阅读都产出代码；它提供一段从理解、比较到自行判断的路。",
+      "artifactUrl": "research/correction-scope-study/README.md"
     }
   ]
 }
