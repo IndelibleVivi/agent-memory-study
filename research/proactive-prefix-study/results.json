@@ -1,0 +1,3541 @@
+{
+  "study": "proactive-prefix-study",
+  "boundary": "AMS exact-rational mean propagation on original synthetic graphs; not learned TGL, attention, trigger probability, or an official implementation audit.",
+  "layers": 3,
+  "propagation_runs": 30,
+  "cases": [
+    {
+      "id": "shared-file",
+      "runs": {
+        "drop-backward-only": {
+          "prefix": {
+            "policy": "drop-backward-only",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          },
+          "zero": {
+            "policy": "drop-backward-only",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0",
+                "event:3": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/4",
+                "event:2": "1/3",
+                "event:3": "0"
+              },
+              {
+                "event:1": "3/8",
+                "file:reading.md": "13/48",
+                "event:2": "13/36",
+                "event:3": "7/36"
+              },
+              {
+                "event:1": "31/96",
+                "file:reading.md": "173/576",
+                "event:2": "145/432",
+                "event:3": "119/432"
+              }
+            ],
+            "readout": {
+              "event:2": "145/432",
+              "file:reading.md": "173/576"
+            }
+          },
+          "one": {
+            "policy": "drop-backward-only",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "1"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0",
+                "event:3": "1"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/2",
+                "event:2": "1/3",
+                "event:3": "1/3"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "5/12",
+                "event:2": "4/9",
+                "event:3": "7/18"
+              },
+              {
+                "event:1": "11/24",
+                "file:reading.md": "7/16",
+                "event:2": "49/108",
+                "event:3": "5/12"
+              }
+            ],
+            "readout": {
+              "event:2": "49/108",
+              "file:reading.md": "7/16"
+            }
+          }
+        },
+        "zero-future-states": {
+          "prefix": {
+            "policy": "zero-future-states",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          },
+          "zero": {
+            "policy": "zero-future-states",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ]
+            ],
+            "masked_nodes": [
+              "event:3"
+            ],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0",
+                "event:3": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/4",
+                "event:2": "1/3",
+                "event:3": "0"
+              },
+              {
+                "event:1": "3/8",
+                "file:reading.md": "13/48",
+                "event:2": "13/36",
+                "event:3": "0"
+              },
+              {
+                "event:1": "31/96",
+                "file:reading.md": "145/576",
+                "event:2": "145/432",
+                "event:3": "0"
+              }
+            ],
+            "readout": {
+              "event:2": "145/432",
+              "file:reading.md": "145/576"
+            }
+          },
+          "one": {
+            "policy": "zero-future-states",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "1"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ]
+            ],
+            "masked_nodes": [
+              "event:3"
+            ],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0",
+                "event:3": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/4",
+                "event:2": "1/3",
+                "event:3": "0"
+              },
+              {
+                "event:1": "3/8",
+                "file:reading.md": "13/48",
+                "event:2": "13/36",
+                "event:3": "0"
+              },
+              {
+                "event:1": "31/96",
+                "file:reading.md": "145/576",
+                "event:2": "145/432",
+                "event:3": "0"
+              }
+            ],
+            "readout": {
+              "event:2": "145/432",
+              "file:reading.md": "145/576"
+            }
+          }
+        },
+        "prefix-graph": {
+          "prefix": {
+            "policy": "prefix-graph",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          },
+          "zero": {
+            "policy": "prefix-graph",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          },
+          "one": {
+            "policy": "prefix-graph",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          }
+        }
+      },
+      "comparisons": {
+        "drop-backward-only": {
+          "zero_suffix_matches_prefix": false,
+          "one_suffix_matches_prefix": false,
+          "changing_future_signal_preserves_readout": false
+        },
+        "zero-future-states": {
+          "zero_suffix_matches_prefix": false,
+          "one_suffix_matches_prefix": false,
+          "changing_future_signal_preserves_readout": true
+        },
+        "prefix-graph": {
+          "zero_suffix_matches_prefix": true,
+          "one_suffix_matches_prefix": true,
+          "changing_future_signal_preserves_readout": true
+        }
+      },
+      "past_change_control": {
+        "policy": "prefix-graph",
+        "current_event": "event:2",
+        "nodes": {
+          "event:1": {
+            "born": 0,
+            "signal": "0"
+          },
+          "file:reading.md": {
+            "born": 0,
+            "signal": "0"
+          },
+          "event:2": {
+            "born": 1,
+            "signal": "0"
+          }
+        },
+        "edges": [
+          [
+            "event:1",
+            "file:reading.md",
+            "has_entity"
+          ],
+          [
+            "file:reading.md",
+            "event:1",
+            "belongs_to"
+          ],
+          [
+            "event:1",
+            "event:2",
+            "forward"
+          ],
+          [
+            "event:2",
+            "file:reading.md",
+            "has_entity"
+          ],
+          [
+            "file:reading.md",
+            "event:2",
+            "belongs_to"
+          ],
+          [
+            "event:1",
+            "event:1",
+            "self"
+          ],
+          [
+            "file:reading.md",
+            "file:reading.md",
+            "self"
+          ],
+          [
+            "event:2",
+            "event:2",
+            "self"
+          ]
+        ],
+        "masked_nodes": [],
+        "layer_states": [
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "event:2": "0"
+          },
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "event:2": "0"
+          },
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "event:2": "0"
+          },
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "event:2": "0"
+          }
+        ],
+        "readout": {
+          "event:2": "0",
+          "file:reading.md": "0"
+        }
+      },
+      "past_change_changes_readout": true
+    },
+    {
+      "id": "shared-type",
+      "runs": {
+        "drop-backward-only": {
+          "prefix": {
+            "policy": "drop-backward-only",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "type:writing": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "type:writing",
+                "type:writing",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "type:writing": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "1/3",
+                "type:writing": "1/3",
+                "event:2": "1/4"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "11/36",
+                "type:writing": "11/36",
+                "event:2": "5/16"
+              },
+              {
+                "event:1": "17/54",
+                "file:reading.md": "137/432",
+                "type:writing": "137/432",
+                "event:2": "181/576"
+              }
+            ],
+            "readout": {
+              "event:2": "181/576",
+              "file:reading.md": "137/432",
+              "type:writing": "137/432"
+            }
+          },
+          "zero": {
+            "policy": "drop-backward-only",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "type:writing": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "0"
+              },
+              "file:tomorrow.md": {
+                "born": 2,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:tomorrow.md",
+                "has_entity"
+              ],
+              [
+                "file:tomorrow.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:3",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "type:writing",
+                "type:writing",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ],
+              [
+                "file:tomorrow.md",
+                "file:tomorrow.md",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "type:writing": "0",
+                "event:2": "0",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "1/3",
+                "type:writing": "1/4",
+                "event:2": "1/4",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "11/36",
+                "file:reading.md": "11/36",
+                "type:writing": "5/24",
+                "event:2": "7/24",
+                "event:3": "1/8",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "59/216",
+                "file:reading.md": "65/216",
+                "type:writing": "67/288",
+                "event:2": "5/18",
+                "event:3": "5/32",
+                "file:tomorrow.md": "1/16"
+              }
+            ],
+            "readout": {
+              "event:2": "5/18",
+              "file:reading.md": "65/216",
+              "type:writing": "67/288"
+            }
+          },
+          "one": {
+            "policy": "drop-backward-only",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "type:writing": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "1"
+              },
+              "file:tomorrow.md": {
+                "born": 2,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:tomorrow.md",
+                "has_entity"
+              ],
+              [
+                "file:tomorrow.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:3",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "type:writing",
+                "type:writing",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ],
+              [
+                "file:tomorrow.md",
+                "file:tomorrow.md",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "type:writing": "0",
+                "event:2": "0",
+                "event:3": "1",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "1/3",
+                "type:writing": "1/2",
+                "event:2": "1/4",
+                "event:3": "1/4",
+                "file:tomorrow.md": "1/2"
+              },
+              {
+                "event:1": "7/18",
+                "file:reading.md": "11/36",
+                "type:writing": "1/3",
+                "event:2": "17/48",
+                "event:3": "3/8",
+                "file:tomorrow.md": "3/8"
+              },
+              {
+                "event:1": "37/108",
+                "file:reading.md": "151/432",
+                "type:writing": "209/576",
+                "event:2": "199/576",
+                "event:3": "23/64",
+                "file:tomorrow.md": "3/8"
+              }
+            ],
+            "readout": {
+              "event:2": "199/576",
+              "file:reading.md": "151/432",
+              "type:writing": "209/576"
+            }
+          }
+        },
+        "zero-future-states": {
+          "prefix": {
+            "policy": "zero-future-states",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "type:writing": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "type:writing",
+                "type:writing",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "type:writing": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "1/3",
+                "type:writing": "1/3",
+                "event:2": "1/4"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "11/36",
+                "type:writing": "11/36",
+                "event:2": "5/16"
+              },
+              {
+                "event:1": "17/54",
+                "file:reading.md": "137/432",
+                "type:writing": "137/432",
+                "event:2": "181/576"
+              }
+            ],
+            "readout": {
+              "event:2": "181/576",
+              "file:reading.md": "137/432",
+              "type:writing": "137/432"
+            }
+          },
+          "zero": {
+            "policy": "zero-future-states",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "type:writing": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "0"
+              },
+              "file:tomorrow.md": {
+                "born": 2,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:tomorrow.md",
+                "has_entity"
+              ],
+              [
+                "file:tomorrow.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:3",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "type:writing",
+                "type:writing",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ],
+              [
+                "file:tomorrow.md",
+                "file:tomorrow.md",
+                "self"
+              ]
+            ],
+            "masked_nodes": [
+              "event:3",
+              "file:tomorrow.md"
+            ],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "type:writing": "0",
+                "event:2": "0",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "1/3",
+                "type:writing": "1/4",
+                "event:2": "1/4",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "11/36",
+                "file:reading.md": "11/36",
+                "type:writing": "5/24",
+                "event:2": "7/24",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "59/216",
+                "file:reading.md": "65/216",
+                "type:writing": "29/144",
+                "event:2": "5/18",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              }
+            ],
+            "readout": {
+              "event:2": "5/18",
+              "file:reading.md": "65/216",
+              "type:writing": "29/144"
+            }
+          },
+          "one": {
+            "policy": "zero-future-states",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "type:writing": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "1"
+              },
+              "file:tomorrow.md": {
+                "born": 2,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:tomorrow.md",
+                "has_entity"
+              ],
+              [
+                "file:tomorrow.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:3",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "type:writing",
+                "type:writing",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ],
+              [
+                "file:tomorrow.md",
+                "file:tomorrow.md",
+                "self"
+              ]
+            ],
+            "masked_nodes": [
+              "event:3",
+              "file:tomorrow.md"
+            ],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "type:writing": "0",
+                "event:2": "0",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "1/3",
+                "type:writing": "1/4",
+                "event:2": "1/4",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "11/36",
+                "file:reading.md": "11/36",
+                "type:writing": "5/24",
+                "event:2": "7/24",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "59/216",
+                "file:reading.md": "65/216",
+                "type:writing": "29/144",
+                "event:2": "5/18",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              }
+            ],
+            "readout": {
+              "event:2": "5/18",
+              "file:reading.md": "65/216",
+              "type:writing": "29/144"
+            }
+          }
+        },
+        "prefix-graph": {
+          "prefix": {
+            "policy": "prefix-graph",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "type:writing": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "type:writing",
+                "type:writing",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "type:writing": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "1/3",
+                "type:writing": "1/3",
+                "event:2": "1/4"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "11/36",
+                "type:writing": "11/36",
+                "event:2": "5/16"
+              },
+              {
+                "event:1": "17/54",
+                "file:reading.md": "137/432",
+                "type:writing": "137/432",
+                "event:2": "181/576"
+              }
+            ],
+            "readout": {
+              "event:2": "181/576",
+              "file:reading.md": "137/432",
+              "type:writing": "137/432"
+            }
+          },
+          "zero": {
+            "policy": "prefix-graph",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "type:writing": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "type:writing",
+                "type:writing",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "type:writing": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "1/3",
+                "type:writing": "1/3",
+                "event:2": "1/4"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "11/36",
+                "type:writing": "11/36",
+                "event:2": "5/16"
+              },
+              {
+                "event:1": "17/54",
+                "file:reading.md": "137/432",
+                "type:writing": "137/432",
+                "event:2": "181/576"
+              }
+            ],
+            "readout": {
+              "event:2": "181/576",
+              "file:reading.md": "137/432",
+              "type:writing": "137/432"
+            }
+          },
+          "one": {
+            "policy": "prefix-graph",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "type:writing": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "type:writing",
+                "has_entity"
+              ],
+              [
+                "type:writing",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "type:writing",
+                "type:writing",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "type:writing": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "1/3",
+                "type:writing": "1/3",
+                "event:2": "1/4"
+              },
+              {
+                "event:1": "1/3",
+                "file:reading.md": "11/36",
+                "type:writing": "11/36",
+                "event:2": "5/16"
+              },
+              {
+                "event:1": "17/54",
+                "file:reading.md": "137/432",
+                "type:writing": "137/432",
+                "event:2": "181/576"
+              }
+            ],
+            "readout": {
+              "event:2": "181/576",
+              "file:reading.md": "137/432",
+              "type:writing": "137/432"
+            }
+          }
+        }
+      },
+      "comparisons": {
+        "drop-backward-only": {
+          "zero_suffix_matches_prefix": false,
+          "one_suffix_matches_prefix": false,
+          "changing_future_signal_preserves_readout": false
+        },
+        "zero-future-states": {
+          "zero_suffix_matches_prefix": false,
+          "one_suffix_matches_prefix": false,
+          "changing_future_signal_preserves_readout": true
+        },
+        "prefix-graph": {
+          "zero_suffix_matches_prefix": true,
+          "one_suffix_matches_prefix": true,
+          "changing_future_signal_preserves_readout": true
+        }
+      },
+      "past_change_control": {
+        "policy": "prefix-graph",
+        "current_event": "event:2",
+        "nodes": {
+          "event:1": {
+            "born": 0,
+            "signal": "0"
+          },
+          "file:reading.md": {
+            "born": 0,
+            "signal": "0"
+          },
+          "type:writing": {
+            "born": 0,
+            "signal": "0"
+          },
+          "event:2": {
+            "born": 1,
+            "signal": "0"
+          }
+        },
+        "edges": [
+          [
+            "event:1",
+            "file:reading.md",
+            "has_entity"
+          ],
+          [
+            "file:reading.md",
+            "event:1",
+            "belongs_to"
+          ],
+          [
+            "event:1",
+            "type:writing",
+            "has_entity"
+          ],
+          [
+            "type:writing",
+            "event:1",
+            "belongs_to"
+          ],
+          [
+            "event:1",
+            "event:2",
+            "forward"
+          ],
+          [
+            "event:2",
+            "file:reading.md",
+            "has_entity"
+          ],
+          [
+            "file:reading.md",
+            "event:2",
+            "belongs_to"
+          ],
+          [
+            "event:2",
+            "type:writing",
+            "has_entity"
+          ],
+          [
+            "type:writing",
+            "event:2",
+            "belongs_to"
+          ],
+          [
+            "event:1",
+            "event:1",
+            "self"
+          ],
+          [
+            "file:reading.md",
+            "file:reading.md",
+            "self"
+          ],
+          [
+            "type:writing",
+            "type:writing",
+            "self"
+          ],
+          [
+            "event:2",
+            "event:2",
+            "self"
+          ]
+        ],
+        "masked_nodes": [],
+        "layer_states": [
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "type:writing": "0",
+            "event:2": "0"
+          },
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "type:writing": "0",
+            "event:2": "0"
+          },
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "type:writing": "0",
+            "event:2": "0"
+          },
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "type:writing": "0",
+            "event:2": "0"
+          }
+        ],
+        "readout": {
+          "event:2": "0",
+          "file:reading.md": "0",
+          "type:writing": "0"
+        }
+      },
+      "past_change_changes_readout": true
+    },
+    {
+      "id": "unrelated-future",
+      "runs": {
+        "drop-backward-only": {
+          "prefix": {
+            "policy": "drop-backward-only",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          },
+          "zero": {
+            "policy": "drop-backward-only",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "0"
+              },
+              "file:tomorrow.md": {
+                "born": 2,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:tomorrow.md",
+                "has_entity"
+              ],
+              [
+                "file:tomorrow.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ],
+              [
+                "file:tomorrow.md",
+                "file:tomorrow.md",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18",
+                "event:3": "1/9",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108",
+                "event:3": "1/6",
+                "file:tomorrow.md": "1/18"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          },
+          "one": {
+            "policy": "drop-backward-only",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "1"
+              },
+              "file:tomorrow.md": {
+                "born": 2,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:tomorrow.md",
+                "has_entity"
+              ],
+              [
+                "file:tomorrow.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ],
+              [
+                "file:tomorrow.md",
+                "file:tomorrow.md",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0",
+                "event:3": "1",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3",
+                "event:3": "1/3",
+                "file:tomorrow.md": "1/2"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18",
+                "event:3": "7/18",
+                "file:tomorrow.md": "5/12"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108",
+                "event:3": "43/108",
+                "file:tomorrow.md": "29/72"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          }
+        },
+        "zero-future-states": {
+          "prefix": {
+            "policy": "zero-future-states",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          },
+          "zero": {
+            "policy": "zero-future-states",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "0"
+              },
+              "file:tomorrow.md": {
+                "born": 2,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:tomorrow.md",
+                "has_entity"
+              ],
+              [
+                "file:tomorrow.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ],
+              [
+                "file:tomorrow.md",
+                "file:tomorrow.md",
+                "self"
+              ]
+            ],
+            "masked_nodes": [
+              "event:3",
+              "file:tomorrow.md"
+            ],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          },
+          "one": {
+            "policy": "zero-future-states",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              },
+              "event:3": {
+                "born": 2,
+                "signal": "1"
+              },
+              "file:tomorrow.md": {
+                "born": 2,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:2",
+                "event:3",
+                "forward"
+              ],
+              [
+                "event:3",
+                "file:tomorrow.md",
+                "has_entity"
+              ],
+              [
+                "file:tomorrow.md",
+                "event:3",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ],
+              [
+                "event:3",
+                "event:3",
+                "self"
+              ],
+              [
+                "file:tomorrow.md",
+                "file:tomorrow.md",
+                "self"
+              ]
+            ],
+            "masked_nodes": [
+              "event:3",
+              "file:tomorrow.md"
+            ],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108",
+                "event:3": "0",
+                "file:tomorrow.md": "0"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          }
+        },
+        "prefix-graph": {
+          "prefix": {
+            "policy": "prefix-graph",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          },
+          "zero": {
+            "policy": "prefix-graph",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          },
+          "one": {
+            "policy": "prefix-graph",
+            "current_event": "event:2",
+            "nodes": {
+              "event:1": {
+                "born": 0,
+                "signal": "1"
+              },
+              "file:reading.md": {
+                "born": 0,
+                "signal": "0"
+              },
+              "event:2": {
+                "born": 1,
+                "signal": "0"
+              }
+            },
+            "edges": [
+              [
+                "event:1",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:1",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:2",
+                "forward"
+              ],
+              [
+                "event:2",
+                "file:reading.md",
+                "has_entity"
+              ],
+              [
+                "file:reading.md",
+                "event:2",
+                "belongs_to"
+              ],
+              [
+                "event:1",
+                "event:1",
+                "self"
+              ],
+              [
+                "file:reading.md",
+                "file:reading.md",
+                "self"
+              ],
+              [
+                "event:2",
+                "event:2",
+                "self"
+              ]
+            ],
+            "masked_nodes": [],
+            "layer_states": [
+              {
+                "event:1": "1",
+                "file:reading.md": "0",
+                "event:2": "0"
+              },
+              {
+                "event:1": "1/2",
+                "file:reading.md": "1/3",
+                "event:2": "1/3"
+              },
+              {
+                "event:1": "5/12",
+                "file:reading.md": "7/18",
+                "event:2": "7/18"
+              },
+              {
+                "event:1": "29/72",
+                "file:reading.md": "43/108",
+                "event:2": "43/108"
+              }
+            ],
+            "readout": {
+              "event:2": "43/108",
+              "file:reading.md": "43/108"
+            }
+          }
+        }
+      },
+      "comparisons": {
+        "drop-backward-only": {
+          "zero_suffix_matches_prefix": true,
+          "one_suffix_matches_prefix": true,
+          "changing_future_signal_preserves_readout": true
+        },
+        "zero-future-states": {
+          "zero_suffix_matches_prefix": true,
+          "one_suffix_matches_prefix": true,
+          "changing_future_signal_preserves_readout": true
+        },
+        "prefix-graph": {
+          "zero_suffix_matches_prefix": true,
+          "one_suffix_matches_prefix": true,
+          "changing_future_signal_preserves_readout": true
+        }
+      },
+      "past_change_control": {
+        "policy": "prefix-graph",
+        "current_event": "event:2",
+        "nodes": {
+          "event:1": {
+            "born": 0,
+            "signal": "0"
+          },
+          "file:reading.md": {
+            "born": 0,
+            "signal": "0"
+          },
+          "event:2": {
+            "born": 1,
+            "signal": "0"
+          }
+        },
+        "edges": [
+          [
+            "event:1",
+            "file:reading.md",
+            "has_entity"
+          ],
+          [
+            "file:reading.md",
+            "event:1",
+            "belongs_to"
+          ],
+          [
+            "event:1",
+            "event:2",
+            "forward"
+          ],
+          [
+            "event:2",
+            "file:reading.md",
+            "has_entity"
+          ],
+          [
+            "file:reading.md",
+            "event:2",
+            "belongs_to"
+          ],
+          [
+            "event:1",
+            "event:1",
+            "self"
+          ],
+          [
+            "file:reading.md",
+            "file:reading.md",
+            "self"
+          ],
+          [
+            "event:2",
+            "event:2",
+            "self"
+          ]
+        ],
+        "masked_nodes": [],
+        "layer_states": [
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "event:2": "0"
+          },
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "event:2": "0"
+          },
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "event:2": "0"
+          },
+          {
+            "event:1": "0",
+            "file:reading.md": "0",
+            "event:2": "0"
+          }
+        ],
+        "readout": {
+          "event:2": "0",
+          "file:reading.md": "0"
+        }
+      },
+      "past_change_changes_readout": true
+    }
+  ]
+}

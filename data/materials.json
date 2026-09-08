@@ -780,13 +780,15 @@
       "shortAuthor": "Liu 等",
       "year": 2026,
       "doi": null,
-      "noteDepth": "skim",
-      "readingScope": "Abstract、§3–§6、Limitations；未通读 related work、附录、prompts 或 graph-construction 细节。",
-      "intro": "把是否唤醒和依据哪些实体从生成模型中拆出，交给共享 temporal-graph backbone 的 trigger 与 routing heads。",
+      "noteDepth": "worked",
+      "readingScope": "完整阅读 arXiv v1 的 Abstract、§§1–6、Limitations、Ethics / AI Assistance、Appendices A–I、Tables 1–7 与 Figures 1–5 图注，含 graph construction、training、causal masking、desktop / mobile prompts 与案例。PDF 共 31 页，pdfinfo 与 pdftotext 分页一致；视觉复核 Tables 1、2、4、6、Appendix E.7–E.10 与 No-TGL prompt。References 仅作定位；pypdf preflight 缺依赖为 advisory unavailable，不记 PASS。另执行 3 个原创图场景、30 次精确分数传播与 8 项行为测试；未执行作者 TGL、GATv2、模型训练、RM judge 或 benchmark。",
+      "intro": "主动助手在生成建议之前，需要决定此刻是否值得调用下游 agent，以及带上哪些具体实体作为依据。本文让一个小型 temporal graph encoder 同时承担 trigger 与 routing，再在放行时调用 LLM。它提供的是这种分工在离线活动流上的证据；何时真的打扰用户、建议是否合适和真实使用体验仍需分开判断。",
       "keyPoints": [
-        "event head 输出 trigger probability，entity head 输出 routing score；只有 trigger 通过后才调用 downstream LLM 生成用户可见语言。（§3–§4）",
-        "同一个 TGL checkpoint、threshold 与 prompt 用于 14 个 downstream backbones，论文报告所有 backbone 的 F1 都提高，平均提升 16.7。（§5.1–§5.2）",
-        "ablation 显示随机替换 routed entities 的平均损失大于强制每个 event 都唤醒；consumer-laptop latency 报告为 13.99 ms，BF16 resident footprint 约 220 MiB。（§5.3–§5.5）"
+        "将每个 session 建成 event、entity、type 节点组成的异构图；三层 relation-aware GATv2 与 Jumping Knowledge 编码共享状态，event head 预测 trigger，entity head 预测 routing。推理阈值 0.5、最多 20 个 routed nodes，只有 gate 放行才调用下游 LLM。（§§3–4；Appendix E.2–E.8）",
+        "训练标签来自 released training split：有非空 proposed task 的 event 标为 fire，接受标记可强制为正；routing 由任务文本提取实体，再匹配回事件图。没有匹配实体的 event 不参与 routing supervision，但仍训练 trigger。（Appendix B.1，PDF pp. 15–17）",
+        "14 个桌面下游 backbones 的主表 F1 均提高，报告平均 +16.7 个百分点。该 F1 经 released reward model 评价最终任务文本；不是裸 graph trigger 的二分类 F1，也不等于用户认可的打扰时机。（Table 1；Appendix E.1）",
+        "推理因果性不只是去掉 backward 时间边：E.7 还要求屏蔽未来事件、新引入实体的输入和 hidden-state contribution。共享实体和类型节点需要一并纳入因果检查。（Appendices B.1、E.7）",
+        "手机辅助实验保留 graph backbone 思路，但在 FingerTip 上从头训练，使用新的 app / intent / semantic heads 和候选检索；它没有桌面 fire-or-skip head，不是同一个 checkpoint 的零样本移动端迁移。（Appendices A、B.2、C.2）"
       ],
       "keywords": [
         "proactive agents",
@@ -807,18 +809,172 @@
         "license": "CC BY 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
-      "editorialQuestion": "证据来自 text-serialized activity stream 与 offline reward-model judge；接入原生事件后，触发校准和真实 interruption cost 是否仍成立？",
+      "editorialQuestion": "固定真实 checkpoint 和观察前缀，加入不同未来事件后，trigger 与已知实体的 routing 是否保持一致；再接入真实事件流时，模型分数与用户愿意被打扰的时机相差在哪里？",
       "sourceNote": "",
       "designTransfer": {
         "byline": "Agent Memory Study editors",
         "date": "2026-09-08",
-        "when": "主动助手需要决定何时打扰，以及这次打扰应该依据哪些事件或实体。",
-        "move": "分别记录触发决定与依据选择；即使保持同一种语言生成器，也能定位“叫醒错了”还是“带来的依据错了”。",
-        "check": "固定一段公开事件流，分别改变 trigger threshold 与依据选择；同时记录漏提醒、误提醒和读者对打扰的评价。",
-        "boundary": "这是 skim 范围下的迁移线索，尚未执行。离线活动流上的模型分数不能替代原生事件接入和真实 interruption cost。",
-        "basis": "既有札记 “关键抓手”：§§3–5；阅读范围 与 “继续追问”。",
+        "when": "主动助手会持续观察事件，或正在离线重放完整会话来评价唤醒与依据选择。",
+        "move": "分别记录 gate、实际任务和接受结果；固定观察前缀，检查后续事件是否通过共享实体、类型、缓存或归一化影响了当前 readout。",
+        "check": "用真实 checkpoint 做前缀重放和不同未来后缀对照，核对实际 attention / entity mask 与 routing candidates；再以固定事件流比较阈值和依据选择，并单独记录用户的打扰评价。",
+        "boundary": "3 个原创图场景 / 30 次均值传播已经执行；这里提出的真实 checkpoint、原生事件管线与用户对照尚未执行。toy 不变性不代表模型效果或实际打扰成本。",
+        "basis": "本次完整精读 §§3–5、Appendices B.1、C.1、E.7、Limitations；本条公开 prefix study。",
         "status": "proposed-not-run"
-      }
+      },
+      "whyRead": "这篇有价值的设计选择，是把持续发生的小判断和偶尔需要的语言生成分开，并让唤醒与依据选择共享一个可检查的输入。它也适合练习如何读系统论文：先区分 graph gate、下游是否输出任务、reward model 是否接受，以及人是否愿意被打扰，再看每个实验究竟覆盖哪一步。对于想做主动助手的读者，保留原生事件结构、按前缀重放、分开记录决策与依据，都是比直接照搬 headline 更具体的借用入口。",
+      "argumentMap": [
+        {
+          "step": "把持续观察写成结构化预测问题",
+          "claim": "活动包含反复出现的文件、应用、URL、query 与时间关系；作者主张将这些结构保留为 temporal graph，用小模型处理持续的 wake / routing 决策。",
+          "locator": "§§1–3，PDF pp. 1–3"
+        },
+        {
+          "step": "在同一编码上训练两个输出",
+          "claim": "trigger 和 routing 共享三层 GNN 与节点表示，分别接受 event / entity 标签监督；下游 LLM 只负责在放行后利用上下文生成具体建议。",
+          "locator": "§4；Appendices B.1、C.1、E.2–E.8，PDF pp. 3–4、15–19、23–25"
+        },
+        {
+          "step": "分别测试最终建议、trigger 与成本",
+          "claim": "主表用多种 downstream backbones 的 RM-judged F1；消融比较去掉 gate、随机 routing 和无图 prompt；另一表比较 trigger 架构、排序、校准与运行延迟。它们衡量不同对象。",
+          "locator": "§5；Tables 1–2、4–6，PDF pp. 4–8、21–24"
+        },
+        {
+          "step": "把迁移和部署限制留在结论里",
+          "claim": "手机实验展示重新训练后的另一种图应用；Limitations 明确尚未评价真实主观体验，桌面输入仍由文本日志解析，真实设备接入与用户级适应是进一步工作。",
+          "locator": "Limitations；Appendices A、B.2、H，PDF pp. 9、14、17、30–31"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Graph and supervision",
+          "text": "桌面 session 最多 64 events；event/entity 双向关系、forward/backward 时间边与 self loops 是 GNN 实际使用的五个 channels，原始 CSV 的语义边并非全部直接进入模型。实体由确定性规则从日志恢复；训练用正类权重 0.15 的 trigger BCE，与 routing BCE 按 0.3:1 联合优化。未标注节点不计入 loss。",
+          "locator": "Appendix B.1；E.6，PDF pp. 15–17、24"
+        },
+        {
+          "label": "Model size and fixed operating point",
+          "text": "节点输入为冻结 BGE-base 的 768-d text embedding、32-d type embedding 与 32-d log-time-gap embedding，投影到 256-d；三层 GATv2、4 attention heads，JK 拼接为 1024-d。约 1.16M trainable 参数加约 109M frozen encoder；AdamW 训练两轮，用 epoch-2 checkpoint，阈值 0.5、routing cap 20 不按 downstream backbone 调整。",
+          "locator": "Appendix E.2–E.8；Table 6，PDF pp. 23–25"
+        },
+        {
+          "label": "Three decisions before a user accepts",
+          "text": "gate 放行只表示调用下游模型；C.1 允许任务字符串为空，视为 no-fire。最终任务由 ProactiveAgent released RM judge 评价。trigger AUC 另用 must-fire、can-skip、must-skip 的不同正类定义；must-skip 是 can-skip 子集，不能把主文这些类别比例自行相加成互斥分布。",
+          "locator": "§5.4；Appendices C.1、E.1，PDF pp. 6–7、18、23"
+        },
+        {
+          "label": "Causal evaluation must include shared nodes",
+          "text": "训练保留双向 temporal edges；推理去掉 backward edges，同时屏蔽 t 之后的 event、新引入 entity 的输入及 hidden-state contribution。E.7 声明 readouts 只依赖已观察前缀；具体 mask 是否覆盖聚合归一化和最终候选仍需源码或实际 tensor 路径核对。",
+          "locator": "Appendices B.1、E.7，PDF pp. 16、24–25"
+        },
+        {
+          "label": "Prompt and ablation conditions",
+          "text": "桌面输入包含最近五条 session events、current observation 和带分数的 routing list；任务需具体、至多 150 字符，prompt 中 TGN 是 TGL 的昵称。No trigger 保留 routing；Rand 使用训练实体 vocabulary 的 event-deterministic 同数量随机替换；No TGL 则移除 routing 指令、三条 few-shots 和外部 gate，让 LLM 自行输出空任务。",
+          "locator": "§5.3；Appendices C.1、D.1、F.1，PDF pp. 6、18–21、26–27"
+        },
+        {
+          "label": "What latency includes",
+          "text": "Table 2 的 TGL forward 用 recurring-entity embedding cache，只编码当前 event 与新实体；每格取四次计时的后三次均值，首轮用于 warm-up。Server 是单 A6000，local 是 36GB M3 Pro / MPS；11.13 / 13.99 ms 不包含完整下游建议生成。Rule / tabular 更快，速度倍数比较针对测试过的 LLM-trigger 配置。",
+          "locator": "§5.5；Appendices E.9–E.10，PDF pp. 8、25"
+        },
+        {
+          "label": "Mobile is a different trained instance",
+          "text": "FingerTip 用 16,003 training episodes 从头训练 40 epochs，换成 BGE-large-zh 和约 2.5M trainable 参数。query 上的 app、intent-class、semantic heads 中，仅 semantic head 用于推理；检索训练 intents 后按 top-1 app 筛选候选，再给 Qwen2.5-VL-7B。测试 1,000 episodes，指标为 Sim1 与 DeepSeek-V3 equivalence judge 的 SR1；没有逐事件 trigger。",
+          "locator": "Appendices A、B.2、C.2，PDF pp. 14、17、19–20"
+        }
+      ],
+      "reportedFindings": [
+        "Table 1 的 14 组下游模型 F1 均提高，范围 +3.1 至 +46.0、平均 +16.7 个百分点；例如 Qwen3-8B 从 26.14 到 72.14，GPT-5.4 从 73.47 到 76.57。不能写成每项指标均提高：Claude-Opus-4.7 的 accuracy 从 72.53 到 72.39，部分模型 recall 也下降。（Table 1，PDF p. 5）",
+        "Table 4 平均 F1 为 Ours 73.96、No trigger 70.71、Rand routes 65.37、No TGL 61.26；论文据此报告约 3.2、8.6、12.7 个百分点差距，并提供每格三次运行 mean±std。随机 routing 的损失支持实体内容有作用，不证明共享 encoder 是唯一原因或两个 head 必然语义一致。（§5.3；Table 4，PDF pp. 6、21）",
+        "TGL 的三项 trigger AUC 为 0.738 / 0.658 / 0.639，Table 2 中均最高；跨 14 backbones 的 test-set oracle threshold 标准差 0.035 最小。但其 Brier / ECE 为 0.308 / 0.334，LR 的 0.270 / 0.201 更低；最佳排序和较稳定阈值不等于所有概率校准指标最佳。（Table 2；§5.4，PDF pp. 7–8）",
+        "TGL cached forward 为 server 11.13 ms、M3 Pro 13.99 ms；两种 single-forward Qwen3 triggers 分别为 server 40.4 / 78.6 ms、local 162.3 / 1156.8 ms。约 220 MiB 是包含冻结 encoder 的 BF16 resident weights，streaming peak 约 267 MiB；这是特定测量协议的资源数，不是端到端建议延迟或全天功耗。（§5.5；E.9–E.10，PDF pp. 8、25）",
+        "对两种 released fine-tuned agents 的输出离线加 gate，作者报告 F1 66.25→67.66、66.47→67.38，对应少调用约 25% / 21%。这属于对已生成输出的 offline pre-filter 分析，没有重新观察减少调用后可能变化的用户活动或真实会话反馈。（Appendix D.3；Figure 5，PDF pp. 22–23）",
+        "FingerTip t=2 的 Sim1 / SR1 为 0.61 / 26.5%，t=3 为 0.59 / 26.2%；引用的 LoRA r=64 baseline 为 0.55 / 26.0%。SR1 差距很小，原表未给相应区间；新 schema、训练 heads 与检索规则同时变化，不能称为桌面 checkpoint 的直接效果迁移。（Table 3；Appendix A，PDF p. 14）"
+      ],
+      "evidenceLimits": [
+        "主结果依赖 released reward model 对任务的判断，未直接测量人在持续使用中感到有用、被打扰、疲劳或选择退出的成本。作者在 Limitations 明确承认主观体验不在评测内；RM 与原有人类标注的一致性不能替代本系统的现场用户评价。",
+        "桌面实验从 text-serialized activity stream 通过规则恢复实体，没有演示原生 OS event 管线。约 14 ms 与小 footprint 证明特定 forward 的可行性，不证明已经部署、完成隐私隔离或具备原生采集能力。",
+        "No TGL 同时改变 gate、routing 字段、anchor 指令与 few-shots；Rand routes 更接近固定 prompt / trigger 的内容干预。不能把所有 No-TGL 增益唯一归因到 graph topology。共享 hidden state 也不自动证明两个 head 的决定一致或正确。",
+        "在 arXiv record、全文、作者主页、作者博客与标题定向搜索的范围内，没有定位可归属于本篇的官方实验代码、checkpoint 或逐事件运行日志。PDF 声称部分 mapping 随代码发布，但本次无法核验其发布位置；不据此推断所有渠道都不存在代码。",
+        "Trigger std 使用 test-set oracle 最优阈值，是事后稳定性诊断；标准差小本身不证明固定 0.5 离每个最优点都足够近。Brier、ECE 的完整计算口径、逐事件 scores 与实际 deployed-threshold regret 还需要原始 artifacts。",
+        "本地公开实验采用三轮同步 mean propagation 和人为指定标量，只检查有限图中的前缀不变性。没有执行 GATv2 attention、学习出来的 trigger/routing、缓存、训练/测试 shift 或模型任务表现；不能把反例判为作者实现 bug。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "去掉时间边的简述，需要补上完整 mask 条件",
+          "observation": "B.1 将去掉 backward temporal edges 与严格因果推理相连；E.7 进一步要求屏蔽未来 events 和新引入 entities 的输入及 hidden-state contribution。",
+          "implication": "引用因果性时应保留 E.7 的完整要求。本站实验说明共享实体与归一化也可能传递未来影响，但未检验作者实际 mask，不能仅凭 B.1 简述指认泄漏。",
+          "locators": [
+            "Appendix B.1，PDF p. 16",
+            "Appendix E.7，PDF pp. 24–25"
+          ]
+        },
+        {
+          "label": "解码说明的 greedy 与 run aggregation 未完全对齐",
+          "observation": "C 的 shared design / C.1 描述 temperature 0；E.1 则说 Tables 1、4 的 API 结果聚合三次 vendor-default decoding，open-weight 结果聚合 recommended sampling、seeds {0,1,100}。",
+          "implication": "可保留论文报告的 mean±std，但复跑需要每个 cell 的实际 sampling config 与 logs；不能自行假定所有格都用同一 temperature 0 或同一随机条件。",
+          "locators": [
+            "Appendices C、C.1，PDF pp. 18–19",
+            "Appendix E.1，PDF p. 23"
+          ]
+        },
+        {
+          "label": "所有 ablation prompt 固定的说法存在明确例外",
+          "observation": "C.1 称 Table 4 的 prompt 固定；§5.3 和 F.1 的 No-TGL variant 却明确替换 system prompt，删除 routing block 和三条 demonstrations，并改为 self-gating。",
+          "implication": "应将 No TGL 作为整套无图/self-gating 配置对照；只有在具体干预保持一致时，才解释单个因素的效果。",
+          "locators": [
+            "§5.3，PDF p. 6",
+            "Appendix C.1，PDF p. 19",
+            "Appendix F.1，PDF p. 27"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "给唤醒、建议和接受分别留下观察点",
+          "text": "记录 graph gate、下游是否输出非空任务、建议内容和接受结果，可以避免一个总 F1 掩盖完全不同的失败：错过时机、叫醒后没有产出、带错依据，或建议本身不合适。",
+          "boundary": "这是基于本文决策分工与 RM 评测提出的诊断设计；本站没有接入真实通知或用户评价。gate 放行只涉及调用下游生成，不能自行扩展成实际工具执行授权。"
+        },
+        {
+          "label": "用未来后缀反事实检查因果边界",
+          "text": "先固定已经观察到的前缀，再追加不同未来事件；既比较未来内容变化，也比较完全没有未来节点的运行。本次图例中，逐层归零未来值仍会通过邻居均值分母改变已知节点，前缀重建避免了这一点。",
+          "boundary": "这是 AMS 原创有限反例，不是作者 GATv2 的近似或源码结果。真实实现还需核对 attention mask、cache、entity availability 与 routing candidate selection。"
+        },
+        {
+          "label": "保留原生标识，检查整条调用成本",
+          "text": "已有结构化事件时，可以保留稳定实体标识和时间关系，把“是否值得调用”与“调用后怎样表达”分开测；计算收益时同时计入事件接入、图更新、embedding cache 和真正触发的下游模型。",
+          "boundary": "这是借用方向，未在真实项目运行。论文 latency 是 cached forward，不能据此承诺整条系统的响应时间或功耗。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "还没发生的事，能改变此刻的判断吗？",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-08",
+          "basis": "Liu et al., arXiv:2605.30152v1 Appendices B.1、E.7；AMS 原创 event/entity/type 图与精确分数传播。",
+          "boundary": "有限前缀不变性实验，不是 TGL / GATv2、trigger probability、官方 masking 审计或 benchmark 复现。",
+          "method": "3 个图场景，比较只去 backward 边、逐层归零未来状态、按观察前缀重建；每种处理运行无后缀、未来信号 0、未来信号 1 三个分支，再各加一次已知过去变化控制，共 30 次三层同步均值传播。",
+          "environment": "macOS arm64；Python 3.13.3 标准库，Fraction 精确算术；不联网、安装依赖、调用模型/API 或使用 GPU。",
+          "fixture": "原创 reading.md / tomorrow.md 文件与 writing 类型节点。两个已知事件信号为 1、0，实体为 0；未来分别共享文件、只共享类型或完全无关。数值是抽象标量，不是任务标签或概率。",
+          "controls": "8 项行为测试覆盖两跳绕行、仅共享类型、逐层归零后的分母变化、无关未来负控制、前缀重建不变性、合法过去变化、同步有界传播和输入不变。",
+          "rawResult": "共享文件和共享类型场景中，只去 backward 边不能阻止未来影响；归零每层未来状态后，改变未来信号不再影响结果，但添加零节点仍改变前缀输出。共享文件第一层由 1/3 变为 1/4。无关未来控制不变；三个前缀重建均对未来不变、对已知过去变化有反应。",
+          "derivedResult": "未来影响可以来自数值，也可以来自完整图的邻接结构与归一化。只检查未来内容替换会漏掉第二种情况，应与真正的前缀运行对照。",
+          "limitations": "均值聚合为 AMS 明示规则，没有学习或 attention；未测试缓存、真实 graph extraction、route ranking 或用户效果。第二种策略是不完整屏蔽控制，不代表论文 E.7 的实现；30 次运行不是独立 benchmark 样本。",
+          "links": [
+            {
+              "label": "方法、路径图与复跑命令",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/proactive-prefix-study/README.md"
+            },
+            {
+              "label": "原创图输入",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/proactive-prefix-study/fixtures.json"
+            },
+            {
+              "label": "逐层传播与全部对照结果",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/proactive-prefix-study/results.json"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 6,

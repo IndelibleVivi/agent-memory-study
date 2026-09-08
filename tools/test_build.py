@@ -66,7 +66,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260908-reuse-1'),
+            source.count('assets/materials-data.js?v=20260908-proactive-1'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260830-mnl-2', source)
@@ -1757,9 +1757,21 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             for link in reuse["contributions"][0]["links"]
         ))
         self.assertEqual(reuse["designTransfer"]["status"], "proposed-not-run")
+        proactive = by_id["proactive-wake-anchor"]
+        self.assertEqual(proactive["noteDepth"], "worked")
+        for field in (
+            "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
+            "sourceTensions", "editorialInferences", "contributions",
+        ):
+            self.assertTrue(proactive[field])
+        self.assertEqual(proactive["contributions"][0]["type"], "public-test")
+        self.assertTrue(any(
+            link["url"].endswith("/research/proactive-prefix-study/results.json")
+            for link in proactive["contributions"][0]["links"]
+        ))
+        self.assertEqual(proactive["designTransfer"]["status"], "proposed-not-run")
         current_skim_ids = {
             "mosaic-long-term-memory",
-            "proactive-wake-anchor",
             "coala-cognitive-architecture", "storage-to-experience",
             "agentic-memory", "midca-dual-cycle",
             "agm-theory-change", "memory-beyond-recall",

@@ -1,0 +1,127 @@
+{
+  "origin": "AMS original synthetic graphs. Signals are abstract scalars, not embeddings, probabilities, or human labels.",
+  "layers": 3,
+  "cases": [
+    {
+      "id": "shared-file",
+      "prefix": [
+        {
+          "id": "event:1",
+          "signal": "1",
+          "entities": [
+            "file:reading.md"
+          ]
+        },
+        {
+          "id": "event:2",
+          "signal": "0",
+          "entities": [
+            "file:reading.md"
+          ]
+        }
+      ],
+      "suffix_variants": {
+        "zero": [
+          {
+            "id": "event:3",
+            "signal": "0",
+            "entities": [
+              "file:reading.md"
+            ]
+          }
+        ],
+        "one": [
+          {
+            "id": "event:3",
+            "signal": "1",
+            "entities": [
+              "file:reading.md"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "shared-type",
+      "prefix": [
+        {
+          "id": "event:1",
+          "signal": "1",
+          "entities": [
+            "file:reading.md",
+            "type:writing"
+          ]
+        },
+        {
+          "id": "event:2",
+          "signal": "0",
+          "entities": [
+            "file:reading.md",
+            "type:writing"
+          ]
+        }
+      ],
+      "suffix_variants": {
+        "zero": [
+          {
+            "id": "event:3",
+            "signal": "0",
+            "entities": [
+              "file:tomorrow.md",
+              "type:writing"
+            ]
+          }
+        ],
+        "one": [
+          {
+            "id": "event:3",
+            "signal": "1",
+            "entities": [
+              "file:tomorrow.md",
+              "type:writing"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "unrelated-future",
+      "prefix": [
+        {
+          "id": "event:1",
+          "signal": "1",
+          "entities": [
+            "file:reading.md"
+          ]
+        },
+        {
+          "id": "event:2",
+          "signal": "0",
+          "entities": [
+            "file:reading.md"
+          ]
+        }
+      ],
+      "suffix_variants": {
+        "zero": [
+          {
+            "id": "event:3",
+            "signal": "0",
+            "entities": [
+              "file:tomorrow.md"
+            ]
+          }
+        ],
+        "one": [
+          {
+            "id": "event:3",
+            "signal": "1",
+            "entities": [
+              "file:tomorrow.md"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
