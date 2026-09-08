@@ -99,3 +99,44 @@ python3 -m unittest tools.test_build
 ```
 
 builder 会检查 schema、publication boundary、approved-analytics boundary、GitHub Pages subpath asset URLs、RDF attachment modes 与 bundled PDF exact allowlist，再从 canonical JSON 重建 browser payload。
+
+## Evidence ownership and reader checks
+
+`reportedFindings` is reserved for paper-reported findings. Keep AMS executions,
+recalculations and synthetic experiments in the optional `amsEvidence` block,
+with an existing public research `artifactUrl` and a matching bylined `public-test`
+contribution. `observations`, `findings`, `methods` and `reasoning` preserve their
+separate roles. The builder checks binding and exact duplication, not the truth
+or semantic attribution of a sentence; editorial source review remains required.
+A `worked` entry must have an attributed `public-test` artifact. Moving an existing
+result between sections does not change its reading depth or historical receipts.
+
+Reader changes should pass:
+
+```bash
+python3 -B tools/verify_reader.py
+python3 -m pip install -r tools/browser-requirements.txt
+python3 -m playwright install chromium
+python3 -B tools/test_reader_browser.py --output-dir dist/browser-check
+```
+
+The first command is model-free and uses only local public/synthetic data. It
+checks the generated browser payload without rewriting it, validates the existing
+RDF, and freshly reruns the four small deterministic studies. It does not rerun
+all external-source audits or any paper benchmark. The second test path serves
+this checkout under `/agent-memory-study/` and checks real browser navigation,
+search, shared scenario state, reload and back/forward on desktop and mobile
+viewports. All third-party browser requests, including analytics, are blocked.
+
+On hosts that prohibit browser navigation, `--offline-render` is an explicitly
+labelled DOM/interaction fallback. Its receipt lists HTTP, reload and history as
+unverified; CI never uses that flag. CI has read-only contents permission and no
+deployment step. Repository settings still determine whether its status is a
+required merge check; this workflow does not change the existing Pages publisher.
+
+Search indexes selected reader-visible fields from materials and studies, never
+arbitrary JSON keys or URLs. Space-separated terms use AND matching across fields;
+exact titles rank first. A study matches combined filters only when one of its
+referenced materials satisfies all of them. The study does not inherit that
+material's reading depth. Keep these semantics in `assets/reading-search.js`, shared
+by the browser and its Node tests, rather than adding a second search truth.

@@ -42,6 +42,7 @@ PUBLIC_COPY_PATHS = (
     "site.webmanifest",
     "assets/app.js",
     "assets/revision-study.js",
+    "assets/reading-search.js",
     "assets/styles.css",
     "assets/materials-data.js",
     "data/materials.json",
@@ -308,6 +309,45 @@ def validate_studies(data: dict[str, Any], material_ids: set[str]) -> None:
                 raise ValueError("unsupported synthetic environment flag")
 
 
+def validate_ams_evidence(paper: dict[str, Any]) -> None:
+    evidence = paper.get("amsEvidence")
+    if evidence is None:
+        return
+    where = f"{paper['id']}.amsEvidence"
+    fields = {"byline", "artifactUrl", "observations", "reasoning", "methods", "findings"}
+    if not isinstance(evidence, dict) or set(evidence) != fields:
+        raise ValueError(f"{where} fields must be exactly {sorted(fields)}")
+    assert_exact_text_object({k: evidence[k] for k in ("byline", "artifactUrl")},
+                             {"byline", "artifactUrl"}, where)
+    artifact = PurePosixPath(evidence["artifactUrl"])
+    if (artifact.is_absolute() or ".." in artifact.parts or artifact.parts[0] != "research"
+            or not (ROOT / artifact).is_file()):
+        raise ValueError(f"{where} must link an existing public research artifact")
+    url = "https://github.com/IndelibleVivi/agent-memory-study/blob/main/" + artifact.as_posix()
+    if not any(c.get("type") == "public-test" and c.get("byline") == evidence["byline"]
+               and any(link.get("url") == url for link in c.get("links", []))
+               for c in paper.get("contributions", [])):
+        raise ValueError(f"{where} must bind to an attributed public-test contribution")
+    for field in ("observations", "findings"):
+        assert_string_list(evidence[field], f"{where}.{field}", allow_empty=True)
+    for field, keys in (("reasoning", {"step", "claim", "locator"}),
+                        ("methods", {"label", "text", "locator"})):
+        if not isinstance(evidence[field], list):
+            raise ValueError(f"{where}.{field} must be a list")
+        for item in evidence[field]:
+            assert_exact_text_object(item, keys, f"{where}.{field}")
+    if not any(evidence[k] for k in ("observations", "reasoning", "methods", "findings")):
+        raise ValueError(f"{where} must contain evidence")
+    paper_text = set(text for _, text in walk_strings({k: paper.get(k, []) for k in
+                     ("intro", "keyPoints", "argumentMap", "methodNotes", "reportedFindings")}))
+    # Structural duplication only. Source attribution still needs editorial review.
+    audit_text = [*evidence["observations"], *evidence["findings"],
+                  *(x["claim"] for x in evidence["reasoning"]),
+                  *(x["text"] for x in evidence["methods"])]
+    if any(text in paper_text for text in audit_text):
+        raise ValueError(f"{where} duplicates a statement in a paper-only section")
+
+
 def load_and_validate(path: Path) -> dict[str, Any]:
     data = json.loads(path.read_text(encoding="utf-8"))
     materials = data.get("materials")
@@ -554,6 +594,13 @@ def load_and_validate(path: Path) -> dict[str, Any]:
                     f"{paper['id']}.contributions[{index}].links",
                     allow_empty=contribution_type != "public-test",
                 )
+
+        validate_ams_evidence(paper)
+        if paper["noteDepth"] == "worked" and not any(
+            c.get("type") == "public-test" and c.get("links")
+            for c in paper.get("contributions", [])
+        ):
+            raise ValueError(f"{paper['id']} worked requires an attributed public-test artifact")
 
         if paper["noteDepth"] in {"read", "worked"}:
             rich_required = {

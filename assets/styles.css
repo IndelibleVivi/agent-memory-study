@@ -2615,3 +2615,12 @@ noscript {
   .design-transfer dt { padding: 18px 0 3px; border: 0; }
   .design-transfer dd { padding: 0 0 18px; }
 }
+
+/* Evidence attribution and discovery reuse the reading-room type scale. */
+.reading-entry a { display: inline-flex; align-items: center; min-height: 44px; }
+.search-scope { max-width: 76ch; font-size: 0.875rem; line-height: 1.65; }
+.material-row-copy .search-match-label { margin-top: 0.75rem; font-size: 0.8rem; }
+.material-row-copy .search-snippet { margin-top: 0.3rem; line-height: 1.65; overflow-wrap: anywhere; }
+.ams-evidence-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+.ams-evidence-links a, .ams-evidence summary { min-height: 44px; display: inline-flex; align-items: center; }
+.ams-evidence summary { cursor: pointer; text-decoration: underline; }

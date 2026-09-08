@@ -1,0 +1,2 @@
+# Browser tests only; the deployed reader has no package/runtime dependencies.
+playwright==1.57.0
