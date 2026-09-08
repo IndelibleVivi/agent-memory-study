@@ -14,6 +14,7 @@
 - 每篇现有材料都有“读完，可以怎样借用”：适用情境、可借用的做法、尚未执行的迁移对照、依据与边界；`skim` / `abstract` 显示初读线索提示，编者建议不改变阅读深度或历史测试结论；
 - 阅读可以继续形成公开、可复跑的研究材料，例如 [TRUSTMEM 的同状态候选比较](research/trustmem-transition-study/README.md)：10 个原创结构化 transition、4 组配对控制和论文数字复核；它单独记录已执行结果，真实更新器 / LLM judge 的迁移对照仍是未执行建议，不把教学实验算作论文效果复现；
 - [VerMem 的历史恢复与 verifier 边界](research/vermem-verifier-boundary-audit/README.md)直接执行固定官方代码的 12 个函数级样例：候选内 ID、合法长度与规则 `pass` 仍不足以单独证明任务归属或语义忠实；原始输入、返回值和外部源码复跑命令均公开，结论不扩展到完整 executor 或模型效果；
+- [旧经验还在，为什么读不到？](research/experience-reuse-retrieval-study/README.md)把 experience reuse 的检索竞争做成 4 个原创场景、108 次 SQLite BM25 选择：重复条目会挤走旧经验，按 key 去重也可能漏掉不同的适用条件；每个排名、控制与复跑命令均公开，不把检索命中算作 agent 成功；
 - 一个没有 backend、继续由 GitHub Pages 托管的静态 reader；唯一 analytics 是 Cloudflare Web Analytics 的 aggregate beacon，不使用 cookie 或 localStorage 识别、画像访客；
 - 23 份 canonical materials：10 份按原许可随站提供的 PDF，另 13 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。

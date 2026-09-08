@@ -1432,13 +1432,14 @@
       "shortAuthor": "Hu 等",
       "year": 2026,
       "doi": null,
-      "noteDepth": "skim",
-      "readingScope": "Abstract、§2–§6、Appendix A/C/D 相关段落；未完整读案例附录。",
-      "intro": "把 frozen-backbone agent 的 continual learning 改写成检索竞争问题：经验没有被参数覆盖，却可能被相似条目挤出有限 context。",
+      "noteDepth": "worked",
+      "readingScope": "完整阅读 arXiv v1 的 Abstract、§§1–6、Limitations、Appendices A–F、Tables 1–8 与 Figures 1–13 图注；视觉复核 Tables 3、5、6、Appendix C 和 Figure 11。PDF 共 16 页，pdfinfo 与 pdftotext 分页一致；pypdf preflight 因依赖未安装为 advisory unavailable，不记 PASS。References 仅作来源定位。另执行 4 个 AMS 原创场景、12 个检索池、108 次 SQLite BM25 选择与 8 项行为测试；未执行作者实现、Qwen-Plus、AgentGym 或论文 benchmark。",
+      "intro": "Frozen backbone 不会被新任务改写参数，但新旧经验仍会竞争有限的检索位置。本文用顺序任务实验比较经验的表示、拆分与取回时机：记忆留在 store 中，不等于旧任务仍能使用它；更大的迁移增益，也不等于更高的最终成功率。",
       "keyPoints": [
-        "框架用经验表示 v 与 storage granularity / retrieval frequency 等 key design choices，配合 FWT、BWT 分开观察 transfer 与 forgetting。（§2.2–§2.3）",
-        "跨任务实验里 raw trajectory 出现负向 transfer，而 abstract insight 在两个环境中为正；噪声尤其伤害原本不会做的 hard cases。（§3.1–§3.2）",
-        "更细 storage 或更频繁 retrieval 没有统一优势；一个条件下 88.5% 请求取回同一 item，coverage 仅 5.4%，旧经验仍在 store 中却可能因 retrieval dilution 而不可用。（§4；Appendix D）"
+        "经验写成 (k, v)：v 可保留完整 action-observation trajectory，也可抽象成 procedural insights；k 与存储单位、查询时机共同决定哪些经验进入 context。两个环境均使用冻结 Qwen-Plus、ReAct、ReMe 与 BM25。（§§2–4；Appendix A）",
+        "在 A→B 方向，Raw 的 FWT 在 ALFWorld / BabyAI 分别为 −9.5 / −7.5 pp，Insight 为 +6.5 / +9.0 pp；反向顺序并不都是正增益。负迁移主要伤害由无记忆基线判定的失败子集，不能把它们称为所有系统都难的任务。（Table 3；§3.2）",
+        "Cond-Agg 以任务为单位返回一个 insight bundle；Cond-Ind 用 when_to_use key 单独返回 top-3 insights；Cond-Step 每四步取 top-3。它们近似对齐的是每次检索的 insight 数，不是整个 episode 的 token 或调用成本。（§4；Appendices A、C）",
+        "更细粒度、更多检索没有统一优势。BabyAI A→B 的 Cond-Ind FWT +15 pp，同时 BWT −10 pp；Appendix C 还说明检索频率改变了训练所积累的 pool，不能把差异完全归因到评测时的检索频率。（Tables 5–6；Appendix C）"
       ],
       "keywords": [
         "continual learning",
@@ -1461,18 +1462,150 @@
         "license": "CC BY-NC-SA 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       },
-      "editorialQuestion": "结论只来自两个 environment、各一个 task pair、单一 BM25 retriever 与两次 runs；retrieval dilution 能否跨 retriever 和任务结构复现？",
+      "editorialQuestion": "冻结实际 memory pool、query 与上下文预算后，重复内容、缺失的适用条件和检索时机分别改变了什么；局部检索命中能否带来旧任务与新任务的真实表现改善？",
       "sourceNote": "",
       "designTransfer": {
         "byline": "Agent Memory Study editors",
         "date": "2026-09-08",
-        "when": "记忆库越来越大，旧经验仍在，但取回结果越来越重复或无关。",
-        "move": "把存储保留率与检索覆盖率分开看；在固定 context 预算下检查重复命中、相关经验被挤出和困难任务的表现。",
-        "check": "固定问题与目标经验，逐步加入相似无关条目；比较当前 retriever 与一个简单 lexical 对照，记录实际进入 context 的条目。",
-        "boundary": "这是 skim 范围下的试验建议，未执行。原文只有有限环境与 retriever 条件，不能把 dilution 当成所有记忆系统的通用解释。",
-        "basis": "既有札记 “关键抓手”：§§2.2–2.3、3–4、Appendix D。",
+        "when": "经验越来越多，旧条目仍在，但取回内容重复、适用条件缺失，或旧任务表现变差。",
+        "move": "同时保留旧条目存在性、目标排名、实际 context 与任务表现；检查重复发生在 key、内容还是适用情境，避免仅按标签合并不同经验。",
+        "check": "冻结真实 memory pool、query 与 token 预算，比较现有 retriever 和一个保留适用条件的去重方案；用实际 agent 回测新旧任务，并记录检索成本与进入 context 的条目。",
+        "boundary": "公开的 4 场景 / 108 次 SQLite 检索选择已经执行；这里提出的真实 pool、语义处理、agent 成功率与成本对照尚未执行，不能由 synthetic 命中结果代替。",
+        "basis": "本次完整精读 §4、Appendices C–F；本条已执行的公开 synthetic retrieval study。",
         "status": "proposed-not-run"
-      }
+      },
+      "whyRead": "这篇帮助读者把“没有删掉记忆”与“还能够利用记忆”分开，也把经验表示的价值放回任务顺序中观察。值得借走的不只是抽象经验或增加检索次数，而是一种读结果的方法：同时看每种配置的起点、最终成功率、新任务迁移和旧任务回测，再追问取回的内容及其适用条件。它保留了一个很好的开放问题：记忆系统积累的是能区分情境的经验，还是一批听起来不同、实际总把检索带到同一处的条目？",
+      "argumentMap": [
+        {
+          "step": "把持续学习问题移到外部记忆",
+          "claim": "不更新参数避免了参数覆盖，却没有消除有限 context 下新旧经验的竞争；顺序训练是 agent 经历任务并向外部记忆积累经验。",
+          "locator": "§§1–2，PDF pp. 1–3"
+        },
+        {
+          "step": "先比较经验内容",
+          "claim": "Raw trajectory 保留细节，Insight 提炼可迁移过程；来源任务与目标任务的程序关系会改变哪种表示有利。清洗任务需要的额外动作，可能被旧的直接放置轨迹误导。",
+          "locator": "§3；Appendix B；Appendix F.1–F.2，PDF pp. 3–5、11–12、13–15"
+        },
+        {
+          "step": "再比较经验怎样被找到",
+          "claim": "聚合 bundle、独立 insight 和周期检索对 transfer / forgetting 呈现不同取舍；拆分后 key 是否可区分，实际取回是否多样，比存储条数本身更接近使用条件。",
+          "locator": "§4；Appendices C–D；Figure 11，PDF pp. 5–8、12–13"
+        },
+        {
+          "step": "用行为指标与检索诊断约束解释",
+          "claim": "FWT / BWT 和 baseline-success / baseline-fail 子集给出不同观察面；检索集中、训练曲线和案例支持竞争解释，但有限环境与联动改变的 memory pools 限制了因果归因。",
+          "locator": "§2.3；§6；Limitations；Appendices C–F，PDF pp. 3、8–9、12–16"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Frozen model, growing memory",
+          "text": "Qwen-Plus + ReAct 在 AgentGym 上运行，ReMe 提供经验 memory，BM25 是全文统一 retriever。每个环境选 A/B 两个任务族，跑 A→B 与 B→A；每阶段 200 个 training episodes，每任务 100 个 held-out test episodes，报告两次独立运行均值。Table 8 给出 temperature 0.5、generation limit 4096、seed 42 等配置，未提供可固定的 Qwen-Plus 模型快照。",
+          "locator": "§2；Appendix A；Table 8，PDF pp. 2–3、10–12"
+        },
+        {
+          "label": "Forward transfer uses a memory-enabled scratch comparator",
+          "text": "FWT(A→B) = Acc_B(∅→A→B) − Acc_B(∅→B)，是在 B 训练完成后比较；BWT(A→B) = Acc_A(∅→A→B) − Acc_A(∅→A)。scratch 是同一 memory 配置从目标任务开始，不是无记忆 agent，也不是进入 B 前的零样本迁移。所有差值均为百分点。",
+          "locator": "§2.3，PDF p. 3"
+        },
+        {
+          "label": "RR and NL have different denominators",
+          "text": "无记忆基线将 100 个样例分成 baseline-success 与 baseline-fail；RR / NL 分别计算这两个固定子集上的成功率，ΔRR / ΔNL 再与对应 scratch 相减。ALFWorld A 仅有 5 个 baseline-fail 样例，因此表中省略相关 ΔNL。难度标签依赖该模型与基线设置。",
+          "locator": "Table 2；§2.3；Tables 3–6，PDF pp. 3–7"
+        },
+        {
+          "label": "Organization changes more than one quantity",
+          "text": "Cond-Agg 将约 3 条 insights 打包，用 task instruction 为 key，开始时取 top-1；Cond-Ind 以 when_to_use 描述为 key，开始时取 top-3；Cond-Step 每 4 个环境动作取 top-3。Agg / Ind 同时改变检索 key、单位与 top-k；Ind / Step 的在线训练又会形成不同 memory pools。",
+          "locator": "§4；Appendix A.1.4；Appendix C，PDF pp. 5–6、10、12"
+        },
+        {
+          "label": "Traces are explanatory examples",
+          "text": "Appendix F 展示直接放置轨迹误导清洗、较复杂经验反向迁移、同质 key 集中命中与按阶段取回经验的案例。案例有助于理解假设，但不能单独量化各机制占多少错误，也不能替代固定 pool 的消融。",
+          "locator": "Appendix F.1–F.3，PDF pp. 13–16"
+        }
+      ],
+      "reportedFindings": [
+        "ALFWorld A→B：Raw 的 scratch / cross-task 成功率为 80.5% / 71.0%，Insight 为 65.5% / 72.0%。FWT 分别 −9.5 / +6.5 pp，二者增益差 16 pp，最终成功率差只有 1 pp；这支持任务顺序改变表示优势，不能只用增益差描述最终性能。（Table 3；Figure 4，PDF p. 4）",
+        "同一方向的 Raw 在 ALFWorld 上 ΔRR +4.6、ΔNL −26.1 pp，BabyAI 上 −2.0 / −12.7 pp；Insight 的两子集差值均为正。反向 B→A 的 ALFWorld FWT 则为 Raw −0.5、Insight −2.5 pp，不能泛化为 Insight 在所有顺序都产生正迁移。（Table 3；Figure 3，PDF p. 4）",
+        "BabyAI A→B：Cond-Ind 从 scratch 32.0% 到 47.0%，FWT +15 pp；Cond-Agg 从 46.0% 到 55.0%，FWT +9 pp。Cond-Ind 的增益更大，但最终成功率更低；它同时有 BWT −10 pp，Cond-Agg 为 0。（Tables 5–6，PDF pp. 6–7）",
+        "ALFWorld A→B：Cond-Step 的 scratch / cross-task 为 79.5% / 78.0%，FWT −1.5 pp；Cond-Ind 为 55.0% / 53.0%，FWT −2.0 pp。较高最终表现与较小或负的迁移增益可以并存；不同训练记忆池仍限制频率效应的归因。（Table 5；Appendix C，PDF pp. 6、12）",
+        "Figure 11 的 BabyAI Task B / Cond-Ind 诊断报告 13/240（5.4%）的 retrieval coverage，图注与正文报告 88.5% 查询命中同一 top-1，图柱取整标为 88%；key diversity 约 0.92，而实际 context diversity 为 0.38。这是一组特定 within-task 查询的集中度证据，不是所有 memory systems 的通用比例。（Appendix D；Figure 11，PDF p. 13）"
+      ],
+      "evidenceLimits": [
+        "Work in progress；两个环境各一个任务对、统一 Qwen-Plus 与 BM25、两次运行均值。未给足跨 seed 不确定区间，不能把小幅差值直接称为显著效果，也不能推断到其他 backbone、retriever 或更长任务序列。（Limitations；Appendix A）",
+        "检索组织同时影响训练行为和后来积累的 memory。本文没有固定池的独立 frequency-only 对照；粒度比较也伴随 key 表示与 top-k 变化，不能把每个差值唯一归因于一个设计变量。（§4；Appendix C）",
+        "Figure 11 的 coverage 图注写作 unique items among all retrievals；没有原始 query/item 日志时，不能擅自把 240 当成整个记忆库大小，或把这组 88.5% 与 Appendix F 另一组 82/200 的案例计数合并成统一分布。",
+        "在本次 arXiv record、PDF 与论文标题定向搜索范围内，没有定位可归属于本研究的官方实验实现和完整逐查询日志；ReMe 是论文使用的基础设施，不能自动作为这篇实验的精确实现。此搜索范围不证明所有渠道都不存在公开代码。",
+        "本次 AMS 实验只观察固定 synthetic queries 的检索排序与返回选择，relevance 由 fixture 明示。未模拟 LLM、评测旧/新任务成功率、语义去重或真实延迟；108 次选择共享 4 个场景，不是 108 个独立任务样本。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "“隔离频率”与训练形成不同的 pool",
+          "observation": "§4 将 Ind / Step 表述为隔离 retrieval frequency 的对比；Appendix C 明确指出，训练期间的检索频率改变 agent 行为、观察和生成的 insights，因此两者 memory pools 并不相同。",
+          "implication": "应把结果读作包含训练反馈的配置差异；若要判断评测时多检索的独立作用，需要另做固定实际 pool 的对照。附录的限制不能在复述主文时省略。",
+          "locators": [
+            "§4，PDF pp. 5–6",
+            "Appendix C，PDF p. 12"
+          ]
+        },
+        {
+          "label": "每次取回量与全程成本不是同一个预算",
+          "observation": "主文说各条件每次取回大约同样数量的 insights；Cond-Step 却每四步重复检索，而 Agg / Ind 只在开头检索一次。文中没有据此对齐全程 token 或检索调用次数。",
+          "implication": "可以比较这些配置的任务表现，不能把它称为等全程 context / token 成本的频率优化证明。",
+          "locators": [
+            "§4；Figure 6，PDF pp. 5–6",
+            "Appendix C，PDF p. 12"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "先看原始成功率，再解释增益",
+          "text": "每种配置的 scratch 起点不同。做项目选择时，同时摆出 scratch、cross-task、FWT 与旧任务回测，才知道自己购买的是更高最终表现、较强迁移，还是代价不同的折衷。",
+          "boundary": "这是从 Tables 3、5、6 提炼的阅读与比较方法；本站没有执行真实项目选择，也没有证明某个配置普遍更优。"
+        },
+        {
+          "label": "重复 key 不等于重复经验",
+          "text": "本次实验中，按 key 去重能缓解完全重复条目的占位，却会漏掉同一 room-search 标签下不同的解锁条件。保留内容差异有必要，精确 key/value 去重又不足以处理同义改写。",
+          "boundary": "结论来自 AMS 原创四场景的有限反例；它不证明作者使用了这种去重，也不是通用语义去重方案。"
+        },
+        {
+          "label": "把存储、排序、进入 context 与使用效果接起来",
+          "text": "保留率、目标排名和实际返回内容能帮助定位经验在哪一步失去可用性。本次旧条目全部保留，目标仍从第 2 位落到第 6 位；扩大 top-k 只推迟该例的排出。",
+          "boundary": "这里证明了构造场景中的检索竞争；没有执行 agent，因此命中改善不能自动称为更好的任务成功率或持续学习。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "旧经验还在，为什么读不到？",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-08",
+          "basis": "Hu et al., arXiv:2604.27003v1 §4、Appendices C–D、F；使用 AMS 原创 synthetic key/value examples，与作者数据和实现分离。",
+          "boundary": "SQLite FTS5 BM25 的有限检索实验；不是 ReMe、Qwen-Plus、AgentGym 或论文 benchmark 的效果复现。",
+          "method": "4 个场景，各从 3 条旧记忆添加 0/2/4 条记录；每个池共用完整 BM25 排名，比较 top-k、unique-key、unique-key-value，返回条数上限为 1/3/5，共 108 次选择。",
+          "environment": "macOS arm64；Python 3.13.3 标准库，SQLite 3.53.4 / FTS5；不安装第三方包，不联网、调用模型或 API。",
+          "fixture": "原创清洗/放置与开门/上锁情境；key-only AND 查询，固定插入顺序处理同分；必要经验由公开标签明示，标签不进入检索或选择。",
+          "controls": "同量无关增长控制、相同 key 的不同条件反例、不同措辞的重复内容、预算 1/3/5；8 项测试另检查标签不参与选择、value 不参与打分、同分顺序影响、旧条目保留与 fixture 不变。",
+          "rawResult": "12 个池均保留全部 3 条旧记忆，旧匹配项间次序不变。重复增长的必要经验排名为 2→4→6；预算 3 在增加 2 条时漏掉目标。按 key 去重恢复该例，却在上锁条件反例中漏掉必要经验；key/value 精确去重保留该条件，但不能解决改写重复。",
+          "derivedResult": "记录存在不保证进入 context；重复的 key 也不足以作为内容等价的判据。扩大条数预算、精确去重或 key 去重各有不同边界，不能从这些构造例子形成总体优胜率。",
+          "limitations": "预算是返回条数上限，不是等 token 或等扫描成本；增长改变 BM25 统计但当前旧项相对顺序不变。只测检索，没有 agent 使用、任务成功率、语义判定、跨查询集中度或真实运行代价。",
+          "links": [
+            {
+              "label": "实验方法、反例与复跑命令",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/experience-reuse-retrieval-study/README.md"
+            },
+            {
+              "label": "公开输入与相关性标签",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/experience-reuse-retrieval-study/fixtures.json"
+            },
+            {
+              "label": "逐池排名与 108 次选择",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/experience-reuse-retrieval-study/results.json"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 11,

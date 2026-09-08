@@ -1,0 +1,1569 @@
+{
+  "study": "experience-reuse-retrieval-study",
+  "boundary": "AMS synthetic key-only SQLite FTS5 BM25 retrieval; no ReMe implementation, LLM, environment success, or paper reproduction.",
+  "sqlite_version": "3.53.4",
+  "budgets_are": "maximum returned entries, not equal tokens or equal retrieval work",
+  "cases": [
+    {
+      "id": "exact-duplicates",
+      "query": "clean bowl kitchen",
+      "stages": [
+        {
+          "added": 0,
+          "pool_size": 3,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-placement",
+              "score": -3.241071e-06
+            },
+            {
+              "id": "old-cleaning",
+              "score": -2.611511e-06
+            }
+          ],
+          "relevant_ranks": {
+            "old-cleaning": 2
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            }
+          ]
+        },
+        {
+          "added": 2,
+          "pool_size": 5,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-placement",
+              "score": -3.151685e-06
+            },
+            {
+              "id": "new-1",
+              "score": -3.151685e-06
+            },
+            {
+              "id": "new-2",
+              "score": -3.151685e-06
+            },
+            {
+              "id": "old-cleaning",
+              "score": -2.515695e-06
+            }
+          ],
+          "relevant_ranks": {
+            "old-cleaning": 4
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            }
+          ]
+        },
+        {
+          "added": 4,
+          "pool_size": 7,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-placement",
+              "score": -3.110656e-06
+            },
+            {
+              "id": "new-1",
+              "score": -3.110656e-06
+            },
+            {
+              "id": "new-2",
+              "score": -3.110656e-06
+            },
+            {
+              "id": "new-3",
+              "score": -3.110656e-06
+            },
+            {
+              "id": "new-4",
+              "score": -3.110656e-06
+            },
+            {
+              "id": "old-cleaning",
+              "score": -2.472313e-06
+            }
+          ],
+          "relevant_ranks": {
+            "old-cleaning": 6
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2",
+                "new-3",
+                "new-4"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "unrelated-growth",
+      "query": "clean bowl kitchen",
+      "stages": [
+        {
+          "added": 0,
+          "pool_size": 3,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-placement",
+              "score": -3.241071e-06
+            },
+            {
+              "id": "old-cleaning",
+              "score": -2.611511e-06
+            }
+          ],
+          "relevant_ranks": {
+            "old-cleaning": 2
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            }
+          ]
+        },
+        {
+          "added": 2,
+          "pool_size": 5,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-placement",
+              "score": -1.104544986186
+            },
+            {
+              "id": "old-cleaning",
+              "score": -0.893932594752
+            }
+          ],
+          "relevant_ranks": {
+            "old-cleaning": 2
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            }
+          ]
+        },
+        {
+          "added": 4,
+          "pool_size": 7,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-placement",
+              "score": -2.601909289202
+            },
+            {
+              "id": "old-cleaning",
+              "score": -2.109656180434
+            }
+          ],
+          "relevant_ranks": {
+            "old-cleaning": 2
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "same-key-paraphrases",
+      "query": "clean bowl kitchen",
+      "stages": [
+        {
+          "added": 0,
+          "pool_size": 3,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-placement",
+              "score": -3.241071e-06
+            },
+            {
+              "id": "old-cleaning",
+              "score": -2.611511e-06
+            }
+          ],
+          "relevant_ranks": {
+            "old-cleaning": 2
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            }
+          ]
+        },
+        {
+          "added": 2,
+          "pool_size": 5,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-placement",
+              "score": -3.151685e-06
+            },
+            {
+              "id": "new-1",
+              "score": -3.151685e-06
+            },
+            {
+              "id": "new-2",
+              "score": -3.151685e-06
+            },
+            {
+              "id": "old-cleaning",
+              "score": -2.515695e-06
+            }
+          ],
+          "relevant_ranks": {
+            "old-cleaning": 4
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 3
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 3
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 4
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 4
+            }
+          ]
+        },
+        {
+          "added": 4,
+          "pool_size": 7,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-placement",
+              "score": -3.110656e-06
+            },
+            {
+              "id": "new-1",
+              "score": -3.110656e-06
+            },
+            {
+              "id": "new-2",
+              "score": -3.110656e-06
+            },
+            {
+              "id": "new-3",
+              "score": -3.110656e-06
+            },
+            {
+              "id": "new-4",
+              "score": -3.110656e-06
+            },
+            {
+              "id": "old-cleaning",
+              "score": -2.472313e-06
+            }
+          ],
+          "relevant_ranks": {
+            "old-cleaning": 6
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 3
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 3
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2",
+                "new-3",
+                "new-4"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 5
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-placement",
+                "old-cleaning"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-placement",
+                "new-1",
+                "new-2",
+                "new-3",
+                "new-4"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "different-values-same-key",
+      "query": "room search",
+      "stages": [
+        {
+          "added": 0,
+          "pool_size": 3,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-open-room",
+              "score": -2.227848e-06
+            },
+            {
+              "id": "old-locked-room",
+              "score": -2.227848e-06
+            },
+            {
+              "id": "old-room-map",
+              "score": -1.660377e-06
+            }
+          ],
+          "relevant_ranks": {
+            "old-locked-room": 2
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-open-room"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-open-room"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-open-room"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "old-room-map"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 3
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-open-room",
+                "old-room-map"
+              ],
+              "hit": false,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "old-room-map"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 3
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "old-room-map"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 3
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-open-room",
+                "old-room-map"
+              ],
+              "hit": false,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "old-room-map"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 3
+            }
+          ]
+        },
+        {
+          "added": 2,
+          "pool_size": 5,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-open-room",
+              "score": -2.146341e-06
+            },
+            {
+              "id": "old-locked-room",
+              "score": -2.146341e-06
+            },
+            {
+              "id": "new-1",
+              "score": -2.146341e-06
+            },
+            {
+              "id": "new-2",
+              "score": -2.146341e-06
+            },
+            {
+              "id": "old-room-map",
+              "score": -1.571429e-06
+            }
+          ],
+          "relevant_ranks": {
+            "old-locked-room": 2
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-open-room"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-open-room"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-open-room"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "new-1"
+              ],
+              "hit": true,
+              "distinct_keys": 1,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-open-room",
+                "old-room-map"
+              ],
+              "hit": false,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "old-room-map"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 3
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "new-1",
+                "new-2",
+                "old-room-map"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 3
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-open-room",
+                "old-room-map"
+              ],
+              "hit": false,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "old-room-map"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 3
+            }
+          ]
+        },
+        {
+          "added": 4,
+          "pool_size": 7,
+          "old_items_retained": 3,
+          "old_item_count": 3,
+          "old_matching_order_preserved": true,
+          "ranking": [
+            {
+              "id": "old-open-room",
+              "score": -2.107784e-06
+            },
+            {
+              "id": "old-locked-room",
+              "score": -2.107784e-06
+            },
+            {
+              "id": "new-1",
+              "score": -2.107784e-06
+            },
+            {
+              "id": "new-2",
+              "score": -2.107784e-06
+            },
+            {
+              "id": "new-3",
+              "score": -2.107784e-06
+            },
+            {
+              "id": "new-4",
+              "score": -2.107784e-06
+            },
+            {
+              "id": "old-room-map",
+              "score": -1.530435e-06
+            }
+          ],
+          "relevant_ranks": {
+            "old-locked-room": 2
+          },
+          "observations": [
+            {
+              "budget_entries": 1,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-open-room"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-open-room"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 1,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-open-room"
+              ],
+              "hit": false,
+              "distinct_keys": 1,
+              "distinct_key_values": 1
+            },
+            {
+              "budget_entries": 3,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "new-1"
+              ],
+              "hit": true,
+              "distinct_keys": 1,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-open-room",
+                "old-room-map"
+              ],
+              "hit": false,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 3,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "old-room-map"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 3
+            },
+            {
+              "budget_entries": 5,
+              "policy": "top-k",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "new-1",
+                "new-2",
+                "new-3"
+              ],
+              "hit": true,
+              "distinct_keys": 1,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key",
+              "selected_ids": [
+                "old-open-room",
+                "old-room-map"
+              ],
+              "hit": false,
+              "distinct_keys": 2,
+              "distinct_key_values": 2
+            },
+            {
+              "budget_entries": 5,
+              "policy": "unique-key-value",
+              "selected_ids": [
+                "old-open-room",
+                "old-locked-room",
+                "old-room-map"
+              ],
+              "hit": true,
+              "distinct_keys": 2,
+              "distinct_key_values": 3
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
