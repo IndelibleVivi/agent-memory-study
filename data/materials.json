@@ -2614,13 +2614,12 @@
       "doi": "10.48550/arXiv.2607.05844",
       "noteDepth": "worked",
       "readingScope": "完整读了 arXiv v1 的 §§1–6、Appendix A.1–A.5、Tables 1–5 与 Figures 1–3，共 18 个 PDF pages；references 只用于 lineage 定位。另检查 official source commit 79a6229f83a7b174a2a9ac8fd0ace267ae30e79b（StateFuse 0.3.0），运行完整 139-test official suite，并执行 preregistered model-free interpretation-contract audit：8 个 synthetic fixtures、17 个 same-contract permutation groups、428 个 raw state/projection rows 与一次 fresh byte reproduction。没有复现论文的 MemoryAgentBench slice、uniform-verification agent loop、correction-handle ablation、模型输出、live connector 或 production trace；repository 中标题不同的 unpublished manuscript 只作为独立 successor source 标注，不向 arXiv v1 反向转移主张。",
-      "intro": "StateFuse 把 replicated memory 拆成两个容易被混淆的层：immutable OpSet 负责让 operation set 收敛，predicate registry、conflict detector、resolver 与 query constraints 再把这个集合解释成可行动的 view。本条 worked essay 所附的 synthetic contract audit 在锁定的 StateFuse 0.3.0 source 上显示：在这些 preregistered fixtures 中，byte-identical operations 仍可因 deterministic interpretation contracts 不同而产生不同的 conflict、activity、resolution lifecycle 与 projection；这收窄的是 replay precondition，不构成 OpSet merge law 的反例。",
+      "intro": "StateFuse 把 replicated memory 拆成两个容易被混淆的层：immutable OpSet 负责让 operation set 收敛，predicate registry、conflict detector、resolver 与 query constraints 再把这个集合解释成可行动的 view。",
       "whyRead": "这篇值得做成 worked essay，不是因为它发明了新的 CRDT join——作者反复否认这一点——而是因为它把 agent memory 最常被悄悄吞掉的三件事变成 public contract：分歧是否被显式保留、修正到底指向一个 assertion 还是一个 semantic class、downstream resolver 能否把选择写回历史。close read 与本地测试合在一起后，真正有用的结论更尖锐：merge substrate 的确定性只管同一组 immutable operations；要让 replica 的 semantic view 也可复现，还必须绑定 interpretation contract。",
       "keyPoints": [
         "Contract boundary：StateFuse 以 immutable EvidenceAdded / ClaimAdded / ClaimRetracted / DecisionAdded operations 构成 OpSet；materialization 先计算 effective claim refs、应用 exact / semantic tombstones、过滤 inactive claims，再为 functional keys 生成显式 ConflictSet。projection 可以选择、abstain 或 fail closed，但不能修改 base memory。（§§3.2–3.4；Figure 1，PDF pp. 5–7）",
-        "Dual correction handles：arXiv v1 将 claim_id 定义为 assertion-local identity，将 claim_ref 定义为由 claim key 与 predicate-governed value contract 导出的 cross-replica semantic handle。锁定的 0.3.0 official source 进一步显示，default ref payload 包含 key 与 value，仅在 non-default 时包含 kind、在 non-empty 时包含 context；validity、confidence、timestamp、evidence、provenance 与 derivation identity 不进入该 payload。semantic retraction 会使共享该 ref 的 claim instances 失活，包括随后才进入 merged OpSet 的 instances。（arXiv v1 §§3.2–3.3；Appendix A.1、A.3–A.4，printed PDF pp. 5–6、14–15；official source src/statefuse/model.py 与 src/statefuse/materialize.py）",
-        "Paper result：在 282-question MemoryAgentBench conflict-bearing slice 上，aggressive StateFuse、flat multi-value、raw log 与 collapsed baselines 同为 97.5% final accuracy；显式 conflict-preserving surfaces 的差异主要是 100% conflict recall。uniform-verification synthetic loop 中 conservative non-collapsing surfaces 同到 100% post-verify success，而 collapsed surface 为 60% 且有 40% post-verify false confidence。（§4.2；Tables 2–4，PDF pp. 9–11）",
-        "Executed synthetic result：锁定 0.3.0 source 上的 8 个 exact fixtures、17 个 fixed-contract constructor-permutation groups 与 428 个 raw state/projection rows 满足 preregistered H1/H2 gates。每个 fixed-contract group 各自产生一个 state digest 与一个 projection digest。该结果未测试 merge-tree equivalence、实现内部 replay-path independence 或跨环境重现。（public synthetic contract test）"
+        "Dual correction handles：arXiv v1 将 claim_id 定义为 assertion-local identity，将 claim_ref 定义为由 claim key 与 predicate-governed value contract 导出的 cross-replica semantic handle。（arXiv v1 §§3.2–3.3；Appendix A.1、A.3–A.4）",
+        "Paper result：在 282-question MemoryAgentBench conflict-bearing slice 上，aggressive StateFuse、flat multi-value、raw log 与 collapsed baselines 同为 97.5% final accuracy；显式 conflict-preserving surfaces 的差异主要是 100% conflict recall。uniform-verification synthetic loop 中 conservative non-collapsing surfaces 同到 100% post-verify success，而 collapsed surface 为 60% 且有 40% post-verify false confidence。（§4.2；Tables 2–4，PDF pp. 9–11）"
       ],
       "argumentMap": [
         {
@@ -2637,16 +2636,6 @@
           "step": "03 · 用 matched policy budget 收窄 empirical claim",
           "claim": "strong flat conflict-preserving baselines 在 answer accuracy 与 conservative operating point 上能追平 StateFuse；因此论文把贡献收窄为 contradiction surfacing、abstention 与 auditable semantic correction 的 contract，而不是 universal accuracy gain。",
           "locator": "§§4.2–5.3；Tables 2–5，PDF pp. 9–12"
-        },
-        {
-          "step": "04 · 再问 fixed OpSet 是否已经足够",
-          "claim": "论文的 replayability 明示 fixed predicate registry、resolver 与 constraints；本地 audit 进一步显示 current source 没有把 registry/detector implementation identity 写进 shared OpSet。same-contract replay 仍稳定，但 cross-contract replicas 可以对同一 operations 形成不同 semantic views。",
-          "locator": "§3.2；Appendix Proposition 6，PDF pp. 5、15；official source 79a6229…；public H1 audit"
-        },
-        {
-          "step": "05 · 把 correction scope 当 ontology 选择",
-          "claim": "semantic ref 是故意设计的 broad correction handle。它能解决 missing-ID / unseen-target correction，也会让不同 validity occurrences 在 semantic identity 相同时共享 tombstone；应用必须明确自己要 correction assertion、occurrence 还是 semantic class。",
-          "locator": "§§3.2–3.3、4.3；Table 5；Appendix A.1、A.4，PDF pp. 5–6、9–10、12、14–16；public H2 audit"
         }
       ],
       "methodNotes": [
@@ -2659,24 +2648,13 @@
           "label": "Paper evaluation layers",
           "text": "主 evidence 是 converted official MemoryAgentBench conflict-bearing slice 与每种 surface 共享 verification budget 的 50-task synthetic agent loop；另用 13-task deterministic handle ablation 比较 claim_id / claim_ref。paper tables 报 final accuracy、false certainty、conflict recall、recoverability 与 abstention quality，但本次本站 audit 没有重跑这些 datasets/runs。",
           "locator": "§§3.6、4.1–4.3；Tables 2–5，PDF pp. 7–12"
-        },
-        {
-          "label": "Preregistered interpretation-contract audit",
-          "text": "H1 的 equality、semantic-handle normalization 与 detector/lifecycle strata 在 paired treatments 中锁定 canonical operation JSON、OpSet hash、query constraints、resolver、serialization、locale/timezone；H2 使用 Monday/Tuesday disjoint validity claims，比较 no retraction、exact-ID、same-ref、changed-context 与 changed-value controls。每个 fixed-contract OpSet 穷举全部 2、6 或 120 个 constructor permutations。",
-          "locator": "research/statefuse-interpretation-contract-audit/PREREGISTRATION.md；raw/cases.jsonl"
-        },
-        {
-          "label": "Source, suite and reproduction receipts",
-          "text": "runner 锁定 arXiv PDF hash、official commit、package version、14 个 source/test/manuscript blobs 与自身 source hash；记录 pytest collect/run 全输出，重算 428 rows 的 payload digests 与 H1/H2 decision，再在同一 invocation 内完整执行 second pass，对八个 primary files 做 byte comparison。",
-          "locator": "research/statefuse-interpretation-contract-audit/raw/source_manifest.json；raw/environment.json；raw/reproduction.json"
         }
       ],
       "reportedFindings": [
         "aggressive official-slice comparison中，StateFuse、flat multi-value、raw log 与 collapsed latest-write 都是 97.5% final accuracy；StateFuse 与 flat conflict-preserving surfaces 为 100% conflict recall，raw log/collapsed 为 0%。这支持 surface distinction，不支持 unique answer-accuracy gain。（§4.2；Table 3，PDF pp. 9、11）",
         "conservative official-slice operating point 中，StateFuse、StateFuse core、MV register 与 provenance surface 都为 64.9% accuracy、100% conflict recall、2.1% false certainty；raw log conservative 同为 64.9% accuracy 但 0% conflict recall。（Tables 2–3，PDF pp. 10–11）",
         "uniform-verification 50-task loop 中，五个 conservative non-collapsing surfaces 都从 80% pre-verify 到 100% post-verify success、0% post-verify false confidence；collapsed surface 从 40% 到 60%，仍有 40% false confidence。该 loop deterministic，paper 因此没有给 confidence intervals。（Tables 2、4，PDF pp. 10–11）",
-        "13-task correction-handle ablation 中，claim_ref 为 100% final accuracy / no-resurrection / ID-target match / semantic-target recoverability；claim_id 为 76.9% / 76.9% / 100% / 0%。这是 paper 对 semantic handle expressivity 的主要支持。（§4.3；Table 5，PDF pp. 9–10、12）",
-        "本地 H1 中，byte-identical operations 在不同 deterministic equality/ref/detector contracts 下改变 conflict formation、effective refs、inactive sets、candidate membership、resolution lifecycle 与 projection；declared detector v2 control 把 behavior change 移到新的 visible locus。H2 中 same-ref retraction 同时停用 disjoint-validity Monday/Tuesday claims，而 exact-ID、changed-context 与 changed-value controls 保留 Tuesday claim。（public synthetic contract test）"
+        "13-task correction-handle ablation 中，claim_ref 为 100% final accuracy / no-resurrection / ID-target match / semantic-target recoverability；claim_id 为 76.9% / 76.9% / 100% / 0%。这是 paper 对 semantic handle expressivity 的主要支持。（§4.3；Table 5，PDF pp. 9–10、12）"
       ],
       "evidenceLimits": [
         "论文的 strongest external evidence 是一个 converted MemoryAgentBench conflict-bearing slice；本站没有取得并独立重算这 282 questions 的转换、predictions 或 aggregate，也没有重跑 50-task agent loop 与 13-task handle ablation，因此这些数字保持 paper-reported。",
@@ -2832,6 +2810,42 @@
         "boundary": "迁移到你的项目的对照未执行。已有 synthetic audit 限于锁定实现与 fixtures，不是 OpSet merge law 的反例，也未验证分布式 rollout。",
         "basis": "既有札记 §§3.2–3.4、Appendix A.1/A.3–A.4；公开测试 H1/H2。",
         "status": "proposed-not-run"
+      },
+      "amsEvidence": {
+        "byline": "Agent Memory Study editors",
+        "artifactUrl": "research/statefuse-interpretation-contract-audit/README.md",
+        "observations": [
+          "本条 worked essay 所附的 synthetic contract audit 在锁定的 StateFuse 0.3.0 source 上显示：在这些 preregistered fixtures 中，byte-identical operations 仍可因 deterministic interpretation contracts 不同而产生不同的 conflict、activity、resolution lifecycle 与 projection；这收窄的是 replay precondition，不构成 OpSet merge law 的反例。",
+          "锁定的 0.3.0 official source 进一步显示，default ref payload 包含 key 与 value，仅在 non-default 时包含 kind、在 non-empty 时包含 context；validity、confidence、timestamp、evidence、provenance 与 derivation identity 不进入该 payload。semantic retraction 会使共享该 ref 的 claim instances 失活，包括随后才进入 merged OpSet 的 instances。（arXiv v1 §§3.2–3.3；Appendix A.1、A.3–A.4，printed PDF pp. 5–6、14–15；official source src/statefuse/model.py 与 src/statefuse/materialize.py）",
+          "Executed synthetic result：锁定 0.3.0 source 上的 8 个 exact fixtures、17 个 fixed-contract constructor-permutation groups 与 428 个 raw state/projection rows 满足 preregistered H1/H2 gates。每个 fixed-contract group 各自产生一个 state digest 与一个 projection digest。该结果未测试 merge-tree equivalence、实现内部 replay-path independence 或跨环境重现。（public synthetic contract test）"
+        ],
+        "reasoning": [
+          {
+            "step": "04 · 再问 fixed OpSet 是否已经足够",
+            "claim": "论文的 replayability 明示 fixed predicate registry、resolver 与 constraints；本地 audit 进一步显示 current source 没有把 registry/detector implementation identity 写进 shared OpSet。same-contract replay 仍稳定，但 cross-contract replicas 可以对同一 operations 形成不同 semantic views。",
+            "locator": "§3.2；Appendix Proposition 6，PDF pp. 5、15；official source 79a6229…；public H1 audit"
+          },
+          {
+            "step": "05 · 把 correction scope 当 ontology 选择",
+            "claim": "semantic ref 是故意设计的 broad correction handle。它能解决 missing-ID / unseen-target correction，也会让不同 validity occurrences 在 semantic identity 相同时共享 tombstone；应用必须明确自己要 correction assertion、occurrence 还是 semantic class。",
+            "locator": "§§3.2–3.3、4.3；Table 5；Appendix A.1、A.4，PDF pp. 5–6、9–10、12、14–16；public H2 audit"
+          }
+        ],
+        "methods": [
+          {
+            "label": "Preregistered interpretation-contract audit",
+            "text": "H1 的 equality、semantic-handle normalization 与 detector/lifecycle strata 在 paired treatments 中锁定 canonical operation JSON、OpSet hash、query constraints、resolver、serialization、locale/timezone；H2 使用 Monday/Tuesday disjoint validity claims，比较 no retraction、exact-ID、same-ref、changed-context 与 changed-value controls。每个 fixed-contract OpSet 穷举全部 2、6 或 120 个 constructor permutations。",
+            "locator": "research/statefuse-interpretation-contract-audit/PREREGISTRATION.md；raw/cases.jsonl"
+          },
+          {
+            "label": "Source, suite and reproduction receipts",
+            "text": "runner 锁定 arXiv PDF hash、official commit、package version、14 个 source/test/manuscript blobs 与自身 source hash；记录 pytest collect/run 全输出，重算 428 rows 的 payload digests 与 H1/H2 decision，再在同一 invocation 内完整执行 second pass，对八个 primary files 做 byte comparison。",
+            "locator": "research/statefuse-interpretation-contract-audit/raw/source_manifest.json；raw/environment.json；raw/reproduction.json"
+          }
+        ],
+        "findings": [
+          "本地 H1 中，byte-identical operations 在不同 deterministic equality/ref/detector contracts 下改变 conflict formation、effective refs、inactive sets、candidate membership、resolution lifecycle 与 projection；declared detector v2 control 把 behavior change 移到新的 visible locus。H2 中 same-ref retraction 同时停用 disjoint-validity Monday/Tuesday claims，而 exact-ID、changed-context 与 changed-value controls 保留 Tuesday claim。（public synthetic contract test）"
+        ]
       }
     },
     {
@@ -2847,40 +2861,17 @@
       "doi": "10.48550/arXiv.2608.12365",
       "noteDepth": "worked",
       "readingScope": "完整读了 arXiv v1 的 abstract、§§1–8、Tables 1–9、Figures 1–5 与 references，共 16 个 PDF pages；另锁定 paper-time official source 593623eea50361e563180c112322e26d0ab4093b、current main d867f3cdbcffcefe4e14473333a78ce33a06ae47 与 official repair descendant f5d51e247b544503f8f47960b9dc6ecd43c2f464。对两条可执行 revision 各运行 unmodified official isolated/shared script 与两次 fresh-process six-treatment matrix，完整 reducer 产生 1,140 个 compact query rows；没有下载或复现 LoCoMo、LongMemEval、BEIR、FAMB corpus/result，没有调用 model、reader、judge、API、remote service、production runtime 或 private data。",
-      "intro": "FluctlightDB 把 `experience()` / `activate()` / `checkpoint()` 提成 database-native memory verbs，并把 provenance-aware ranking 放进 read semantics。但它自己的 shared-brain provenance suite 在排序之前已经缺少 query→observation identity：十个 cue classes 各用一个相同 query 对五个 incompatible target IDs 计 exact top-1；在本地复现的 within-store invariance 下，50-row scalar 条件性最多只能命中 10 行。source-linked controls 又露出排序之后的另一条 seam：`agent_id` retain 后，不接收 scope 的 wallet / successor exact helpers 可以重新插入 foreign stored episodes。",
+      "intro": "FluctlightDB 把 `experience()` / `activate()` / `checkpoint()` 提成 database-native memory verbs，并把 provenance-aware ranking 放进 read semantics。",
       "whyRead": "这篇值得做成 worked essay，不是因为“brain-native database”这个比喻够新，而是因为它把三个常被压成一个 accuracy 数字的 contract 拆了出来：query 是否指明 intended observation、已识别的 ledger/chat 怎样排序、final output 是否在所有 helper 之后仍满足 scope。official 9/50、45-case identity-bearing control 与 nonexistent-agent negative controls 合在一起，给出的不是一条安全 headline，而是一套能分辨 identification、ranking、candidate truncation 与 late reinjection 的读法。",
       "keyPoints": [
         "Data-model claim：论文把 relational row / predicate、vector embedding / nearest neighbor 与 agent-memory experience / cue activation 区分；write path 负责编码 content、context、salience、provenance 与 graph edges，read path 融合 lexical、semantic、graph 与 provenance scores。`experience()` / `activate()` / `checkpoint()` 是 embedded engine contract，不是对 Mem0、Zep 或 HippoRAG application layer 的直接替代。（Abstract；§§1–3.7；Figure 1，PDF pp. 1–6、15）",
-        "Paper evidence：arXiv v1 报告 LoCoMo evidence recall 99.0% @150、LongMemEval-S session recall@8 97.6%、LongMemEval-S E2E 97.4%、BEIR SciFact 0.646 nDCG@10 / 0.792 Recall@10，以及 author-designed FAMB/provenance regressions。metric、retrieval budget、reader/judge 与 harness 不同，不能折成一张 memory-quality 排名。（§§4.1–4.5；Tables 3–8；Figures 2–4，PDF pp. 7–12）",
-        "Structural ceiling：official shared fixture 的十个 domain 各有五个 distinct expected ledger IDs，却在同一 frozen store 上重复 byte-identical cue；五次 call 若 top-1 invariant，每类最多命中一个，故上限是 10/50。paper-time 与 repair-descendant unmodified runs 均为 isolated 50/50、shared 9/50，且十类全部 within-store invariant。（paper-time / repair-descendant official-source execution receipt；synthetic audit）",
-        "Identity-bearing control：45 个 non-wallet lexical-bound K=128 pairs 在两条 revisions × 两个 fresh repeats 中全部同时返回 intended ledger/chat，configured verified higher-salience ledger 为 45/45 above chat、0 chat-above-ledger、0 foreign-agent rows。该 treatment 同时保留 salience、confidence、context、source、verification 与 wording differences，所以不是 provenance-only causal estimate。（synthetic contract test）",
-        "Scope closure：两条 source lines 都在 global activation/sort/top-K 后 retain matching `agent_id`，再运行 unscoped wallet helper；repair/current 又运行 unscoped exact helper。wallet、repair exact-status 与 nonexistent-agent controls 返回 foreign stored `episode.agent_id`，shipping control 不返回 foreign rows。结论只到 exact local `agent_id` output-scope preservation，不扩成 tenant/auth/security/remote/production claim。（official-source + synthetic contract test）"
+        "Paper evidence：arXiv v1 报告 LoCoMo evidence recall 99.0% @150、LongMemEval-S session recall@8 97.6%、LongMemEval-S E2E 97.4%、BEIR SciFact 0.646 nDCG@10 / 0.792 Recall@10，以及 author-designed FAMB/provenance regressions。metric、retrieval budget、reader/judge 与 harness 不同，不能折成一张 memory-quality 排名。（§§4.1–4.5；Tables 3–8；Figures 2–4，PDF pp. 7–12）"
       ],
       "argumentMap": [
         {
           "step": "01 · 先把 memory 变成 database contract",
           "claim": "论文把 experience encoding、cue activation、provenance ranking、consolidation 与 durability 作为 engine-native primitives，要求 agent memory 不再只是 application 在 vector index 外围拼的隐式 pipeline。",
           "locator": "Abstract；§§1–3.7；Tables 1–2；Figure 1，PDF pp. 1–6"
-        },
-        {
-          "step": "02 · 再问 provenance suite 的 scorer 认识谁",
-          "claim": "official shared suite 把五个 incompatible ledger observations 放进一个 store，却对它们使用同一 cue 并轮换 exact-ID gold；在 ranking quality 之前，query 已经无法唯一标识 intended observation。",
-          "locator": "§4.3；Table 6，PDF pp. 8–9；official benchmark source"
-        },
-        {
-          "step": "03 · 用 conditional theorem 而不是事后故事读 9/50",
-          "claim": "within-frozen-store five-call top-1 invariance 使每个 cue class 最多一行 exact-ID hit；本地 unmodified runs 验证 premise 与 9/50 observation。winner 可跨 fresh brain 改变，不影响 store-local 10/50 ceiling。",
-          "locator": "paper-time / repair-descendant official execution；raw/summary.json"
-        },
-        {
-          "step": "04 · 给 pair 加 identity，仍不把 composite treatment 偷换成 provenance-only",
-          "claim": "neutral lexical key 让 intended ledger/chat 都进入 K=128 observable set；45/45 ledger-above-chat 排除了‘41 个 official misses 等于 41 个 observed pairwise provenance losses’，但多个 ledger/chat score inputs 同时不同，不能给 provenance field 单独归因。",
-          "locator": "public synthetic lexical treatment；raw/posttest-evidence.json"
-        },
-        {
-          "step": "05 · 把 scope 当 pipeline 末端 postcondition",
-          "claim": "source 把 agent retain 放在 unscoped helpers 之前；foreign stored `episode.agent_id` 与 nonexistent-agent positives 证明 helper 能在 retain 后重新填充结果。scope 若要成立，所有 add/boost/expand paths 必须共享 scope 或在末端重新 fail closed。",
-          "locator": "paper-time/current `crates/fluctlightdb/src/brain.rs`；wallet/exact/shipping synthetic controls"
         }
       ],
       "methodNotes": [
@@ -2888,30 +2879,11 @@
           "label": "Paper architecture and metric separation",
           "text": "essay 分开读 full episodic engine、index/CHORUS lanes、optional Recall Fabric、retrieval metric、E2E reader/judge 与 author-designed regressions；不把 LoCoMo @150、LongMemEval session@8、E2E QA、BEIR 与 FAMB 当同一个 construct。",
           "locator": "§§3.5–3.7、4.1–4.5、5；PDF pp. 5–12"
-        },
-        {
-          "label": "Exact source/build chain",
-          "text": "runner 在 import 前校验 exact commit、clean checkout 与七个 source blobs/hashes。paper-time 0.5.9 exact wheel 可构建；current-main 0.5.10 在 Python crate 调用未从 crate root re-export 的 `sync_once` 处以 Rust E0425 fail closed；official repair descendant 只恢复该 export，并以独立 runtime label 执行。",
-          "locator": "research/fluctlightdb-observation-binding-audit/raw/source-manifest.json；raw/current-main-build-receipt.md"
-        },
-        {
-          "label": "Preregistered complete construction",
-          "text": "static preflight 固定 10×5 census、五个 distinct labels/class、tokenizer-stable `x000…x049`、wallet/exact router classification；每个 pair 必须取得 non-nil、non-rejected、non-deduplicated IDs，并在 full snapshot 中完整出现且保留 expected agent metadata。",
-          "locator": "research/fluctlightdb-observation-binding-audit/PREREGISTRATION.md；audit.py"
-        },
-        {
-          "label": "Fresh-process matrix and logical reducer",
-          "text": "每个 treatment 独立 child process；两条 executable revisions 各跑六个 treatments × 两个 fresh repeats，再加四个 official runs。reducer 无条件处理完整 1,140 rows，以 stable aliases 比较 claim-level objects，保留 ambiguous winner、low-K set 与 paper-time ordinary K=1 instability。",
-          "locator": "research/fluctlightdb-observation-binding-audit/analyze_results.py；raw/compact-query-rows.json；raw/summary.json"
         }
       ],
       "reportedFindings": [
         "paper-reported：LoCoMo evidence recall 99.0% @150、LongMemEval-S session recall@8 97.6%、LongMemEval-S E2E 97.4%；paper 同时报告 LoCoMo 50-question E2E pilot 23.5% F1，并明确 retrieval 与 QA 指标不同。（Abstract；§§4.2、4.4–4.5、5；Tables 4–8，PDF pp. 1、7–12）",
-        "paper-reported：provenance-conflict suite isolated 50/50、shared 9/50；作者把 shared drop 归因于 cross-case cue contamination，说明尚无 mitigation，并不把 isolated figure 当 multi-tenant readiness evidence。（§4.3；Table 6；§5–6，PDF pp. 8–12）",
-        "official-source execution：paper-time 与 repair descendant 的 unmodified scripts 各自重现 isolated 50/50、shared 9/50；十个 shared cue classes 在各自 frozen store 内均为 single top-ID invariant，满足 conditional 20% ceiling premise。",
-        "synthetic contract test：四个 revision/repeat cells 各有 45/45 non-wallet K=128 rows 同时显示 paired observations、ledger above chat、0 chat-above-ledger、0 foreign rows；完整 selected population 是 180 rows，不把 repeats 当 180 个独立样本。",
-        "synthetic contract test：两条 revisions 的 50-case scoped wallet 10/10 queries 含 foreign `refund_4:ledger`；two-agent wallet winner 随 tied ingest order 反转，other-agent 与 nonexistent-agent queries 都接到 later-ingested stored ledger，cache repeated logical signatures invariant。",
-        "synthetic contract test：repair-descendant exact-status 的 A/B/nonexistent queries 全部含 foreign verified rows，nonexistent K=3 返回两 agents；paper-time nonexistent exact controls 稳定为空；shipping A/B 只返回 own pair、nonexistent 为空。"
+        "paper-reported：provenance-conflict suite isolated 50/50、shared 9/50；作者把 shared drop 归因于 cross-case cue contamination，说明尚无 mitigation，并不把 isolated figure 当 multi-tenant readiness evidence。（§4.3；Table 6；§5–6，PDF pp. 8–12）"
       ],
       "evidenceLimits": [
         "本站没有下载、执行或独立重算 LoCoMo、LongMemEval、BEIR、FAMB result；paper 的 headline、baseline、公平性与 statistics 都保持 paper-reported。",
@@ -3072,6 +3044,61 @@
         "boundary": "新项目的检查未执行。已有本地 audit 只支持指定 agent_id / helper 路径结论，不等于 tenant 隔离、安全认证或 provenance 单变量效果。",
         "basis": "既有札记 公开测试：scope closure、identity-bearing controls；“编者判断”。",
         "status": "proposed-not-run"
+      },
+      "amsEvidence": {
+        "byline": "Agent Memory Study editors",
+        "artifactUrl": "research/fluctlightdb-observation-binding-audit/README.md",
+        "observations": [
+          "但它自己的 shared-brain provenance suite 在排序之前已经缺少 query→observation identity：十个 cue classes 各用一个相同 query 对五个 incompatible target IDs 计 exact top-1；在本地复现的 within-store invariance 下，50-row scalar 条件性最多只能命中 10 行。source-linked controls 又露出排序之后的另一条 seam：`agent_id` retain 后，不接收 scope 的 wallet / successor exact helpers 可以重新插入 foreign stored episodes。",
+          "Structural ceiling：official shared fixture 的十个 domain 各有五个 distinct expected ledger IDs，却在同一 frozen store 上重复 byte-identical cue；五次 call 若 top-1 invariant，每类最多命中一个，故上限是 10/50。paper-time 与 repair-descendant unmodified runs 均为 isolated 50/50、shared 9/50，且十类全部 within-store invariant。（paper-time / repair-descendant official-source execution receipt；synthetic audit）",
+          "Identity-bearing control：45 个 non-wallet lexical-bound K=128 pairs 在两条 revisions × 两个 fresh repeats 中全部同时返回 intended ledger/chat，configured verified higher-salience ledger 为 45/45 above chat、0 chat-above-ledger、0 foreign-agent rows。该 treatment 同时保留 salience、confidence、context、source、verification 与 wording differences，所以不是 provenance-only causal estimate。（synthetic contract test）",
+          "Scope closure：两条 source lines 都在 global activation/sort/top-K 后 retain matching `agent_id`，再运行 unscoped wallet helper；repair/current 又运行 unscoped exact helper。wallet、repair exact-status 与 nonexistent-agent controls 返回 foreign stored `episode.agent_id`，shipping control 不返回 foreign rows。结论只到 exact local `agent_id` output-scope preservation，不扩成 tenant/auth/security/remote/production claim。（official-source + synthetic contract test）"
+        ],
+        "reasoning": [
+          {
+            "step": "02 · 再问 provenance suite 的 scorer 认识谁",
+            "claim": "official shared suite 把五个 incompatible ledger observations 放进一个 store，却对它们使用同一 cue 并轮换 exact-ID gold；在 ranking quality 之前，query 已经无法唯一标识 intended observation。",
+            "locator": "§4.3；Table 6，PDF pp. 8–9；official benchmark source"
+          },
+          {
+            "step": "03 · 用 conditional theorem 而不是事后故事读 9/50",
+            "claim": "within-frozen-store five-call top-1 invariance 使每个 cue class 最多一行 exact-ID hit；本地 unmodified runs 验证 premise 与 9/50 observation。winner 可跨 fresh brain 改变，不影响 store-local 10/50 ceiling。",
+            "locator": "paper-time / repair-descendant official execution；raw/summary.json"
+          },
+          {
+            "step": "04 · 给 pair 加 identity，仍不把 composite treatment 偷换成 provenance-only",
+            "claim": "neutral lexical key 让 intended ledger/chat 都进入 K=128 observable set；45/45 ledger-above-chat 排除了‘41 个 official misses 等于 41 个 observed pairwise provenance losses’，但多个 ledger/chat score inputs 同时不同，不能给 provenance field 单独归因。",
+            "locator": "public synthetic lexical treatment；raw/posttest-evidence.json"
+          },
+          {
+            "step": "05 · 把 scope 当 pipeline 末端 postcondition",
+            "claim": "source 把 agent retain 放在 unscoped helpers 之前；foreign stored `episode.agent_id` 与 nonexistent-agent positives 证明 helper 能在 retain 后重新填充结果。scope 若要成立，所有 add/boost/expand paths 必须共享 scope 或在末端重新 fail closed。",
+            "locator": "paper-time/current `crates/fluctlightdb/src/brain.rs`；wallet/exact/shipping synthetic controls"
+          }
+        ],
+        "methods": [
+          {
+            "label": "Exact source/build chain",
+            "text": "runner 在 import 前校验 exact commit、clean checkout 与七个 source blobs/hashes。paper-time 0.5.9 exact wheel 可构建；current-main 0.5.10 在 Python crate 调用未从 crate root re-export 的 `sync_once` 处以 Rust E0425 fail closed；official repair descendant 只恢复该 export，并以独立 runtime label 执行。",
+            "locator": "research/fluctlightdb-observation-binding-audit/raw/source-manifest.json；raw/current-main-build-receipt.md"
+          },
+          {
+            "label": "Preregistered complete construction",
+            "text": "static preflight 固定 10×5 census、五个 distinct labels/class、tokenizer-stable `x000…x049`、wallet/exact router classification；每个 pair 必须取得 non-nil、non-rejected、non-deduplicated IDs，并在 full snapshot 中完整出现且保留 expected agent metadata。",
+            "locator": "research/fluctlightdb-observation-binding-audit/PREREGISTRATION.md；audit.py"
+          },
+          {
+            "label": "Fresh-process matrix and logical reducer",
+            "text": "每个 treatment 独立 child process；两条 executable revisions 各跑六个 treatments × 两个 fresh repeats，再加四个 official runs。reducer 无条件处理完整 1,140 rows，以 stable aliases 比较 claim-level objects，保留 ambiguous winner、low-K set 与 paper-time ordinary K=1 instability。",
+            "locator": "research/fluctlightdb-observation-binding-audit/analyze_results.py；raw/compact-query-rows.json；raw/summary.json"
+          }
+        ],
+        "findings": [
+          "official-source execution：paper-time 与 repair descendant 的 unmodified scripts 各自重现 isolated 50/50、shared 9/50；十个 shared cue classes 在各自 frozen store 内均为 single top-ID invariant，满足 conditional 20% ceiling premise。",
+          "synthetic contract test：四个 revision/repeat cells 各有 45/45 non-wallet K=128 rows 同时显示 paired observations、ledger above chat、0 chat-above-ledger、0 foreign rows；完整 selected population 是 180 rows，不把 repeats 当 180 个独立样本。",
+          "synthetic contract test：两条 revisions 的 50-case scoped wallet 10/10 queries 含 foreign `refund_4:ledger`；two-agent wallet winner 随 tied ingest order 反转，other-agent 与 nonexistent-agent queries 都接到 later-ingested stored ledger，cache repeated logical signatures invariant。",
+          "synthetic contract test：repair-descendant exact-status 的 A/B/nonexistent queries 全部含 foreign verified rows，nonexistent K=3 返回两 agents；paper-time nonexistent exact controls 稳定为空；shipping A/B 只返回 own pair、nonexistent 为空。"
+        ]
       }
     },
     {
@@ -3400,15 +3427,14 @@
         "artifact provenance"
       ],
       "sourceNote": "arXiv v1，2026-06-23；preprint，PDF 共 32 个 physical pages。official release audit 锁定 commit 19bb83644b082489b4e181e59f1cded1a00d0529；repository 无 tag 或 GitHub Release，故 exact commit 是本站 source identity。paper-reported result、official-source observation、released historical LLM artifact、fixed-artifact recalculation 与 AMS-authored synthetic control 分层标注。top-level code 与 generated benchmark artifacts 的 CC BY 4.0 不覆盖 vendored A-Mem、Mem-T、外部 taxonomy、model weight 或 API service；本站不复制 hidden bank、task、transcript、memory content、prediction/rationale 等 upstream free text。",
-      "intro": "MEMPROBE 把长期记忆的评估对象从“agent 后来答得对不对”移到“普通协作结束后，系统究竟留下了什么可恢复的 user state”。论文的 50 个 simulated users、31 个 hidden dimensions 与 full-store / top-k 双 read mode，让 task success、written artifact 与 operational retrieval 被放在同一条 evidence-loss chain 上。它也不能被读得太快：full-store recovery 仍经过 serialization、context budget、slot filler 与 LLM judge；top-k recovery 又叠加 fixed abstract query；failure attribution 则是 stored historical LLM stages 的阈值化 reduction，不是对 write、read 或 causal cause 的直接观测。本站的 fixed released-artifact audit 因此不重新判“记住了什么”，而只检查 exact release 内哪些 joins、score reductions、packet-to-store bindings 与 attribution reductions 可由固定 bytes 机械验证，以及哪些 historical execution edges 仍没有 provenance。",
+      "intro": "MEMPROBE 把长期记忆的评估对象从“agent 后来答得对不对”移到“普通协作结束后，系统究竟留下了什么可恢复的 user state”。论文的 50 个 simulated users、31 个 hidden dimensions 与 full-store / top-k 双 read mode，让 task success、written artifact 与 operational retrieval 被放在同一条 evidence-loss chain 上。它也不能被读得太快：full-store recovery 仍经过 serialization、context budget、slot filler 与 LLM judge；top-k recovery 又叠加 fixed abstract query；failure attribution 则是 stored historical LLM stages 的阈值化 reduction，不是对 write、read 或 causal cause 的直接观测。",
       "whyRead": "这篇最适合从一次 answer failure 倒推，因为它明确给出三段 loss path：hidden state 是否在 interaction 中 expose、evidence 是否被 collect 成 final store、stored evidence 是否能在 recover 时进入 active context。但 close read 与 source inspection 也暴露出一个更深的 reliability lesson：benchmark 自己同样是一条 observation pipeline。只要 full-store payload、retrieved packet、slot-fill response、judge request 或 attribution input 没有 exact binding，一个低分就不能直接命名为 write failure、retrieval failure 或真实 causal cause。MEMPROBE 最有价值的地方不是替我们完成归因，而是逼 memory evaluation 把每条 inference edge 写清楚。",
       "editorialQuestion": "当一个 hidden user-state target 在 top-k mode 下得分变低时，我们能从 released artifacts 精确确认的是 target join、stored packet membership、historical score arithmetic，还是只能看到一条经过 query、serialization、slot filling、judging 与 attribution 后的终点标签？",
       "keyPoints": [
         "Paper protocol：每个 simulated user 携带一个不向 agent 暴露的 31-dimension user-state bank；普通 assistance tasks 只给相关 dimension 一个自然 disclosure opening。论文把信息路径写成 hidden state u → exposed evidence e → final memory m_final → reconstruction û，并把 task success 与 post-interaction artifact recovery 分开。（§§1、3.1–3.3；Figures 1–2，physical PDF pp. 1–6）",
         "Metric contract：slot filler 在 full-store dump_all 或 system-native top-k=5 packet 上生成 per-dimension prediction，另一个 LLM judge 给出 {0, 0.25, 0.5, 0.75, 1} score；headline B 先在五个 categories 内求均值，再对五个 category means 等权平均，不是 31 dimensions 的 micro mean。（§3.4；Appendix F；Table 9，physical PDF pp. 6、23–24）",
         "Paper result：五个 settings 的 immediate task completion 约为 99.87%–99.94%，连 nomem 也近乎饱和；三个 context-fit systems 的 full-store B 为 0.611–0.624，top-k B 降至 0.473–0.540。Assistance Preference 最容易恢复，Episodic Memory 最难；memt full-store B=0.130 被作者单列为 serialized store 超出 reader context 的 diagnostic auditability outcome。（§§4.2–4.5；Tables 2–4，physical PDF pp. 7–9）",
-        "Paper boundary：Appendix J 的 user_022 / pushback_tolerance 表明同一种“欢迎具体纠正”的 behavior 可因 directional label 被写成 high 或 low pushback tolerance 而得到相反 verdict；作者明确把它归为 slot-label polarity boundary，不是 headline memory failure。Appendix G 的 attribution human audit 是 stratified 120-case sample，overall agreement 90/120，原 Memory row 的 exact agreement 20/30；相近 aggregate distribution 不能替代 casewise causal truth。（Appendices G、J；Tables 11–12，physical PDF pp. 24、28）",
-        "Fixed-artifact audit：exact release 注册 1,550 个 user/category/dimension targets，并将其投影为九个 runs 的 13,950 target-join rows；另检查 13,950 attribution rows、6,200 retrieve-packet rows、30,379 packet-item rows与6,200 full/retrieve paired historical artifact deltas。raw/decision.json 只记录 single-run fixed-artifact gates全部为true、packet_unique_binding=PASS、stored_output_observability=COMPLETE_TYPED_INVENTORY、attribution_input_observability=PARTIAL、source_replay_material_status=BLOCKED 与 historical_execution_replay=NOT_ATTEMPTED，并明确保留 PENDING_REPEATABILITY_AND_SOURCE_BOUND_REVALIDATION；raw/comparison.json 另行记录两份16-file primary manifests byte-identical、distinct recorded hash seeds 与 runner_repeatability=PASS；再单独执行 source-bound verifier，结果为 PASS: source-bound revalidation; worked_fixed_artifact_audit=PASS。这三种 provenance surface 不能互相冒充，也不能从 paper tables 或手工 reconnaissance 回填。"
+        "Paper boundary：Appendix J 的 user_022 / pushback_tolerance 表明同一种“欢迎具体纠正”的 behavior 可因 directional label 被写成 high 或 low pushback tolerance 而得到相反 verdict；作者明确把它归为 slot-label polarity boundary，不是 headline memory failure。Appendix G 的 attribution human audit 是 stratified 120-case sample，overall agreement 90/120，原 Memory row 的 exact agreement 20/30；相近 aggregate distribution 不能替代 casewise causal truth。（Appendices G、J；Tables 11–12，physical PDF pp. 24、28）"
       ],
       "argumentMap": [
         {
@@ -3430,11 +3456,6 @@
           "step": "04 · 把 score 与 attribution 当作有版本的 measurement contracts",
           "claim": "B 是 historical LLM judge quarter-step outputs 的 category-balanced reduction；attribution 又先用 0.75 threshold 决定哪些 cases 进入 Stage 0–2。stored label 可以与 stored stages 机械一致，却仍不能证明 stage judgment 或 final causal category为真。",
           "locator": "§3.5；Appendices A、F–G；Tables 9–12，physical PDF pp. 6、14、23–25"
-        },
-        {
-          "step": "05 · 最后审计 release 能证明哪些 edge",
-          "claim": "本站 checker 只把 exact target/task/reconstruction identities、fixed-score arithmetic、stored packet 对 designated final dump 的 typed membership/binding、stored attribution stage reduction 与 replay-material inventory作为 model-free gates；target support、historical prompt payload、semantic correctness、causal cause 与 retriever replay保持 NOT_TESTED、UNVERIFIABLE 或 NOT_ATTEMPTED。",
-          "locator": "research/memprobe-recovery-boundary-audit/PROTOCOL.md；raw/decision.json；raw/target_registry.json；raw/target_joins.jsonl；raw/replay_inventory.json"
         }
       ],
       "methodNotes": [
@@ -3457,20 +3478,13 @@
           "label": "Thresholded failure-attribution pipeline",
           "text": "score ≥0.75 直接标 ok；其余依次经过 task-design oracle、transcript disclosure judge 与 elicitation-versus-strictness subclass judge。access mode 改变 threshold-entry population，paper也提醒 retrieve rows 中的 Task/Agent/User counts不能被读成 task或simulator本身发生了变化。",
           "locator": "§3.5；Appendix F；Tables 4、10，physical PDF pp. 6、8、23–24"
-        },
-        {
-          "label": "Frozen fixed released-artifact audit",
-          "text": "independently authored standard-library runner拒绝 wrong/dirty source，穷举1,550-target registry与九个run-bound projections，以 exact typed joins、Fraction arithmetic、四套 frozen system adapters、stored-stage truth table 与 historical-provenance inventory生成 public-safe receipts；deny-listed upstream free text仅保留 locator、count、enum 与 SHA-256。complete audit在两个 fresh processes / roots / output dirs及不同 PYTHONHASHSEED下重跑，并由 source-bound verifier重新读取 exact checkout与paper PDF。",
-          "locator": "research/memprobe-recovery-boundary-audit/README.md；PROTOCOL.md；raw/input_manifest.json；raw/comparison.json；verify_checked.py"
         }
       ],
       "reportedFindings": [
         "Paper-reported：nomem、amem、longctx_full、mem0、memt 的 task completion 为 99.871%–99.935%；nomem 的 B=0，而 amem / longctx_full / mem0 的 full-store B 分别为 0.611、0.624、0.613。near-perfect immediate assistance 因此不能区分 durable memory formation。（§4.2；Table 2，physical PDF pp. 7–8）",
         "Paper-reported：top-k B 为 amem 0.540、longctx_full 0.503、mem0 0.473、memt 0.465；context-fit systems 的 full-store 到 top-k gap 显示 stored artifact 与 operationally reachable packet不是同一个 surface。memt full-store 0.130 是 context-overflow diagnostic，不能与其他 full-store rows直接比较。（§§4.3–4.4；Tables 2–4，physical PDF pp. 7–9）",
         "Paper-reported：Assistance Preference 在所有 comparable rows 中最高，Episodic Memory 最低；作者把 episodic deficit解释为 event、context 与 consequence 的 binding problem，而不只是 isolated fact 没被保存。（§4.5；Table 3，physical PDF pp. 7、9）",
-        "Paper-reported human audit：satisfied end state 在 48/50 samples中被判 reasonable；failure attribution 与 human relabel 在 90/120 stratified samples中一致，但 Memory row exact agreement只有 20/30。该 audit支持“broadly reliable”这一有限措辞，不把 individual labels升级为 human gold或 causal truth。（Appendix G；Tables 11–12，physical PDF p. 24）",
-        "Fixed-artifact recalculation：formal receipts登记1,550 registered targets与13,950 run-bound target rows；fixed joins、quarter-step arithmetic、aggregate-report comparison、packet membership/binding与stored attribution reduction结果为 11项fixed-artifact gates全部为true；九个runs均INDEPENDENT_RECALCULATION_SUCCEEDED且50-user released-aggregate gates通过；30,379个packet items均adapter schema通过、EXACT_MEMBER且match_count=1；13,950个stored attribution rows均REDUCTION_CONSISTENT，同时input binding均为PARTIALLY_BOUND / HISTORICAL_INPUT_UNVERIFIED。",
-        "Replay boundary：source replay materials=BLOCKED；historical execution replay=NOT_ATTEMPTED。这条必须与 fixed-artifact result 并列展示；internal consistency 通过也不能被写成 MEMPROBE rerun。"
+        "Paper-reported human audit：satisfied end state 在 48/50 samples中被判 reasonable；failure attribution 与 human relabel 在 90/120 stratified samples中一致，但 Memory row exact agreement只有 20/30。该 audit支持“broadly reliable”这一有限措辞，不把 individual labels升级为 human gold或 causal truth。（Appendix G；Tables 11–12，physical PDF p. 24）"
       ],
       "evidenceLimits": [
         "paper 是 2026-06-23 的 arXiv v1 preprint；当前 material没有 peer-reviewed venue claim。实验只覆盖 50 个 U.S.-based DeepPersona synthetic users、固定 assistant scaffold、31 个被挑选为 meaningful/disclosable 的 dimensions与 everyday assistance tasks，不能外推到 multilingual、cross-cultural、privacy-protective、rapidly changing 或 real-user deployment。",
@@ -3686,6 +3700,32 @@
         "boundary": "这组迁移试验未执行。已有 fixed-artifact audit 未重判语义；不能用恢复得分直接诊断 write failure，也不能据此扩大真实用户画像采集。",
         "basis": "既有札记 §§3.3–3.4、Appendices G/J 与 “编者判断”：reader contract、label polarity。",
         "status": "proposed-not-run"
+      },
+      "amsEvidence": {
+        "byline": "Agent Memory Study editors",
+        "artifactUrl": "research/memprobe-recovery-boundary-audit/README.md",
+        "observations": [
+          "本站的 fixed released-artifact audit 因此不重新判“记住了什么”，而只检查 exact release 内哪些 joins、score reductions、packet-to-store bindings 与 attribution reductions 可由固定 bytes 机械验证，以及哪些 historical execution edges 仍没有 provenance。",
+          "Fixed-artifact audit：exact release 注册 1,550 个 user/category/dimension targets，并将其投影为九个 runs 的 13,950 target-join rows；另检查 13,950 attribution rows、6,200 retrieve-packet rows、30,379 packet-item rows与6,200 full/retrieve paired historical artifact deltas。raw/decision.json 只记录 single-run fixed-artifact gates全部为true、packet_unique_binding=PASS、stored_output_observability=COMPLETE_TYPED_INVENTORY、attribution_input_observability=PARTIAL、source_replay_material_status=BLOCKED 与 historical_execution_replay=NOT_ATTEMPTED，并明确保留 PENDING_REPEATABILITY_AND_SOURCE_BOUND_REVALIDATION；raw/comparison.json 另行记录两份16-file primary manifests byte-identical、distinct recorded hash seeds 与 runner_repeatability=PASS；再单独执行 source-bound verifier，结果为 PASS: source-bound revalidation; worked_fixed_artifact_audit=PASS。这三种 provenance surface 不能互相冒充，也不能从 paper tables 或手工 reconnaissance 回填。"
+        ],
+        "reasoning": [
+          {
+            "step": "05 · 最后审计 release 能证明哪些 edge",
+            "claim": "本站 checker 只把 exact target/task/reconstruction identities、fixed-score arithmetic、stored packet 对 designated final dump 的 typed membership/binding、stored attribution stage reduction 与 replay-material inventory作为 model-free gates；target support、historical prompt payload、semantic correctness、causal cause 与 retriever replay保持 NOT_TESTED、UNVERIFIABLE 或 NOT_ATTEMPTED。",
+            "locator": "research/memprobe-recovery-boundary-audit/PROTOCOL.md；raw/decision.json；raw/target_registry.json；raw/target_joins.jsonl；raw/replay_inventory.json"
+          }
+        ],
+        "methods": [
+          {
+            "label": "Frozen fixed released-artifact audit",
+            "text": "independently authored standard-library runner拒绝 wrong/dirty source，穷举1,550-target registry与九个run-bound projections，以 exact typed joins、Fraction arithmetic、四套 frozen system adapters、stored-stage truth table 与 historical-provenance inventory生成 public-safe receipts；deny-listed upstream free text仅保留 locator、count、enum 与 SHA-256。complete audit在两个 fresh processes / roots / output dirs及不同 PYTHONHASHSEED下重跑，并由 source-bound verifier重新读取 exact checkout与paper PDF。",
+            "locator": "research/memprobe-recovery-boundary-audit/README.md；PROTOCOL.md；raw/input_manifest.json；raw/comparison.json；verify_checked.py"
+          }
+        ],
+        "findings": [
+          "Fixed-artifact recalculation：formal receipts登记1,550 registered targets与13,950 run-bound target rows；fixed joins、quarter-step arithmetic、aggregate-report comparison、packet membership/binding与stored attribution reduction结果为 11项fixed-artifact gates全部为true；九个runs均INDEPENDENT_RECALCULATION_SUCCEEDED且50-user released-aggregate gates通过；30,379个packet items均adapter schema通过、EXACT_MEMBER且match_count=1；13,950个stored attribution rows均REDUCTION_CONSISTENT，同时input binding均为PARTIALLY_BOUND / HISTORICAL_INPUT_UNVERIFIED。",
+          "Replay boundary：source replay materials=BLOCKED；historical execution replay=NOT_ATTEMPTED。这条必须与 fixed-artifact result 并列展示；internal consistency 通过也不能被写成 MEMPROBE rerun。"
+        ]
       }
     },
     {
@@ -3715,8 +3755,7 @@
         "Schedule as treatment：Static-All、streaming batches、order permutations与 repeated near-duplicates可从同一 episode collection形成不同 end states；update operator因此不能默认 exchangeable。（§§4.2–4.4；Figures 3、8–10；Appendix F，PDF pp. 5–7、44–52）",
         "Gated consolidation：controlled ARC-AGI Stream让 agent选择 Retain/Delete/Consolidate；auto regime偏向保留 episodes，并约为 forced-consolidation accuracy的两倍，episodic-only与 auto相当。它支持显式 action gate，不证明所有 agents都会学到正确 retention policy。（§§5–6；Figures 11–12，PDF pp. 8–10）",
         "Headline tension：19-task ARC treatment在同一v1中出现 failure 54%、failure 46%、accuracy 54%与Figure 2的10/19=52.6% accuracy四种不兼容写法；Static又被称为at the ceiling但画成18/19=94.7%。public prose必须回到exact fraction与locator。",
-        "Comparator wording：AppWorld所谓raw trajectory control实际使用Qwen3.5-27B对完整ReAct trajectory的episode-level prose summaries；安全名称是episode-level summarized records with no cross-trajectory lesson abstraction，而不是byte-raw histories everywhere。（Tables 2–3；Appendix F.4，PDF pp. 7、15、48–49）",
-        "Exact-current audit：762个arm summaries与55,075 released rows全部内部一致；official 675 numeric assertions只resolve到335 arms，304 missing outcomes影响40 arms，selected current/A/B/succdrop pools保持同一200-record canonical-JSON multiset但historical run lineage未被digest封存。（public checked artifact）"
+        "Comparator wording：AppWorld所谓raw trajectory control实际使用Qwen3.5-27B对完整ReAct trajectory的episode-level prose summaries；安全名称是episode-level summarized records with no cross-trajectory lesson abstraction，而不是byte-raw histories everywhere。（Tables 2–3；Appendix F.4，PDF pp. 7、15、48–49）"
       ],
       "argumentMap": [
         {
@@ -3765,30 +3804,12 @@
           "label": "Controlled memory actions",
           "text": "ARC Stream显式提供Retain、Delete、Consolidate，并比较auto、forced-consolidation与episodic-only regimes；它观察policy/action-space interaction，不等于production agent的owner authority或长期retention governance。",
           "locator": "§§5–6；Figures 11–12，PDF pp. 8–10"
-        },
-        {
-          "label": "Current-release membership and denominator audit",
-          "text": "standard-library checker独立读取六个arms.csv与merged JSONL，按environment-specific row identity、Boolean success、metadata、aggregate与ARC rectangular grid重算762 arms/55,075 rows，并同时保留task-denominator与valid-only rates。",
-          "locator": "research/faulty-memory-release-boundary-audit/PROTOCOL.md；REVIEW-AMENDMENT.md；REVIEW-AMENDMENT-2.md；raw/audit.json"
-        },
-        {
-          "label": "Official-verifier coverage instrumentation",
-          "text": "先运行exact upstream verifier，再对锁定的13张mapper tables独立枚举675 assertions、requested/actual arm与fallback；coverage unit分别报告assertions、335 unique arms、associated raw/valid rows以及27张unmapped tables。",
-          "locator": "official results/verify_numbers.py；public raw/audit.json"
-        },
-        {
-          "label": "Schedule fixture and receipt-chain validation",
-          "text": "selected pools比较完整canonical JSON objects与ordered IDs，exceptions单列；final checker用17 negative/2 positive production controls、两个fresh seeds、exact section/whole-audit digests、exact JSON types、canonical receipt bytes与no-extra-file inventory区分current source-bound revalidation、producer-recorded comparison和offline package consistency。",
-          "locator": "research/faulty-memory-release-boundary-audit/audit.py；raw/mutation-controls.json；raw/repeatability.json"
         }
       ],
       "reportedFindings": [
         "paper-reported：ScienceWorld中若干methods随memory size先改善后下降；WebShop AWM随examples增加而success下降，episode-level summarized control更稳。Figure 1同时展示binary success与parenthesized average score，不能把两种metric互换。（Figure 1，PDF p. 2）",
         "paper-reported：controlled ARC Stream里auto与episodic-only约为forced consolidation accuracy的两倍；作者观察auto agent多数保留episodes，而非持续consolidate。（§§5–6；Figures 11–12，PDF pp. 8–10）",
-        "paper-reported：WebShop W8 memory surgery在50 tasks的single run中删除/替换selected content后performance变化；作者明确没有significance test，因此属于mechanism hypothesis与case evidence。（§7；Appendix I.1，PDF pp. 10、61–62）",
-        "released-row audit：exact current release有762 arms、55,075 rows、54,771 valid outcomes与304 invalid/refusal/skipped rows；所有arm sets、row identities、metadata、count summaries与ARC grids内部一致。（public raw/audit.json）",
-        "official-scope audit：upstream 675 assertions PASS，但只resolve到335/762 arms；这些arms关联33,956/55,075 raw rows。40张number tables中27张、511 data rows未被mapper打开，arms.csv也不在official numeric verifier中。（public raw/audit.json）",
-        "schedule fixture audit：natural/A/B/succdrop各200 records且full canonical-record multiset相同；A/B/succdrop移动196/199/199个positions。N25的B result arm只有49 task identities，N50/N100/N150/N200四schedules才完全paired。（public raw/audit.json）"
+        "paper-reported：WebShop W8 memory surgery在50 tasks的single run中删除/替换selected content后performance变化；作者明确没有significance test，因此属于mechanism hypothesis与case evidence。（§7；Appendix I.1，PDF pp. 10、61–62）"
       ],
       "evidenceLimits": [
         "论文自己限定text-only、natural-language abstraction、current model capability、few repeats、point estimates与缺少formal error bars；embodied、multimodal、structured与parametric memory不在证据范围。（Limitations，PDF p. 11）",
@@ -3978,6 +3999,36 @@
         "boundary": "这组模型迁移对照未执行。已有 released-row audit 与专题的规则演示都不能证明真实 consolidation 的因果效果，也不支持“原始记录永远更好”。",
         "basis": "既有札记 §§4–6、Appendix F.4、公开测试；“编者判断”：candidate / schedule / denominator。",
         "status": "proposed-not-run"
+      },
+      "amsEvidence": {
+        "byline": "Agent Memory Study editors",
+        "artifactUrl": "research/faulty-memory-release-boundary-audit/README.md",
+        "observations": [
+          "Exact-current audit：762个arm summaries与55,075 released rows全部内部一致；official 675 numeric assertions只resolve到335 arms，304 missing outcomes影响40 arms，selected current/A/B/succdrop pools保持同一200-record canonical-JSON multiset但historical run lineage未被digest封存。（public checked artifact）"
+        ],
+        "reasoning": [],
+        "methods": [
+          {
+            "label": "Current-release membership and denominator audit",
+            "text": "standard-library checker独立读取六个arms.csv与merged JSONL，按environment-specific row identity、Boolean success、metadata、aggregate与ARC rectangular grid重算762 arms/55,075 rows，并同时保留task-denominator与valid-only rates。",
+            "locator": "research/faulty-memory-release-boundary-audit/PROTOCOL.md；REVIEW-AMENDMENT.md；REVIEW-AMENDMENT-2.md；raw/audit.json"
+          },
+          {
+            "label": "Official-verifier coverage instrumentation",
+            "text": "先运行exact upstream verifier，再对锁定的13张mapper tables独立枚举675 assertions、requested/actual arm与fallback；coverage unit分别报告assertions、335 unique arms、associated raw/valid rows以及27张unmapped tables。",
+            "locator": "official results/verify_numbers.py；public raw/audit.json"
+          },
+          {
+            "label": "Schedule fixture and receipt-chain validation",
+            "text": "selected pools比较完整canonical JSON objects与ordered IDs，exceptions单列；final checker用17 negative/2 positive production controls、两个fresh seeds、exact section/whole-audit digests、exact JSON types、canonical receipt bytes与no-extra-file inventory区分current source-bound revalidation、producer-recorded comparison和offline package consistency。",
+            "locator": "research/faulty-memory-release-boundary-audit/audit.py；raw/mutation-controls.json；raw/repeatability.json"
+          }
+        ],
+        "findings": [
+          "released-row audit：exact current release有762 arms、55,075 rows、54,771 valid outcomes与304 invalid/refusal/skipped rows；所有arm sets、row identities、metadata、count summaries与ARC grids内部一致。（public raw/audit.json）",
+          "official-scope audit：upstream 675 assertions PASS，但只resolve到335/762 arms；这些arms关联33,956/55,075 raw rows。40张number tables中27张、511 data rows未被mapper打开，arms.csv也不在official numeric verifier中。（public raw/audit.json）",
+          "schedule fixture audit：natural/A/B/succdrop各200 records且full canonical-record multiset相同；A/B/succdrop移动196/199/199个positions。N25的B result arm只有49 task identities，N50/N100/N150/N200四schedules才完全paired。（public raw/audit.json）"
+        ]
       }
     },
     {
@@ -4083,7 +4134,7 @@
         },
         {
           "label": "候选表现与实际接纳需要分开",
-          "observation": "Table 5 的 Run A / B 包含 post-hoc candidate evaluation，只有 Run C 在循环内接纳 patch；Run B 一轮到达 0/86，Run C 也不是单调上涨。",
+          "observation": "Table 5 的 Run A / B 包含 post-hoc candidate evaluation，只有 Run C 在循环内接纳 patch；Run B 第四轮的 memory reach 为 0/86，任务成功率仍为 57.85%（Table 5）；该候选没有被调用到，Run C 也不是单调上涨。",
           "implication": "候选分数不等于 live admission history；门控应被审查，而非从标题推定有效。",
           "locators": [
             "§3.4.2",

@@ -31,6 +31,7 @@ GitHub Pages 没有 SPA rewrite，所以 reader 使用 query URL，而不是伪�
 - failure-surface thread：`?thread=retrieval-active-context`
 - reading path：`?path=from-revision`
 
+检索覆盖材料与共读专题，支持空格分隔的跨字段多词匹配，并展示命中位置。
 搜索与筛选也写入 query parameters；material、study、scenario / phase、thread、path 使用 browser history，back / forward 可以恢复对应视图。
 
 Cloudflare Web Analytics 只用于了解 visits、page views、referrers、国家/设备类别和 Web Vitals 等站点级信号。它不记录 query string，也没有接入 custom events，因此 `?material=`、`?study=`、`?scenario=`、`?phase=`、`?thread=`、`?path=` 和筛选参数不会成为阅读行为追踪；当前 analytics 不能回答访客具体读了哪个 material 或 failure surface。
@@ -245,3 +246,10 @@ python3 -m unittest tools.test_build
 ## Content boundary
 
 Bundled papers keep their file-level Creative Commons licenses; linked works remain subject to their original terms. Those licenses do not extend to the reader code or editorial notes, for which this repository currently grants no open-source or Creative Commons license. See [NOTICE.md](./NOTICE.md).
+
+## Reader 验证
+
+`python3 -B tools/verify_reader.py` 校验 canonical、证据归属绑定与 generated payload，
+并复跑四组无模型的确定性研究。真实浏览器测试与受限环境的验证边界见
+[贡献指南](CONTRIBUTING.md#evidence-ownership-and-reader-checks)。
+新增的 Reading Room validation 仅检查 PR / main，不发布站点；既有 Pages 发布设置不变。
