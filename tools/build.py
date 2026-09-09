@@ -338,14 +338,30 @@ def validate_ams_evidence(paper: dict[str, Any]) -> None:
             assert_exact_text_object(item, keys, f"{where}.{field}")
     if not any(evidence[k] for k in ("observations", "reasoning", "methods", "findings")):
         raise ValueError(f"{where} must contain evidence")
-    paper_text = set(text for _, text in walk_strings({k: paper.get(k, []) for k in
-                     ("intro", "keyPoints", "argumentMap", "methodNotes", "reportedFindings")}))
+    paper_text = [text for _, text in walk_strings({k: paper.get(k, []) for k in
+                  ("intro", "keyPoints", "argumentMap", "methodNotes", "reportedFindings")})]
     # Structural duplication only. Source attribution still needs editorial review.
     audit_text = [*evidence["observations"], *evidence["findings"],
                   *(x["claim"] for x in evidence["reasoning"]),
                   *(x["text"] for x in evidence["methods"])]
-    if any(text in paper_text for text in audit_text):
+    normalized_paper = [normalize_evidence_statement(text) for text in paper_text]
+    normalized_audit = [normalize_evidence_statement(text) for text in audit_text]
+    if any(evidence_statements_duplicate(audit, paper)
+           for audit in normalized_audit for paper in normalized_paper):
         raise ValueError(f"{where} duplicates a statement in a paper-only section")
+
+
+def normalize_evidence_statement(value: str) -> str:
+    return " ".join(unicodedata.normalize("NFKC", value).casefold().split())
+
+
+def evidence_statements_duplicate(left: str, right: str) -> bool:
+    if left == right:
+        return True
+    minimum_contained_length = 40
+    return min(len(left), len(right)) >= minimum_contained_length and (
+        left in right or right in left
+    )
 
 
 def load_and_validate(path: Path) -> dict[str, Any]:

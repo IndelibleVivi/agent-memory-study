@@ -106,8 +106,9 @@ builder 会检查 schema、publication boundary、approved-analytics boundary、
 recalculations and synthetic experiments in the optional `amsEvidence` block,
 with an existing public research `artifactUrl` and a matching bylined `public-test`
 contribution. `observations`, `findings`, `methods` and `reasoning` preserve their
-separate roles. The builder checks binding and exact duplication, not the truth
-or semantic attribution of a sentence; editorial source review remains required.
+separate roles. The builder checks binding and normalized verbatim duplication,
+including long statements wrapped by extra copy; it does not check the truth or
+semantic attribution of a sentence, so editorial source review remains required.
 A `worked` entry must have an attributed `public-test` artifact. Moving an existing
 result between sections does not change its reading depth or historical receipts.
 

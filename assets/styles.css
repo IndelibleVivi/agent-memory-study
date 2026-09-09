@@ -1955,8 +1955,12 @@ noscript {
     scroll-behavior: auto;
   }
 
+  .site-header {
+    gap: 8px;
+  }
+
   .site-mark {
-    font-size: 21px;
+    font-size: 19px;
     font-weight: 400;
   }
 

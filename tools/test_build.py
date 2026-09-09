@@ -71,6 +71,14 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         )
         self.assertNotIn('assets/materials-data.js?v=20260830-mnl-2', source)
 
+    def test_stylesheet_cache_key_tracks_mobile_evidence_fix(self):
+        source = (build.ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(
+            source.count('assets/styles.css?v=20260910-evidence-fixes-1'),
+            1,
+        )
+        self.assertNotIn('assets/styles.css?v=20260909-evidence-discovery-1', source)
+
     def test_article_copy_wraps_unbroken_evidence_tokens(self):
         css = (build.ROOT / "assets" / "styles.css").read_text(encoding="utf-8")
         self.assertRegex(

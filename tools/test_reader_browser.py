@@ -91,13 +91,29 @@ def main():
                         def current_url():
                             return page.evaluate('window.__AMS_TEST_LOCATION.href') if args.offline_render else page.url
                         def layout(label):
-                            actual = page.evaluate('document.documentElement.scrollWidth')
-                            assert actual <= width + 1, (label, width, actual)
+                            document_width, viewport_width, header_width, header_client_width = page.evaluate('''() => {
+                              const header = document.querySelector('.site-header');
+                              return [
+                                document.documentElement.scrollWidth,
+                                document.documentElement.clientWidth,
+                                header.scrollWidth,
+                                header.clientWidth,
+                              ];
+                            }''')
+                            assert document_width <= viewport_width + 1, (
+                                label, 'document', viewport_width, document_width
+                            )
+                            assert header_width <= header_client_width + 1, (
+                                label, 'header', header_client_width, header_width
+                            )
                         def record(name):
                             evidence['checks'].append({'width': width, 'check': name, 'passed': True})
 
                         go()
                         expect(page.locator('#reading-entry a')).to_contain_text('一条更正之后')
+                        if width <= 390:
+                            expect(page.locator('#menu-button')).to_be_visible()
+                            expect(page.locator('#search')).to_be_visible()
                         layout('home'); record('home entry and layout')
                         for material in data['materials']:
                             go('?material=' + material['id'])

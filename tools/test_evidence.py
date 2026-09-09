@@ -58,6 +58,27 @@ class EvidenceTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'duplicates'):
                 self.validate(data)
 
+    def test_audit_duplicates_reject_wrapping_and_whitespace_variants(self):
+        variants = [
+            lambda text: f'Paper prefix: {text}',
+            lambda text: f'{text} Paper suffix.',
+            lambda text: f'  {text.replace(" ", "  \n", 1)}  ',
+        ]
+        for variant in variants:
+            data = copy.deepcopy(self.data)
+            m = next(m for m in data['materials'] if 'amsEvidence' in m)
+            m['reportedFindings'].append(variant(m['amsEvidence']['findings'][0]))
+            with self.subTest(variant=variant), self.assertRaisesRegex(ValueError, 'duplicates'):
+                self.validate(data)
+
+    def test_distinct_paper_and_audit_statements_remain_valid(self):
+        data = copy.deepcopy(self.data)
+        m = next(m for m in data['materials'] if 'amsEvidence' in m)
+        m['reportedFindings'].append(
+            'The paper reports a separate benchmark result with its own source locator.'
+        )
+        self.validate(data)
+
     def test_empty_or_untyped_audit_fails(self):
         for field in ['observations', 'reasoning', 'methods', 'findings']:
             data = copy.deepcopy(self.data)
