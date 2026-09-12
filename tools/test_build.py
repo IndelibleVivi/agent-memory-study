@@ -66,7 +66,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260912-mosaic-1'),
+            source.count('assets/materials-data.js?v=20260912-agentic-1'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260830-mnl-2', source)
@@ -1793,9 +1793,24 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         self.assertEqual(mosaic["designTransfer"]["status"], "proposed-not-run")
         self.assertEqual(mosaic["amsEvidence"]["artifactUrl"],
                          "research/mosaic-score-dependency-study/README.md")
+        agentic = by_id["agentic-memory"]
+        self.assertEqual(agentic["noteDepth"], "worked")
+        for field in (
+            "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
+            "sourceTensions", "editorialInferences", "contributions",
+        ):
+            self.assertTrue(agentic[field])
+        self.assertEqual(agentic["contributions"][0]["type"], "public-test")
+        self.assertTrue(any(
+            link["url"].endswith("/research/agemem-reward-observation-audit/results.json")
+            for link in agentic["contributions"][0]["links"]
+        ))
+        self.assertEqual(agentic["designTransfer"]["status"], "proposed-not-run")
+        self.assertEqual(agentic["amsEvidence"]["artifactUrl"],
+                         "research/agemem-reward-observation-audit/README.md")
         current_skim_ids = {
             "coala-cognitive-architecture", "storage-to-experience",
-            "agentic-memory", "midca-dual-cycle",
+            "midca-dual-cycle",
             "agm-theory-change", "memory-beyond-recall",
         }
         self.assertTrue(all(by_id[material_id]["noteDepth"] == "skim" for material_id in current_skim_ids))

@@ -17,6 +17,7 @@
 - [旧经验还在，为什么读不到？](research/experience-reuse-retrieval-study/README.md)把 experience reuse 的检索竞争做成 4 个原创场景、108 次 SQLite BM25 选择：重复条目会挤走旧经验，按 key 去重也可能漏掉不同的适用条件；每个排名、控制与复跑命令均公开，不把检索命中算作 agent 成功；
 - [还没发生的事，能改变此刻的判断吗？](research/proactive-prefix-study/README.md)沿着 proactive trigger 的因果要求，用 3 个原创图场景、30 次精确分数传播说明未来如何经共享实体或归一化影响当前状态；保留前缀参照和负控制，不将它称为作者 GNN 的实现审计；
 - [邻居没变，为什么分数过期了？](research/mosaic-score-dependency-study/README.md)对 MOSAIC 的公开评分式执行 9 个原创场景、27 组缓存处理：frontier 最大值和 previous community 都可能让远处节点的完整分数过期；保留全量参照、依赖补全与有效控制，不将公式实验称为作者实现或 benchmark 复现；
+- [做过、做成、做对](research/agemem-reward-observation-audit/README.md)直接运行固定 AgeMem reward 模块的 16 个原创消息输入：失败维护消息、context reset 与语义利用代理分别暴露不同的评价边界；公开完整输入、返回值、配对控制和复跑命令，不把函数级测试称为真实 mutation 或训练复现；
 - 一个没有 backend、继续由 GitHub Pages 托管的静态 reader；唯一 analytics 是 Cloudflare Web Analytics 的 aggregate beacon，不使用 cookie 或 localStorage 识别、画像访客；
 - 23 份 canonical materials：10 份按原许可随站提供的 PDF，另 13 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
@@ -251,6 +252,7 @@ Bundled papers keep their file-level Creative Commons licenses; linked works rem
 ## Reader 验证
 
 `python3 -B tools/verify_reader.py` 校验 canonical、证据归属绑定与 generated payload，
-并复跑五组无模型的确定性研究。真实浏览器测试与受限环境的验证边界见
+并复跑五组无模型的确定性研究，另检查 AgeMem 已保存 receipt 的输入绑定与算术。
+AgeMem 官方模块的 fresh run 需要外部固定 checkout，见[复跑说明](research/agemem-reward-observation-audit/README.md#复跑)。真实浏览器测试与受限环境的验证边界见
 [贡献指南](CONTRIBUTING.md#evidence-ownership-and-reader-checks)。
 新增的 Reading Room validation 仅检查 PR / main，不发布站点；既有 Pages 发布设置不变。

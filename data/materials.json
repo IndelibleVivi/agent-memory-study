@@ -1963,18 +1963,20 @@
       "shortAuthor": "Yu 等",
       "year": 2026,
       "doi": "10.18653/v1/2026.acl-long.981",
-      "noteDepth": "skim",
-      "readingScope": "Abstract、§3–§5、Limitations、主要 tables/figures；未通读附录，也未复核训练实现。",
-      "intro": "把 active context 与 persistent store 放进统一状态和 action space，让一个 policy 同时决定语言生成与 STM/LTM 操作。",
+      "noteDepth": "worked",
+      "readingScope": "完整阅读 ACL 2026 正式版 Abstract、§§1–5、Limitations、References 与 Appendices A–D，共 27 个 physical PDF pages（pp. 21457–21483）；references 只作来源定位，未逐篇验证。pdfinfo 确认页数，另视觉核对 PDF pp. 7–9、13、17、19、26–27 的主要公式、算法与实验图表。另检查官方源码固定 revision 98f563f9 的 reward 模块、训练调用点和 advantage 广播路径，直接执行 reward 模块的 16 个原创消息测试；未运行完整训练、optimizer、memory backend、真实 LLM judge 或 benchmark。",
+      "intro": "AgeMem 将 LTM 的增删改与 STM 的检索、摘要、过滤放进同一个 agent policy。每条训练 trajectory 先接触信息并构建 LTM，再清空 active context、加入干扰，最后回答任务；复合终点 reward 通过 step-wise GRPO 回传到各阶段。读这篇需要同时看 policy 学什么、reward 能观察到什么，以及受控 benchmark 能支持多远的结论。",
       "keyPoints": [
-        "显式 memory tools 包括 LTM 的 ADD、UPDATE、DELETE，以及 STM 的 RETRIEVE、SUMMARY、FILTER。（§3.1–§3.2）",
-        "训练 trajectory 先决定哪些信息进入 LTM，再 reset active context 并加入 distractors 训练 STM，最后完成必须联合使用两者的任务，以减少 residual-context shortcut。（§3.1；§3.3）",
-        "Step-wise GRPO 把同一个 terminal advantage 广播给整条 trajectory 的先前 memory 与 reasoning actions，因此提供早期训练信号，却不区分每次具体 mutation 的独立贡献。（§3.4）"
+        "三阶段是每条 rollout 内的信息暴露、干扰和任务执行，不是三个互不相干的模型。LTM 跨阶段保留，Stage 1→2 重置 STM，目的在于减少靠残留 context 答题的捷径。（§§3.1、3.3；Algorithms 1、3–5）",
+        "六个动作覆盖 ADD / UPDATE / DELETE 和 RETRIEVE / SUMMARY / FILTER。检索把 store 内容带入 context，SUMMARY 用 LLM 压缩；FILTER 的公式保留 similarity 小于阈值的消息，调用者需要明确 criteria 是要移除的内容。（§3.2；Appendix A.1；Figs. 6–7）",
+        "每个 task 的 K 个 rollout 用终点 reward 做组内标准化，再把同一个 advantage 广播给该 trajectory 的所有 memory / reasoning steps。这能为早期动作提供学习信号，但不是对每次 mutation 的独立归因。（§3.4；Eq. 5–6；Algorithm 2）",
+        "奖励同时涉及答案、context 与 memory；maintenance 在 Eq. (24) 中仅检查做过 update/delete，其他分项才评价存储或检索质量。理解这些代理量的含义，是读懂“memory quality improved”的前提。（§3.5；Appendix A.2、C.2）"
       ],
       "keywords": [
         "memory policy",
         "reinforcement learning",
-        "STM and LTM"
+        "STM and LTM",
+        "reward observation"
       ],
       "categories": [
         "记忆架构"
@@ -1991,17 +1993,192 @@
         "license": "CC BY 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
-      "editorialQuestion": "在关键质量指标依赖 LLM judge、实验尚未覆盖长期真实用户互动的情况下，怎样识别某一次具体 memory mutation 是帮助还是伤害了结果？",
+      "editorialQuestion": "清空给 policy 的 context 后，怎样保留独立的历史操作记录用于 reward？若要判断某次 mutation 的贡献，怎样固定后续任务、区分执行成功与语义收益，而不让最终答对替全部早期动作背书？",
       "sourceNote": "",
       "designTransfer": {
         "byline": "Agent Memory Study editors",
-        "date": "2026-09-08",
-        "when": "准备让同一 agent policy 同时回答问题、删改长期记忆和整理当前 context。",
-        "move": "先观察单次 memory mutation 的输入、动作和下游使用，避免仅凭任务最终成功就认定此前每次编辑都有益。",
-        "check": "把必要信息写入长期层后清空 active context，再加入干扰信息；比较是否能真正回取。对一项编辑做有 / 无对照，看具体行为是否改变。",
-        "boundary": "这是 skim 范围内的线索，试验未执行。共享 terminal advantage 不能提供每次 mutation 的独立因果贡献。",
-        "basis": "既有札记 “关键抓手”：§§3.1–3.4；“继续追问”。",
-        "status": "proposed-not-run"
+        "date": "2026-09-12",
+        "status": "proposed-not-run",
+        "when": "训练或评价 memory policy 时，active context 会被重置、过滤或摘要，而 reward 还需要评价更早的动作。",
+        "move": "用独立事件记录保存操作请求、执行结果与版本；用当前 context 表示 agent 能看到什么。评估分别消费实际执行状态、语义判断和后续利用，避免只凭工具名称或最终回答替代。",
+        "check": "在真实 rollout 中固定输入与 judge，比较从最后 context 反推统计和从独立事件记录取统计；再对选定 mutation 做有无对照，分别报告信息保留、任务表现、工具成本与错误维护奖励。",
+        "boundary": "官方 reward 函数的 16 例消息对照已执行；这里的事件记录改造、真实 rollout 与逐 mutation 收益比较尚未执行，不称为已验证的训练修复。",
+        "basis": "§§3.3–3.5、Appendix A.2–A.3；本页公开 reward-observation audit。"
+      },
+      "whyRead": "这篇把记忆管理从外部服务变成 agent 可以学习的行动。值得细读的不只是六个工具，而是它如何安排信息出现的时间、让早期动作收到延迟反馈，再用什么信号衡量存储与遗忘。正文、奖励公式、工具 schema 和补充消融放在一起，能帮助读者区分统一训练的总体收益、行为代理与单次操作的证据。",
+      "argumentMap": [
+        {
+          "step": "把两类记忆放进同一决策过程",
+          "claim": "作者将 state 写成 context、LTM store 与任务 specification，并让语言生成与六类 memory tools 共享 policy，避免 LTM 与 STM 仅在部署时松散拼接。",
+          "locator": "§§1–3.2；Table 1，PDF pp. 1–5"
+        },
+        {
+          "step": "用时间隔离让存储具有后果",
+          "claim": "先从 contextual information 构建 LTM，重置 STM 后注入干扰，再提供最终任务。知识必须通过保留下来的 store 或后续有效 context 参与回答。",
+          "locator": "§3.3；Appendix A.3 / Algorithms 1、3–5，PDF pp. 5、18–20"
+        },
+        {
+          "step": "把延迟评价传播到早期动作",
+          "claim": "每条 trajectory 得到复合 reward，组内标准化的 advantage 统一赋给它的各步。context 压缩、预防操作、信息保留和 memory 质量共同参与评分。",
+          "locator": "§§3.4–3.5；Appendix A.2 / Eqs. (18)–(26)，PDF pp. 5–6、17"
+        },
+        {
+          "step": "用跨域任务与补充控制支持统一设计",
+          "claim": "只用 HotpotQA 做 RL，然后评估五类 benchmark；除 noRL、RAG、reward 消融外，Appendix D.3 给既有 LTM baselines 加上同类 STM / RL 扩展，以进一步比较统一设计。",
+          "locator": "§4；Appendices C–D / Tables 2、4、6–8，PDF pp. 6–9、23–27"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Reward 的层级与权重",
+          "text": "Appendix A.2 将 context 的 compression / preventive / preservation 与 memory 的 storage / maintenance / relevance 分别等权平均。C.4 再令 task、context、memory 三项各 1/3。maintenance 是存在 update/delete 的指示量；不能仅从这个分项读出操作成功、内容正确或独立贡献。",
+          "locator": "§3.5；Appendix A.2 / Eqs. (18)–(26)；C.4，PDF pp. 6、17、25"
+        },
+        {
+          "label": "Group normalization 与广播",
+          "text": "K=8；Algorithm 2 用样本标准差，Eq. (5) 加 epsilon。trajectory 内所有步共享 advantage，Eq. (6) 对全部 experiences 平均并加入 KL，C.4 给 β=0.1。广播同一标量不意味着不同动作梯度相同，也不等于做了逐动作反事实比较。",
+          "locator": "§3.4；Algorithm 2；Appendix C.4，PDF pp. 5–6、19、25"
+        },
+        {
+          "label": "训练数据与干扰",
+          "text": "RL 使用 HotpotQA supporting facts 作为 Stage 1 信息；另外四个任务是跨域评估。Appendix D.4 的 distractor generator 由外部 LLM 产生 plausible 但不共享关键实体/概念的消息；Table 8 比较 N=3、5、7。这不是 adversarial contradiction 或真实长期用户互动。",
+          "locator": "§4.1；Appendices C.1、D.4，PDF pp. 6、23–24、27"
+        },
+        {
+          "label": "不同任务指标不能当成同一种成功率",
+          "text": "ALFWorld、SciWorld、BabyAI 用 SR，PDDL 用 PR，HotpotQA 用 Qwen-Max LLM judge。Table 2 的 Average 混合这五个任务指标；MQ 也由 Qwen-Max 比较存储事实与 HotpotQA supporting facts，不是经过独立事实核验的长期用户记忆正确率。",
+          "locator": "§4.1；Appendix C.2；Table 2，PDF pp. 6–8、24–25"
+        },
+        {
+          "label": "STM 对照与完整成本",
+          "text": "RAG variants 每步检索并追加 context；Fig. 3 比较平均 prompt tokens。Table 3 的 total calls 在 RL 后上升，不能从 prompt 减少直接推出总 tokens、latency、API 费用或工具开销下降。",
+          "locator": "Figs. 2–3；Table 3；Appendix C.3，PDF pp. 7–8、25"
+        },
+        {
+          "label": "补充 baseline 比较的范围",
+          "text": "Appendix D.3 给 LangMem、A-Mem、Mem0 增加 STM / RL 后，三任务平均上升；AgeMem 的 43.69 仍高于最佳增强 baseline A-Mem 的 41.70，但 LangMem+ST/RL 在 ALFWorld 的 41.32 高于 AgeMem 41.07。该控制补强总体比较，不建立每个任务或组件都占优。",
+          "locator": "Appendix D.3；Table 7，PDF pp. 26–27"
+        }
+      ],
+      "reportedFindings": [
+        "Table 2 报告 Qwen2.5-7B / Qwen3-4B 五任务平均 41.96 / 54.31，相较各自最佳 baseline Mem0 37.14 / A-Mem 45.74 高 4.82 / 8.57 个百分点；相较 AgeMem-noRL 高 8.53 / 8.72 个百分点。Qwen2.5 的 PDDL 17.31 低于 A-Mem 18.39，不能概括成所有单项最佳。（Table 2，PDF p. 8）",
+        "HotpotQA MQ 为 0.533 / 0.605，对应最强其他 memory baseline 为 0.527 / 0.587。作者将其解释为更好的记忆组织；这些是 LLM judge 分数，图中未提供足以独立检验小差距显著性的重复实验数据。（Fig. 2，PDF p. 7）",
+        "对 AgeMem-RAG，prompt tokens 从 2186→2117、2310→2191，论文标为减少 3.1% / 5.1%。同时相较 noRL，total tool calls 从 4.33→4.92、7.50→8.67；这两个比较的参照组不同。（Fig. 3；Table 3，PDF pp. 7–8）",
+        "All-Returns 相较 Answer-Only：Qwen2.5 的 J 0.509→0.544、MQ 0.479→0.533、tokens 2078→2117；Qwen3 的 J 0.546→0.555、MQ 0.415→0.605、tokens 2164→2191。收益伴随更多上下文和工具调用，不是全面减少资源。（Tables 4、6，PDF pp. 9、26）",
+        "FILTER 阈值 0.4–0.8 的 J 在 0.524–0.551；干扰消息 N=3/5/7 的 J 为 0.549/0.544/0.537，MQ 为 0.541/0.533/0.532。这是有限超参数扫描，不能推广为任意干扰强度或长期运行都稳定。（Tables 5、8，PDF pp. 9、27）"
+      ],
+      "evidenceLimits": [
+        "未重跑 RL、真实 Qwen-Max judge、五个 benchmark 或完整 AgentScope / Trinity workflow。16 个本地样例仅执行固定公开 reward 模块，消息和 judge stub 由本站提供；不估计模型表现或真实失败率。",
+        "公开源码 revision 与正式 PDF 的 reward 权重和实现细节不同；没有 paper-run manifest 将二者绑定。当前函数行为不能倒推成论文当时训练或结果表必然采用的路径。",
+        "Appendix B 的三类个人学习助手对话是展示案例，缺少相应可重跑的逐例实验记录；Limitations 明说 persistent long-term dialogue / real-user interaction 留待以后，不能把案例当作长期用户实验。",
+        "正文主表未给出足够 seed、逐例 traces 或重复统计以独立估计不确定性；算法、摘要工具和 Qwen-Max judge 还需要运行配置与输入绑定才能完成 end-to-end 复现。",
+        "终点 reward 广播是学习机制，不识别某次 mutation 的独立效果。context 重置、工具执行结果和语义质量需要分别有证据；总体结果改善也可能与其他组件共同作用。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "有意义的维护与动作存在指示量",
+          "observation": "§3.5 用 meaningful update/delete 描述维护奖励，Appendix A.2 Eq. (24) 的公式只判断是否做过这两类动作。",
+          "implication": "公式本身没有成功或语义收益判断；其他 reward 可能补充约束，不能把单独的 maintenance=1 解读为这次操作有益。",
+          "locators": [
+            "§3.5，PDF p. 6",
+            "Appendix A.2 / Eq. (24)，PDF p. 17"
+          ]
+        },
+        {
+          "label": "FILTER 的保留描述与移除 schema",
+          "observation": "Eq. (15) 保留 sim<θf 的消息，邻近文字却举 criteria 描述要保留内容的例子；Fig. 6 schema 则明确说 criteria 描述要移除的内容。",
+          "implication": "按公式与 schema 使用 removal criterion 才方向一致；不能照搬 keep 描述而不核对实际实现。",
+          "locators": [
+            "Appendix A.1 / Eq. (15)，PDF p. 13",
+            "Fig. 6，PDF p. 15"
+          ]
+        },
+        {
+          "label": "schema 与展示对话参数不同",
+          "observation": "Fig. 7 的 Delete_memory 参数是 confirmation，Appendix B.1 展示调用却用 confirmed；SUMMARY 文本给 all 或 N，B.2 示例用 full。",
+          "implication": "展示案例不能直接当作可执行 API contract；实现可能有兼容处理，需要查证，不能仅凭叙事认定调用成功。",
+          "locators": [
+            "Appendix A.1 / Figs. 6–7，PDF pp. 13、15–16",
+            "Appendix B.1–B.2，PDF pp. 21–22"
+          ]
+        },
+        {
+          "label": "task 主导叙述与等权配置",
+          "observation": "§3.5 称 task reward 为 dominant component，Appendix C.4 明确三项权重各 1/3。",
+          "implication": "等权不自动意味着 task 的实际梯度或方差主导；需要分项分布与训练证据，不从形容词推导配置。",
+          "locators": [
+            "§3.5，PDF p. 6",
+            "Appendix C.4，PDF p. 25"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "给 policy 的 context 与给 evaluator 的记录可以分开",
+          "text": "为避免残留信息捷径，可以重置 policy context；评价历史行为时另保留带 stage、operation、result 与目标版本的事件记录，更容易追踪存储、维护和后续利用。",
+          "boundary": "这是编者的工程建议；本次未改官方训练器，也未测试独立记录能带来多少学习或任务收益。"
+        },
+        {
+          "label": "奖励代理要写明它实际检测什么",
+          "text": "把“出现工具名”“返回成功”“记忆内容正确”“下游使用”和“使用后有益”分成可观察事实，能减少同一布尔值承担多个含义的混淆。",
+          "boundary": "不是主张全部信号都必须由 LLM judge 评分，也不从有限函数例子推断 RL 整体无效。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "做过、做成、做对：reward 看见了什么？",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-12",
+          "basis": "ACL 2026 正式版；官方 y1y5/AgeMem revision 98f563f907d67b2f2436e3ae7b7ceff32e482814 的 reward 模块与训练调用点。",
+          "boundary": "未修改官方 reward 函数的本地消息输入审计，不运行真实 mutation、memory backend、optimizer、LLM judge 或 benchmark。",
+          "method": "直接加载 stdlib-only my_reward.py，执行三个 stats extractors 与 ThreeStageRewardCalculator；16 例分 maintenance、history、retrieval、preservation、工具名提及和 judge override 六组。",
+          "environment": "macOS arm64 / Python 3.13.3 标准库；14 例无 judge，2 例由本地 stub 返回固定 0/1 并记录请求，无网络调用。",
+          "fixture": "原创 amber train / platform 消息；成功、失败、取消返回格式依据官方 _apply_tools；固定 task score 0.5、rounds 4/10、budget 8192、训练调用点四项权重 0.5/0.2/0.15/0.15。",
+          "controls": "Update / Delete 各 True/False，取消与无操作；Stage 1 add 消息保留/移除；检索利用/忽略；原问题/替代问题/无 user；仅提工具名；固定 judge 0/1。核对全部预期、输入不变、分项权重和 total 算术；fresh --check 与保存结果一致。",
+          "rawResult": "16 例均匹配固定预期。失败 update/delete 也得到 r_maintenance=1，维护分项贡献 0.05；Stage 1 add 消息移除后 added_count 1→0；明确忽略检索仍在 fallback 标为 used；无关 user message 仍通过 preservation。judge override 改变 relevance，但两例 maintenance 仍为 1。",
+          "derivedResult": "该 revision 的 reward 输入依赖最终 context 的消息形式和可见性；工具结果的成功、语义利用、原任务保留不能仅由这些代理值推出。清空 policy context 与保留 evaluator 的历史证据是不同需求。",
+          "limitations": "固定消息不是实际执行 trace，两个 judge 返回不是模型 verdict；完整 workflow 和训练未执行。没有将源码绑定到论文实验版本，也不报告 reward hacking 发生率或 benchmark 性能变化。",
+          "links": [
+            {
+              "label": "方法、结果与复跑命令",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/agemem-reward-observation-audit/README.md"
+            },
+            {
+              "label": "执行前协议与控制",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/agemem-reward-observation-audit/protocol.md"
+            },
+            {
+              "label": "原始输入与完整结果",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/agemem-reward-observation-audit/results.json"
+            }
+          ]
+        }
+      ],
+      "amsEvidence": {
+        "byline": "Agent Memory Study editors",
+        "artifactUrl": "research/agemem-reward-observation-audit/README.md",
+        "observations": [
+          "直接执行固定官方 reward 模块；16 个原创消息输入中，14 例走无 judge fallback，2 例用明确标注的固定返回 stub。只读训练调用点显示：Stage 1 后清空 context，最后从保留消息重新提取 stats。"
+        ],
+        "findings": [
+          "失败 update/delete 返回消息与成功消息都产生 maintenance=1，按源码调用点权重贡献 0.05；取消删除和无维护为 0。固定 judge 返回 0 或 1 会改变 relevance，maintenance 仍为 1。",
+          "保留/移除 Stage 1 add 消息使 added_count 从 1 变为 0；明确忽略 retrieved fact 仍被 fallback 标为 used；替换为无关 user message 仍通过 preservation。16 例全部匹配预期，fresh source execution 与保存 receipt 一致。"
+        ],
+        "methods": [
+          {
+            "label": "结果格式、历史可见性与 judge 分支",
+            "text": "保持 task score、rounds、budget 和调用点权重固定；用成功、失败、取消、历史保留、忽略检索与无 user 等控制区分各分项。完整输入、extractor 输出、reward breakdown 和 stub 请求公开；未执行真实 store 操作。",
+            "locator": "research/agemem-reward-observation-audit/protocol.md；fixtures.json；results.json"
+          }
+        ],
+        "reasoning": [
+          {
+            "step": "reward 需要可追溯的观察来源",
+            "claim": "训练收益评价不能仅由最终 context 中是否出现某段消息反推完整操作历史；函数级对照展示了代理的具体边界，不推断整套训练无效，也不把它算作 mutation 因果效果。",
+            "locator": "research/agemem-reward-observation-audit/README.md；audit.py"
+          }
+        ]
       }
     },
     {

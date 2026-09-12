@@ -33,7 +33,8 @@ def main():
     result = run(['node', 'research/correction-scope-study/run.js'], capture_output=True, text=True)
     if json.loads(result.stdout) != json.loads((ROOT / 'research/correction-scope-study/results.json').read_text()):
         raise SystemExit('Correction study outputs differ from the checked results.')
-    print('PASS: reader contracts, generated data and five fresh deterministic studies')
+    run([python, '-B', 'research/agemem-reward-observation-audit/audit.py', '--verify-checked'])
+    print('PASS: reader contracts, generated data, five fresh deterministic studies and checked AgeMem receipts')
 
 
 if __name__ == '__main__':

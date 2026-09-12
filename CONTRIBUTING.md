@@ -123,8 +123,11 @@ python3 -B tools/test_reader_browser.py --output-dir dist/browser-check
 
 The first command is model-free and uses only local public/synthetic data. It
 checks the generated browser payload without rewriting it, validates the existing
-RDF, and freshly reruns the five small deterministic studies. It does not rerun
-all external-source audits or any paper benchmark. The second test path serves
+RDF, freshly reruns the five small deterministic studies, and checks the saved
+AgeMem reward receipts for fixture binding and arithmetic. That receipt check
+does not execute upstream AgeMem; a fresh run requires the pinned external
+checkout described in its [audit guide](research/agemem-reward-observation-audit/README.md).
+The command does not rerun all external-source audits or any paper benchmark. The second test path serves
 this checkout under `/agent-memory-study/` and checks real browser navigation,
 search, shared scenario state, reload and back/forward on desktop and mobile
 viewports. All third-party browser requests, including analytics, are blocked.

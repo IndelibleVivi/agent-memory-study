@@ -1,0 +1,1017 @@
+{
+  "schema": "ams.agemem-reward-observation.v1",
+  "upstream": "https://github.com/y1y5/AgeMem",
+  "commit": "98f563f907d67b2f2436e3ae7b7ceff32e482814",
+  "executed_module": "trinity/common/workflows/memory_reward/my_reward.py",
+  "inspected_sources": [
+    "trinity/common/workflows/memory_reward/my_reward.py",
+    "trinity/common/workflows/memory_context/train_hotpotQA.py",
+    "trinity/algorithm/advantage_fn/multi_step_grpo_advantage.py"
+  ],
+  "weights": {
+    "task_completion_weight": 0.5,
+    "tool_efficiency_weight": 0.2,
+    "context_management_weight": 0.15,
+    "memory_management_weight": 0.15
+  },
+  "constants": {
+    "task_score": 0.5,
+    "finished_at_round": 4,
+    "max_rounds": 10,
+    "found_answer": true,
+    "max_tokens": 8192,
+    "supporting_facts": [
+      "The amber train uses platform four."
+    ]
+  },
+  "results": [
+    {
+      "id": "updated-true",
+      "group": "maintenance",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "assistant",
+            "content": "<tool_call>[{\"name\": \"Update_memory\", \"arguments\": {\"memory_id\": \"example-1\", \"content\": \"The amber train uses platform four.\"}}]</tool_call>"
+          },
+          {
+            "role": "tool",
+            "content": "[memory tool result]\nmemory_updated:True"
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 1,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.006744384765625,
+        "total_messages": 3,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 0,
+        "updated_count": 1,
+        "deleted_count": 0,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.42366278076171876,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.09966278076171875,
+        "memory_management": 0.049999999999999996,
+        "tool_efficiency": 0.024,
+        "total": 0.42366278076171876,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 1.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "updated-false",
+      "group": "maintenance",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "assistant",
+            "content": "<tool_call>[{\"name\": \"Update_memory\", \"arguments\": {\"memory_id\": \"example-1\", \"content\": \"The amber train uses platform four.\"}}]</tool_call>"
+          },
+          {
+            "role": "tool",
+            "content": "[memory tool result]\nmemory_updated:False"
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 1,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.00677490234375,
+        "total_messages": 3,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 0,
+        "updated_count": 1,
+        "deleted_count": 0,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.4236612548828125,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.0996612548828125,
+        "memory_management": 0.049999999999999996,
+        "tool_efficiency": 0.024,
+        "total": 0.4236612548828125,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 1.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "deleted-true",
+      "group": "maintenance",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "assistant",
+            "content": "<tool_call>[{\"name\": \"Delete_memory\", \"arguments\": {\"memory_id\": \"example-1\", \"confirmation\": true}}]</tool_call>"
+          },
+          {
+            "role": "tool",
+            "content": "[memory tool result]\nmemory_deleted:True"
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 0,
+        "Delete_memory": 1
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.005889892578125,
+        "total_messages": 3,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 0,
+        "updated_count": 0,
+        "deleted_count": 1,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.42370550537109375,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.09970550537109375,
+        "memory_management": 0.049999999999999996,
+        "tool_efficiency": 0.024,
+        "total": 0.42370550537109375,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 1.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "deleted-false",
+      "group": "maintenance",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "assistant",
+            "content": "<tool_call>[{\"name\": \"Delete_memory\", \"arguments\": {\"memory_id\": \"example-1\", \"confirmation\": true}}]</tool_call>"
+          },
+          {
+            "role": "tool",
+            "content": "[memory tool result]\nmemory_deleted:False"
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 0,
+        "Delete_memory": 1
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.00592041015625,
+        "total_messages": 3,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 0,
+        "updated_count": 0,
+        "deleted_count": 1,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.4237039794921875,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.0997039794921875,
+        "memory_management": 0.049999999999999996,
+        "tool_efficiency": 0.024,
+        "total": 0.4237039794921875,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 1.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "delete-cancelled",
+      "group": "maintenance",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "assistant",
+            "content": "<tool_call>[{\"name\": \"Delete_memory\", \"arguments\": {\"memory_id\": \"example-1\", \"confirmation\": false}}]</tool_call>"
+          },
+          {
+            "role": "tool",
+            "content": "[memory tool result]\nmemory_deletion_cancelled:confirmation_required"
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 0,
+        "Delete_memory": 1
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.00677490234375,
+        "total_messages": 3,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 0,
+        "updated_count": 0,
+        "deleted_count": 0,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.3736612548828125,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.0996612548828125,
+        "memory_management": 0.0,
+        "tool_efficiency": 0.024,
+        "total": 0.3736612548828125,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 0.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "no-maintenance",
+      "group": "maintenance",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "assistant",
+            "content": "The amber train uses platform four."
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 0,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.002288818359375,
+        "total_messages": 2,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 0,
+        "updated_count": 0,
+        "deleted_count": 0,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.37388555908203125,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.09988555908203124,
+        "memory_management": 0.0,
+        "tool_efficiency": 0.024,
+        "total": 0.37388555908203125,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 0.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "history-retained",
+      "group": "history",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Remember this important fact: the amber train uses platform four."
+          },
+          {
+            "role": "assistant",
+            "content": "<tool_call>[{\"name\": \"Add_memory\", \"arguments\": {\"content\": \"Important: the amber train uses platform four.\"}}]</tool_call>"
+          },
+          {
+            "role": "tool",
+            "content": "[memory tool result]\nmemory_added:example-1"
+          },
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "assistant",
+            "content": "The amber train uses platform four."
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 1,
+        "Update_memory": 0,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.00933837890625,
+        "total_messages": 5,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 1,
+        "updated_count": 0,
+        "deleted_count": 0,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 1,
+        "redundant_storage": false
+      },
+      "returned_total": 0.4085330810546875,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.09953308105468749,
+        "memory_management": 0.014999999999999998,
+        "tool_efficiency": 0.044000000000000004,
+        "total": 0.4085330810546875,
+        "memory_r_storage": 0.3,
+        "memory_r_maintenance": 0.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "history-reset",
+      "group": "history",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "assistant",
+            "content": "The amber train uses platform four."
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 0,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.002288818359375,
+        "total_messages": 2,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 0,
+        "updated_count": 0,
+        "deleted_count": 0,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.37388555908203125,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.09988555908203124,
+        "memory_management": 0.0,
+        "tool_efficiency": 0.024,
+        "total": 0.37388555908203125,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 0.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "retrieval-used",
+      "group": "retrieval",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "tool",
+            "content": "[retrieved memories]\n- The amber train uses platform four. (Memory ID: example-1)"
+          },
+          {
+            "role": "assistant",
+            "content": "Using the retrieved fact, the answer is platform four."
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 0,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.005340576171875,
+        "total_messages": 3,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 1,
+        "added_count": 0,
+        "updated_count": 0,
+        "deleted_count": 0,
+        "used_retrieved_memory": true,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.3987329711914062,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.09973297119140624,
+        "memory_management": 0.024999999999999998,
+        "tool_efficiency": 0.024,
+        "total": 0.3987329711914062,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 0.0,
+        "memory_r_relevance": 0.5
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "retrieval-ignored",
+      "group": "retrieval",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "tool",
+            "content": "[retrieved memories]\n- The amber train uses platform four. (Memory ID: example-1)"
+          },
+          {
+            "role": "assistant",
+            "content": "I will ignore that retrieved fact. The answer is platform nine."
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 0,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.005615234375,
+        "total_messages": 3,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 1,
+        "added_count": 0,
+        "updated_count": 0,
+        "deleted_count": 0,
+        "used_retrieved_memory": true,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.39871923828125,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.09971923828125,
+        "memory_management": 0.024999999999999998,
+        "tool_efficiency": 0.024,
+        "total": 0.39871923828125,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 0.0,
+        "memory_r_relevance": 0.5
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "original-query",
+      "group": "preservation",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 0,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.001220703125,
+        "total_messages": 1,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 0,
+        "updated_count": 0,
+        "deleted_count": 0,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.37393896484375,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.09993896484374999,
+        "memory_management": 0.0,
+        "tool_efficiency": 0.024,
+        "total": 0.37393896484375,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 0.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "unrelated-query",
+      "group": "preservation",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Describe purple clouds over a distant ocean."
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 0,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.0013427734375,
+        "total_messages": 1,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 0,
+        "updated_count": 0,
+        "deleted_count": 0,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.373932861328125,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.099932861328125,
+        "memory_management": 0.0,
+        "tool_efficiency": 0.024,
+        "total": 0.373932861328125,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 0.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "no-user-query",
+      "group": "preservation",
+      "input": {
+        "messages": [
+          {
+            "role": "assistant",
+            "content": "A distant ocean has purple clouds."
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 0,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.00103759765625,
+        "total_messages": 1,
+        "messages_removed": 0,
+        "preserved_user_query": false,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 0,
+        "updated_count": 0,
+        "deleted_count": 0,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.3239481201171875,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.0499481201171875,
+        "memory_management": 0.0,
+        "tool_efficiency": 0.024,
+        "total": 0.3239481201171875,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 0.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "summary-name-only",
+      "group": "mention",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "assistant",
+            "content": "Summary_context is a tool name; I am only discussing it, not invoking it."
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": null
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 1,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 0,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.003448486328125,
+        "total_messages": 2,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 0,
+        "added_count": 0,
+        "updated_count": 0,
+        "deleted_count": 0,
+        "used_retrieved_memory": false,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.46382757568359373,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.14982757568359373,
+        "memory_management": 0.0,
+        "tool_efficiency": 0.064,
+        "total": 0.46382757568359373,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 0.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": []
+    },
+    {
+      "id": "judge-0.0",
+      "group": "judge",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "assistant",
+            "content": "<tool_call>[{\"name\": \"Update_memory\", \"arguments\": {\"memory_id\": \"missing\", \"content\": \"The amber train uses platform four.\"}}]</tool_call>"
+          },
+          {
+            "role": "tool",
+            "content": "[memory tool result]\nmemory_updated:False"
+          },
+          {
+            "role": "tool",
+            "content": "[retrieved memories]\n- The amber train uses platform four. (Memory ID: example-1)"
+          },
+          {
+            "role": "assistant",
+            "content": "The answer is platform four."
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": "0.0"
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 1,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.010040283203125,
+        "total_messages": 5,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 1,
+        "added_count": 0,
+        "updated_count": 1,
+        "deleted_count": 0,
+        "used_retrieved_memory": true,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.42349798583984377,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.09949798583984375,
+        "memory_management": 0.049999999999999996,
+        "tool_efficiency": 0.024,
+        "total": 0.42349798583984377,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 1.0,
+        "memory_r_relevance": 0.0
+      },
+      "judge_calls": [
+        {
+          "messages": [
+            {
+              "role": "user",
+              "content": "You are grading retrieval relevance.\nQuestion: Which platform does the amber train use?\nRetrieved items (one per line):\n- The amber train uses platform four. (Memory ID: example-1)\n\nScore on 0.0-1.0 how relevant these are overall to answering the question. Respond with a single number."
+            }
+          ],
+          "model_name": "qwen-max"
+        }
+      ]
+    },
+    {
+      "id": "judge-1.0",
+      "group": "judge",
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Which platform does the amber train use?"
+          },
+          {
+            "role": "assistant",
+            "content": "<tool_call>[{\"name\": \"Update_memory\", \"arguments\": {\"memory_id\": \"missing\", \"content\": \"The amber train uses platform four.\"}}]</tool_call>"
+          },
+          {
+            "role": "tool",
+            "content": "[memory tool result]\nmemory_updated:False"
+          },
+          {
+            "role": "tool",
+            "content": "[retrieved memories]\n- The amber train uses platform four. (Memory ID: example-1)"
+          },
+          {
+            "role": "assistant",
+            "content": "The answer is platform four."
+          }
+        ],
+        "question": "Which platform does the amber train use?",
+        "judge_reply": "1.0"
+      },
+      "input_unchanged": true,
+      "tool_stats": {
+        "Summary_context": 0,
+        "Clear_context": 0,
+        "Retrieve_memory": 0,
+        "Add_memory": 0,
+        "Update_memory": 1,
+        "Delete_memory": 0
+      },
+      "context_stats": {
+        "token_usage_ratio": 0.010040283203125,
+        "total_messages": 5,
+        "messages_removed": 0,
+        "preserved_user_query": true,
+        "preserved_key_info": true,
+        "overflow_occurred": false
+      },
+      "memory_stats": {
+        "retrieved_count": 1,
+        "added_count": 0,
+        "updated_count": 1,
+        "deleted_count": 0,
+        "used_retrieved_memory": true,
+        "high_quality_additions": 0,
+        "redundant_storage": false
+      },
+      "returned_total": 0.47349798583984376,
+      "breakdown": {
+        "task_completion": 0.25,
+        "context_management": 0.09949798583984375,
+        "memory_management": 0.09999999999999999,
+        "tool_efficiency": 0.024,
+        "total": 0.47349798583984376,
+        "memory_r_storage": 0.0,
+        "memory_r_maintenance": 1.0,
+        "memory_r_relevance": 1.0
+      },
+      "judge_calls": [
+        {
+          "messages": [
+            {
+              "role": "user",
+              "content": "You are grading retrieval relevance.\nQuestion: Which platform does the amber train use?\nRetrieved items (one per line):\n- The amber train uses platform four. (Memory ID: example-1)\n\nScore on 0.0-1.0 how relevant these are overall to answering the question. Respond with a single number."
+            }
+          ],
+          "model_name": "qwen-max"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "cases": 16,
+    "judge_stub_cases": 2,
+    "failed_operation_messages_with_maintenance_one": [
+      "updated-false",
+      "deleted-false"
+    ],
+    "stage1_add_count_retained_vs_reset": [
+      1,
+      0
+    ],
+    "ignored_retrieval_marked_used": true,
+    "unrelated_query_marked_preserved": true,
+    "maintenance_with_zero_vs_one_stub_judge": [
+      1.0,
+      1.0
+    ],
+    "maintenance_weighted_contribution_when_one": 0.049999999999999996,
+    "all_inputs_unchanged": true
+  }
+}
