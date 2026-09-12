@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
-    <link rel="stylesheet" href="assets/styles.css?v=20260908-transfers-1" />
+    <link rel="stylesheet" href="assets/styles.css?v=20260910-evidence-fixes-1" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -28,7 +28,7 @@
         <a href="./#constellation" data-route="home" data-scroll-target="constellation">研究星图</a>
         <a href="./#reading-paths" data-route="home" data-scroll-target="reading-paths">阅读路径</a>
         <a href="./#studies" data-route="home" data-scroll-target="studies">共读专题</a>
-        <a href="./#library" data-route="home" data-scroll-target="library">全部材料</a>
+        <a href="./#library" data-route="home" data-scroll-target="library">材料与专题</a>
         <a href="./#about" data-route="home" data-scroll-target="about">About</a>
       </nav>
     </header>
@@ -39,6 +39,7 @@
           <div class="atlas-intro">
             <h1 id="atlas-title"></h1>
             <p class="atlas-dek" id="atlas-dek"></p>
+            <p id="reading-entry" class="reading-entry" hidden></p>
             <p class="atlas-instruction">选择一个 failure surface，先看故障在哪里，再决定从哪篇读起。</p>
           </div>
 
@@ -113,7 +114,7 @@
         <section class="library" id="library" aria-labelledby="library-title">
           <div class="library-heading">
             <div>
-              <h2 id="library-title">全部材料</h2>
+              <h2 id="library-title">材料与专题</h2>
               <p id="library-summary"></p>
             </div>
             <p class="result-count" id="result-count" aria-live="polite"></p>
@@ -122,8 +123,8 @@
           <form class="library-controls" id="library-controls" role="search">
             <label class="search-field">
               <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
-              <span class="sr-only">搜索标题、作者或问题</span>
-              <input id="search" type="search" autocomplete="off" placeholder="搜索标题、作者或问题" />
+              <span class="sr-only">搜索材料、专题、作者或问题</span>
+              <input id="search" type="search" autocomplete="off" placeholder="搜索材料、专题、作者或问题" />
             </label>
             <label>
               <span>主题</span>
@@ -140,9 +141,10 @@
             <button class="text-button" id="clear-filters" type="button">清空筛选</button>
           </form>
 
+          <p class="search-scope">支持空格分隔的多词搜索。专题按其引用的同一篇材料匹配主题、surface 与 depth；专题本身不标阅读深度。</p>
           <div class="material-index" id="material-index" role="list"></div>
           <div class="empty-state" id="empty-state" hidden>
-            <h3>没有匹配的材料</h3>
+            <h3>没有匹配的材料或专题</h3>
             <p>清空一个筛选，或者换一种关键词。</p>
           </div>
         </section>
@@ -179,6 +181,12 @@
               <div class="material-surface-links" id="material-surface-links"></div>
             </header>
 
+            <section class="article-section why-read" id="why-read-block" data-toc-label="为什么值得读" hidden>
+              <p class="content-kind editorial-kind">Editorial reading guide · 编者导读</p>
+              <h2>为什么值得读</h2>
+              <p id="material-why-read"></p>
+            </section>
+
             <section class="article-section" id="paper-problem" data-toc-label="论文在解决什么">
               <p class="content-kind source-kind">Source-backed paraphrase</p>
               <h2>论文在解决什么</h2>
@@ -189,15 +197,6 @@
               <p class="content-kind source-kind">Source-backed paraphrase</p>
               <h2>关键抓手</h2>
               <ol class="mechanism-list" id="material-points"></ol>
-            </section>
-
-            <section class="article-section design-transfer" id="paper-transfer" data-toc-label="怎样借用" hidden>
-              <p class="content-kind editorial-kind">Editorial transfer · 编者设计建议</p>
-              <h2>读完，可以怎样借用</h2>
-              <p class="transfer-disclosure" id="transfer-disclosure"></p>
-              <p class="transfer-meta" id="transfer-meta"></p>
-              <dl id="material-transfer"></dl>
-              <p class="transfer-basis" id="transfer-basis"></p>
             </section>
 
             <section class="article-section" id="paper-argument" data-toc-label="论证怎样成立" hidden>
@@ -218,6 +217,13 @@
               <ul class="finding-list" id="material-findings"></ul>
             </section>
 
+            <section class="article-section ams-evidence" id="paper-ams-evidence" data-toc-label="AMS 复核与实验" hidden>
+              <p class="content-kind contribution-kind">AMS audit · 本站复核与实验</p>
+              <h2>AMS 复核与实验</h2>
+              <p>以下为本站对固定代码、公开记录或原创场景的检查；适用范围以所链接的方法与记录为准。</p>
+              <div id="material-ams-evidence"></div>
+            </section>
+
             <section class="article-section evidence-limits" id="paper-limits" data-toc-label="仍未证明什么">
               <p class="content-kind boundary-kind">Evidence boundary</p>
               <h2>仍未证明什么</h2>
@@ -234,15 +240,20 @@
             <section class="article-section editorial-section" id="paper-editorial" data-toc-label="编者判断">
               <p class="content-kind editorial-kind">Editorial synthesis / question</p>
               <h2>编者判断</h2>
-              <div class="why-read" id="why-read-block" hidden>
-                <h3>为什么值得读</h3>
-                <p id="material-why-read"></p>
-              </div>
               <div id="material-inferences"></div>
               <div class="editorial-question">
                 <h3>继续追问</h3>
                 <p id="material-question"></p>
               </div>
+            </section>
+
+            <section class="article-section design-transfer" id="paper-transfer" data-toc-label="怎样借用" hidden>
+              <p class="content-kind editorial-kind">Editorial transfer · 编者设计建议</p>
+              <h2>读完，可以怎样借用</h2>
+              <p class="transfer-disclosure" id="transfer-disclosure"></p>
+              <p class="transfer-meta" id="transfer-meta"></p>
+              <dl id="material-transfer"></dl>
+              <p class="transfer-basis" id="transfer-basis"></p>
             </section>
 
             <section class="article-section protocol-section" id="paper-protocols" data-toc-label="可复核的下一步" hidden>
@@ -282,9 +293,10 @@
 
     <p class="sr-only" id="route-status" aria-live="polite"></p>
     <noscript>这个 reading room 需要 JavaScript 来读取同 repo 的 public canonical data。材料与许可说明仍可在 GitHub repository 中查看。</noscript>
-    <script src="assets/materials-data.js?v=20260908-proactive-1"></script>
+    <script src="assets/materials-data.js?v=20260912-mosaic-1"></script>
     <script src="assets/revision-study.js?v=20260908-studies-1"></script>
-    <script src="assets/app.js?v=20260908-transfers-1"></script>
+    <script src="assets/reading-search.js?v=20260909-evidence-discovery-1"></script>
+    <script src="assets/app.js?v=20260909-evidence-discovery-1"></script>
     <!-- Cloudflare Web Analytics -->
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"4e0929eca0504d43aca1cc1a1f30ffaf"}'></script>
     <!-- End Cloudflare Web Analytics -->

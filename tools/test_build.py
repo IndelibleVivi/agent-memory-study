@@ -66,10 +66,18 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260908-proactive-1'),
+            source.count('assets/materials-data.js?v=20260912-mosaic-1'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260830-mnl-2', source)
+
+    def test_stylesheet_cache_key_tracks_mobile_evidence_fix(self):
+        source = (build.ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(
+            source.count('assets/styles.css?v=20260910-evidence-fixes-1'),
+            1,
+        )
+        self.assertNotIn('assets/styles.css?v=20260909-evidence-discovery-1', source)
 
     def test_article_copy_wraps_unbroken_evidence_tokens(self):
         css = (build.ROOT / "assets" / "styles.css").read_text(encoding="utf-8")
@@ -1783,6 +1791,8 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             for link in mosaic["contributions"][0]["links"]
         ))
         self.assertEqual(mosaic["designTransfer"]["status"], "proposed-not-run")
+        self.assertEqual(mosaic["amsEvidence"]["artifactUrl"],
+                         "research/mosaic-score-dependency-study/README.md")
         current_skim_ids = {
             "coala-cognitive-architecture", "storage-to-experience",
             "agentic-memory", "midca-dual-cycle",

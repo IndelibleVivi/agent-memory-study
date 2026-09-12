@@ -46,6 +46,7 @@
       textAnchor: Math.cos(angle) < -0.2 ? "end" : Math.cos(angle) > 0.2 ? "start" : "middle",
     }];
   }));
+  const searchIndex = window.ReadingSearch.buildIndex(data);
   let route = readRoute();
   let articleObserver = null;
   let constellationMeasurer = null;
@@ -831,29 +832,38 @@
   }
 
   function matchingMaterials() {
-    const query = normalize(route.q).trim();
-    return data.materials.filter((material) => {
-      if (route.topic && !material.categories.includes(route.topic)) return false;
-      if (route.surface && !material.failureSurfaces.includes(route.surface)) return false;
-      if (route.depth && material.noteDepth !== route.depth) return false;
-      if (!query) return true;
-      const haystack = normalize([
-        material.title,
-        material.authors.join(" "),
-        material.shortAuthor,
-        material.year,
-        JSON.stringify(material),
-      ].join(" "));
-      return haystack.includes(query);
-    });
+    return window.ReadingSearch.search(searchIndex, route.q, route)
+      .filter(hit => hit.kind === "material").map(hit => hit.item);
   }
 
   function renderLibrary() {
-    const materials = matchingMaterials();
-    refs.librarySummary.textContent = `${data.materials.length} 条 public allowlisted records；按阅读范围理解，不按“完成度”排名。`;
-    refs.resultCount.textContent = `${materials.length} / ${data.materials.length} 条材料`;
-    refs.emptyState.hidden = materials.length !== 0;
-    refs.materialIndex.replaceChildren(...materials.map(createMaterialRow));
+    const hits = window.ReadingSearch.search(searchIndex, route.q, route);
+    const materialCount = hits.filter(hit => hit.kind === "material").length;
+    const studyCount = hits.length - materialCount;
+    refs.librarySummary.textContent = `${data.materials.length} 份材料与 ${data.studies.length} 个共读专题；按问题进入，不按阅读深度排名。`;
+    refs.resultCount.textContent = `${materialCount} 份材料 · ${studyCount} 个专题`;
+    refs.emptyState.hidden = hits.length !== 0;
+    refs.materialIndex.replaceChildren(...hits.map(hit => {
+      const row = hit.kind === "material" ? createMaterialRow(hit.item) : createStudyRow(hit.item);
+      row.dataset.resultKind = hit.kind;
+      if (hit.snippet) {
+        const copy = row.querySelector(".material-row-copy");
+        copy.append(createTextElement("p", `命中：${hit.matchLabels.join(" · ")}`, "search-match-label"),
+          createTextElement("p", hit.snippet.text, "search-snippet"));
+      }
+      return row;
+    }));
+  }
+
+  function createStudyRow(study) {
+    const row = createTextElement("article", "", "material-row study-result");
+    row.setAttribute("role", "listitem");
+    const copy = createTextElement("div", "", "material-row-copy");
+    copy.append(createRouteLink("study", study.id, study.title, "material-row-title"),
+      createTextElement("p", study.subtitle));
+    row.append(createTextElement("span", "共读", "material-row-number"), copy,
+      createTextElement("p", `${study.readings.length} 份串读材料`, "material-row-topics"));
+    return row;
   }
 
   function createMaterialRow(material) {
@@ -950,6 +960,45 @@
     const findings = material.reportedFindings || [];
     refs.findingsSection.hidden = findings.length === 0;
     refs.materialFindings.replaceChildren(...findings.map((finding) => createTextElement("li", finding)));
+
+    const audit = material.amsEvidence;
+    document.querySelector("#paper-ams-evidence").hidden = !audit;
+    const auditBody = document.querySelector("#material-ams-evidence");
+    auditBody.replaceChildren();
+    if (audit) {
+      auditBody.append(createTextElement("p", audit.byline, "study-byline"));
+      const artifact = document.createElement("a");
+      artifact.href = audit.artifactUrl;
+      artifact.textContent = "方法、记录与复跑入口 ↗";
+      const detail = document.createElement("a");
+      detail.href = "#paper-contributions";
+      detail.textContent = "本页署名测试详情 ↓";
+      const links = createTextElement("p", "", "ams-evidence-links");
+      links.append(artifact, detail); auditBody.append(links);
+      if (audit.observations.length) {
+        const list = document.createElement("ul");
+        list.append(...audit.observations.map(text => createTextElement("li", text)));
+        auditBody.append(createTextElement("h3", "检查对象与观察"), list);
+      }
+      if (audit.findings.length) {
+        const list = document.createElement("ul");
+        list.append(...audit.findings.map(text => createTextElement("li", text)));
+        auditBody.append(createTextElement("h3", "本站已记录的结果"), list);
+      }
+      if (audit.methods.length || audit.reasoning.length) {
+        const details = document.createElement("details");
+        details.append(createTextElement("summary", "展开复核方法与推论"));
+        for (const item of audit.methods) {
+          details.append(createTextElement("h3", item.label), createTextElement("p", item.text),
+            createTextElement("p", item.locator, "research-note-locator"));
+        }
+        for (const item of audit.reasoning) {
+          details.append(createTextElement("h3", item.step), createTextElement("p", item.claim),
+            createTextElement("p", item.locator, "research-note-locator"));
+        }
+        auditBody.append(details);
+      }
+    }
 
     const limits = material.evidenceLimits || [];
     refs.materialLimits.replaceChildren(...limits.map((limit) => createTextElement("li", limit)));
@@ -1136,6 +1185,12 @@
   }
 
   function renderStudyIndex() {
+    const entry = document.querySelector("#reading-entry");
+    entry.hidden = data.studies.length === 0;
+    entry.replaceChildren();
+    if (data.studies.length) {
+      entry.append("第一次来？", createRouteLink("study", data.studies[0].id, `从「${data.studies[0].title}」开始 →`));
+    }
     refs.studyIndex.replaceChildren(...data.studies.map(study => {
       const entry = createTextElement("div", "", "study-entry");
       entry.append(createTextElement("span", study.number, "study-entry-number"));
@@ -1305,13 +1360,19 @@
         : route.path
           ? refs.pathFocus
           : hash
-            ? document.querySelector(hash)
+            ? fragmentTarget(hash)
             : document.querySelector("#main-content");
       if (target) {
         target.scrollIntoView({ behavior: "auto", block: "start" });
         if (focus && target.matches("[tabindex]")) target.focus({ preventScroll: true });
       }
     });
+  }
+
+  function fragmentTarget(hash) {
+    // A shared URL fragment is an ID, not a CSS selector.
+    try { return document.getElementById(decodeURIComponent(hash.replace(/^#/, ""))); }
+    catch { return null; }
   }
 
   function updateFilters(changes) {
