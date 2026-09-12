@@ -1,0 +1,1560 @@
+{
+  "schema": "ams-mosaic-score-study-v1",
+  "source": "https://arxiv.org/abs/2607.16211v1",
+  "scope": "AMS synthetic equation/cache study; no official implementation or benchmark execution",
+  "inputs": {
+    "source": "https://arxiv.org/abs/2607.16211v1",
+    "weights": {
+      "alpha": "1/2",
+      "beta": "3/10",
+      "gamma": "1/5"
+    },
+    "graph": {
+      "association_edges": [
+        [
+          "a",
+          "b"
+        ],
+        [
+          "b",
+          "a"
+        ],
+        [
+          "c",
+          "d"
+        ],
+        [
+          "d",
+          "c"
+        ]
+      ],
+      "prerequisites": []
+    },
+    "cases": [
+      {
+        "id": "remote-max-change",
+        "before": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        },
+        "after": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 20,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        }
+      },
+      {
+        "id": "remote-frontier-exit",
+        "before": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        },
+        "after": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        }
+      },
+      {
+        "id": "previous-community-change",
+        "before": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        },
+        "after": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "d"
+        }
+      },
+      {
+        "id": "distant-nonmax-change",
+        "before": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        },
+        "after": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 3,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        }
+      },
+      {
+        "id": "own-nonmax-change",
+        "before": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        },
+        "after": {
+          "nodes": {
+            "a": {
+              "importance": 6,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        }
+      },
+      {
+        "id": "no-change",
+        "before": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        },
+        "after": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        }
+      },
+      {
+        "id": "previous-same-community",
+        "before": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        },
+        "after": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 10,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "a"
+        }
+      },
+      {
+        "id": "prerequisite-unlock-max",
+        "before": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 20,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        },
+        "after": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 20,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        },
+        "graph": {
+          "association_edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "a"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "c"
+            ]
+          ],
+          "prerequisites": [
+            [
+              "d",
+              "c"
+            ]
+          ]
+        }
+      },
+      {
+        "id": "prerequisite-unlock-nonmax",
+        "before": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 4,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        },
+        "after": {
+          "nodes": {
+            "a": {
+              "importance": 8,
+              "resolved": false,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "b": {
+              "importance": 2,
+              "resolved": true,
+              "community": "left",
+              "centrality": "1/4"
+            },
+            "c": {
+              "importance": 4,
+              "resolved": false,
+              "community": "right",
+              "centrality": "1/4"
+            },
+            "d": {
+              "importance": 2,
+              "resolved": true,
+              "community": "right",
+              "centrality": "1/4"
+            }
+          },
+          "previous": "b"
+        },
+        "graph": {
+          "association_edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "a"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "c"
+            ]
+          ],
+          "prerequisites": [
+            [
+              "d",
+              "c"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "remote-max-change",
+      "changed_nodes": [
+        "c"
+      ],
+      "graph_dirty_nodes": [
+        "c",
+        "d"
+      ],
+      "before_frontier": [
+        "a",
+        "c"
+      ],
+      "after_frontier": [
+        "a",
+        "c"
+      ],
+      "before_context": [
+        "10",
+        "left"
+      ],
+      "after_context": [
+        "20",
+        "left"
+      ],
+      "global_context_changed": true,
+      "before_scores": {
+        "a": "27/40",
+        "c": "23/40"
+      },
+      "fresh_terms": {
+        "a": {
+          "importance": "1/5",
+          "centrality": "3/40",
+          "continuity": "1/5"
+        },
+        "c": {
+          "importance": "1/2",
+          "centrality": "3/40",
+          "continuity": "0"
+        }
+      },
+      "treatments": {
+        "full": {
+          "rescored": [
+            "a",
+            "c"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "19/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "c",
+            "a"
+          ],
+          "selected": "c",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "graph-dirty": {
+          "rescored": [
+            "c"
+          ],
+          "reused": [
+            "a"
+          ],
+          "scores": {
+            "a": "27/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [
+            "a"
+          ],
+          "matches_full_scores": false,
+          "matches_full_choice": false
+        },
+        "dependency-aware": {
+          "rescored": [
+            "a",
+            "c"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "19/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "c",
+            "a"
+          ],
+          "selected": "c",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        }
+      }
+    },
+    {
+      "id": "remote-frontier-exit",
+      "changed_nodes": [
+        "c"
+      ],
+      "graph_dirty_nodes": [
+        "c",
+        "d"
+      ],
+      "before_frontier": [
+        "a",
+        "c"
+      ],
+      "after_frontier": [
+        "a"
+      ],
+      "before_context": [
+        "10",
+        "left"
+      ],
+      "after_context": [
+        "8",
+        "left"
+      ],
+      "global_context_changed": true,
+      "before_scores": {
+        "a": "27/40",
+        "c": "23/40"
+      },
+      "fresh_terms": {
+        "a": {
+          "importance": "1/2",
+          "centrality": "3/40",
+          "continuity": "1/5"
+        }
+      },
+      "treatments": {
+        "full": {
+          "rescored": [
+            "a"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "31/40"
+          },
+          "ranking": [
+            "a"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "graph-dirty": {
+          "rescored": [],
+          "reused": [
+            "a"
+          ],
+          "scores": {
+            "a": "27/40"
+          },
+          "ranking": [
+            "a"
+          ],
+          "selected": "a",
+          "stale_nodes": [
+            "a"
+          ],
+          "matches_full_scores": false,
+          "matches_full_choice": true
+        },
+        "dependency-aware": {
+          "rescored": [
+            "a"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "31/40"
+          },
+          "ranking": [
+            "a"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        }
+      }
+    },
+    {
+      "id": "previous-community-change",
+      "changed_nodes": [],
+      "graph_dirty_nodes": [],
+      "before_frontier": [
+        "a",
+        "c"
+      ],
+      "after_frontier": [
+        "a",
+        "c"
+      ],
+      "before_context": [
+        "10",
+        "left"
+      ],
+      "after_context": [
+        "10",
+        "right"
+      ],
+      "global_context_changed": true,
+      "before_scores": {
+        "a": "27/40",
+        "c": "23/40"
+      },
+      "fresh_terms": {
+        "a": {
+          "importance": "2/5",
+          "centrality": "3/40",
+          "continuity": "0"
+        },
+        "c": {
+          "importance": "1/2",
+          "centrality": "3/40",
+          "continuity": "1/5"
+        }
+      },
+      "treatments": {
+        "full": {
+          "rescored": [
+            "a",
+            "c"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "19/40",
+            "c": "31/40"
+          },
+          "ranking": [
+            "c",
+            "a"
+          ],
+          "selected": "c",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "graph-dirty": {
+          "rescored": [],
+          "reused": [
+            "a",
+            "c"
+          ],
+          "scores": {
+            "a": "27/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [
+            "a",
+            "c"
+          ],
+          "matches_full_scores": false,
+          "matches_full_choice": false
+        },
+        "dependency-aware": {
+          "rescored": [
+            "a",
+            "c"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "19/40",
+            "c": "31/40"
+          },
+          "ranking": [
+            "c",
+            "a"
+          ],
+          "selected": "c",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        }
+      }
+    },
+    {
+      "id": "distant-nonmax-change",
+      "changed_nodes": [
+        "d"
+      ],
+      "graph_dirty_nodes": [
+        "c",
+        "d"
+      ],
+      "before_frontier": [
+        "a",
+        "c"
+      ],
+      "after_frontier": [
+        "a",
+        "c"
+      ],
+      "before_context": [
+        "10",
+        "left"
+      ],
+      "after_context": [
+        "10",
+        "left"
+      ],
+      "global_context_changed": false,
+      "before_scores": {
+        "a": "27/40",
+        "c": "23/40"
+      },
+      "fresh_terms": {
+        "a": {
+          "importance": "2/5",
+          "centrality": "3/40",
+          "continuity": "1/5"
+        },
+        "c": {
+          "importance": "1/2",
+          "centrality": "3/40",
+          "continuity": "0"
+        }
+      },
+      "treatments": {
+        "full": {
+          "rescored": [
+            "a",
+            "c"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "27/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "graph-dirty": {
+          "rescored": [
+            "c"
+          ],
+          "reused": [
+            "a"
+          ],
+          "scores": {
+            "a": "27/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "dependency-aware": {
+          "rescored": [
+            "c"
+          ],
+          "reused": [
+            "a"
+          ],
+          "scores": {
+            "a": "27/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        }
+      }
+    },
+    {
+      "id": "own-nonmax-change",
+      "changed_nodes": [
+        "a"
+      ],
+      "graph_dirty_nodes": [
+        "a",
+        "b"
+      ],
+      "before_frontier": [
+        "a",
+        "c"
+      ],
+      "after_frontier": [
+        "a",
+        "c"
+      ],
+      "before_context": [
+        "10",
+        "left"
+      ],
+      "after_context": [
+        "10",
+        "left"
+      ],
+      "global_context_changed": false,
+      "before_scores": {
+        "a": "27/40",
+        "c": "23/40"
+      },
+      "fresh_terms": {
+        "a": {
+          "importance": "3/10",
+          "centrality": "3/40",
+          "continuity": "1/5"
+        },
+        "c": {
+          "importance": "1/2",
+          "centrality": "3/40",
+          "continuity": "0"
+        }
+      },
+      "treatments": {
+        "full": {
+          "rescored": [
+            "a",
+            "c"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "23/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "graph-dirty": {
+          "rescored": [
+            "a"
+          ],
+          "reused": [
+            "c"
+          ],
+          "scores": {
+            "a": "23/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "dependency-aware": {
+          "rescored": [
+            "a"
+          ],
+          "reused": [
+            "c"
+          ],
+          "scores": {
+            "a": "23/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        }
+      }
+    },
+    {
+      "id": "no-change",
+      "changed_nodes": [],
+      "graph_dirty_nodes": [],
+      "before_frontier": [
+        "a",
+        "c"
+      ],
+      "after_frontier": [
+        "a",
+        "c"
+      ],
+      "before_context": [
+        "10",
+        "left"
+      ],
+      "after_context": [
+        "10",
+        "left"
+      ],
+      "global_context_changed": false,
+      "before_scores": {
+        "a": "27/40",
+        "c": "23/40"
+      },
+      "fresh_terms": {
+        "a": {
+          "importance": "2/5",
+          "centrality": "3/40",
+          "continuity": "1/5"
+        },
+        "c": {
+          "importance": "1/2",
+          "centrality": "3/40",
+          "continuity": "0"
+        }
+      },
+      "treatments": {
+        "full": {
+          "rescored": [
+            "a",
+            "c"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "27/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "graph-dirty": {
+          "rescored": [],
+          "reused": [
+            "a",
+            "c"
+          ],
+          "scores": {
+            "a": "27/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "dependency-aware": {
+          "rescored": [],
+          "reused": [
+            "a",
+            "c"
+          ],
+          "scores": {
+            "a": "27/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        }
+      }
+    },
+    {
+      "id": "previous-same-community",
+      "changed_nodes": [],
+      "graph_dirty_nodes": [],
+      "before_frontier": [
+        "a",
+        "c"
+      ],
+      "after_frontier": [
+        "a",
+        "c"
+      ],
+      "before_context": [
+        "10",
+        "left"
+      ],
+      "after_context": [
+        "10",
+        "left"
+      ],
+      "global_context_changed": false,
+      "before_scores": {
+        "a": "27/40",
+        "c": "23/40"
+      },
+      "fresh_terms": {
+        "a": {
+          "importance": "2/5",
+          "centrality": "3/40",
+          "continuity": "1/5"
+        },
+        "c": {
+          "importance": "1/2",
+          "centrality": "3/40",
+          "continuity": "0"
+        }
+      },
+      "treatments": {
+        "full": {
+          "rescored": [
+            "a",
+            "c"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "27/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "graph-dirty": {
+          "rescored": [],
+          "reused": [
+            "a",
+            "c"
+          ],
+          "scores": {
+            "a": "27/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "dependency-aware": {
+          "rescored": [],
+          "reused": [
+            "a",
+            "c"
+          ],
+          "scores": {
+            "a": "27/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        }
+      }
+    },
+    {
+      "id": "prerequisite-unlock-max",
+      "changed_nodes": [
+        "d"
+      ],
+      "graph_dirty_nodes": [
+        "c",
+        "d"
+      ],
+      "before_frontier": [
+        "a",
+        "d"
+      ],
+      "after_frontier": [
+        "a",
+        "c"
+      ],
+      "before_context": [
+        "8",
+        "left"
+      ],
+      "after_context": [
+        "20",
+        "left"
+      ],
+      "global_context_changed": true,
+      "before_scores": {
+        "a": "31/40",
+        "d": "1/5"
+      },
+      "fresh_terms": {
+        "a": {
+          "importance": "1/5",
+          "centrality": "3/40",
+          "continuity": "1/5"
+        },
+        "c": {
+          "importance": "1/2",
+          "centrality": "3/40",
+          "continuity": "0"
+        }
+      },
+      "treatments": {
+        "full": {
+          "rescored": [
+            "a",
+            "c"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "19/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "c",
+            "a"
+          ],
+          "selected": "c",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "graph-dirty": {
+          "rescored": [
+            "c"
+          ],
+          "reused": [
+            "a"
+          ],
+          "scores": {
+            "a": "31/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [
+            "a"
+          ],
+          "matches_full_scores": false,
+          "matches_full_choice": false
+        },
+        "dependency-aware": {
+          "rescored": [
+            "a",
+            "c"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "19/40",
+            "c": "23/40"
+          },
+          "ranking": [
+            "c",
+            "a"
+          ],
+          "selected": "c",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        }
+      }
+    },
+    {
+      "id": "prerequisite-unlock-nonmax",
+      "changed_nodes": [
+        "d"
+      ],
+      "graph_dirty_nodes": [
+        "c",
+        "d"
+      ],
+      "before_frontier": [
+        "a",
+        "d"
+      ],
+      "after_frontier": [
+        "a",
+        "c"
+      ],
+      "before_context": [
+        "8",
+        "left"
+      ],
+      "after_context": [
+        "8",
+        "left"
+      ],
+      "global_context_changed": false,
+      "before_scores": {
+        "a": "31/40",
+        "d": "1/5"
+      },
+      "fresh_terms": {
+        "a": {
+          "importance": "1/2",
+          "centrality": "3/40",
+          "continuity": "1/5"
+        },
+        "c": {
+          "importance": "1/4",
+          "centrality": "3/40",
+          "continuity": "0"
+        }
+      },
+      "treatments": {
+        "full": {
+          "rescored": [
+            "a",
+            "c"
+          ],
+          "reused": [],
+          "scores": {
+            "a": "31/40",
+            "c": "13/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "graph-dirty": {
+          "rescored": [
+            "c"
+          ],
+          "reused": [
+            "a"
+          ],
+          "scores": {
+            "a": "31/40",
+            "c": "13/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        },
+        "dependency-aware": {
+          "rescored": [
+            "c"
+          ],
+          "reused": [
+            "a"
+          ],
+          "scores": {
+            "a": "31/40",
+            "c": "13/40"
+          },
+          "ranking": [
+            "a",
+            "c"
+          ],
+          "selected": "a",
+          "stale_nodes": [],
+          "matches_full_scores": true,
+          "matches_full_choice": true
+        }
+      }
+    }
+  ],
+  "summary": {
+    "cases": 9,
+    "after_state_treatments": 27,
+    "graph_dirty_score_mismatches": [
+      "remote-max-change",
+      "remote-frontier-exit",
+      "previous-community-change",
+      "prerequisite-unlock-max"
+    ],
+    "graph_dirty_choice_mismatches": [
+      "remote-max-change",
+      "previous-community-change",
+      "prerequisite-unlock-max"
+    ],
+    "dependency_aware_matches_all": true
+  }
+}

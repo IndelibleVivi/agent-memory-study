@@ -1,0 +1,632 @@
+{
+  "source": "https://arxiv.org/abs/2607.16211v1",
+  "weights": {
+    "alpha": "1/2",
+    "beta": "3/10",
+    "gamma": "1/5"
+  },
+  "graph": {
+    "association_edges": [
+      [
+        "a",
+        "b"
+      ],
+      [
+        "b",
+        "a"
+      ],
+      [
+        "c",
+        "d"
+      ],
+      [
+        "d",
+        "c"
+      ]
+    ],
+    "prerequisites": []
+  },
+  "cases": [
+    {
+      "id": "remote-max-change",
+      "before": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      },
+      "after": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 20,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      }
+    },
+    {
+      "id": "remote-frontier-exit",
+      "before": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      },
+      "after": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      }
+    },
+    {
+      "id": "previous-community-change",
+      "before": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      },
+      "after": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "d"
+      }
+    },
+    {
+      "id": "distant-nonmax-change",
+      "before": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      },
+      "after": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 3,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      }
+    },
+    {
+      "id": "own-nonmax-change",
+      "before": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      },
+      "after": {
+        "nodes": {
+          "a": {
+            "importance": 6,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      }
+    },
+    {
+      "id": "no-change",
+      "before": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      },
+      "after": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      }
+    },
+    {
+      "id": "previous-same-community",
+      "before": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      },
+      "after": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 10,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "a"
+      }
+    },
+    {
+      "id": "prerequisite-unlock-max",
+      "before": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 20,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      },
+      "after": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 20,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      },
+      "graph": {
+        "association_edges": [
+          [
+            "a",
+            "b"
+          ],
+          [
+            "b",
+            "a"
+          ],
+          [
+            "c",
+            "d"
+          ],
+          [
+            "d",
+            "c"
+          ]
+        ],
+        "prerequisites": [
+          [
+            "d",
+            "c"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "prerequisite-unlock-nonmax",
+      "before": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 4,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      },
+      "after": {
+        "nodes": {
+          "a": {
+            "importance": 8,
+            "resolved": false,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "b": {
+            "importance": 2,
+            "resolved": true,
+            "community": "left",
+            "centrality": "1/4"
+          },
+          "c": {
+            "importance": 4,
+            "resolved": false,
+            "community": "right",
+            "centrality": "1/4"
+          },
+          "d": {
+            "importance": 2,
+            "resolved": true,
+            "community": "right",
+            "centrality": "1/4"
+          }
+        },
+        "previous": "b"
+      },
+      "graph": {
+        "association_edges": [
+          [
+            "a",
+            "b"
+          ],
+          [
+            "b",
+            "a"
+          ],
+          [
+            "c",
+            "d"
+          ],
+          [
+            "d",
+            "c"
+          ]
+        ],
+        "prerequisites": [
+          [
+            "d",
+            "c"
+          ]
+        ]
+      }
+    }
+  ]
+}

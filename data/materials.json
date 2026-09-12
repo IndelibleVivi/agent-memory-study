@@ -725,13 +725,14 @@
       "shortAuthor": "Zhao 等",
       "year": 2026,
       "doi": null,
-      "noteDepth": "skim",
-      "readingScope": "Abstract、§3–§6；未复现 benchmark 或 latency 测量。",
-      "intro": "用 typed graph、局部稳定性更新和写入前冲突检查来管理 event、persona 与 relationship memory。",
+      "noteDepth": "worked",
+      "readingScope": "完整阅读 arXiv:2607.16211v1 的 Abstract、§§1–6（含 Discussion 内的 limitations）、Tables 1–3、Figures 1–4 图注与 references，共 12 个 physical PDF pages；无附录。References 只用于来源定位，未逐篇验证。pdfinfo 与 pdftotext 的 12 页分页一致，另视觉核对 PDF pp. 4–5、8–10 的架构图、公式、表格、结果图与限制段；pypdf preflight 因依赖未安装为 advisory UNAVAILABLE，不记 PASS。另执行 AMS 原创的 9 个评分缓存场景、27 组处理与 8 项行为测试；未执行作者实现、LLM、PageRank / Leiden、检索、冲突检测或 benchmark。",
+      "intro": "MOSAIC 将长期记忆表示为 event、persona、relationship typed graph，在保存新信息时检索近邻并检查冲突。prerequisite graph 约束下一步可以询问什么，association graph 提供语义关联；controller 按实体重要性、centrality 与 community continuity 选择候选。论文分别用 conversation QA、memory pipeline 与人工注入冲突评价这一框架。",
       "keyPoints": [
-        "memory 被表示为 event、persona、relationship typed graph，并区分 prerequisite graph 与 association graph；节点带 embedding、confidence 与 timestamp。（§3.2）",
-        "Neighbor-Conditioned Stability 只在节点邻居改变时用 dirty flags 重算，论文给出的局部更新复杂度为 O(Δmax)。（§3.3；§3.9）",
-        "写入前先找近邻，再由 LLM 检查 numerical、semantic、logical conflict；低于 0.6 confidence 的 extraction 等待 clarification。50 条 injected errors 中检测出 33 条。（§3.5–§3.6；§5.2）"
+        "记忆分为 event、persona、relationship，节点包含正文、embedding、confidence 与时间。prerequisite graph 限定何时能问，association graph 组织语义关联；它们承担不同职责。（§§3.1–3.2，PDF pp. 3–4）",
+        "NCS 将局部稳定性定义为评分只依赖入邻居状态，dirty set 包含本次改变的节点及其边接收者。但实际 Score 还用当前 frontier 的最大 importance 做归一化，并按 previous community 加分；这两项需要单独的依赖说明。（§§3.3–3.4，PDF pp. 4–5）",
+        "写入前检索近邻，由 LLM 判断 numerical、semantic、logical conflict；低于 0.6 confidence 的 extraction 触发 clarification。高 confidence 不等于已经校准的真实性，近邻中没有出现的矛盾也不会自动被比较。（§§3.5–3.8，PDF p. 5）",
+        "LoCoMo / HaluMem baselines 引自既有论文；自建 conflict test 的 baselines 用 GPT-4o，MOSAIC 用 Qwen3.5-plus。Long HaluMem 一行还合并了 archived extraction/update 与 refreshed QA，不能当成同配置端到端实验或单一组件消融。（§§4.1–4.3；Table 2；§6）"
       ],
       "keywords": [
         "graph memory",
@@ -749,18 +750,175 @@
         "delivery": "official",
         "url": "https://arxiv.org/pdf/2607.16211v1"
       },
-      "editorialQuestion": "正文对 LSH 与 HNSW 的描述并不完全一致，且 0.58 秒只计 search latency；完整 extraction、conflict check 与 write path 的准确率—延迟权衡究竟怎样？",
+      "editorialQuestion": "如果实现只局部缓存 importance、在选择时重新组合全局评分项，能否既保持与全量状态一致，又减少实际写入到选择的成本？还需要哪些源码、配置和逐例结果，才能把 graph、base model 与冲突检查的效果分开？",
       "sourceNote": "",
       "designTransfer": {
         "byline": "Agent Memory Study editors",
-        "date": "2026-09-08",
-        "when": "已有结构化记忆图，而更新一条事实会触发大量无关节点重算。",
-        "move": "先沿实际依赖标出受影响邻居，只对它们重算；把写入前冲突检查的成本也计入更新流程。",
-        "check": "修改一条局部依赖，比较局部重算与完整重算的最终状态和端到端耗时；再改一条跨区域依赖，检查是否漏更新。",
-        "boundary": "这是 skim 范围内的候选做法，未验证实现或延迟；是否值得采用取决于你的图是否具有局部依赖，不能直接套用论文 search latency。",
-        "basis": "既有札记 “关键抓手”：§§3.2–3.6、3.9；“继续追问”：完整 write path 成本。",
-        "status": "proposed-not-run"
-      }
+        "date": "2026-09-12",
+        "status": "proposed-not-run",
+        "when": "结构化记忆系统已经用局部 dirty flags 缓存优先级，而排序同时依赖候选集合或最近访问状态。",
+        "move": "先列出完整评分的实际输入；局部分项按依赖失效，归一化和 continuity 在其上下文改变时更新，并分别检查完整分数和最终选择。",
+        "check": "在真实实现上固定输入流，比较分项缓存、显式依赖失效与全量重算；覆盖远处最大值、frontier 进出、previous community 和跨区域依赖，并测写入到选择的端到端成本。",
+        "boundary": "9 个原创场景 / 27 组公式与缓存对照已执行；这里的真实实现、动态 graph 与端到端耗时比较尚未执行。不得将合成正确性或 rescored 数量当成系统性能结论。",
+        "basis": "完整精读 §§3.2–3.9、4.3；本条公开 score-dependency study。"
+      },
+      "whyRead": "这篇把一个容易被忽略的问题放到了写入时刻：保存新记忆，也是在选择将来推理会依赖什么。prerequisite 与 association 的分工提供了具体设计语言；NCS 又提出了一个很适合亲手检查的优化条件。沿着定义、评分式、表格和限制段读下去，能练习把“结构化记忆有帮助”拆成可验证的部分：哪些状态真的局部、哪些比较混合了不同模型或运行、哪些检测成功仍未覆盖漏检与误报。",
+      "argumentMap": [
+        {
+          "step": "从保留信息走向追踪信息缺口",
+          "claim": "作者认为长期记忆不仅要能回忆，还需要记录哪些实体已确认、哪些未解决、哪些询问存在先决条件，以支持结构化信息收集。",
+          "locator": "§§1、3.1，PDF pp. 1–3"
+        },
+        {
+          "step": "用双图组织状态与查询",
+          "claim": "typed entities 被 prerequisite 与 association edges 连接；frontier 限制候选，importance、预计算 centrality 与 community continuity 共同决定下一步。",
+          "locator": "§§3.2–3.4；Eq. (1)，PDF pp. 3–5"
+        },
+        {
+          "step": "在写入之前比较已有知识",
+          "claim": "近邻检索后调用 LLM 检查冲突，结合 confidence、belief update 与 clarification 决定如何处理新信息；检索再利用实体、community 与图路径。",
+          "locator": "§§3.5–3.8；Eq. (2)，PDF p. 5"
+        },
+        {
+          "step": "分别展示 QA、流水线与冲突检测结果",
+          "claim": "LoCoMo 测 conversation QA，HaluMem 分 extraction / updating / QA，自建 50-error test 测发现注入矛盾的比例。它们提供不同层面的证据，不能互相代替。",
+          "locator": "§§4–6；Tables 1–3，PDF pp. 6–10"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Local stability is a condition on dependencies",
+          "text": "Definition 2 的 N(v) 是 prerequisite 或 association 入边来源；update frontier U 包含 Δ 本身和依赖 Δ 的节点。Eq. (1) 的 importance 被当前 frontier 的最大值归一化，另加固定 PageRank 与 previous-community 指示量。若缓存完整 Score，只监听实体邻域不足以自动覆盖这些全局输入。",
+          "locator": "§§3.3–3.4，PDF pp. 4–5"
+        },
+        {
+          "label": "Confidence and conflict resolution",
+          "text": "confidence 结合 directness、consistency 与 specificity，阈值 0.6；confirmed entity 还需满足 entropy threshold δ。likelihood 由规则与 LLM assessment 混合估计。正文没有给出 confidence calibration、δ 的具体值或 authority 的完整比较契约。",
+          "locator": "§§3.5–3.8；Eq. (2)，PDF p. 5"
+        },
+        {
+          "label": "Retrieval stages need separate implementation evidence",
+          "text": "摘要与 Figure 1 caption 描述 LLM / LSH 双路径 classification，§3.8 明确用 HNSW 做 memory retrieval，默认 top-m=5。两种算法可能作用于不同阶段，名称不同本身不构成矛盾；正文未完整展开 hash 参数、fallback 或端到端路径。",
+          "locator": "Abstract；Figure 1；§§3.7–3.8、4.3，PDF pp. 1、4–6"
+        },
+        {
+          "label": "Benchmark provenance",
+          "text": "LoCoMo 为 10 conversations / 1,540 QA：single-hop 841、multi-hop 282、open-domain 96、temporal 321，使用 LLM-as-Judge。其 baseline numbers 来自 Mem0 论文；HaluMem baselines 来自 HaluMem 论文；MOSAIC 使用 qwen3.5-plus-2026-02-15。当前正文没有足够逐例配置支持 matched-backbone 或 matched-budget 归因。",
+          "locator": "§§4.1–4.3；Table 1，PDF pp. 6–7"
+        },
+        {
+          "label": "The Long row has two run origins",
+          "text": "HaluMem-Long 的 extraction / updating 来自 archived full long run，QA 来自 latest refreshed answer evaluation。Table 2 注释和 Discussion 均明确承认这是一行合并视图，不是同一 frozen configuration 的端到端重跑。",
+          "locator": "§4.1；Table 2 note；§6，PDF pp. 6、8、10"
+        },
+        {
+          "label": "Conflict detection denominator",
+          "text": "50 个人工注入错误分为 numerical 14、semantic 13、logical 23；另按可发现性分为 implicit 11、explicit 39。两种分类是同一批样本的不同切面，不能把它们相加。各系统读入 corrupted guidelines；MOSAIC 用 Qwen3.5-plus，作者自跑 baselines 用 GPT-4o。",
+          "locator": "§§4.1、4.3、5.3；Table 3，PDF pp. 6、8–9"
+        },
+        {
+          "label": "Search latency is a partial cost",
+          "text": "0.58 s 是 HaluMem-Medium 每题 average search latency。正文没有相应计时表、hardware / warm-up 细节或同条件 hash ablation，也没有把 extraction、逐近邻 LLM conflict calls、write 和最终回答计入这一数值。",
+          "locator": "Abstract；§§1、6，PDF pp. 1–2、10"
+        }
+      ],
+      "reportedFindings": [
+        "LoCoMo 报告总体 89.35%，对引用的 Mem0 62.14% 高 27.21 个百分点；single-hop 92.87%、multi-hop 81.56%、open-domain 78.12%、temporal 90.34%。这是论文给出的不同系统/来源结果对比，不是本地重跑或隔离 graph 单变量的证据。（Table 1，PDF p. 7）",
+        "HaluMem-Medium extraction F1 为 86.77%、QA correctness 73.10%；但 update correctness 55.77% 低于 MemOS 62.11%，update hallucination 2.85% 高于表中所有 baseline 的 0.26%–1.15%。写入前检查不等于更新已经最可靠。（Table 2，PDF p. 8）",
+        "HaluMem-Long 合并行报告 extraction F1 85.84%、update correctness 83.33%、QA correctness 70.75%。它并非每列最佳：extraction accuracy 37.26% 低于 Mem0 46.01% / MemOS 43.77%，update hallucination 3.93% 也高于各 baseline。（Table 2 与注释，PDF p. 8）",
+        "Conflict test 报告发现 33/50=66%，相较最佳 baseline 的 7/50=14% 约 4.7 倍；implicit 为 8/11≈72.7%，explicit 为 25/39≈64.1%。这些是小样本切面，差距本身不证明隐含矛盾普遍更容易发现。（Table 3；Figure 4，PDF pp. 8–10）",
+        "作者把 17 个漏检中的约 60% 归因于跨远处图邻域的矛盾，约 40% 归因于仍在 plausible range 内的数值错误。这是作者对漏检的归类，未提供逐例 trace 或受控 search-radius ablation；不把它直接当作 graph 距离的因果估计。（§5.3，PDF p. 9）"
+      ],
+      "evidenceLimits": [
+        "全文、arXiv record 及标题 / 作者 / arXiv ID 定向搜索范围内，未定位可归属于本篇的官方代码、run logs 或逐例 conflict annotations。不能核验实际 dirty flag、hash routing、judge prompt 或论文数字；不据此断言所有发布渠道都没有代码。",
+        "不同模型、引用 baseline 与合并 Long run 限制因果解释；论文没有同模型同预算的 component ablations、逐题不确定性或多次重复数据，不能把全部性能差唯一归到 typed graph、NCS 或 conflict module。",
+        "50 个注入错误来自一个 domain；未同时给出明确的干净负例 denominator、false-positive rate 或 downstream repair success。发现冲突不等于已经正确解决，更不建立临床部署或其他专业领域的可靠性。",
+        "§3.9 的两个定理在正文中没有展开证明。最高 composite Score 与 coverage marginal gain 的对应、prerequisite 约束、entropy 更新、association propagation / cycles、每轮变化节点数量等条件仍需说明；本次不声称验证或普遍推翻这两个定理。",
+        "9 个 local cases 使用固定 graph、centrality、community 和人为 importance，直接计算公开评分式；没有执行作者 importance 估计、PageRank、Leiden、缓存实现、LLM、检索或 QA。它们是定向反例与控制，不能换算成实际错误率或 performance benchmark。",
+        "本地 dependency-aware treatment 会在全局评分上下文改变时重算整个 frontier；runner 本身也全量检查 eligibility。正确性对照不能被解释为证明 O(Δmax)、省时、低资源或 0.58 s 的性能主张。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "局部稳定性与完整评分的输入范围",
+          "observation": "§3.3 将 Score 的稳定性系于图入邻居；§3.4 的 Score 又包含整个 frontier 的最大 importance 与 previous community。",
+          "implication": "需要说明缓存的是局部分项还是完整分数，以及全局上下文如何参与 invalidation。原创实验给出严格的 score / choice 对照；没有官方实现证据时，不把它升级为已发现实现缺陷。",
+          "locators": [
+            "§3.3 / Definition 2，PDF p. 4",
+            "§3.4 / Eq. (1)，PDF p. 5"
+          ]
+        },
+        {
+          "label": "冲突处理有不同的描述",
+          "observation": "§3.5 描述按 evidence authority 更新、拒绝或交由人审；§3.8 又说冲突两值都带时间保留，以较高 confidence 值进行后续推理；摘要提及 updates / deletions。",
+          "implication": "这些可能是不同状态或操作阶段，但正文缺少把它们连起来的明确转换契约。不能默认 authority 与 confidence 相同，也不能把“检出了冲突”写成统一的安全修复行为。",
+          "locators": [
+            "Abstract，PDF p. 1",
+            "§§3.5、3.8，PDF p. 5"
+          ]
+        },
+        {
+          "label": "classification 与 retrieval 的图文需要进一步对齐",
+          "observation": "Figure 1 caption 使用 dual-path classification，图内部却写 Single-Path Classification；摘要强调 LSH retrieval，§3.8 描述 HNSW retrieval。",
+          "implication": "LSH / HNSW 可以分别承担分类与检索，不能仅凭名称判断冲突；但具体启用路径、fallback 与 0.58 s 所覆盖阶段仍需代码或配置确认。",
+          "locators": [
+            "Abstract，PDF p. 1",
+            "Figure 1，PDF p. 4",
+            "§3.8，PDF p. 5"
+          ]
+        },
+        {
+          "label": "局部更新的渐近式需要计入变化批次",
+          "observation": "§3.3 先定义 U 为本轮所有变化节点与其接收者，随后写 O(|U|)=O(Δmax)；§3.9 又按 prerequisite graph 最长路径给出传播界。",
+          "implication": "如果一轮可以改变多个分散节点，|U| 还依赖 |Δ|；若评分沿 association edges 传播，还需要相应收敛条件。本文未给出足够假设让这些结论仅由局部依赖定义自动成立。",
+          "locators": [
+            "§3.3，PDF p. 4",
+            "§3.9 / Theorem 2，PDF pp. 5–6"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "为缓存值画依赖，而不只为领域实体画关系",
+          "text": "prerequisite / association edges 可以表达任务结构，却未必覆盖派生 Score 的所有输入。把 denominator、previous community、候选资格和局部 importance 分开记录，更容易判断一次变化究竟应使什么失效。",
+          "boundary": "本次只证明固定公式与九例的缓存行为；动态依赖图、分项缓存和真实系统效率仍未实现或比较。"
+        },
+        {
+          "label": "让检测成功与修复成功分别可见",
+          "text": "一次 write receipt 可以分别记录候选覆盖、是否发现矛盾、选择更新/拒绝/保留的依据，以及下游实际读到的版本。这样能区分漏检、判断错误和修复后仍使用旧值。",
+          "boundary": "这是基于原文处理层次提出的编者建议；本站没有运行检测模型或真实 write pipeline，也没有测量这些记录的收益。"
+        }
+      ],
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "邻居没变，为什么分数过期了？",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-12",
+          "basis": "Zhao et al., arXiv:2607.16211v1 §§3.3–3.4、4.3；AMS 原创 graph、before/after 状态与缓存处理。",
+          "boundary": "直接计算公开评分公式的 finite synthetic study；不是官方实现、importance estimator、conflict detection 或 benchmark 复现。",
+          "method": "9 个独立 before/after 场景，各比较 full、graph-dirty 与 dependency-aware，共 27 组 after-state outputs。使用原文 0.5/0.3/0.2 权重与 Fraction 精确算术；所有处理都正确重建 frontier、加入新节点、移除退出节点。",
+          "environment": "macOS arm64 / Python 3.13.3 标准库；不联网、不安装依赖、不调用模型/API或使用 GPU。",
+          "fixture": "四个原创抽象节点组成两对双向 association edges；两种 community、固定 centrality 1/4、正整数 importance。两个场景另加 d→c prerequisite。previous-pointer 干预明示为 controller context，不伪装成完整对话重放。",
+          "controls": "8 项行为测试覆盖手算分数、同选择但分数过期、无 entity mutation 的 context 改变、自身合法变化、远处无关变化、相同 community、新旧 frontier、有向依赖与输入不变。",
+          "rawResult": "graph-dirty 在远处最大值改变、最大值退出、previous 跨 community、解锁新最大值四例留下 stale score，其中三例把 full 的 c 误选为 a。远处最大值 10→20 时，a 应从 27/40 变为 19/40，缓存却保留前者。另五例一致；dependency-aware 九例全部与 full 分数和排名一致。",
+          "derivedResult": "完整 Score 的缓存依赖包含候选集合的最大 importance 与上一轮 community；只按领域图失效可能遗漏它们。比较 top-1 不足以检出所有 stale score。",
+          "limitations": "固定图、community、centrality 与 importance 输入，没有运行作者源码或模型。局部策略是对公开 dirty-set 描述的明示实现，不证明作者代码如此缓存。runner 扫描全图，不测性能；9 例不是随机样本或实际错误率，Theorems 1–2 未验证。",
+          "links": [
+            {
+              "label": "方法、依赖图与复跑命令",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mosaic-score-dependency-study/README.md"
+            },
+            {
+              "label": "执行前协议与控制",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mosaic-score-dependency-study/protocol.md"
+            },
+            {
+              "label": "原始输入与完整结果",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/mosaic-score-dependency-study/results.json"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 5,

@@ -1770,8 +1770,20 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             for link in proactive["contributions"][0]["links"]
         ))
         self.assertEqual(proactive["designTransfer"]["status"], "proposed-not-run")
+        mosaic = by_id["mosaic-long-term-memory"]
+        self.assertEqual(mosaic["noteDepth"], "worked")
+        for field in (
+            "whyRead", "argumentMap", "methodNotes", "reportedFindings", "evidenceLimits",
+            "sourceTensions", "editorialInferences", "contributions",
+        ):
+            self.assertTrue(mosaic[field])
+        self.assertEqual(mosaic["contributions"][0]["type"], "public-test")
+        self.assertTrue(any(
+            link["url"].endswith("/research/mosaic-score-dependency-study/results.json")
+            for link in mosaic["contributions"][0]["links"]
+        ))
+        self.assertEqual(mosaic["designTransfer"]["status"], "proposed-not-run")
         current_skim_ids = {
-            "mosaic-long-term-memory",
             "coala-cognitive-architecture", "storage-to-experience",
             "agentic-memory", "midca-dual-cycle",
             "agm-theory-change", "memory-beyond-recall",
