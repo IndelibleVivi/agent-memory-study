@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-09-18",
+  "status": "local-runner-controls-passed; pretrained-transfer-not-run",
+  "pretrained_transfer": "not-run",
+  "corpus_prepare": {
+    "dataset": "HuggingFaceFW/fineweb-edu",
+    "config": "sample-10BT",
+    "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+    "candidate_documents": 200,
+    "input_jsonl_sha256": "8dd29387ff1a3909f710efc426a1afb9c1c9d28c94b26a1344cbc5e58f140e0f",
+    "eligible_documents": 157,
+    "dropped_short": 43,
+    "dedupe": {
+      "duplicate_ids": 0,
+      "duplicate_text": 0
+    },
+    "split_counts": {
+      "test": 16,
+      "train": 64,
+      "validation": 8
+    },
+    "token_alignment": "two-tokenizers",
+    "limitation": "Pinned tokenizer-only preparation; no pretrained model inference, cache capture, fit, or transfer evaluation.",
+    "identical_truncated_sequences_across_88_selected_documents": 0,
+    "tokens_sha256": "e04f8a99e782287121bbd7a38fac81013d1f7c013b22b5422471b3d96c245f53"
+  },
+  "fit_tensor_probe": {
+    "evidence_kind": "tensor-only-memory-probe",
+    "upstream_commit": "949d81d7861e998d5c42db68d7567cc70e2e58c5",
+    "torch": "2.8.0",
+    "threads": 1,
+    "accumulation_dtype": "float64",
+    "feature_width": 1024,
+    "output_width": 1024,
+    "batch_rows": 64,
+    "observation_counts": [
+      64,
+      128,
+      192,
+      256
+    ],
+    "persistent_tensor_shapes": {
+      "mean_x": [
+        1024
+      ],
+      "mean_y": [
+        1024
+      ],
+      "centered_xtx": [
+        1024,
+        1024
+      ],
+      "centered_xty": [
+        1024,
+        1024
+      ],
+      "centered_yty": []
+    },
+    "persistent_shapes_unchanged": true,
+    "accumulation_seconds": 0.07189700001617894,
+    "total_seconds": 0.17476266698213294,
+    "peak_process_rss_bytes": 274857984,
+    "limitation": "One K or V accumulator/solve at k=1; not full runner/model RSS, quality, or VPS timing."
+  },
+  "not_run": [
+    "pretrained 256-token disk/native 191/64 control",
+    "pretrained cross-model mapper fit or quality evaluation",
+    "paper benchmark",
+    "end-to-end serving speedup",
+    "cross-model source-retraction extension"
+  ],
+  "runtime": {
+    "python": "3.12.13",
+    "torch": "2.8.0",
+    "transformers": "4.51.3",
+    "execution": "CPU; local random models only; pretrained tokenizers allowed",
+    "accelerate": null,
+    "safetensors": "0.8.0",
+    "numpy": "2.5.3"
+  },
+  "random_native_disk_control": {
+    "status": "complete-measured",
+    "evidence_kind": "native-disk-cache-control",
+    "run_evidence_kind": "random-model-smoke",
+    "seq_len": 256,
+    "cached_tokens": 191,
+    "fresh_tokens": 64,
+    "labels": 64,
+    "attention_backend": "eager",
+    "native_prefix_kind": "raw-post-rope",
+    "native_vs_full": {
+      "max_abs_logit_delta": 0.0,
+      "nll_delta": 0.0
+    },
+    "first_logit_future_invariance": 0.0,
+    "capture_roundtrip_diagnostics": {
+      "content_roundtrip_max_abs": 0.012244462966918945,
+      "content_roundtrip_r2": 0.9999967071824563
+    },
+    "peak_process_rss_bytes": 300171264,
+    "limitation": "One target-native document; no source model, mapper fit, transfer-quality claim or speedup. Numerical deltas require inspection before a calibration run.",
+    "roundtrip_nll_delta": -0.0002117156982421875,
+    "roundtrip_kl_native_to_candidate": 1.7157590264105238e-06,
+    "fixture": "probe_native_cache.py --random; seeded synthetic tokens and random Qwen weights"
+  },
+  "runner_code_sha256": "8d4a2ba183c9cfe178d081beec24c9e1f8d1942c07db93d4f40fa8b006a4dc2f",
+  "unittest": {
+    "status": "passed",
+    "tests": 21,
+    "seconds": 28.541,
+    "command": "KVPREFILL_UPSTREAM=/path/to/kvbridge python3 -B -m unittest discover -s research/kv-prefill-transfer -p 'test_runner.py' -v",
+    "includes": [
+      "full 256/192/191/64 pipeline",
+      "BF16 raw-native and RoPE roundtrip separation",
+      "candidate independent of target reference",
+      "branch order invariance",
+      "train-only fit with held-out shards absent",
+      "per-head reconstruction reduction",
+      "known-layer and all-head order controls",
+      "FP64 sum-ridge against direct solve and chunk/order controls",
+      "official nonzero-position rotary with different theta",
+      "prepared token identity and capture resume identity",
+      "reject unsupported fit precision/content-space settings instead of silently ignoring them"
+    ]
+  },
+  "random_cli_smoke": {
+    "status": "complete",
+    "evidence_kind": "random-model-smoke",
+    "phases": {
+      "capture_source": "complete",
+      "capture_target": "complete",
+      "evaluate_test": "complete",
+      "evaluate_validation": "complete",
+      "fit": "complete",
+      "prepare": "complete"
+    },
+    "dataset": {
+      "test": 4,
+      "train": 12,
+      "validation": 4
+    },
+    "native_vs_full_reference": {
+      "first_argmax_match_all": true,
+      "max_abs_logit_delta": 7.152557373046875e-07,
+      "max_abs_nll_delta": 0.0,
+      "max_first_logit_abs_delta": 5.364418029785156e-07
+    },
+    "quality_gate": {
+      "reason": "random-model-smoke numbers are a structural check on a randomly initialised model and must not be read as transfer quality",
+      "status": "not-a-gate"
+    },
+    "attention_cosine": {
+      "test": "measured",
+      "validation": "measured"
+    },
+    "future_invariance_max_abs_logit_delta": 0.0
+  },
+  "reader_validation": {
+    "status": "passed",
+    "command": "python3 -B tools/verify_reader.py",
+    "scope": "Existing reader contracts, generated data, five fresh deterministic studies and saved AgeMem/C2C receipts; does not run this PyTorch runner."
+  },
+  "execution_notes": [
+    "Development checks found index, head-reduction and BF16 native-reference issues; corrected before the recorded final run.",
+    "Reader validation initially rejected local bytecode residue; residue moved outside the checkout and final validation passed.",
+    "Synthetic smoke outputs were inspected during implementation; they are engineering controls, not a blinded quality experiment."
+  ]
+}

@@ -129,6 +129,9 @@ C2C receipt checks do not load model weights or perform inference; see its
 [experiment guide](research/c2c-cache-retraction-study/README.md). The AgeMem receipt check
 does not execute upstream AgeMem; a fresh run requires the pinned external
 checkout described in its [audit guide](research/agemem-reward-observation-audit/README.md).
+The [cross-model KV runner](research/kv-prefill-transfer/README.md) has separate
+PyTorch and pinned-upstream tests. It is not part of this model-free command;
+random-model checks do not establish pretrained transfer quality or reading depth.
 The command does not rerun all external-source audits or any paper benchmark. The second test path serves
 this checkout under `/agent-memory-study/` and checks real browser navigation,
 search, shared scenario state, reload and back/forward on desktop and mobile

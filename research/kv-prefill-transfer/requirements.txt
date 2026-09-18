@@ -1,0 +1,16 @@
+# Minimal dependencies for research/kv-prefill-transfer/runner.py, pinned to the
+# versions of the verified CPU environment (Python 3.12).
+#
+# Not installable here: the pinned kvbridge-streaming checkout
+# (commit 949d81d7861e998d5c42db68d7567cc70e2e58c5) is passed with --upstream.
+# The runner imports kvbridge.ridge.RidgeAccumulator plus the cache/features/
+# mapper/metrics helpers from that checkout at run time and verifies the commit
+# before importing anything. Nothing from it is copied or vendored.
+#
+# Local random-model controls ran without accelerate; low_cpu_mem_usage=True
+# is retained on every load. The earlier Linux resource probe also had
+# accelerate==1.10.1 installed, but this runner does not import it.
+torch==2.8.0
+transformers==4.51.3
+safetensors==0.8.0
+numpy==2.5.3

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "pretrained-transfer",
+  "seed": 260803893,
+  "threads": 1,
+  "seq_len": 256,
+  "prefix_len": 192,
+  "stride": 4,
+  "dtype": "bfloat16",
+  "top_k": 1,
+  "ridge_alpha": 0.01,
+  "selection_alpha": 0.000001,
+  "splits": {"train": 64, "validation": 8, "test": 16},
+  "source": {
+    "model": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "origin": "pretrained"
+  },
+  "target": {
+    "model": "Qwen/Qwen3-1.7B",
+    "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "origin": "pretrained"
+  },
+  "data": {"kind": "jsonl", "path": "corpus/documents.jsonl"},
+  "fit": {
+    "accumulation_dtype": "float64",
+    "content_space": true,
+    "max_statistics_bytes": 536870912
+  }
+}
