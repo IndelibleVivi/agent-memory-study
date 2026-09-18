@@ -1188,6 +1188,65 @@
         <prism:doi>10.48550/arXiv.2608.24876</prism:doi>
         <link:link rdf:resource="#attachment_23_recuris-memory-evolution" />
     </rdf:Description>
+    <rdf:Description rdf:about="https://arxiv.org/abs/2510.03215v2">
+        <z:itemType>conferencePaper</z:itemType>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Fu</foaf:surname>
+                        <foaf:givenName>Tianyu</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Min</foaf:surname>
+                        <foaf:givenName>Zihan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Zhang</foaf:surname>
+                        <foaf:givenName>Hanling</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Yan</foaf:surname>
+                        <foaf:givenName>Jichao</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Dai</foaf:surname>
+                        <foaf:givenName>Guohao</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Ouyang</foaf:surname>
+                        <foaf:givenName>Wanli</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Wang</foaf:surname>
+                        <foaf:givenName>Yu</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>Cache-to-Cache: Direct Semantic Communication Between Large Language Models</dc:title>
+        <prism:doi>10.48550/arXiv.2510.03215</prism:doi>
+        <dc:date>2026</dc:date>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/abs/2510.03215v2</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dc:description>ICLR 2026; arXiv:2510.03215v2. Public metadata-derived projection; not a native Zotero export.</dc:description>
+        <link:link rdf:resource="#attachment_24_cache-to-cache" />
+    </rdf:Description>
     <z:Attachment rdf:about="#attachment_01_a-tma-state-aware-memory">
         <z:itemType>attachment</z:itemType>
         <dc:title>Full Text PDF</dc:title>
@@ -1387,6 +1446,17 @@
         <dc:identifier>
             <dcterms:URI>
                 <rdf:value>https://arxiv.org/pdf/2608.24876v1</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <z:linkMode>3</z:linkMode>
+    </z:Attachment>
+    <z:Attachment rdf:about="#attachment_24_cache-to-cache">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Full Text PDF</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://arxiv.org/pdf/2510.03215v2</rdf:value>
             </dcterms:URI>
         </dc:identifier>
         <z:linkMode>3</z:linkMode>

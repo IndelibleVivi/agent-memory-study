@@ -34,7 +34,9 @@ def main():
     if json.loads(result.stdout) != json.loads((ROOT / 'research/correction-scope-study/results.json').read_text()):
         raise SystemExit('Correction study outputs differ from the checked results.')
     run([python, '-B', 'research/agemem-reward-observation-audit/audit.py', '--verify-checked'])
-    print('PASS: reader contracts, generated data, five fresh deterministic studies and checked AgeMem receipts')
+    run([python, '-B', 'research/c2c-cache-retraction-study/study.py', '--verify-checked'])
+    run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/c2c-cache-retraction-study', '-p', 'test_*.py'])
+    print('PASS: reader contracts, generated data, five fresh deterministic studies and checked AgeMem/C2C receipts')
 
 
 if __name__ == '__main__':

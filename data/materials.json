@@ -63,7 +63,8 @@
           "longmemeval-v2-experienced-colleague",
           "fluctlightdb-observation-binding",
           "memprobe-hidden-user-state-recovery",
-          "recuris-memory-evolution"
+          "recuris-memory-evolution",
+          "cache-to-cache"
         ]
       },
       {
@@ -4571,6 +4572,267 @@
         "boundary": "这是基于精读的迁移建议，尚未在新项目执行。原文不同 benchmark 启用的组件不同；专题没有模拟 automatic evolution 或验证 gate。",
         "basis": "既有札记 §§2.2–2.3、Table 2、Appendix E；“编者判断”。",
         "status": "proposed-not-run"
+      }
+    },
+    {
+      "number": 24,
+      "id": "cache-to-cache",
+      "title": "Cache-to-Cache: Direct Semantic Communication Between Large Language Models",
+      "authors": [
+        "Tianyu Fu",
+        "Zihan Min",
+        "Hanling Zhang",
+        "Jichao Yan",
+        "Guohao Dai",
+        "Wanli Ouyang",
+        "Yu Wang"
+      ],
+      "year": 2026,
+      "doi": "10.48550/arXiv.2510.03215",
+      "noteDepth": "worked",
+      "readingScope": "精读 arXiv:2510.03215v2（2026-03-02，ICLR 2026）完整 29 页：正文 §§1–6、声明、Appendices A.1–A.5、Tables 1–15、figure captions 与展示案例；references 只作定位，未逐项核验。PDF page preflight PASS，视觉核对 pp. 4、9、27、28。本站原创机制实验与当前源码审计另列 AMS evidence，不称为论文模型或 benchmark 复现。",
+      "intro": "同一段文字已经进入 context，不代表不同模型得到了同样可用的内部表示。C2C 在双方模型 prefill 后，用训练过的 fuser 将 Sharer 的 KV-cache 投影、融合到 Receiver，再继续生成。它研究模型内部的通信接口，不提供外部记忆库、检索器或来源有效性规则。",
+      "whyRead": "它把“证据进入 context”继续拆成“证据如何改变可复用的计算状态”。尤其是删去示例 cache 后仍保留问题 cache 的 oracle，让来源移除与派生影响撤回成为两个可以分别检验的动作。与此同时，同模型融合、token 对齐、训练成本与混合文字路径都限制了“直接传理解”的叙事。",
+      "keyPoints": [
+        "§3.2.1 / Eq. 2：oracle 先处理示例 E 与问题 X，再只保留 X 对应的 KV slice；X 的 cache 已经在 E 的条件下生成。它测试固定 cache 长度下的 enrichment，不是更正、遗忘或隐私删除实验。",
+        "§§3.3.1–3.3.4：按层融合双方 cache，并残差加入 Receiver；动态权重依输入变化，层 gate 由训练学习。模型冻结，fuser 仍需要 next-token prediction 训练。",
+        "§3.3.3 / A.1.2：异构 tokenizer 把 Receiver 的单 token 文本重新编码到 Sharer，一对多时只取 first 或 longest。对齐长度不构成原文或状态角色无损保证。",
+        "§4.4 / Table 6：同模型融合控制已有明显收益；异构模型再提高表现。额外容量、训练过的 cache 通路和异构互补不能只靠总增益作唯一因果归因。",
+        "A.5.3 / Table 15：加入文字解释的 T-C2C 探索有较高 GSM8K 分数，提示文字生成与内部表示可组合；它没有把通信方式、额外推理与训练条件完全分账。"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 长度之外的条件化",
+          "claim": "先用示例塑造问题 cache，再移除示例 slots；保留下来的问题表示可以承接前缀影响。",
+          "locator": "§3.2.1、Eq. 2、Table 1；A.3.1、A.3.6"
+        },
+        {
+          "step": "02 · 可转换不等于无损语义传输",
+          "claim": "用 MSE 训练最后一层 cache 映射并展示 t-SNE，提供可学习的表示转换线索；主任务性能另由生成实验检验。",
+          "locator": "§3.2.2、Figure 3；A.3.2"
+        },
+        {
+          "step": "03 · 学习融合与选择",
+          "claim": "投影、动态加权、残差和层 gate 共同构成 cache 注入；token 与 layer alignment 决定双方状态怎样接合。",
+          "locator": "§3.3、Figure 5、Eqs. 3–4；A.1"
+        },
+        {
+          "step": "04 · 回到具体对照",
+          "claim": "多组模型配对、Single / Identical 消融和训练成本表支持工程可行性，同时把结论限定在各自训练、输出预算和任务设置内。",
+          "locator": "§4、Tables 3–9、12；A.3.4–A.3.5"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Oracle 与主方法训练分开",
+          "text": "enrichment oracle 使用示例条件化，不训练 C2C；transformation oracle 则以最后一层 K/V 的 MSE 训练三层 MLP，并对 300 样本做 t-SNE。主 C2C 使用 Receiver 的 next-token loss。",
+          "locator": "§3.2、§3.3.4；A.3.1–A.3.2"
+        },
+        {
+          "label": "训练集随实验变化",
+          "text": "主表使用 OpenHermes-2.5 的 500k 样本；model-size / model-combination 使用 MMLU auxiliary train 的 15k；长 context 实验按 LongBench-E 数据索引分 3/4 training、1/4 evaluation。不能把所有表理解成同一个通用 checkpoint。",
+          "locator": "§4.1；A.3.4–A.3.5"
+        },
+        {
+          "label": "计时包括什么",
+          "text": "主设置是单 A100、batch size 1、greedy decoding。通常 Receiver 上限 64 tokens、T2T 通信上限 256；C2C-C 表的回答上限为 8，而 Qwen2.5-Math 特例两种上限均改为 1024。",
+          "locator": "§4.1、Table 3；A.1.3、A.3.4、A.4.3"
+        },
+        {
+          "label": "Gate 的控制对象",
+          "text": "gate 学习哪些层注入；general-purpose 训练平均 gate activation 超过 98.21%，task-specific 为 52.67%。这种稀疏性不是来源被撤回、时效改变或主体归属的判定。",
+          "locator": "§3.3.2；A.4.2"
+        },
+        {
+          "label": "额外表示的证据尺度",
+          "text": "effective rank 是奇异值分布的熵指数；其增加描述表示维度，不单独证明事实更真实、某条知识已传递或信息不可逆。t-SNE 也不能单独建立这些结论。",
+          "locator": "§3.2.2、§4.5；A.4.1、Figure 12"
+        }
+      ],
+      "reportedFindings": [
+        "Table 1：Direct 58.42%、Few-shot 63.39%、仅保留问题 cache 的 Oracle 62.34%；Oracle 与 Direct 的 cache 长度均为 |X|。这些数字来自论文，不是本站重跑。",
+        "Table 6：Single / Identical / C2C 的 MMLU 分数分别为 36.81 / 42.17 / 42.92；列出的可训练参数分别为 596M / 529M / 478M。异构相对同模型的差为 0.75 pp，并非总增益的严格因果分账。",
+        "Table 8：Project / +Fuse / +Gate 的四任务均值为 20.70 / 44.88 / 47.95；gate 的均值提升没有遍及每个任务，MMLU 为 43.36→42.92。",
+        "Table 3：该 MMLU-Redux 设置的总时延为 Receiver-only 308 ms、T2T 1596 ms、C2C 445 ms，其中包含 90 ms fusion。相对 T2T 加速不等于比单 Receiver 更快。",
+        "Table 12：Qwen2.5-0.5B→Qwen3-0.6B 在 300 / 1929 steps 的 MMLU-Redux 为 44.30 / 42.92，GPU hours 为 6.95 / 44.72；训练更久并不保证该评测分数单调上升。",
+        "Table 15：GSM8K 的 Single / T2T / C2C / T-C2C 为 41.17 / 61.18 / 62.55 / 78.01；这是探索性 agentic flow，不是所有 agent 任务的通用比较。"
+      ],
+      "evidenceLimits": [
+        "没有运行 C2C fuser 训练、双模型通信、论文 benchmark 或 A100 计时；本站执行另放 AMS evidence。",
+        "同模型融合与全参数微调提供有价值控制，但结构与可训练参数不同；不能据总分唯一归因于跨模型特有知识。",
+        "Transformer hidden state 与 atlas 中的时间/主体/修订角色不是同一种 state。本文主要映射 Active context / retrieval 的检索后接口；不自动扩展成 state-aware memory 方法。",
+        "本文没有证明单条来源撤回后的影响消除、隐私保护或 machine unlearning；§5 的 privacy-aware collaboration 是未来方向。KV 未明文传输不等于内容不可恢复。",
+        "token alignment 的 first/longest 是有损选择的可能机制，不凭算法描述推断某个真实 tokenizer 在否定词上实际失败；需区分源码 doubles、真实 tokenizer 和最终模型行为。",
+        "t-SNE 覆盖与 effective-rank 增加不单独验证语义忠实或真实性；小模型对合成问答的表现也不能外推到真实用户记忆。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "选对字母仍可能给错推导",
+          "observation": "A.4.6 把 Receiver 案例称为正确；Text 11 展示的计算先得到 2400，最后却选 A（2500），同时列出的中间加减式与结果也不一致。",
+          "implication": "此例可支持最终选项层面的比较，不能把其解释当作可靠推理基线，再据此论证完整理解被破坏。",
+          "locators": [
+            "A.4.6，PDF pp. 25–27",
+            "Text 10–14，尤其 Text 11"
+          ]
+        },
+        {
+          "label": "多 Sharer 的身份描述不一致",
+          "observation": "Table 14 的 caption / rows 列 Coder-0.5B 与 4B-Base；A.5.2 最后一段却写 Coder-0.5B 与 Math-1.5B。",
+          "implication": "表格数值可按其行标签定位，但仅靠该段不能消除第二个 Sharer 的身份歧义；不补造统一配置。",
+          "locators": [
+            "Table 14",
+            "A.5.2，PDF p. 28"
+          ]
+        },
+        {
+          "label": "总收益不是每项都受益",
+          "observation": "§4.4 描述 gate 提高平均成绩；Table 8 的 MMLU +Gate 低于 +Fuse，A.4.6 也列出了通信后的错误选项。",
+          "implication": "保留整体收益与局部退化两种事实，不把 learned gate 写成逐输入可靠性保证。",
+          "locators": [
+            "§4.4、Table 8",
+            "A.4.6"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "撤回还需要计算依赖边界",
+          "text": "如果来源曾参与 suffix 状态的计算，删除来源 slots 之后仍需单独检查 retained cache；重建有效 context 和复用旧派生状态是不同操作。",
+          "boundary": "这是由 oracle 机制提出的 AMS 问题；本篇不提供遗忘保证，本站实验也只覆盖一个小模型与合成条件。"
+        },
+        {
+          "label": "与 A-TMA 相邻，但不混用 state",
+          "text": "A-TMA 追问证据以什么当前/历史角色进入使用；C2C 追问同样 context 怎样形成可用内部状态。两者可连成阅读问题，但 neural representation 本身不携带可审查的角色合同。",
+          "boundary": "这是跨源编者连接，不是两篇论文共同验证的框架，也不把 C2C 归类成时序记忆或检索算法。"
+        },
+        {
+          "label": "保留可更正的外部依据",
+          "text": "可以同时研究文字解释与 cache 表示；来源、版本与适用范围仍应在可检查层保留，再验证失效如何传播到内部状态。",
+          "boundary": "迁移建议没有得到本文的长期 memory 部署验证；纯文本 API 也不提供论文需要的 KV 读写接口。"
+        }
+      ],
+      "keywords": [
+        "KV-cache",
+        "latent communication",
+        "cache enrichment",
+        "source retraction",
+        "token alignment"
+      ],
+      "categories": [
+        "记忆架构",
+        "可靠性"
+      ],
+      "failureSurfaces": [
+        "retrieval-active-context"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2510.03215v2",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2510.03215v2",
+        "accessNote": "arXiv v2 official PDF；arXiv non-exclusive license，本站不重新分发。"
+      },
+      "editorialQuestion": "来源已经退出显式 context，哪些仍被复用的计算状态还受它影响；怎样区分保留历史与继续把旧前提当成当前依据？",
+      "sourceNote": "Source authority：arXiv:2510.03215v2，2026-03-02；论文标注 ICLR 2026。官方源码 github.com/thu-nics/C2C 的 current revision audit 与 paper-time evidence 分层；本站原创单模型对照不训练 C2C。 本站固定官方实现 revision 113c3a9b2538cbf096a0477e1ec99ae2a2e0d12a（commit date 2026-02-06）；源码时间早于所读 v2，未建立 paper-run identity。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-18",
+        "status": "proposed-not-run",
+        "when": "系统把 evidence bundle 编译成可跨请求复用的计算状态，并允许来源更正或撤回。",
+        "move": "将 source version 与派生 cache 的计算依赖一起记录；更正后按仍有效依据重建受影响状态，并分别定义当前回答与历史追溯的允许来源。",
+        "check": "在实际 serving pipeline 固定问题、token 位置与预算，撤回来源后比较旧 cache 复用与按新版本重建；再测当前与历史两个问题，检查调度是否真的选中了新状态。",
+        "boundary": "这是尚未在 serving pipeline 执行的迁移建议；本地单模型机制实验不验证真实请求生命周期、并发失效传播或选择性 unlearning。",
+        "basis": "§3.2.1、Eq. 2；A.5.3；本站来源撤回机制实验与源码审计的狭义证据。"
+      },
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "来源删了，计算影响还在吗？",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-18",
+          "basis": "C2C v2 §3.2.1 / Eq. 2 的 cache enrichment 机制；固定 HuggingFaceTB/SmolLM2-135M-Instruct revision 12fd25f77366fa6b3b4b768ec3050bf629380bac。",
+          "boundary": "原创单模型机制实验，不运行 C2C fuser、论文 benchmark 或权重级 unlearning；不给现实纠错、遗忘或安全性评分。",
+          "method": "四对等长合成来源 × 五类问题 × 五种 cache treatment。R 与 Q 的绝对位置相同，physical cache index 按裁剪长度推进；答案由新的 Q forward 产生。先执行 float32，再按明确 amendment 加强控制并以 float64 参数/hidden states 重跑。",
+          "environment": "Python 3.12.13 / torch 2.8.0 / transformers 4.51.3；CPU、eager、4 threads、eval、greedy 8 tokens。最终参数与 hidden states 使用 float64；官方 RoPE frequency 和 softmax 仍内部使用 float32。",
+          "fixture": "四对 beacon/lamp/route/gate 合成事实，每条来源 9 tokens；同一配对共用 R、Q 与第三个更新值。原状态、状态改变后的当前/过去、记录纠错后的真值/先前报告共五类问题。无私人数据。",
+          "controls": "full、trim、recompute、neutral_trim、masked_trim；检查 native/repacked cache、shifted split、Q 前半段、同长度未来 token 置换、所有层 R→C attention、masked/recompute 与 layer-0 不变量。所有条件独立 clone。",
+          "rawResult": "最终 200 个输出全部保存。20/20 配对的 trim 来源替换改变 next-token 分布，最大 logit 差范围 0.433175–1.087516；3/20 首个 greedy token 改变。recompute 来源配对、masked/recompute、split/repack 与因果前缀控制的差均为零。",
+          "derivedResult": "在固定模型与这些 token 序列里，删除来源 slots 后仍存在来源内容依赖。探索性答案定向 margin 在四组当前题中三正一负；分布差异不等于稳定、正确的事实恢复。",
+          "limitations": "首轮 120 输出已被查看后才增加问题与控制；float32 加强轮两项控制略超 1e-4，保留失败记录，未调大阈值。最终重跑不是盲确认性试验。小模型历史问答不稳定；候选概率与自由生成答案不同；不报告总体错误率。",
+          "links": [
+            {
+              "label": "方法、结果与复跑命令",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/c2c-cache-retraction-study/README.md"
+            },
+            {
+              "label": "协议与修订顺序",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/c2c-cache-retraction-study/protocol.md"
+            },
+            {
+              "label": "完整 compact receipt",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/c2c-cache-retraction-study/results.json"
+            }
+          ]
+        },
+        {
+          "type": "public-test",
+          "title": "Token 选中了什么，gate 又保证了什么？",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-18",
+          "basis": "官方 thu-nics/C2C commit 113c3a9b2538cbf096a0477e1ec99ae2a2e0d12a；TokenAligner、C2CProjector 与 shipped recipes。",
+          "boundary": "直接执行固定官方类，输入是手写 tokenizer doubles 与 toy 张量；真实 paired-tokenizer roundtrip、官方 cache enrichment forward 和完整训练未执行。",
+          "method": "四个 token-split fixtures 分别执行 first/longest；projector 比较闭 gate、开 gate、开 gate且零化投影输出，并检查阈值和 temperature schedule。示例裁剪与配置只作源码阅读。",
+          "environment": "Python 3.12.13 / torch 2.8.0 / transformers 4.51.3，CPU，projector seed 20260918；无权重下载、训练或推理服务。",
+          "fixture": "前导空白后的 not、分成20/24的年份、一对一映射、not后的尾空白。每项明确需要保留的完整词素或内容；后者作为与前导空白情形配对的控制。",
+          "controls": "每种策略用新实例；一对一和尾空白控制；projector gate=0 的精确恒等、gate>0 的非恒等与投影输出零化后的恢复。",
+          "rawResult": "给定 doubles 下，first 在前导空白/not 例中丢掉否定词，longest 保留；20/24 两片段在两策略下都只保留20。闭 gate 与零化投影时输出逐位等于 Receiver。library 默认 first，shipped eval 配置写 longest 但 alignment 同时关闭。",
+          "derivedResult": "长度对齐不保证原文完整保留，learned gate 的开闭也不表达来源有效性。配置中的一个策略名不能单独证明该策略在论文或端到端评估中实际运行。",
+          "limitations": "构造 split 不是真实 tokenizer 失效证据；toy projector 不是质量评测。源码示例保留前15个 slots并续用原始绝对位置，只读未跑，未据此判断论文 oracle 有错。",
+          "links": [
+            {
+              "label": "方法、结果与复跑命令",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/c2c-source-contract-audit/README.md"
+            },
+            {
+              "label": "协议与修订顺序",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/c2c-source-contract-audit/protocol.md"
+            },
+            {
+              "label": "完整 compact receipt",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/c2c-source-contract-audit/results.json"
+            }
+          ]
+        }
+      ],
+      "amsEvidence": {
+        "byline": "Agent Memory Study editors",
+        "artifactUrl": "research/c2c-cache-retraction-study/README.md",
+        "observations": [
+          "实际加载固定的 SmolLM2-135M-Instruct，并对等长来源替换做 200 个 cache/问答输出；另直接 import 固定官方 TokenAligner 与 C2CProjector，运行手写输入的函数级对照。"
+        ],
+        "findings": [
+          "20/20 来源配对在裁掉来源 slots 后仍改变 next-token 分布，3/20 首 token 改变；最终重跑的 position、mask、repack、因果性与重新计算控制全部通过。检测到的是来源内容依赖，不等于旧事实仍可正确恢复。",
+          "四组当前题的探索性 source-value margin 三正一负；历史/先前报告问题的 full 条件也不稳定，不能从分布差异推出普遍的更正失败或可用记忆。",
+          "官方 aligner 在构造的一对多输入上可丢掉否定词或截断年份；闭 projector gate 精确保留 Receiver。真实 tokenizer 失效率、learned gate 的语义可信度和论文 benchmark 均未验证。"
+        ],
+        "methods": [
+          {
+            "label": "位置、mask 与执行顺序",
+            "text": "先保存执行前协议；首轮后追加独立审阅建议，再保留 float32 控制失败记录并用更高精度矩阵运算重跑。数值阈值仍为1e-4，所有输出和探索性指标均保留。",
+            "locator": "research/c2c-cache-retraction-study/protocol.md；execution-history.json；results.json"
+          },
+          {
+            "label": "真实类与输入替身",
+            "text": "固定当前 official commit 并直接执行 TokenAligner / C2CProjector；tokenizer 仅替代受控输入形状，projector 张量为 toy dimensions。裁剪示例和配置明确只读未运行。",
+            "locator": "research/c2c-source-contract-audit/README.md；audit.py；results.json"
+          }
+        ],
+        "reasoning": [
+          {
+            "step": "从显式来源到计算依赖",
+            "claim": "来源不再占据 cache slots，与 retained 状态不再受来源影响是两个不同命题。重新计算提供了本次有限模型实验的无来源参照；真实 serving 的失效传播仍待验证。",
+            "locator": "research/c2c-cache-retraction-study/README.md"
+          }
+        ]
       }
     }
   ],

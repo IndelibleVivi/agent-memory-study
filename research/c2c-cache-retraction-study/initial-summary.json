@@ -1,0 +1,236 @@
+{
+  "phase": "initial execution, before independent review was received",
+  "date": "2026-09-18",
+  "fixtures": {
+    "schema": "ams-c2c-retraction-fixtures-v1",
+    "byline": "Agent Memory Study editors",
+    "date": "2026-09-18",
+    "pairs": [
+      {
+        "id": "beacon-color",
+        "subject": "beacon color",
+        "values": [
+          "red",
+          "blue"
+        ],
+        "updated": "green"
+      },
+      {
+        "id": "lamp-color",
+        "subject": "lamp color",
+        "values": [
+          "black",
+          "white"
+        ],
+        "updated": "yellow"
+      },
+      {
+        "id": "route-direction",
+        "subject": "route direction",
+        "values": [
+          "north",
+          "south"
+        ],
+        "updated": "east"
+      },
+      {
+        "id": "gate-position",
+        "subject": "gate position",
+        "values": [
+          "left",
+          "right"
+        ],
+        "updated": "center"
+      }
+    ],
+    "prefix_template": "Record: The {subject} is {value}.\n",
+    "retained_template": "This record concerns the {subject}.\n",
+    "queries": {
+      "current": "Question: What is the {subject}? Answer with one word.\nAnswer:",
+      "corrected_current": "Update: The {subject} is now {updated}.\nQuestion: What is the {subject} now? Answer with one word.\nAnswer:",
+      "historical": "Update: The {subject} is now {updated}.\nQuestion: What was the {subject} before the update? Answer with one word.\nAnswer:"
+    }
+  },
+  "summary": {
+    "rollouts": 120,
+    "source_pairs_by_query": 12,
+    "trim_pair_logit_differences_above_tolerance": 12,
+    "recompute_pair_controls_pass": true,
+    "masked_controls_pass": true,
+    "full_split_controls_pass": true,
+    "first_layer_content_controls_pass": true,
+    "greedy_top1_changes_after_source_swap": 3,
+    "scope": "one fixed small model, four synthetic source pairs, three query roles; no accuracy benchmark"
+  },
+  "pair_logit_deltas": [
+    {
+      "pair": "beacon-color",
+      "query_role": "current",
+      "trim_pair": {
+        "max_abs_logit_delta": 0.5291087627410889,
+        "total_variation": 0.018861472732685187,
+        "argmax_changed": true
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    },
+    {
+      "pair": "beacon-color",
+      "query_role": "corrected_current",
+      "trim_pair": {
+        "max_abs_logit_delta": 0.6104843616485596,
+        "total_variation": 0.028302722300688633,
+        "argmax_changed": false
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    },
+    {
+      "pair": "beacon-color",
+      "query_role": "historical",
+      "trim_pair": {
+        "max_abs_logit_delta": 0.6278362274169922,
+        "total_variation": 0.02757067918534659,
+        "argmax_changed": false
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    },
+    {
+      "pair": "lamp-color",
+      "query_role": "current",
+      "trim_pair": {
+        "max_abs_logit_delta": 0.4331715703010559,
+        "total_variation": 0.01713463611198803,
+        "argmax_changed": false
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    },
+    {
+      "pair": "lamp-color",
+      "query_role": "corrected_current",
+      "trim_pair": {
+        "max_abs_logit_delta": 0.639801025390625,
+        "total_variation": 0.03361754900333385,
+        "argmax_changed": false
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    },
+    {
+      "pair": "lamp-color",
+      "query_role": "historical",
+      "trim_pair": {
+        "max_abs_logit_delta": 0.5815420150756836,
+        "total_variation": 0.03927567104645534,
+        "argmax_changed": true
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    },
+    {
+      "pair": "route-direction",
+      "query_role": "current",
+      "trim_pair": {
+        "max_abs_logit_delta": 0.792477011680603,
+        "total_variation": 0.02956520183177393,
+        "argmax_changed": false
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    },
+    {
+      "pair": "route-direction",
+      "query_role": "corrected_current",
+      "trim_pair": {
+        "max_abs_logit_delta": 1.085698127746582,
+        "total_variation": 0.026651963362425635,
+        "argmax_changed": false
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    },
+    {
+      "pair": "route-direction",
+      "query_role": "historical",
+      "trim_pair": {
+        "max_abs_logit_delta": 1.0875048637390137,
+        "total_variation": 0.027994083255639797,
+        "argmax_changed": false
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    },
+    {
+      "pair": "gate-position",
+      "query_role": "current",
+      "trim_pair": {
+        "max_abs_logit_delta": 0.9764580726623535,
+        "total_variation": 0.06466110066621965,
+        "argmax_changed": false
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    },
+    {
+      "pair": "gate-position",
+      "query_role": "corrected_current",
+      "trim_pair": {
+        "max_abs_logit_delta": 0.859933078289032,
+        "total_variation": 0.032405655665032874,
+        "argmax_changed": true
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    },
+    {
+      "pair": "gate-position",
+      "query_role": "historical",
+      "trim_pair": {
+        "max_abs_logit_delta": 0.9803910851478577,
+        "total_variation": 0.04789747398104118,
+        "argmax_changed": false
+      },
+      "recompute_pair": {
+        "max_abs_logit_delta": 0.0,
+        "total_variation": 0.0,
+        "argmax_changed": false
+      }
+    }
+  ],
+  "max_masked_logit_delta": 5.91278076171875e-05
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "ams-c2c-retraction-fixtures-v1",
+  "byline": "Agent Memory Study editors",
+  "date": "2026-09-18",
+  "pairs": [
+    {
+      "id": "beacon-color",
+      "subject": "beacon color",
+      "values": [
+        "red",
+        "blue"
+      ],
+      "updated": "green"
+    },
+    {
+      "id": "lamp-color",
+      "subject": "lamp color",
+      "values": [
+        "black",
+        "white"
+      ],
+      "updated": "yellow"
+    },
+    {
+      "id": "route-direction",
+      "subject": "route direction",
+      "values": [
+        "north",
+        "south"
+      ],
+      "updated": "east"
+    },
+    {
+      "id": "gate-position",
+      "subject": "gate position",
+      "values": [
+        "left",
+        "right"
+      ],
+      "updated": "center"
+    }
+  ],
+  "prefix_template": "Record: The {subject} is {value}.\n",
+  "retained_template": "This record concerns the {subject}.\n",
+  "queries": {
+    "current_state": "Question: What is the {subject}? Answer with one word.\nAnswer:",
+    "updated_current_state": "Update: The {subject} is now {updated}.\nQuestion: What is the {subject} now? Answer with one word.\nAnswer:",
+    "prior_world_state": "Update: The {subject} is now {updated}.\nQuestion: What was the {subject} before the update? Answer with one word.\nAnswer:",
+    "corrected_truth": "Correction: The earlier record was wrong. The {subject} is {updated}.\nQuestion: What is the correct {subject}? Answer with one word.\nAnswer:",
+    "prior_report": "Correction: The earlier record was wrong. The {subject} is {updated}.\nQuestion: What {subject} did the earlier record report? Answer with one word.\nAnswer:"
+  },
+  "question_semantics": {
+    "current_state": {
+      "kind": "original_record",
+      "target": "source_value"
+    },
+    "updated_current_state": {
+      "kind": "state_change",
+      "target": "updated"
+    },
+    "prior_world_state": {
+      "kind": "state_change",
+      "target": "source_value"
+    },
+    "corrected_truth": {
+      "kind": "record_correction",
+      "target": "updated"
+    },
+    "prior_report": {
+      "kind": "record_correction",
+      "target": "source_value"
+    }
+  }
+}

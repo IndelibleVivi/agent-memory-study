@@ -18,8 +18,9 @@
 - [还没发生的事，能改变此刻的判断吗？](research/proactive-prefix-study/README.md)沿着 proactive trigger 的因果要求，用 3 个原创图场景、30 次精确分数传播说明未来如何经共享实体或归一化影响当前状态；保留前缀参照和负控制，不将它称为作者 GNN 的实现审计；
 - [邻居没变，为什么分数过期了？](research/mosaic-score-dependency-study/README.md)对 MOSAIC 的公开评分式执行 9 个原创场景、27 组缓存处理：frontier 最大值和 previous community 都可能让远处节点的完整分数过期；保留全量参照、依赖补全与有效控制，不将公式实验称为作者实现或 benchmark 复现；
 - [做过、做成、做对](research/agemem-reward-observation-audit/README.md)直接运行固定 AgeMem reward 模块的 16 个原创消息输入：失败维护消息、context reset 与语义利用代理分别暴露不同的评价边界；公开完整输入、返回值、配对控制和复跑命令，不把函数级测试称为真实 mutation 或训练复现；
+- [来源删了，计算影响还在吗？](research/c2c-cache-retraction-study/README.md)受 C2C 启发，对固定 SmolLM2-135M-Instruct 执行 200 个原创 cache 干预输出：删去来源 slots 后，20 组配对仍有来源相关分布差异；记录重算、位置、mask 与数值控制，不将残余依赖称为成功恢复事实。[配套源码审计](research/c2c-source-contract-audit/README.md)直接检查固定 C2C aligner / projector 的函数级行为；两者均不复现论文 benchmark；
 - 一个没有 backend、继续由 GitHub Pages 托管的静态 reader；唯一 analytics 是 Cloudflare Web Analytics 的 aggregate beacon，不使用 cookie 或 localStorage 识别、画像访客；
-- 23 份 canonical materials：10 份按原许可随站提供的 PDF，另 13 份从 reader 直达 official full text；
+- 24 份 canonical materials：10 份按原许可随站提供的 PDF，另 14 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
 
 这些札记是阅读导航，不是逐篇全文批注，也不代替原文。转述、问题和编辑判断不能冒充作者主张；需要引用时，请回到每条记录链接的 official source。
@@ -45,7 +46,7 @@ Constellation 是同一 canonical data 的 semantic projection：failure surface
 
 ## PDF 怎样分发
 
-这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。23 份 canonical materials 中，10 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；另 13 篇只链接作者、publisher、arXiv 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
+这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。24 份 canonical materials 中，10 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；另 14 篇只链接作者、publisher、arXiv 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
 
 不要单独下载 `agent-memory-study.rdf`：其中 10 个 attachment 使用相对路径。请下载 `main` branch ZIP、解压后再导入 RDF；具体步骤与导入后应出现的结构见 [ZOTERO-IMPORT.md](./ZOTERO-IMPORT.md)。tagged Zotero ZIP 只在显式发版时更新，可能暂时落后于 `main`。Doyle 1979 只链接 MIT DSpace 的 official scan，本地 OCR derivative 不在 repo 或分享包里。
 
@@ -252,7 +253,8 @@ Bundled papers keep their file-level Creative Commons licenses; linked works rem
 ## Reader 验证
 
 `python3 -B tools/verify_reader.py` 校验 canonical、证据归属绑定与 generated payload，
-并复跑五组无模型的确定性研究，另检查 AgeMem 已保存 receipt 的输入绑定与算术。
+并复跑五组无模型的确定性研究，另检查 AgeMem 与 C2C 已保存 receipt 的输入绑定与算术；
+C2C receipt 校验不加载权重或执行 inference，fresh run 见[实验说明](research/c2c-cache-retraction-study/README.md)。
 AgeMem 官方模块的 fresh run 需要外部固定 checkout，见[复跑说明](research/agemem-reward-observation-audit/README.md#复跑)。真实浏览器测试与受限环境的验证边界见
 [贡献指南](CONTRIBUTING.md#evidence-ownership-and-reader-checks)。
 新增的 Reading Room validation 仅检查 PR / main，不发布站点；既有 Pages 发布设置不变。

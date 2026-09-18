@@ -1,0 +1,477 @@
+{
+  "schema": "ams/c2c-source-contract-audit.results@2",
+  "environment": {
+    "python": "3.12.13",
+    "torch": "2.8.0",
+    "transformers": "4.51.3",
+    "device": "cpu",
+    "seed": 20260918
+  },
+  "paper": {
+    "id": "arXiv:2510.03215v2",
+    "url": "https://arxiv.org/abs/2510.03215v2",
+    "venue": "ICLR 2026 camera-ready (arXiv v2)"
+  },
+  "source": {
+    "repo": "https://github.com/thu-nics/C2C",
+    "commit": "113c3a9b2538cbf096a0477e1ec99ae2a2e0d12a",
+    "commit_date": "2026-02-06T15:51:33+08:00",
+    "expected_commit": "113c3a9b2538cbf096a0477e1ec99ae2a2e0d12a",
+    "commit_matches_pin": true,
+    "dirty": false,
+    "files": [
+      {
+        "path": "rosetta/model/aligner.py",
+        "purpose": "TokenAligner, AlignmentStrategy",
+        "sha256": "3aeae7edd24c75a501e0a48375ad6ef9fbd7c0200c9358ff549b34ecd198b9a6",
+        "bytes": 26923
+      },
+      {
+        "path": "rosetta/model/projector.py",
+        "purpose": "C2CProjector gate and residual fusion",
+        "sha256": "d4426933c1d788adb3ca4cc5e8ad75ba504b5b2e7d0e996c22a19866869238f6",
+        "bytes": 50952
+      },
+      {
+        "path": "script/train/SFT_train.py",
+        "purpose": "aligner construction default and freeze config",
+        "sha256": "4ed92947e6a6b9e045041d32a53357464d90d7f2e35375b238765d0f49193fb6",
+        "bytes": 43040
+      },
+      {
+        "path": "script/evaluation/unified_evaluator.py",
+        "purpose": "aligner construction in evaluation",
+        "sha256": "ea198b74544a1008de876ea6f163e8466dc242f2ddb7af59d64a76524ea49c27",
+        "bytes": 90361
+      },
+      {
+        "path": "script/evaluation/standard_kvcache_del.py",
+        "purpose": "cache-enrichment trimming example",
+        "sha256": "36f4d3b288cf29f966182c0e76ab08fcf9316cdea874e875d34e71f2ff85e6ed",
+        "bytes": 21074
+      },
+      {
+        "path": "recipe/train_recipe/C2C_0.6+0.5.json",
+        "purpose": "shipped training recipe",
+        "sha256": "a858ff8a8245c3409944d4547b1e8510992edd3eb805b15fdf99b87e08ed2d3c",
+        "bytes": 1603
+      },
+      {
+        "path": "recipe/eval_recipe/unified_eval.yaml",
+        "purpose": "shipped evaluation recipe",
+        "sha256": "a1e0497962f4458abfc5d6a9a662d09bfca28f6a9a33b9f0b7f43d8f4a8c72aa",
+        "bytes": 1840
+      }
+    ]
+  },
+  "tokenizer_mocks": {
+    "role": "bounded input substitute",
+    "note": "These are hand-written tokenizer stand-ins, not Qwen tokenizer metadata. They fix one input shape each so that a one-to-many selection policy has to declare what it keeps. No result here is evidence about the real Qwen3-0.6B or Qwen2.5-0.5B-Instruct tokenizers.",
+    "encode_rule": "greedy longest-prefix match over vocab; equal-length prefix matches resolve to the smallest token id",
+    "decode_rule": "decode([id]) returns the vocab string verbatim",
+    "slm": {
+      "name": "slm (receiver-side, Qwen3-0.6B stand-in)",
+      "pad_token_id": 0,
+      "eos_token_id": 2,
+      "unk_token_id": 3,
+      "bos_token_id": 1,
+      "special_ids": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "vocab": {
+        "0": "<pad>",
+        "1": "<bos>",
+        "2": "<eos>",
+        "3": "<unk>",
+        "100": " the",
+        "101": " not",
+        "102": "2024",
+        "103": "not "
+      }
+    },
+    "llm": {
+      "name": "llm (sharer-side, Qwen2.5-0.5B-Instruct stand-in)",
+      "pad_token_id": 0,
+      "eos_token_id": 5,
+      "unk_token_id": 3,
+      "bos_token_id": 1,
+      "special_ids": [
+        0,
+        1,
+        3,
+        5
+      ],
+      "vocab": {
+        "0": "<pad>",
+        "1": "<bos>",
+        "3": "<unk>",
+        "5": "<eos>",
+        "200": " ",
+        "201": "the",
+        "202": "not",
+        "203": "20",
+        "204": "24",
+        "207": " the"
+      }
+    }
+  },
+  "aligner": {
+    "rows": [
+      {
+        "id": "F1_negation_one_to_many",
+        "role": "negation",
+        "slm_token_id": 101,
+        "slm_token_text": " not",
+        "why_this_role": "In 'x is not y' the negation is carried by one lexeme. If the aligned position keeps only the separating space, the aligned sequence loses the negation word at that position.",
+        "criterion": {
+          "kind": "exact_lexeme",
+          "required": "not"
+        },
+        "strategies": {
+          "first": {
+            "resolved_strategy": "first",
+            "candidates": [
+              200,
+              202
+            ],
+            "candidate_texts": [
+              " ",
+              "not"
+            ],
+            "selected": 200,
+            "selected_text": " ",
+            "criteria_met": false
+          },
+          "longest": {
+            "resolved_strategy": "longest",
+            "candidates": [
+              200,
+              202
+            ],
+            "candidate_texts": [
+              " ",
+              "not"
+            ],
+            "selected": 202,
+            "selected_text": "not",
+            "criteria_met": true
+          }
+        },
+        "candidate_shape_matches_fixture": true
+      },
+      {
+        "id": "F2_temporal_two_way_split",
+        "role": "temporal",
+        "slm_token_id": 102,
+        "slm_token_text": "2024",
+        "why_this_role": "A year is only meaningful as a whole. Any single candidate here is a two-digit fragment, so no choice under either strategy can keep the date intact; the point is to record what the source actually does rather than to assume a tie is handled.",
+        "criterion": {
+          "kind": "complete_content",
+          "required": "2024"
+        },
+        "strategies": {
+          "first": {
+            "resolved_strategy": "first",
+            "candidates": [
+              203,
+              204
+            ],
+            "candidate_texts": [
+              "20",
+              "24"
+            ],
+            "selected": 203,
+            "selected_text": "20",
+            "criteria_met": false
+          },
+          "longest": {
+            "resolved_strategy": "longest",
+            "candidates": [
+              203,
+              204
+            ],
+            "candidate_texts": [
+              "20",
+              "24"
+            ],
+            "selected": 203,
+            "selected_text": "20",
+            "criteria_met": false
+          }
+        },
+        "candidate_shape_matches_fixture": true
+      },
+      {
+        "id": "F3_one_to_one_control",
+        "role": "control",
+        "slm_token_id": 100,
+        "slm_token_text": " the",
+        "why_this_role": "A 1-to-1 mapping has nothing to select, so it must be unaffected by the strategy; this isolates any observed difference to the 1-to-many branch.",
+        "criterion": {
+          "kind": "exact_lexeme",
+          "required": "the"
+        },
+        "strategies": {
+          "first": {
+            "resolved_strategy": "first",
+            "candidates": [
+              207
+            ],
+            "candidate_texts": [
+              " the"
+            ],
+            "selected": 207,
+            "selected_text": " the",
+            "criteria_met": true
+          },
+          "longest": {
+            "resolved_strategy": "longest",
+            "candidates": [
+              207
+            ],
+            "candidate_texts": [
+              " the"
+            ],
+            "selected": 207,
+            "selected_text": " the",
+            "criteria_met": true
+          }
+        },
+        "candidate_shape_matches_fixture": true
+      },
+      {
+        "id": "F4_one_to_many_first_retains",
+        "role": "control",
+        "slm_token_id": 103,
+        "slm_token_text": "not ",
+        "why_this_role": "Both first and longest keep the complete negation lexeme not when it occurs before a trailing space. This controls the position of the same required lexeme; it does not require preservation of whitespace.",
+        "criterion": {
+          "kind": "exact_lexeme",
+          "required": "not"
+        },
+        "strategies": {
+          "first": {
+            "resolved_strategy": "first",
+            "candidates": [
+              202,
+              200
+            ],
+            "candidate_texts": [
+              "not",
+              " "
+            ],
+            "selected": 202,
+            "selected_text": "not",
+            "criteria_met": true
+          },
+          "longest": {
+            "resolved_strategy": "longest",
+            "candidates": [
+              202,
+              200
+            ],
+            "candidate_texts": [
+              "not",
+              " "
+            ],
+            "selected": 202,
+            "selected_text": "not",
+            "criteria_met": true
+          }
+        },
+        "candidate_shape_matches_fixture": true
+      }
+    ],
+    "constructor_defaults": {
+      "constructor_default_strategy": "first",
+      "constructor_default_is_FIRST": true,
+      "string_longest_resolves_to": "longest",
+      "invalid_string_prefix": "ValueError: 'prefix' is not a valid AlignmentStrategy"
+    },
+    "special_token_path": {
+      "slm_special_id": 2,
+      "llm_eos_id": 5,
+      "aligned": [
+        5
+      ],
+      "candidates": [
+        5
+      ],
+      "note": "special ids take the _map_special_token branch; the 1-to-many strategy is not consulted"
+    },
+    "cache_behaviour": {
+      "first_result": [
+        200
+      ],
+      "after_switching_instance_strategy_to_longest": [
+        200
+      ],
+      "returned_cached_value": true,
+      "scope": "Documented so that every probe above uses a fresh instance. All shipped call sites pass the strategy at construction and never reassign it."
+    }
+  },
+  "projector": {
+    "eval_closed_gate_is_identity": {
+      "key_identical_to_target": true,
+      "value_identical_to_target": true,
+      "init_key_gate_logit": 0.0,
+      "gate_rule": "inference uses (gate_logit > 0); the 0.0 initial logit therefore closes the gate",
+      "shape_preserved": true,
+      "dtype_preserved": true
+    },
+    "eval_open_gate_adds_a_term": {
+      "key_differs_from_target": true,
+      "value_differs_from_target": true,
+      "deterministic_in_eval": true,
+      "delta_key_norm": 1.1916100978851318,
+      "delta_value_norm": 0.5985903739929199
+    },
+    "residual_structure": {
+      "key_identical_to_target_with_gate_open_and_zero_projection": true,
+      "value_identical_to_target_with_gate_open_and_zero_projection": true,
+      "reading": "The gated term enters only through the projection path and is added to the target tensors, which is the residual form of Eq.(3). Whether the fused cache then replaces the receiver cache downstream is a separate wiring question."
+    },
+    "gate_threshold": {
+      "logit_0_closes_gate": true,
+      "logit_1e_minus_6_opens_gate": true,
+      "rule": "strict inequality (logit > 0) at inference"
+    },
+    "gate_temperature_annealing": {
+      "temperatures": {
+        "0": 1.0,
+        "964": 0.03167944774031639,
+        "1929": 0.0010000000474974513,
+        "1000000": 0.0010000000474974513
+      },
+      "monotonic_nonincreasing": true,
+      "clamped_at_final": true,
+      "note": "gate_temperature is a float32 buffer; reported values carry float32 rounding"
+    },
+    "num_layers_guard": "AssertionError: num_layers must be >= 3"
+  },
+  "trimming_example": {
+    "file": "script/evaluation/standard_kvcache_del.py",
+    "branch": "few_shot_delete",
+    "executed": false,
+    "not_executed_reason": "the branch needs a real model forward pass; no weights were loaded",
+    "locators": {
+      "first_pass_len": {
+        "needle": "full_seq_len = first_pass_input_ids.shape[1]",
+        "lines": [
+          300
+        ],
+        "source": [
+          "full_seq_len = first_pass_input_ids.shape[1]"
+        ]
+      },
+      "keep_prefix_slice": {
+        "needle": "key[:, :, :15, :]",
+        "lines": [
+          320
+        ],
+        "source": [
+          "key[:, :, :15, :],           # 保留第一个元素"
+        ]
+      },
+      "drop_exemplars_slice": {
+        "needle": "key[:, :, few_shot_len:, :]",
+        "lines": [
+          321,
+          329
+        ],
+        "source": [
+          "key[:, :, few_shot_len:, :]  # 保留few_shot_len之后的元素",
+          "#new_key = key[:, :, few_shot_len:, :]"
+        ]
+      },
+      "second_pass_positions": {
+        "needle": "position_ids = torch.arange(",
+        "lines": [
+          304,
+          336
+        ],
+        "source": [
+          "position_ids = torch.arange(0, full_seq_len, device=device).unsqueeze(0)",
+          "position_ids = torch.arange("
+        ]
+      },
+      "second_pass_forward": {
+        "needle": "past_key_values=new_past_key_values",
+        "lines": [
+          350
+        ],
+        "source": [
+          "past_key_values=new_past_key_values, # 使用修改后的 KV cache"
+        ]
+      }
+    },
+    "semantics": "After the first pass over exemplars + question, each layer's cache is rebuilt as [0:15) concatenated with [few_shot_len:N), i.e. a template prefix plus everything from the exemplar boundary onward. The second pass feeds only the answer prefix and uses absolute position ids continuing at full_seq_len, so retained entries keep the positions they had before the deletion. No attention mask is passed for the second pass, so attention spans the retained cache plus the new tokens.",
+    "preserved_positions_is_intentional": "Keeping the original absolute positions is self-consistent for a cache whose keys were already rotated at those positions; this audit does not treat it as a defect.",
+    "comment_note": "The inline comment next to the prefix slice says it keeps 'the first element' while the code keeps 15. Recorded as a comment/code mismatch without inferring intent."
+  },
+  "training_config": {
+    "training_recipe": {
+      "path": "recipe/train_recipe/C2C_0.6+0.5.json",
+      "base_model": "Qwen/Qwen3-0.6B",
+      "teacher_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "mapping": "last_aligned",
+      "is_do_alignment": false,
+      "alignment_strategy": "first",
+      "projector_type": "C2CProjector",
+      "projector_params": {
+        "hidden_dim": 1024,
+        "intermediate_dim": 1024,
+        "num_layers": 3,
+        "dropout": 0.1,
+        "initial_temperature": 1.0,
+        "final_temperature": 0.001,
+        "anneal_steps": 1929
+      },
+      "freeze": [
+        "teacher",
+        "base"
+      ],
+      "learning_rate": 0.0001,
+      "weight_decay": 0.01,
+      "num_epochs": 1,
+      "scheduler_type": "linear",
+      "warmup_ratio": 0.1,
+      "max_grad_norm": 1.0,
+      "gradient_accumulation_steps": 8,
+      "per_device_train_batch_size": 4,
+      "seed": 42
+    },
+    "training_recipe_checks": {
+      "freezes_both_models": true,
+      "alignment_disabled_in_training_recipe": true,
+      "training_strategy_value": "first"
+    },
+    "evaluation_recipe": {
+      "path": "recipe/eval_recipe/unified_eval.yaml",
+      "alignment_lines": [
+        "is_do_alignment: false",
+        "alignment_strategy: \"longest\""
+      ]
+    },
+    "alignment_strategy_defaults": {
+      "class_signature_default": "first",
+      "training_script_fallback": "first",
+      "evaluator_fallback_string": "prefix",
+      "evaluator_fallback_is_valid_enum": "ValueError: 'prefix' is not a valid AlignmentStrategy",
+      "note": "The class default and the training-script fallback are 'first'; the evaluator falls back to the string 'prefix', which is not a member of AlignmentStrategy. The shipped recipes set the value explicitly."
+    }
+  },
+  "real_tokenizer_roundtrip": {
+    "status": "not-tested",
+    "reason": "No local tokenizer metadata for the paired models was available, and the audit does not download model artifacts."
+  },
+  "claim_ceiling": [
+    "Every aligner row exercises the real TokenAligner but with hand-written tokenizer substitutes; it is not evidence about real Qwen tokenizers.",
+    "Projector rows exercise the real C2CProjector with synthetic tensors at toy dimensions; they are structure checks, not training or quality results.",
+    "The trimming example is inspected at source level only and was not executed.",
+    "No accuracy, benchmark, or production-behaviour claim follows from this artifact."
+  ]
+}
