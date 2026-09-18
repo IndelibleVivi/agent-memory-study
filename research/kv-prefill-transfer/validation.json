@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "recorded_date": "2026-09-18",
-  "status": "local-runner-controls-passed; pretrained-transfer-not-run",
+  "status": "local-runner-controls-passed; pretrained-native-disk-measured; pretrained-transfer-not-run",
   "pretrained_transfer": "not-run",
   "corpus_prepare": {
     "dataset": "HuggingFaceFW/fineweb-edu",
@@ -64,7 +64,6 @@
     "limitation": "One K or V accumulator/solve at k=1; not full runner/model RSS, quality, or VPS timing."
   },
   "not_run": [
-    "pretrained 256-token disk/native 191/64 control",
     "pretrained cross-model mapper fit or quality evaluation",
     "paper benchmark",
     "end-to-end serving speedup",
@@ -165,5 +164,14 @@
     "Development checks found index, head-reduction and BF16 native-reference issues; corrected before the recorded final run.",
     "Reader validation initially rejected local bytecode residue; residue moved outside the checkout and final validation passed.",
     "Synthetic smoke outputs were inspected during implementation; they are engineering controls, not a blinded quality experiment."
-  ]
+  ],
+  "updated_date": "2026-09-19",
+  "pretrained_native_disk_control": {
+    "status": "complete-measured; exact-disk-reconstruction-confirmed; nonzero-full-split-delta",
+    "receipt": "native-target-check.json",
+    "documents": 1,
+    "split": "validation",
+    "test_evaluated": false,
+    "transfer_quality": "not-run"
+  }
 }

@@ -1,12 +1,12 @@
 # Cross-model KV prefill reuse — 分阶段研究 runner
 
-**状态：runner 已实现，本地随机模型与数据准备验收通过。真实 Qwen3 mapper 尚未拟合，尚无迁移质量结果。**
+**状态：runner、本地随机控制与公开数据准备已完成；真实 Qwen3-1.7B 单文档 native 磁盘路径已验证，full/split 的非零数值差已单独记录。跨模型 mapper 尚未拟合，尚无迁移质量结果。**
 
 这个 runner 为 [arXiv:2608.03893v1](https://arxiv.org/html/2608.03893v1) 的 Qwen3-0.6B → 1.7B 小配对研究准备完整执行路径：公开文档切分、两个模型先后采集、磁盘分块拟合、三路 held-out 评价。模型、样本量、序列长度和固定 k 都缩小了；不声称复现论文表格。协议、指标定义与解释边界见 [protocol.md](protocol.md)。
 
 ## 已执行证据
 
-2026-09-18 的公开摘要见 [validation.json](validation.json)，完整输出在操作者的仓库外run目录；以下数字不包含pretrained迁移效果。
+本地控制与数据准备摘要见 [validation.json](validation.json)，真实单target的受限实测见 [native-target-check.json](native-target-check.json)（2026-09-18 UTC执行，次日整理）。完整输出在操作者的仓库外run目录；以下数字不包含pretrained迁移效果。
 
 | 检查 | 实测结果 | 解释范围 |
 | --- | --- | --- |
@@ -16,8 +16,16 @@
 | RoPE往返诊断 | K最大绝对差约0.01224；输出KL约`1.72e-6` | 同一随机BF16模型；说明往返cache不能冒充原始native |
 | 公开语料prepare | 200候选中157篇足够长，选出64/8/16；两tokenizer一致，88个截断序列无完全重复 | 只读取tokenizer，不加载pretrained权重 |
 | 1024→1024 FP64 ridge tensor probe | 256行分四批，统计张量形状不增长；单进程峰值约262MiB | 单个K或V solver，不是完整runner或模型峰值 |
+| 真实Qwen3-1.7B native磁盘闭环 | 28层原始K/V与重新捕获逐元素相等；同64-token suffix的logits差为0 | 首篇validation文档，256tokens；未运行source/mapper/test |
+| 真实BF16 full/split差异 | 最大logit差0.1953125，NLL差+0.0028193；64位置top1全相同 | 比较原生191/64分段与255-token整段，不是迁移损失 |
+| 真实模型数值定位 | 长度191/255的前缀仅最后两层K/V不同；同shape未来干预的前缀K/V差为0 | 支持prefill长度相关数值差异，具体算术kernel未定位 |
+| 受限CPU实测 | 原始probe约244.4s，诊断约332.0s；峰值RSS分别4.008/3.949GiB | 各限1CPU、4500MiB、swap0、15min，均exit0并结束 |
 
 实现期间发现并修正过索引、head聚合与BF16基线问题；随机输出已被查看，属于工程控制，不是盲测质量结论。原有reader验证也通过，但不运行本目录的PyTorch实验。
+
+真实检查没有沿用随机模型的“full/split误差为零”结论。磁盘交接在本例中精确保留了raw native状态；改变prefill计算长度时，零起算第26、27层出现少量K/V差异。把full forward产生的前缀接上同shape的64-token suffix，可复现相同的最大logit差和full NLL；这些聚合量不能证明完整logits逐元素相同。当前未定位具体kernel，也未设定通用BF16通过阈值。
+
+资源数字来自两个独立受限进程。实验cgroup的swap peak均为0；进程RSS与cgroup charged memory含义不同，不能用较低的cgroup统计冒充模型内存占用，也不据此声称宿主没有资源争用。真实迁移仍需另行预算和执行完整串行采集/拟合/评价。
 
 ## 计算与资料流
 
@@ -99,6 +107,16 @@ cd "$EXPERIMENT"
 ```
 
 它保存原始post-RoPE cache并读回，记录191/64分段与255-token full forward的logit/NLL差、首token、同shape未来干预、RoPE往返误差和进程峰值RSS。`complete-measured`表示测量完成；检查实际数值和资源后再决定校准预算，不代表迁移质量通过。不要将这份单文档输出标为完整target capture。
+
+若真实BF16的full/split出现数值差，使用同一文档和原始shard区分磁盘重建与分段计算：
+
+```bash
+"$PYTHON" -B "$AMS_STUDY/diagnose_native_cache.py" \
+  --upstream "$KVPREFILL_UPSTREAM" --run "$EXPERIMENT/run" \
+  --probe-output "$EXPERIMENT/native-check" --out "$EXPERIMENT/native-diagnostic.json"
+```
+
+该诊断重新捕获191-token前缀，与磁盘raw K/V逐元素比较，并比较二者在相同64-token suffix下的logits；再对照255-token full forward产生的前191-token K/V，以及保持255-token shape、只改变后64tokens的因果控制。最后让full forward得到的前缀也走64-token suffix，测量前缀状态差异的影响。输出记录实际差异，不自动提高阈值或识别具体算术kernel；随机模型可复用`native-check/fixture/run`作为`--run`。
 
 ```bash
 "$PYTHON" -B "$AMS_STUDY/runner.py" capture --run "$EXPERIMENT/run" --role source

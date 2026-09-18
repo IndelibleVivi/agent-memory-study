@@ -1,6 +1,6 @@
 # 小配对跨模型 KV prefill reuse — 实验协议
 
-状态：runner 已实现，21项本地测试及随机小模型闭环通过；真实 mapper 尚未拟合，尚无迁移质量结果。已执行范围见 [validation.json](validation.json)。
+状态：runner 已实现，21项本地测试及随机小模型闭环通过；真实单target的256-token native磁盘闭环已执行。真实 mapper 尚未拟合，尚无迁移质量结果。已执行范围见 [validation.json](validation.json) 与 [native-target-check.json](native-target-check.json)。
 
 本实验沿 [Cross-Model KV Cache Transfer in LLM Families, arXiv:2608.03893v1](https://arxiv.org/html/2608.03893v1) §3 的中心化 ridge 与跨层输入构造，准备 Qwen3-0.6B → 1.7B 的缩小机制复现。模型、序列长度、校准规模和固定 k 与原文不同；不声称复现论文表格，也不把 cache 表征迁移叫作事实或记忆的正确继承。
 
@@ -48,7 +48,7 @@ fit 不加载模型；读取 train shards，按目标层分块选择源层、积
 
 先完成普通held-out质量基线，后续才开展来源撤回扩展。届时用同一冻结mapper比较“受旧来源条件化的保留cache”与“从未接触来源的重算cache”，先确认目标原生分支具备回答资格。RoPE-stripped不表示状态没有历史依赖。
 
-真实实验尚未开始，统计阈值、数据快照身份与实际执行状态应随冻结run manifest公开；所有失败与协议修订保留，不修改既有结果伪装成初次确认。
+真实跨模型实验尚未开始；已执行的单target检查单独记录。统计阈值、数据快照身份与实际执行状态应随冻结run manifest公开；所有失败与协议修订保留，不修改既有结果伪装成初次确认。
 
 ## 独立方法检查后的补充
 
@@ -56,9 +56,9 @@ fit 不加载模型；读取 train shards，按目标层分块选择源层、积
 - mapped/direct候选计算接口只接收source与mapper；target reference在候选算完后才读取。用不可访问target reference的测试验证依赖，而非只检查函数名。交换分支顺序后输出不变；错误mapper不得fallback为native。
 - fitter只消费train，held-out不可访问时仍可拟合同一结果。层选择分数为每个目标head在对应source head上拟合K、V后，分别按全部校准token与head维度的SSE/SST计算R²，再对2H个R²等权平均；selection_alpha进入未归一化sum方程。常量target沿固定RidgeAccumulator的零方差约定报告，不据此扩展质量结论。
 - 非零位置/不同theta以Transformers官方rotary为oracle；仅用自写inverse/apply互相抵消不足以验收。BF16去/补RoPE带来的坐标与量化误差须单列，不能让重编码后的native分支冒充未经改动的原生上限。
-- 1024×1024矩阵的tensor-only probe已执行；首轮真实fitting前仍需一条256-token pretrained target经capture→disk→rebuild→191/64 scorer的full/split检查，旧128-token资源探针不能代替。
+- 1024×1024矩阵的tensor-only probe与256-token pretrained target经capture→disk→rebuild→191/64 scorer的检查均已执行。真实native/full出现非零数值差，后续同文档诊断确认raw cache磁盘交接精确、191/255前缀末两层存在差异、同shape未来干预不改变前缀。旧128-token资源探针或随机模型不能代替这份真实数值记录。
 - 真实test首次执行前冻结输入、模型、依赖、代码与mapper身份；test查看后影响结果的修改应记录为新探索，不能重新称为未见测试。
 
 上述检查用于拒绝具体的错位、泄漏、别名与数值错误；它们不设置任意的论文性能通过线。随机模型、资源探针与真实迁移结果始终分列。
 
-本地验收已覆盖这些实现合同，包括完整256-token随机模型路径。尚未执行的pretrained单文档检查由`probe_native_cache.py --run`提供独立入口；此项必须单独记录，不能用随机模型结果替代。
+本地验收已覆盖这些实现合同，包括完整256-token随机模型路径。`probe_native_cache.py --run`提供pretrained单文档检查，`diagnose_native_cache.py`区分磁盘重建、prefill长度与同shape未来干预。首篇validation检查已执行，NLL差+0.0028193、最大logit差0.1953125，64位置top1一致；不能把它叫作零误差full/split通过或完整target capture。后续迁移评价继续以同shape的raw native分支为参照，保留full/split与RoPE往返误差，不凭本单例设定通用数值阈值。

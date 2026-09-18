@@ -1,0 +1,295 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-09-19",
+  "execution_date_utc": "2026-09-18",
+  "status": "complete-measured; exact-disk-reconstruction-confirmed; nonzero-full-split-delta",
+  "evidence_kind": "pretrained-single-target-native-control",
+  "pretrained_transfer": "not-run",
+  "model": {
+    "architecture": "Qwen3ForCausalLM",
+    "dtype": "bfloat16",
+    "fingerprint": "bbd1f33a3b3bd8f1d15c39a2201e11ed33831c00c61b64a64b5b412f0f850d82",
+    "head_dim": 128,
+    "hidden_size": 2048,
+    "model_ref": "Qwen/Qwen3-1.7B",
+    "num_attention_heads": 16,
+    "num_kv_heads": 8,
+    "num_layers": 28,
+    "origin": "pretrained",
+    "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "role": "target",
+    "rope_theta": 1000000.0,
+    "tokenizer_hash": "18bd42540b46bad3f59e9630317d9174b026d376e3ab7dd56bfb3e343e9ff183",
+    "tokenizer_identity_kind": "hf-tokenizer"
+  },
+  "upstream_commit": "949d81d7861e998d5c42db68d7567cc70e2e58c5",
+  "source_identity": {
+    "runner.py": "8d4a2ba183c9cfe178d081beec24c9e1f8d1942c07db93d4f40fa8b006a4dc2f",
+    "probe_native_cache.py": "c3c9f87e4fd3216e22021e4ea4d32f28adf04432137434784b66c528c76ba8d0",
+    "diagnose_native_cache.py": "b850a37f533ff30f45be2f6cb04b49ef137684547d8c894a76297373ff731f19"
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "torch": "2.8.0+cpu",
+    "transformers": "4.51.3",
+    "safetensors": "0.8.0",
+    "numpy": "2.5.3",
+    "accelerate": "1.10.1",
+    "execution": "Linux CPU, one thread, eager, BF16 model; cached weights with offline inference",
+    "low_cpu_mem_usage": true
+  },
+  "input": {
+    "dataset": "HuggingFaceFW/fineweb-edu",
+    "config": "sample-10BT",
+    "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+    "dataset_fingerprint": "b52b06cf634ea19a6c04d7f89d74f6f2f9706d46d47d545760fe5ad52f9752a0",
+    "tokens_sha256": "e04f8a99e782287121bbd7a38fac81013d1f7c013b22b5422471b3d96c245f53",
+    "document_index": 64,
+    "split": "validation",
+    "documents_measured": 1,
+    "seq_len": 256,
+    "cached_tokens": 191,
+    "fresh_tokens": 64,
+    "labels": 64,
+    "test_evaluated": false,
+    "preparation_note": "Portable config uses data.path=corpus/documents.jsonl. Its manifest identity differs from the earlier absolute-path preparation; all 88 selected token sequences and split assignments were checked identical."
+  },
+  "native_control": {
+    "native_prefix_kind": "raw-post-rope",
+    "native_vs_full": {
+      "max_abs_logit_delta": 0.1953125,
+      "nll_delta": 0.0028192996978759766
+    },
+    "native": {
+      "first_token": {
+        "argmax": 22324,
+        "gold_id": 4514,
+        "log_p_gold": -3.4304614067077637,
+        "nll": 3.4304614067077637,
+        "p_gold": 0.03237200155854225
+      },
+      "first_token_argmax": 22324,
+      "first_token_gold_id": 4514,
+      "first_token_kl": 0.0,
+      "first_token_nll": 3.4304614067077637,
+      "first_token_p_gold": 0.03237200155854225,
+      "first_token_reference_argmax": 22324,
+      "first_token_top1_agreement": 1.0,
+      "kl_native_to_candidate": 0.0,
+      "label_indices": [
+        192,
+        255
+      ],
+      "logit_positions": [
+        191,
+        254
+      ],
+      "nll": 2.335103750228882,
+      "ppl": 10.330531668797075,
+      "top1_agreement": 1.0
+    },
+    "full": {
+      "first_token": {
+        "argmax": 22324,
+        "gold_id": 4514,
+        "log_p_gold": -3.436331272125244,
+        "nll": 3.436331272125244,
+        "p_gold": 0.03218253701925278
+      },
+      "first_token_argmax": 22324,
+      "first_token_gold_id": 4514,
+      "first_token_kl": 0.0003463879693299532,
+      "first_token_nll": 3.436331272125244,
+      "first_token_p_gold": 0.03218253701925278,
+      "first_token_reference_argmax": 22324,
+      "first_token_top1_agreement": 1.0,
+      "kl_native_to_candidate": 0.0004394186835270375,
+      "label_indices": [
+        192,
+        255
+      ],
+      "logit_positions": [
+        191,
+        254
+      ],
+      "nll": 2.332284450531006,
+      "ppl": 10.301447821289873,
+      "top1_agreement": 1.0
+    },
+    "first_logit_future_invariance": 0.0,
+    "capture_roundtrip_diagnostics": {
+      "content_roundtrip_max_abs": 0.179779052734375,
+      "content_roundtrip_r2": 0.999999676318792
+    },
+    "content_roundtrip": {
+      "first_token": {
+        "argmax": 22324,
+        "gold_id": 4514,
+        "log_p_gold": -3.406182289123535,
+        "nll": 3.406182289123535,
+        "p_gold": 0.033167582005262375
+      },
+      "first_token_argmax": 22324,
+      "first_token_gold_id": 4514,
+      "first_token_kl": 0.003787440713495016,
+      "first_token_nll": 3.406182289123535,
+      "first_token_p_gold": 0.033167582005262375,
+      "first_token_reference_argmax": 22324,
+      "first_token_top1_agreement": 1.0,
+      "kl_native_to_candidate": 0.0013920749770477414,
+      "label_indices": [
+        192,
+        255
+      ],
+      "logit_positions": [
+        191,
+        254
+      ],
+      "nll": 2.3307857513427734,
+      "ppl": 10.286020613062298,
+      "top1_agreement": 1.0
+    },
+    "load_seconds": 1.553882583975792,
+    "capture_seconds": 60.41585335601121,
+    "native_suffix_seconds": 26.711875333916396,
+    "peak_process_rss_bytes": 4304076800
+  },
+  "diagnostic": {
+    "disk_vs_fresh_capture": {
+      "keys": {
+        "all_equal": true,
+        "first_differing_layer": null,
+        "max_abs_delta": 0.0,
+        "layers_compared": 28,
+        "elements_per_layer": 195584,
+        "differing_layers": []
+      },
+      "values": {
+        "all_equal": true,
+        "first_differing_layer": null,
+        "max_abs_delta": 0.0,
+        "layers_compared": 28,
+        "elements_per_layer": 195584,
+        "differing_layers": []
+      }
+    },
+    "full255_vs_standalone191_prefix": {
+      "keys": {
+        "all_equal": false,
+        "first_differing_layer": 26,
+        "max_abs_delta": 0.25,
+        "layers_compared": 28,
+        "elements_per_layer": 195584,
+        "differing_layers": [
+          {
+            "different_elements": 152,
+            "elements": 195584,
+            "layer": 26,
+            "max_abs_delta": 0.0625
+          },
+          {
+            "different_elements": 970,
+            "elements": 195584,
+            "layer": 27,
+            "max_abs_delta": 0.25
+          }
+        ]
+      },
+      "values": {
+        "all_equal": false,
+        "first_differing_layer": 26,
+        "max_abs_delta": 0.25,
+        "layers_compared": 28,
+        "elements_per_layer": 195584,
+        "differing_layers": [
+          {
+            "different_elements": 250,
+            "elements": 195584,
+            "layer": 26,
+            "max_abs_delta": 0.25
+          },
+          {
+            "different_elements": 1260,
+            "elements": 195584,
+            "layer": 27,
+            "max_abs_delta": 0.25
+          }
+        ]
+      }
+    },
+    "full255_same_shape_future_prefix": {
+      "keys": {
+        "all_equal": true,
+        "first_differing_layer": null,
+        "max_abs_delta": 0.0,
+        "layers_compared": 28,
+        "elements_per_layer": 195584,
+        "differing_layers": []
+      },
+      "values": {
+        "all_equal": true,
+        "first_differing_layer": null,
+        "max_abs_delta": 0.0,
+        "layers_compared": 28,
+        "elements_per_layer": 195584,
+        "differing_layers": []
+      }
+    },
+    "direct_vs_disk_same_split": {
+      "bitwise_equal": true,
+      "max_abs_delta": 0.0,
+      "top1_agreement": 1.0
+    },
+    "full_vs_disk_split_logits": {
+      "bitwise_equal": false,
+      "max_abs_delta": 0.1953125,
+      "top1_agreement": 1.0
+    },
+    "full_prefix_split_vs_standalone_prefix_split_logits": {
+      "bitwise_equal": false,
+      "max_abs_delta": 0.1953125,
+      "top1_agreement": 1.0
+    },
+    "nll": {
+      "disk_split": 2.335103750228882,
+      "full": 2.332284450531006,
+      "full_prefix_split": 2.332284450531006
+    },
+    "elapsed_seconds": 332.01980273379013,
+    "peak_process_rss_bytes": 4239753216
+  },
+  "resource_controls": {
+    "cpu_quota_cores": 1,
+    "memory_max_bytes": 4718592000,
+    "memory_swap_max_bytes": 0,
+    "runtime_max_seconds_per_process": 900,
+    "verified": "systemctl properties while running; primary probe also checked cgroup cpu.max/memory.max/memory.swap.max",
+    "primary": {
+      "exit_code": 0,
+      "service_runtime_seconds": 244.386,
+      "cpu_seconds": 243.283,
+      "experiment_swap_peak_bytes": 0,
+      "final_state": "inactive/dead"
+    },
+    "diagnostic": {
+      "exit_code": 0,
+      "cpu_seconds": 334.317755,
+      "experiment_swap_peak_bytes": 0,
+      "cgroup_memory_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "final_state": "inactive/dead"
+    },
+    "memory_interpretation": "Peak process RSS is reported separately. Cgroup charged-memory peaks can exclude already shared/cached model pages and are not process RSS or proof of zero host contention."
+  },
+  "interpretation": {
+    "observed": "Saved raw cache equals fresh capture across all 28 K/V layers, and same-shape continuation logits are exactly equal. Standalone-191 versus full-255 prefix cache differs only at zero-based layers 26 and 27. Same-255-shape future perturbation leaves every prefix K/V element equal.",
+    "inference": "Differences between the two prefill lengths contribute to the native full/split discrepancy. Substituting the full-prefill prefix under the same 64-token suffix reproduces the measured max-logit delta and full NLL; these aggregate comparisons do not establish full-logit identity or identify the arithmetic kernel.",
+    "limits": "One inspected validation document; no universal BF16 tolerance, transfer quality, benchmark retention, or service speedup follows. The initial nonzero full/split observation is retained without loosening a test threshold."
+  }
+}
