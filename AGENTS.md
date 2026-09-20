@@ -89,3 +89,11 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 - `assets/practice.js` 是 browser 与 `tools/export_practice.cjs` 共用的唯一 query / brief / Markdown 实现。每个 finding 占一个候选名额，重复 evidence 不增加排名；不同条件的独立 finding 不按标题/主题合并。查询模块无网络、无持久化（页面 query URL / history 的边界见 README）；这是本地 lexical matching，不宣称 semantic retrieval。
 - 详情与导出保留署名、日期、适用条件、反例、目标侧检查和 evidence 限制。全站搜索仍用 `assets/reading-search.js` 的跨字段 AND；复合 filters 必须由同一篇引用 material 满足。
 - 改动上述合同后运行 `python3 -B tools/verify_reader.py`；修改 UI 时运行 `tools/test_reader_browser.py`，覆盖 question / finding / practice 深链接、下载、回退、旧 material / study / atlas、desktop / mobile。维护规则见 `docs/research-practice.md`。
+
+## 静态阅读站点
+
+- `assets/app.js` 是唯一正文 renderer；`assets/seo.js` 统一生成 source / browser / build-time 的 route URLs 和 metadata。`tools/seo_build.py` 使用已有 Python Playwright 执行该 renderer，生成独立的 `dist/site/`，不维护第二份文章 HTML。
+- `dist/` 是忽略的生成物，不入 Git。构建仅复制 tracked `assets/`、`research/`、`docs/`、canonical bundled PDF 和命名公开下载；不复制整个 checkout、工具或机器状态。构建/测试拦截非本机请求，不发送 analytics。
+- 改动 renderer / routes / metadata / build 时，运行 `node --test tools/test_seo.cjs`、既有 reader 检查、`python3 -B tools/seo_build.py` 和 `python3 -B tools/test_static_reader.py`。后两项需要 `tools/browser-requirements.txt` 与 Chromium；不能把离线语法检查称作浏览器验收。
+- 公共物理路径只对应 material / study / question / finding 与首页。query 兼容、source file mode、场景参数、history、目录锚点和导出必须保留。不要把访客查询写进 canonical、metadata 或 sitemap；不要把论文作者标成本站札记作者。
+- `.github/workflows/reader-validation.yml` 的 PR 构建不部署，main 仅发布同一验证通过的 artifact。Pages 首次从 branch 切为 Actions 是账号/发布操作，需要对应授权；源码/CI通过不代表线上已切换。流程见 `docs/website.md`。

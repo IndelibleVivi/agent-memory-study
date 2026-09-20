@@ -21,7 +21,10 @@
   const studiesById = new Map(data.studies.map((study) => [study.id, study]));
   const questionsById = new Map((data.questions || []).map(item => [item.id, item]));
   const findingsById = new Map((data.findings || []).map(item => [item.id, item]));
-  const routeKeys = ["question", "finding", "practice", "material", "study", "scenario", "phase", "thread", "path", "q", "topic", "surface", "depth"];
+  const seo = window.AMS_SEO;
+  const siteRoot = document.currentScript.src
+    ? new URL("../", document.currentScript.src) : new URL("./", window.location.href);
+  const physicalRoutes = document.documentElement.dataset.staticReader === "true" && window.location.protocol !== "file:";
   const depthOrder = ["abstract", "skim", "read", "worked"];
   const svgNamespace = "http://www.w3.org/2000/svg";
   const constellationViewBox = { width: 1200, height: 680 };
@@ -127,6 +130,11 @@
 
   function readRoute() {
     const params = new URLSearchParams(window.location.search);
+    const detail = physicalRoutes && seo.pathRoute(new URL(window.location.href), siteRoot);
+    if (detail) {
+      seo.kinds.forEach(key => params.delete(key));
+      Object.entries(detail).forEach(([key, value]) => params.set(key, value));
+    }
     const material = materialsById.has(params.get("material")) ? params.get("material") : null;
     const study = !material && studiesById.has(params.get("study")) ? params.get("study") : null;
     const question = !material && !study && questionsById.has(params.get("question")) ? params.get("question") : null;
@@ -155,27 +163,7 @@
   }
 
   function routeUrl(nextRoute, hash = "") {
-    const url = new URL(window.location.href);
-    routeKeys.forEach((key) => url.searchParams.delete(key));
-    if (nextRoute.question) url.searchParams.set("question", nextRoute.question);
-    if (nextRoute.finding) url.searchParams.set("finding", nextRoute.finding);
-    if (nextRoute.practice) url.searchParams.set("practice", nextRoute.practice);
-    if (nextRoute.material) url.searchParams.set("material", nextRoute.material);
-    if (nextRoute.study) {
-      url.searchParams.set("study", nextRoute.study);
-      if (nextRoute.scenario) url.searchParams.set("scenario", nextRoute.scenario);
-      if (nextRoute.phase === "after") url.searchParams.set("phase", "after");
-    }
-    if (nextRoute.thread) url.searchParams.set("thread", nextRoute.thread);
-    if (nextRoute.path) url.searchParams.set("path", nextRoute.path);
-    if (nextRoute.q) url.searchParams.set("q", nextRoute.q);
-    if (nextRoute.topic) url.searchParams.set("topic", nextRoute.topic);
-    if (nextRoute.surface && nextRoute.surface !== nextRoute.thread) {
-      url.searchParams.set("surface", nextRoute.surface);
-    }
-    if (nextRoute.depth) url.searchParams.set("depth", nextRoute.depth);
-    url.hash = hash;
-    return `${url.pathname}${url.search}${url.hash}`;
+    return seo.routeUrl(nextRoute, window.location.href, siteRoot, physicalRoutes, hash);
   }
 
   function navigate(nextRoute, options = {}) {
@@ -1129,7 +1117,6 @@
     refs.sourceMobile.replaceChildren(mobileSourceContent);
     renderArticleToc();
     observeArticleSections();
-    document.title = `${material.title} · Agent Memory Study`;
   }
 
   function buildSourceContent(material) {
@@ -1192,7 +1179,7 @@
         .sort((left, right) => left.boundingClientRect.top - right.boundingClientRect.top)[0];
       if (!visible) return;
       links.forEach((link) => {
-        const active = link.getAttribute("href") === `#${visible.target.id}`;
+        const active = link.hash === `#${visible.target.id}`;
         link.setAttribute("aria-current", String(active));
       });
     }, { rootMargin: "-18% 0px -66% 0px", threshold: 0 });
@@ -1485,6 +1472,35 @@
   }
 
   function render(options = {}) {
+    renderView(options);
+    if (physicalRoutes) {
+      document.querySelectorAll('a[href^="#"], a[data-fragment]').forEach(link => {
+        const hash = link.dataset.fragment || link.getAttribute("href");
+        link.dataset.fragment = hash;
+        link.href = routeUrl(route, hash);
+      });
+    }
+    const meta = seo.metadata(data, route);
+    document.title = meta.title;
+    function setMeta(attribute, name, content) {
+      let node = document.querySelector(`meta[${attribute}="${name}"]`);
+      if (!node) { node = document.createElement("meta"); node.setAttribute(attribute, name); document.head.append(node); }
+      node.content = content;
+    }
+    setMeta("name", "description", meta.description);
+    for (const [name, value] of Object.entries({title: meta.title, description: meta.description, url: meta.canonical, type: "website", site_name: "Agent Memory Study", locale: "zh_CN", image: meta.image, "image:alt": "Agent Memory Study 标识"})) {
+      setMeta("property", `og:${name}`, value);
+    }
+    for (const [name, value] of Object.entries({card: "summary", title: meta.title, description: meta.description, image: meta.image})) setMeta("name", `twitter:${name}`, value);
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) { canonical = document.createElement("link"); canonical.rel = "canonical"; document.head.append(canonical); }
+    canonical.href = meta.canonical;
+    let structured = document.querySelector('#seo-structured-data');
+    if (!structured) { structured = document.createElement("script"); structured.type = "application/ld+json"; structured.id = "seo-structured-data"; document.head.append(structured); }
+    structured.textContent = JSON.stringify(meta.structured).replace(/</g, "\\u003c");
+  }
+
+  function renderView(options = {}) {
     const { focus = false, hash = window.location.hash } = options;
     const material = materialsById.get(route.material);
     const showingMaterial = Boolean(material);
@@ -1501,7 +1517,6 @@
 
     if (inquiry) {
       renderInquiry(inquiry, question ? "question" : "finding");
-      document.title = `${inquiry.title} · Agent Memory Study`;
       refs.routeStatus.textContent = `已打开${question ? "问题专题" : "实践判断"}：${inquiry.title}`;
       if (focus) {
         window.scrollTo({top: 0, behavior: "auto"});
@@ -1512,7 +1527,6 @@
     }
     if (study) {
       renderStudy(study);
-      document.title = `${study.title} · Agent Memory Study`;
       if (focus) {
         window.scrollTo({top: 0, behavior: "auto"});
         document.querySelector("#study-title").focus({preventScroll: true});
@@ -1530,7 +1544,6 @@
       return;
     }
 
-    document.title = "Agent Memory Study · Research atlas";
     renderAtlasFrame();
     const activeSurface = selectedSurface();
     refs.routeStatus.textContent = route.path
@@ -1661,5 +1674,13 @@
     render({ focus: true, hash: window.location.hash });
   });
 
+  if (physicalRoutes) {
+    // Keep old query links addressable; redirect to a real page whose initial HTML has the matching canonical.
+    const target = routeUrl(route, window.location.hash);
+    if (new URL(target, window.location.href).pathname !== window.location.pathname) {
+      window.location.replace(target);
+      return;
+    }
+  }
   render({ focus: false, hash: window.location.hash });
 })();

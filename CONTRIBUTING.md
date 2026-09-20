@@ -160,3 +160,13 @@ material's reading depth. Keep these semantics in `assets/reading-search.js`, sh
 by the browser and its Node tests, rather than adding a second search truth.
 
 实践查询与全部内容搜索是不同用途：前者按 curated triggers 与文字重合返回少量判断，后者保持跨字段 AND 语义。维护 `assets/practice.js` 时保留重复证据与不同条件条目的控制；网页和 CLI 必须共用实现，不维护另一份手写 Markdown 真源。运行 `node --test tools/test_practice.cjs` 可单独检查查询与导出。
+
+### Static reader pages
+
+Routing and rendering changes also need `node --test tools/test_seo.cjs`, a fresh
+`python3 -B tools/seo_build.py` artifact and `python3 -B tools/test_static_reader.py`.
+These checks cover initial HTML, hydration, nested links, legacy query URLs,
+scenario/history, table-of-contents anchors, practice export and source file mode.
+Use the existing pinned browser dependency; see [website operations](docs/website.md)
+for build, preview and the separate Pages activation boundary. Generated pages are
+not hand-edited or committed.

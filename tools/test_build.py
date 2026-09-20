@@ -2273,7 +2273,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         for asset in ("materials-data.js", "styles.css", "practice.js", "reading-search.js", "app.js"):
             with self.subTest(asset=asset):
                 self.assertEqual(
-                    source.count(f'assets/{asset}?v=20260921-research-practice-1'),
+                    source.count(f'assets/{asset}?v=' + ('20260921-static-reader-1' if asset == 'app.js' else '20260921-research-practice-1')),
                     1,
                 )
 

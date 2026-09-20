@@ -31,19 +31,20 @@
 
 ## 怎样链接到一页
 
-GitHub Pages 没有 SPA rewrite，所以 reader 使用 query URL，而不是伪装成目录的 client-only path：
+发布构建为首页和每份 material、study、question、finding 生成真实 HTML 文件；正文、标题、canonical 和分享 metadata 随初始响应一起返回，不需要等待 JavaScript 才能读文章。交互仍使用同一个 renderer。
 
-- 问题专题：`?question=experience-to-capability`
-- 实践判断：`?finding=retrieval-candidate-competition`；按问题查询：`?practice=重复候选#practice`
-- 共读专题：`?study=after-a-correction`；场景可分享为 `?study=after-a-correction&scenario=legacy&phase=after`
-- material：`?material=a-tma-state-aware-memory`
-- failure-surface thread：`?thread=retrieval-active-context`
-- reading path：`?path=from-revision`
+- 问题专题：`question/experience-to-capability/`
+- 实践判断：`finding/retrieval-candidate-competition/`
+- 共读专题：`study/after-a-correction/`；场景保留 `?scenario=legacy&phase=after`
+- material：`material/a-tma-state-aware-memory/`
+- 按问题查询：`?practice=重复候选#practice`；failure-surface thread：`?thread=retrieval-active-context`；reading path：`?path=from-revision`
+
+已有的 `?material=`、`?study=`、`?question=`、`?finding=` 链接继续可用，在发布站点由浏览器转成对应的物理路径。本地直接打开源码 `index.html` 或用简单 HTTP server 预览源码时，继续使用 query routes。仅阅读页面列入 [sitemap](https://indeliblevivi.github.io/agent-memory-study/sitemap.xml)；搜索、筛选和场景状态不生成重复索引页。构建、验收和发布边界见 [网站说明](docs/website.md)。
 
 全部内容检索覆盖材料、共读、问题专题与实践判断，支持空格分隔的跨字段多词匹配，并展示命中位置。实践入口另提供本地关键词匹配，接受带关键短语的中英文问题，最多返回三条相关判断；它不调用模型、embedding 或远端搜索，也不承诺理解任意自然语言。
 搜索与筛选也写入 query parameters；material、study、question、finding、practice、scenario / phase、thread、path 使用 browser history，back / forward 可以恢复对应视图。
 
-Cloudflare Web Analytics 只用于了解 visits、page views、referrers、国家/设备类别和 Web Vitals 等站点级信号。它不记录 query string，也没有接入 custom events，因此 `?material=`、`?study=`、`?question=`、`?finding=`、`?practice=`、`?scenario=`、`?phase=`、`?thread=`、`?path=` 和筛选参数不会成为阅读行为追踪；当前 analytics 不能回答访客具体读了哪个 material 或 failure surface。
+Cloudflare Web Analytics 收集 visits、page views、referrers、国家/设备类别和 Web Vitals 等 aggregate 信号，不使用 cookie 或 localStorage 识别、画像访客。它不记录 query string，本站也没有 custom events。公开的 material / study / question / finding 路径可以出现在 page-view 统计中；practice、搜索、筛选和 scenario / phase 参数不进入这些统计。这不等于知道某位访客读完了哪篇内容。
 
 Constellation 是同一 canonical data 的 semantic projection：failure surfaces 使用固定语义 anchors，material
 位置由它的 `failureSurfaces` membership 与 stable ID 派生；没有逐篇维护的第二份 layout truth。新增 material
@@ -279,4 +280,4 @@ C2C receipt 校验不加载权重或执行 inference，fresh run 见[实验说�
 跨模型 KV runner 需要 PyTorch 和固定外部源码，使用[独立验收命令](research/kv-prefill-transfer/README.md#先验收再使用真实权重)，不包含在该无模型入口内。
 AgeMem 官方模块的 fresh run 需要外部固定 checkout，见[复跑说明](research/agemem-reward-observation-audit/README.md#复跑)。真实浏览器测试与受限环境的验证边界见
 [贡献指南](CONTRIBUTING.md#evidence-ownership-and-reader-checks)。
-新增的 Reading Room validation 仅检查 PR / main，不发布站点；既有 Pages 发布设置不变。
+Reading Room validation 检查源码与生成站点；PR 只生成可检查的 artifact，main 在全部检查通过后发布同一 artifact。仓库 Pages 需启用 GitHub Actions，首次切换与回退见 [网站说明](docs/website.md)。
