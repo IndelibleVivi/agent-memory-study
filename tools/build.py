@@ -41,6 +41,7 @@ PUBLIC_COPY_PATHS = (
     "index.html",
     "site.webmanifest",
     "assets/app.js",
+    "assets/seo.js",
     "assets/revision-study.js",
     "assets/reading-search.js",
     "assets/practice.js",

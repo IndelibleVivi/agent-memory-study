@@ -177,7 +177,7 @@
           <h2 id="about-title">读源，<span class="mobile-keep">不把导航冒充结论。</span></h2>
           <div class="about-grid">
             <p id="editorial-note"></p>
-            <p>这个页面是 static、no-backend，并只使用 Cloudflare Web Analytics 的轻量 aggregate beacon：不使用 cookie 或 localStorage 识别、画像访客，也不记录 query string 或自定义阅读事件。PDF 采用 hybrid delivery：只有逐文件确认 public redistribution license 的文件随站提供，其余材料回到 official source。</p>
+            <p>这个页面是 static、no-backend，并只使用 Cloudflare Web Analytics 的轻量 aggregate beacon：不使用 cookie 或 localStorage 识别、画像访客，也不记录 query string 或自定义阅读事件；公开内容路径可以出现在 aggregate page-view 统计中。PDF 采用 hybrid delivery：只有逐文件确认 public redistribution license 的文件随站提供，其余材料回到 official source。</p>
           </div>
           <button class="architecture-note" id="architecture-note" type="button" aria-pressed="false">
             <span class="architecture-line" id="architecture-line"></span>
@@ -315,6 +315,11 @@
         <a href="NOTICE.md">Notice</a>
         <a href="THIRD_PARTY_NOTICES.md">PDF notices</a>
       </nav>
+      <p class="related-projects">相关工具：
+        <a href="https://indeliblevivi.github.io/mcp-boundary/">MCP Boundary · 协议与工程边界</a> ·
+        <a href="https://indeliblevivi.github.io/codex-worker-routing/">Worker Routing · agent 委派</a> ·
+        <a href="https://servotab.com/">Servotab · 工程工作方法</a>
+      </p>
     </footer>
 
     <p class="sr-only" id="route-status" aria-live="polite"></p>
@@ -323,7 +328,8 @@
     <script src="assets/revision-study.js?v=20260908-studies-1"></script>
     <script src="assets/reading-search.js?v=20260921-research-practice-1"></script>
     <script src="assets/practice.js?v=20260921-research-practice-1"></script>
-    <script src="assets/app.js?v=20260921-research-practice-1"></script>
+    <script src="assets/seo.js?v=20260921-static-reader-1"></script>
+    <script src="assets/app.js?v=20260921-static-reader-1"></script>
     <!-- Cloudflare Web Analytics -->
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"4e0929eca0504d43aca1cc1a1f30ffaf"}'></script>
     <!-- End Cloudflare Web Analytics -->

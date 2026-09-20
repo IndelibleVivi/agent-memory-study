@@ -24,7 +24,7 @@ def main():
     run([python, '-B', '-m', 'unittest', 'tools.test_build', 'tools.test_evidence',
          'tools.test_practice_data'])
     run(['node', '--test', 'tools/test_revision_study.cjs', 'tools/test_reading_search.cjs',
-         'tools/test_practice.cjs'])
+         'tools/test_practice.cjs', 'tools/test_seo.cjs'])
     for study, runner in [('trustmem-transition-study', 'audit.py'),
                           ('experience-reuse-retrieval-study', 'study.py'),
                           ('proactive-prefix-study', 'study.py'),
