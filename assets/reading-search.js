@@ -14,7 +14,25 @@
     const strings = (label, values) => (values || []).forEach(text => add(label, text));
     const objects = (label, values, keys) => (values || []).forEach(value => keys.forEach(key => add(label, value[key])));
     add("标题", item.title, 30);
-    if (kind === "material") {
+    if (kind === "question" || kind === "finding") {
+      // Human prose only. Statuses, internal ids and URLs stay out of the index.
+      if (kind === "question") {
+        add("问题", item.question, 20);
+        add("导读", item.intro, 6); add("判断", item.judgment, 4); add("署名", item.byline, 2);
+        objects("解释", item.explanations, ["title", "text"]);
+        objects("证据", item.evidence, ["label", "observation", "limit"]);
+        add("下一个测试", item.nextTest?.question, 5);
+        add("测试对照", item.nextTest?.comparison, 3);
+        add("测试边界", item.nextTest?.boundary, 2);
+      } else {
+        add("署名", item.byline, 2);
+        strings("触发", item.triggers);
+        add("主张", item.claim, 8); add("何时", item.when, 4); add("做法", item.action, 4);
+        add("避免", item.avoid, 3); add("验证", item.validation, 3); add("边界", item.limit, 3);
+        objects("证据", item.evidence, ["label", "observation", "limit"]);
+        objects("应用", item.applications, ["title", "decision", "observation", "limit"]);
+      }
+    } else if (kind === "material") {
       add("作者", (item.authors || []).join(" "), 12);
       add("年份", String(item.year));
       add("导读", item.whyRead, 5); add("摘要", item.intro, 4);
@@ -51,9 +69,12 @@
 
   function buildIndex(data) {
     const materials = new Map(data.materials.map(item => [item.id, item]));
+    const facetFor = (item) => (item.materialIds || []).map(id => materials.get(id)).filter(Boolean);
     return [
       ...data.materials.map(item => ({kind: "material", item, facets: [item]})),
       ...(data.studies || []).map(item => ({kind: "study", item, facets: (item.readings || []).map(r => materials.get(r.materialId)).filter(Boolean)})),
+      ...(data.questions || []).map(item => ({kind: "question", item, facets: facetFor(item)})),
+      ...(data.findings || []).map(item => ({kind: "finding", item, facets: facetFor(item)})),
     ].map((entry, order) => ({...entry, order, fields: fieldsFor(entry.item, entry.kind, materials)}));
   }
 

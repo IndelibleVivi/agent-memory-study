@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f6f7f4" />
-    <meta name="description" content="一个沿 agent memory failure surfaces 组织的公开书房：研究地图、精读札记与可亲手比较的共读专题。" />
+    <meta name="description" content="一个沿 agent memory failure surfaces 组织的公开书房：问题专题、实践判断、研究地图与可亲手比较的共读专题。" />
     <title>Agent Memory Study</title>
     <link rel="icon" type="image/png" sizes="48x48" href="assets/icons/favicon-48.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
-    <link rel="stylesheet" href="assets/styles.css?v=20260910-evidence-fixes-1" />
+    <link rel="stylesheet" href="assets/styles.css?v=20260921-research-practice-1" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -24,11 +24,12 @@
         <span>菜单</span>
       </button>
       <nav class="site-nav" id="site-nav" aria-label="主要导航">
+        <a href="./#inquiries" data-route="home" data-scroll-target="inquiries">研究与实践</a>
         <a href="./#research-map" data-route="home" data-scroll-target="research-map">研究地图</a>
         <a href="./#constellation" data-route="home" data-scroll-target="constellation">研究星图</a>
         <a href="./#reading-paths" data-route="home" data-scroll-target="reading-paths">阅读路径</a>
         <a href="./#studies" data-route="home" data-scroll-target="studies">共读专题</a>
-        <a href="./#library" data-route="home" data-scroll-target="library">材料与专题</a>
+        <a href="./#library" data-route="home" data-scroll-target="library">全部内容</a>
         <a href="./#about" data-route="home" data-scroll-target="about">About</a>
       </nav>
     </header>
@@ -49,6 +50,28 @@
               <p id="atlas-label"></p>
             </div>
             <ol class="surface-list" id="surface-list"></ol>
+          </div>
+        </section>
+
+        <section class="inquiries-home" id="inquiries" aria-labelledby="inquiries-title">
+          <div class="section-heading">
+            <div><p class="content-kind">Questions in progress / 让理解继续生长</p><h2 id="inquiries-title">沿问题研究，带判断回去。</h2></div>
+            <p>研究有下一问，实践有适用范围。已执行的证据和待验证的建议，各自说清楚。</p>
+          </div>
+          <div id="question-index"></div>
+          <div class="practice-desk" id="practice" aria-labelledby="practice-title">
+            <div class="practice-intro"><p class="content-kind">Take it into practice</p><h3 id="practice-title">你遇到了什么问题？</h3><p>不用先想起论文名字。取回几条相关判断，带着做法、依据和边界继续工作。</p></div>
+            <div class="practice-workspace">
+              <form id="practice-form" role="search">
+                <label for="practice-query">按问题找实践判断</label>
+                <div class="practice-input-row"><input id="practice-query" type="search" placeholder="例如：结果被重复条目占满" autocomplete="off" /><button type="submit">找判断 →</button></div>
+              </form>
+              <div class="practice-examples" id="practice-examples" aria-label="试试这些问题"></div>
+              <p class="practice-hint">本地关键词匹配，最多返回 3 条；可用中英文关键短语。匹配在浏览器内完成，不调用模型或远端检索。</p>
+              <p id="practice-result-count" class="content-kind" role="status"></p>
+              <div id="practice-results"></div>
+              <div id="practice-export" class="brief-actions"></div>
+            </div>
           </div>
         </section>
 
@@ -114,7 +137,7 @@
         <section class="library" id="library" aria-labelledby="library-title">
           <div class="library-heading">
             <div>
-              <h2 id="library-title">材料与专题</h2>
+              <h2 id="library-title">全部内容</h2>
               <p id="library-summary"></p>
             </div>
             <p class="result-count" id="result-count" aria-live="polite"></p>
@@ -123,8 +146,8 @@
           <form class="library-controls" id="library-controls" role="search">
             <label class="search-field">
               <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
-              <span class="sr-only">搜索材料、专题、作者或问题</span>
-              <input id="search" type="search" autocomplete="off" placeholder="搜索材料、专题、作者或问题" />
+              <span class="sr-only">搜索材料、专题、判断或作者</span>
+              <input id="search" type="search" autocomplete="off" placeholder="搜索材料、专题、判断或作者" />
             </label>
             <label>
               <span>主题</span>
@@ -141,10 +164,10 @@
             <button class="text-button" id="clear-filters" type="button">清空筛选</button>
           </form>
 
-          <p class="search-scope">支持空格分隔的多词搜索。专题按其引用的同一篇材料匹配主题、surface 与 depth；专题本身不标阅读深度。</p>
+          <p class="search-scope">支持空格分隔的多词搜索。专题与实践判断按其引用的同一篇材料匹配主题、surface 与 depth；它们本身不标阅读深度。</p>
           <div class="material-index" id="material-index" role="list"></div>
           <div class="empty-state" id="empty-state" hidden>
-            <h3>没有匹配的材料或专题</h3>
+            <h3>没有匹配的内容</h3>
             <p>清空一个筛选，或者换一种关键词。</p>
           </div>
         </section>
@@ -162,6 +185,8 @@
           </button>
         </section>
       </div>
+
+      <article class="inquiry-view" id="inquiry-view" hidden></article>
 
       <article class="study-view" id="study-view" hidden></article>
 
@@ -247,6 +272,7 @@
               </div>
             </section>
 
+            <section class="article-section" id="paper-inquiries" hidden><h2>继续追问与实践</h2><div id="material-inquiries"></div></section>
             <section class="article-section design-transfer" id="paper-transfer" data-toc-label="怎样借用" hidden>
               <p class="content-kind editorial-kind">Editorial transfer · 编者设计建议</p>
               <h2>读完，可以怎样借用</h2>
@@ -293,10 +319,11 @@
 
     <p class="sr-only" id="route-status" aria-live="polite"></p>
     <noscript>这个 reading room 需要 JavaScript 来读取同 repo 的 public canonical data。材料与许可说明仍可在 GitHub repository 中查看。</noscript>
-    <script src="assets/materials-data.js?v=20260920-state-transfer-1"></script>
+    <script src="assets/materials-data.js?v=20260921-research-practice-1"></script>
     <script src="assets/revision-study.js?v=20260908-studies-1"></script>
-    <script src="assets/reading-search.js?v=20260909-evidence-discovery-1"></script>
-    <script src="assets/app.js?v=20260909-evidence-discovery-1"></script>
+    <script src="assets/reading-search.js?v=20260921-research-practice-1"></script>
+    <script src="assets/practice.js?v=20260921-research-practice-1"></script>
+    <script src="assets/app.js?v=20260921-research-practice-1"></script>
     <!-- Cloudflare Web Analytics -->
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"4e0929eca0504d43aca1cc1a1f30ffaf"}'></script>
     <!-- End Cloudflare Web Analytics -->

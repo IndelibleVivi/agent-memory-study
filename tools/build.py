@@ -43,6 +43,7 @@ PUBLIC_COPY_PATHS = (
     "assets/app.js",
     "assets/revision-study.js",
     "assets/reading-search.js",
+    "assets/practice.js",
     "assets/styles.css",
     "assets/materials-data.js",
     "data/materials.json",
@@ -54,6 +55,7 @@ PUBLIC_COPY_PATHS = (
     "ZOTERO-IMPORT.md",
     "agent-memory-study.rdf",
 )
+PUBLIC_DOC_SUFFIXES = {".md"}
 ICON_SIZES = {
     "assets/icons/ams-icon-512.png": 512,
     "assets/icons/ams-icon-192.png": 192,
@@ -137,18 +139,22 @@ def assert_links(value: Any, where: str, *, allow_empty: bool = True) -> None:
 
 def public_copy_paths() -> list[Path]:
     paths = [ROOT / relative_path for relative_path in PUBLIC_COPY_PATHS]
-    research_root = ROOT / "research"
-    if research_root.is_dir():
-        paths.extend(
-            path
-            for path in sorted(research_root.rglob("*"))
-            if path.is_file() and path.suffix.lower() in PUBLIC_RESEARCH_SUFFIXES
-        )
+    for root, suffixes in ((ROOT / "research", PUBLIC_RESEARCH_SUFFIXES),
+                           (ROOT / "docs", PUBLIC_DOC_SUFFIXES)):
+        if root.is_dir():
+            paths.extend(
+                path
+                for path in sorted(root.rglob("*"))
+                if path.is_file() and path.suffix.lower() in suffixes
+            )
     return paths
 
 
 def validate_public_copy_files() -> None:
-    for path in public_copy_paths():
+    global _PUBLIC_COPY_CACHE
+    paths = public_copy_paths()
+    _PUBLIC_COPY_CACHE = set(paths)
+    for path in paths:
         relative_path = path.relative_to(ROOT).as_posix()
         if not path.is_file():
             raise ValueError(f"public copy file is missing: {relative_path}")
@@ -363,6 +369,185 @@ def evidence_statements_duplicate(left: str, right: str) -> bool:
         left in right or right in left
     )
 
+
+_PUBLIC_COPY_CACHE: set[Path] | None = None
+
+def public_copy_path_set() -> set[Path]:
+    global _PUBLIC_COPY_CACHE
+    if _PUBLIC_COPY_CACHE is None:
+        _PUBLIC_COPY_CACHE = set(public_copy_paths())
+    return _PUBLIC_COPY_CACHE
+
+def assert_public_relative_url(url: Any, where: str) -> None:
+    """Evidence links are HTTPS or repo-relative files that exist in the public tree."""
+    if not isinstance(url, str) or not url.strip():
+        raise ValueError(f"{where} must be non-empty text")
+    if url.startswith("https://"):
+        return
+    if re.match(r"^[a-z][a-z0-9+.-]*:", url, re.IGNORECASE):
+        raise ValueError(f"{where} must be HTTPS or a repo-relative path: {url!r}")
+    relative = PurePosixPath(url.split("#", 1)[0])
+    if (relative.is_absolute() or "\\" in url
+            or any(part in {"", ".", ".."} or part.startswith(".") for part in relative.parts)):
+        raise ValueError(f"{where} must be a safe repo-relative path: {url!r}")
+    candidate = ROOT / relative
+    if not candidate.is_file():
+        raise ValueError(f"{where} must resolve to an existing public file: {url!r}")
+    if candidate not in public_copy_path_set():
+        raise ValueError(
+            f"{where} must point at a published surface, not an arbitrary checkout file: {url!r}"
+        )
+
+def validate_evidence_list(value: Any, where: str) -> list[str]:
+    if not isinstance(value, list) or not value:
+        raise ValueError(f"{where} must be a non-empty list")
+    keys = {"label", "url", "observation", "limit"}
+    urls: list[str] = []
+    for index, evidence in enumerate(value):
+        assert_exact_text_object(evidence, keys, f"{where}[{index}]")
+        assert_public_relative_url(evidence["url"], f"{where}[{index}].url")
+        urls.append(evidence["url"])
+    return urls
+
+def validate_reference_list(value: Any, where: str, known: set[str]) -> set[str]:
+    assert_string_list(value, where, allow_empty=True)
+    unknown = set(value) - known
+    if unknown:
+        raise ValueError(f"{where} references unknown ids: {sorted(unknown)}")
+    if len(set(value)) != len(value):
+        raise ValueError(f"{where} must not repeat ids")
+    return set(value)
+
+def validate_question_dossiers(data: dict[str, Any], material_ids: set[str],
+                               study_ids: set[str]) -> None:
+    questions = data.get("questions")
+    if not isinstance(questions, list) or not questions:
+        raise ValueError("data.questions must be a non-empty list")
+    findings = data.get("findings")
+    finding_ids = {
+        finding.get("id") for finding in findings or [] if isinstance(finding, dict)
+    }
+    # Detect duplicate or malformed ids before any reciprocal membership check, so
+    # a duplicate id is reported as such rather than as a membership fault.
+    seen_ids: set[str] = set()
+    for question in questions:
+        if not isinstance(question, dict):
+            continue
+        question_id = question.get("id")
+        if not isinstance(question_id, str):
+            continue
+        if question_id in seen_ids:
+            raise ValueError(f"duplicate question id: {question_id}")
+        seen_ids.add(question_id)
+    question_ids: set[str] = set()
+    for index, question in enumerate(questions):
+        where = f"questions[{index}]"
+        if not isinstance(question, dict):
+            raise ValueError(f"{where} must be an object")
+        text_fields = {"id", "title", "question", "intro", "judgment", "byline", "updated", "status"}
+        missing = text_fields.difference(question)
+        if missing:
+            raise ValueError(f"{where} missing fields: {sorted(missing)}")
+        assert_exact_text_object({k: question[k] for k in text_fields}, text_fields, where)
+        if not re.fullmatch(r"[a-z0-9-]+", question["id"]):
+            raise ValueError(f"{where}.id must be a slug")
+        if question["id"] in question_ids:
+            raise ValueError(f"duplicate question id: {question['id']}")
+        question_ids.add(question["id"])
+        if question["status"] != "open":
+            raise ValueError(f"{where}.status must be open")
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", question["updated"]):
+            raise ValueError(f"{where}.updated must be YYYY-MM-DD")
+        explanations = question.get("explanations")
+        if not isinstance(explanations, list) or not explanations:
+            raise ValueError(f"{where}.explanations must be a non-empty list")
+        for position, explanation in enumerate(explanations):
+            assert_exact_text_object(
+                explanation, {"title", "text"}, f"{where}.explanations[{position}]"
+            )
+        validate_evidence_list(question.get("evidence"), f"{where}.evidence")
+        validate_reference_list(question.get("materialIds"), f"{where}.materialIds", material_ids)
+        validate_reference_list(question.get("studyIds"), f"{where}.studyIds", study_ids)
+        validate_reference_list(question.get("findingIds"), f"{where}.findingIds", finding_ids)
+        assert_exact_text_object(
+            question.get("nextTest"),
+            {"question", "comparison", "success", "reviseWhen", "boundary"},
+            f"{where}.nextTest",
+        )
+    by_finding = {
+        finding["id"]: finding for finding in data["findings"]
+    }
+    for question in questions:
+        for finding_id in question["findingIds"]:
+            if question["id"] not in by_finding[finding_id]["questionIds"]:
+                raise ValueError(
+                    f"question {question['id']} lists finding {finding_id}, "
+                    "but the finding does not list the question"
+                )
+
+def validate_findings(data: dict[str, Any], material_ids: set[str],
+                      question_ids: set[str]) -> None:
+    findings = data.get("findings")
+    if not isinstance(findings, list) or not findings:
+        raise ValueError("data.findings must be a non-empty list")
+    finding_ids: set[str] = set()
+    memberships: dict[str, set[str]] = {}
+    for index, finding in enumerate(findings):
+        where = f"findings[{index}]"
+        if not isinstance(finding, dict):
+            raise ValueError(f"{where} must be an object")
+        text_fields = {
+            "id", "title", "byline", "updated", "status", "claim", "when", "action", "avoid",
+            "validation", "limit",
+        }
+        missing = text_fields.difference(finding)
+        if missing:
+            raise ValueError(f"{where} missing fields: {sorted(missing)}")
+        assert_exact_text_object({k: finding[k] for k in text_fields}, text_fields, where)
+        if not re.fullmatch(r"[a-z0-9-]+", finding["id"]):
+            raise ValueError(f"{where}.id must be a slug")
+        if finding["id"] in finding_ids:
+            raise ValueError(f"duplicate finding id: {finding['id']}")
+        finding_ids.add(finding["id"])
+        if finding["status"] != "proposed-transfer":
+            raise ValueError(f"{where}.status must be proposed-transfer")
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", finding["updated"]):
+            raise ValueError(f"{where}.updated must be YYYY-MM-DD")
+        assert_string_list(finding.get("triggers"), f"{where}.triggers")
+        validate_evidence_list(finding.get("evidence"), f"{where}.evidence")
+        validate_reference_list(finding.get("materialIds"), f"{where}.materialIds", material_ids)
+        memberships[finding["id"]] = validate_reference_list(
+            finding.get("questionIds"), f"{where}.questionIds", question_ids
+        )
+        applications = finding.get("applications")
+        if not isinstance(applications, list):
+            raise ValueError(f"{where}.applications must be a possibly empty list")
+        for position, application in enumerate(applications):
+            application_where = f"{where}.applications[{position}]"
+            assert_exact_text_object(
+                application,
+                {"title", "status", "date", "url", "decision", "observation", "limit"},
+                application_where,
+            )
+            if application["status"] not in {"adopted", "rejected", "inconclusive", "cited"}:
+                raise ValueError(f"{application_where}.status is unsupported")
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", application["date"]):
+                raise ValueError(f"{application_where}.date must be YYYY-MM-DD")
+            assert_public_relative_url(application["url"], f"{application_where}.url")
+    questions = data.get("questions")
+    if not isinstance(questions, list) or any(
+        not isinstance(question, dict) or "id" not in question for question in questions
+    ):
+        # Malformed questions are reported by validate_question_dossiers.
+        return
+    by_id = {question["id"]: question for question in questions}
+    for finding_id, linked in memberships.items():
+        for question_id in linked:
+            if finding_id not in by_id[question_id].get("findingIds", []):
+                raise ValueError(
+                    f"finding {finding_id} lists question {question_id}, "
+                    "but the question does not list the finding"
+                )
 
 def load_and_validate(path: Path) -> dict[str, Any]:
     data = json.loads(path.read_text(encoding="utf-8"))
@@ -698,6 +883,18 @@ def load_and_validate(path: Path) -> dict[str, Any]:
                 f"reading path {reading_path['id']} references unknown materials: {sorted(unknown_materials)}"
             )
     validate_studies(data, ids)
+    study_ids = {study["id"] for study in data["studies"]}
+    question_ids = {
+        question.get("id") for question in data.get("questions") or [] if isinstance(question, dict)
+    }
+    question_id_list = [
+        question.get("id") for question in data.get("questions") or [] if isinstance(question, dict)
+    ]
+    duplicates = {qid for qid in question_id_list if question_id_list.count(qid) > 1}
+    if duplicates:
+        raise ValueError(f"duplicate question id: {sorted(duplicates)[0]}")
+    validate_findings(data, ids, question_ids)
+    validate_question_dossiers(data, ids, study_ids)
     bundled_paths = bundled_pdf_paths(data)
     if len(set(bundled_paths)) != delivery_counts["bundled"]:
         raise ValueError("each bundled material must use a distinct PDF path")

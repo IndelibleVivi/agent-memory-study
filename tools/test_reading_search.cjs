@@ -59,10 +59,58 @@ test('plain snippets are bounded and do not manufacture highlights or HTML', () 
 });
 
 test('empty query preserves inventory and audit prose stays discoverable', () => {
-  assert.equal(search.search(index,'').length, data.materials.length+data.studies.length);
+  const total = data.materials.length + data.studies.length
+    + (data.questions || []).length + (data.findings || []).length;
+  assert.equal(search.search(index,'').length, total);
   const h=search.search(index,'428')[0];
   assert.equal(h.item.id,'statefuse-conflict-preserving-memory');
   assert.ok(h.matchLabels.some(l=>l.includes('AMS') || l.includes('测试')));
+});
+
+test('questions and findings are indexed by human prose, facets by materialIds', () => {
+  const fake={materials:[
+    {id:'m1',title:'Material one',authors:[],categories:['x'],failureSurfaces:[],noteDepth:'read'},
+  ],studies:[],questions:[{
+    id:'q1',title:'Question title',question:'问题正文关键词',intro:'',judgment:'',byline:'Desk',
+    updated:'2026-09-21',status:'open',
+    explanations:[{title:'解释标题',text:'解释正文关键词'}],
+    evidence:[{label:'证据标签词',url:'https://example.org/e',observation:'观察正文关键词',limit:'边界正文关键词'}],
+    materialIds:['m1'],studyIds:[],findingIds:['f1'],
+    nextTest:{question:'下一个测试关键词',comparison:'c',success:'s',reviseWhen:'r',boundary:'b'},
+  }],findings:[{
+    id:'f1',title:'Finding title',byline:'Desk',updated:'2026-09-21',status:'proposed-transfer',
+    questionIds:['q1'],materialIds:['m1'],triggers:['触发词'],
+    claim:'主张关键词',when:'w',action:'a',avoid:'av',validation:'v',limit:'l',
+    evidence:[{label:'证据标签',url:'https://example.org/e',observation:'观察',limit:'边界'}],
+    applications:[{title:'应用标题词',status:'cited',date:'2026-09-21',url:'https://example.org/a',
+      decision:'决定关键词',observation:'o',limit:'边界'}],
+  }]};
+  const i=search.buildIndex(fake);
+  assert.equal(search.search(i,'问题正文关键词')[0].kind,'question');
+  assert.equal(search.search(i,'解释正文关键词')[0].kind,'question');
+  assert.equal(search.search(i,'下一个测试关键词')[0].kind,'question');
+  assert.equal(search.search(i,'主张关键词')[0].kind,'finding');
+  assert.equal(search.search(i,'触发词')[0].kind,'finding');
+  assert.equal(search.search(i,'决定关键词')[0].kind,'finding');
+  // same-material facet filtering uses materialIds
+  assert.equal(search.search(i,'问题正文关键词',{topic:'x'}).length,1);
+  assert.equal(search.search(i,'主张关键词',{depth:'read'}).length,1);
+  assert.equal(search.search(i,'主张关键词',{depth:'worked'}).length,0);
+  // statuses, ids and URLs stay out of the index
+  for (const q of ['proposed-transfer','q1','f1','open','example.org','https']) {
+    assert.equal(search.search(i,q).length,0,q);
+  }
+});
+
+test('question and finding hits keep deterministic order and bounded snippets', () => {
+  const fake={materials:[{id:'m1',title:'M',authors:[],categories:[],failureSurfaces:[],noteDepth:'read'}],
+    studies:[],questions:[{id:'q1',title:'Shared keyword',question:'x',intro:'body keyword here',
+      judgment:'',byline:'',updated:'2026-09-21',status:'open',explanations:[],evidence:[],materialIds:['m1'],studyIds:[],findingIds:[],
+      nextTest:{question:'',comparison:'',success:'',reviseWhen:'',boundary:''}}],findings:[]};
+  const i=search.buildIndex(fake);
+  assert.deepEqual(search.search(i,'Shared keyword'), search.search(i,'Shared keyword'));
+  const hit=search.search(i,'keyword')[0];
+  assert.ok(hit.snippet.text.length<=147);
 });
 
 test('unknown filters and absent studies fail closed without changing the data', () => {

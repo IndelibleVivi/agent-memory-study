@@ -66,7 +66,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260920-state-transfer-1'),
+            source.count('assets/materials-data.js?v=20260921-research-practice-1'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260918-c2c-1', source)
@@ -74,7 +74,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_stylesheet_cache_key_tracks_mobile_evidence_fix(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/styles.css?v=20260910-evidence-fixes-1'),
+            source.count('assets/styles.css?v=20260921-research-practice-1'),
             1,
         )
         self.assertNotIn('assets/styles.css?v=20260909-evidence-discovery-1', source)
@@ -2255,7 +2255,27 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             "research/mnl-promotion-cohort-audit/raw/run_results.jsonl",
             relative_paths,
         )
+        # Practice surfaces added this round are inside the public text/privacy scan.
+        self.assertIn("assets/practice.js", relative_paths)
+        self.assertIn("docs/research-practice.md", relative_paths)
+        self.assertIn("docs/practice-brief-use.md", relative_paths)
         build.validate_public_copy_files()
+
+    def test_practice_asset_and_docs_are_scanned_for_private_tokens(self):
+        for relative_path in ("assets/practice.js", "docs/research-practice.md",
+                              "docs/practice-brief-use.md"):
+            text = (build.ROOT / relative_path).read_text(encoding="utf-8")
+            with self.subTest(path=relative_path):
+                build.assert_public_text({relative_path: text})
+
+    def test_practice_cache_keys_track_the_current_release(self):
+        source = (build.ROOT / "index.html").read_text(encoding="utf-8")
+        for asset in ("materials-data.js", "styles.css", "practice.js", "reading-search.js", "app.js"):
+            with self.subTest(asset=asset):
+                self.assertEqual(
+                    source.count(f'assets/{asset}?v=20260921-research-practice-1'),
+                    1,
+                )
 
     def test_unknown_failure_surface_is_rejected(self):
         invalid = copy.deepcopy(self.data)

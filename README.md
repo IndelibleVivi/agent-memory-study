@@ -1,11 +1,13 @@
 # Agent Memory Study
 
-一个关于 long-term memory、belief revision、prospective memory 与 cognitive architecture 的公开 research atlas / annotated reading room。
+一个关于 long-term memory、belief revision、prospective memory 与 cognitive architecture 的公开研究书房：读原文，围绕问题继续研究，把有依据的判断带回实践。
 
 [打开 Reading Room](https://indeliblevivi.github.io/agent-memory-study/) · [阅读项目介绍 PDF](./publications/agent-memory-study-project-introduction.zh-CN.pdf) · [下载当前 main branch](https://github.com/IndelibleVivi/agent-memory-study/archive/refs/heads/main.zip) · [下载最近一次 tagged Zotero 包](https://github.com/IndelibleVivi/agent-memory-study/releases/latest/download/agent-memory-study-zotero.zip)
 
 ## 这里有什么
 
+- 一个持续更新的[问题专题：旧经验，怎样继续帮助当前任务？](https://indeliblevivi.github.io/agent-memory-study/?question=experience-to-capability)，连接已执行研究、竞争解释、当前判断与下一次会改变认识的观察；
+- 三条可独立引用的实践判断，覆盖候选挤占、修订范围和来源撤回；可从[研究与实践入口](https://indeliblevivi.github.io/agent-memory-study/#inquiries)按问题查询，导出带署名、适用条件、证据和限制的 Markdown / JSON；[AMS 自身的取用记录](docs/practice-brief-use.md)说明一个实际采用决定，同时保留“已采用不等于已证明有帮助”的边界；
 - 一组从唯一 canonical public data 生长的 source-linked materials；
 - 一张 failure-surface 研究地图、一幅 data-driven research constellation，以及三条可自由进入和离开的 reading paths；
 - 面向所有读者的共读专题：原文与精读互链、跨源论述、可亲手切换的场景对照、适用条件与失败反例；首题为[一条更正之后](https://indeliblevivi.github.io/agent-memory-study/?study=after-a-correction)，不要求读者有私人项目或把每次阅读转成代码；
@@ -31,20 +33,37 @@
 
 GitHub Pages 没有 SPA rewrite，所以 reader 使用 query URL，而不是伪装成目录的 client-only path：
 
+- 问题专题：`?question=experience-to-capability`
+- 实践判断：`?finding=retrieval-candidate-competition`；按问题查询：`?practice=重复候选#practice`
 - 共读专题：`?study=after-a-correction`；场景可分享为 `?study=after-a-correction&scenario=legacy&phase=after`
 - material：`?material=a-tma-state-aware-memory`
 - failure-surface thread：`?thread=retrieval-active-context`
 - reading path：`?path=from-revision`
 
-检索覆盖材料与共读专题，支持空格分隔的跨字段多词匹配，并展示命中位置。
-搜索与筛选也写入 query parameters；material、study、scenario / phase、thread、path 使用 browser history，back / forward 可以恢复对应视图。
+全部内容检索覆盖材料、共读、问题专题与实践判断，支持空格分隔的跨字段多词匹配，并展示命中位置。实践入口另提供本地关键词匹配，接受带关键短语的中英文问题，最多返回三条相关判断；它不调用模型、embedding 或远端搜索，也不承诺理解任意自然语言。
+搜索与筛选也写入 query parameters；material、study、question、finding、practice、scenario / phase、thread、path 使用 browser history，back / forward 可以恢复对应视图。
 
-Cloudflare Web Analytics 只用于了解 visits、page views、referrers、国家/设备类别和 Web Vitals 等站点级信号。它不记录 query string，也没有接入 custom events，因此 `?material=`、`?study=`、`?scenario=`、`?phase=`、`?thread=`、`?path=` 和筛选参数不会成为阅读行为追踪；当前 analytics 不能回答访客具体读了哪个 material 或 failure surface。
+Cloudflare Web Analytics 只用于了解 visits、page views、referrers、国家/设备类别和 Web Vitals 等站点级信号。它不记录 query string，也没有接入 custom events，因此 `?material=`、`?study=`、`?question=`、`?finding=`、`?practice=`、`?scenario=`、`?phase=`、`?thread=`、`?path=` 和筛选参数不会成为阅读行为追踪；当前 analytics 不能回答访客具体读了哪个 material 或 failure surface。
 
 Constellation 是同一 canonical data 的 semantic projection：failure surfaces 使用固定语义 anchors，material
 位置由它的 `failureSurfaces` membership 与 stable ID 派生；没有逐篇维护的第二份 layout truth。新增 material
 会自动成为一颗星，跨 surface material 会成为 bridge。Desktop 使用可键盘进入的 SVG，mobile 使用同源 matrix；
 坐标、连线、星环与亮度都不表示论文质量、重要性或阅读进度。
+
+## 把判断带回正在做的事
+
+网页的“研究与实践”入口可下载当前查询结果；每条判断页也可以单独导出。在本地 checkout，无需安装依赖：
+
+```bash
+node tools/export_practice.cjs --query '候选增加之后，结果被重复条目占满' --format markdown
+node tools/export_practice.cjs --finding revision-needs-scope --format json --out /tmp/ams-brief.json
+```
+
+导出使用同一 canonical 内容和查询实现，保留 reader、材料与证据链接。匹配只在当前进程或浏览器运行，没有应用层查询日志或私人项目映射。网页查询写入可分享的 URL 和 browser history；直接打开或刷新时，该 URL 随页面请求交给静态托管服务。把 brief 放进目标项目原有的设计或测试流程即可，AMS 不自动修改其他 repo。
+
+研究专题与实践判断的结构、证据归属和修订方式见[维护说明](docs/research-practice.md)。实践建议保持 `proposed-transfer`；应用记录分别使用 `cited`、`adopted`、`rejected` 或 `inconclusive`，不自动晋级为效果证据。单篇的 `designTransfer` 继续保持 `proposed-not-run`。
+
+本轮组织已有证据，没有新增真实模型 pilot 或 KV mapper 拟合。跨模型实验仍以[现有 runner 的执行状态](research/kv-prefill-transfer/README.md)为准；问题专题中的“下一问”不是实验结果。
 
 ## PDF 怎样分发
 
@@ -254,7 +273,7 @@ Bundled papers keep their file-level Creative Commons licenses; linked works rem
 
 ## Reader 验证
 
-`python3 -B tools/verify_reader.py` 校验 canonical、证据归属绑定与 generated payload，
+`python3 -B tools/verify_reader.py` 校验 canonical、证据归属绑定、问题/判断引用、全站搜索、实践查询/导出与 generated payload，
 并复跑五组无模型的确定性研究，另检查 AgeMem 与 C2C 已保存 receipt 的输入绑定与算术；
 C2C receipt 校验不加载权重或执行 inference，fresh run 见[实验说明](research/c2c-cache-retraction-study/README.md)。
 跨模型 KV runner 需要 PyTorch 和固定外部源码，使用[独立验收命令](research/kv-prefill-transfer/README.md#先验收再使用真实权重)，不包含在该无模型入口内。

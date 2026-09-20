@@ -21,8 +21,10 @@ def main():
         run([python, '-B', 'tools/build.py', '--js-output', str(payload)])
         if payload.read_bytes() != (ROOT / 'assets/materials-data.js').read_bytes():
             raise SystemExit('Generated browser data drift: run python3 tools/build.py and commit the projection.')
-    run([python, '-B', '-m', 'unittest', 'tools.test_build', 'tools.test_evidence'])
-    run(['node', '--test', 'tools/test_revision_study.cjs', 'tools/test_reading_search.cjs'])
+    run([python, '-B', '-m', 'unittest', 'tools.test_build', 'tools.test_evidence',
+         'tools.test_practice_data'])
+    run(['node', '--test', 'tools/test_revision_study.cjs', 'tools/test_reading_search.cjs',
+         'tools/test_practice.cjs'])
     for study, runner in [('trustmem-transition-study', 'audit.py'),
                           ('experience-reuse-retrieval-study', 'study.py'),
                           ('proactive-prefix-study', 'study.py'),

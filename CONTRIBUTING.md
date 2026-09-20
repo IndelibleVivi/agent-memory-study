@@ -73,6 +73,12 @@ Project-specific 评价可以进入，但被评价的 project、版本与证据�
 
 栏目允许从 `skim` 形成待核验线索，但页面会明确提示该阅读范围。没有足够依据时可以不提供此字段，栏目隐藏；不能为了补齐页面而升级 depth。共读连接的借鉴点 / 边界直接取自 `studies.readings`，不在 material 再复制一份。
 
+### 7. 持续的问题与可借用的判断
+
+`questions` 是问题专题：当前判断、竞争解释、已执行证据和能改变认识的下一次观察。`findings` 是独立实践判断：适用情境、具体选择、不要怎样用、目标侧检查与证据上限。只整理有内容的条目，不给每篇材料机械填模板。引用关系由 canonical IDs 连接；完整字段与维护约定见[研究与实践维护说明](docs/research-practice.md)。
+
+问题保持 `open`，判断保持 `proposed-transfer`。如已取用，在 `applications` 记录 `cited` / `adopted` / `rejected` / `inconclusive`、日期、公开链接、决定、观察与限制。引用与采用不证明收益；没有对照不要写因果归因。私人项目的 PR、日志与实现不因发生取用就获得公开授权。负反馈、拒绝采用和缩小范围同样欢迎。
+
 ## 声音与证据怎样分开
 
 - quotation、source-backed paraphrase、paper-reported result、source audit 与 editorial inference 必须可区分；逐字引用必须有精确 locator；
@@ -122,7 +128,8 @@ python3 -B tools/test_reader_browser.py --output-dir dist/browser-check
 ```
 
 The first command is model-free and uses only local public/synthetic data. It
-checks the generated browser payload without rewriting it, validates the existing
+checks the generated browser payload without rewriting it, validates question/finding
+references, lexical query and portable brief contracts, and the existing
 RDF, freshly reruns the five small deterministic studies, and checks the saved
 AgeMem reward and C2C cache-retraction receipts for fixture binding and arithmetic.
 C2C receipt checks do not load model weights or perform inference; see its
@@ -136,7 +143,7 @@ establish pretrained transfer quality or reading depth. The native control and
 chunk-length diagnostic have their own commands and receipt in that guide.
 The command does not rerun all external-source audits or any paper benchmark. The second test path serves
 this checkout under `/agent-memory-study/` and checks real browser navigation,
-search, shared scenario state, reload and back/forward on desktop and mobile
+search, question/finding links, practice query and Markdown/JSON downloads, shared scenario state, reload and back/forward on desktop and mobile
 viewports. All third-party browser requests, including analytics, are blocked.
 
 On hosts that prohibit browser navigation, `--offline-render` is an explicitly
@@ -145,9 +152,11 @@ unverified; CI never uses that flag. CI has read-only contents permission and no
 deployment step. Repository settings still determine whether its status is a
 required merge check; this workflow does not change the existing Pages publisher.
 
-Search indexes selected reader-visible fields from materials and studies, never
+Search indexes selected reader-visible fields from materials, studies, questions and findings, never
 arbitrary JSON keys or URLs. Space-separated terms use AND matching across fields;
-exact titles rank first. A study matches combined filters only when one of its
+exact titles rank first. A study, question or finding matches combined filters only when one of its
 referenced materials satisfies all of them. The study does not inherit that
 material's reading depth. Keep these semantics in `assets/reading-search.js`, shared
 by the browser and its Node tests, rather than adding a second search truth.
+
+实践查询与全部内容搜索是不同用途：前者按 curated triggers 与文字重合返回少量判断，后者保持跨字段 AND 语义。维护 `assets/practice.js` 时保留重复证据与不同条件条目的控制；网页和 CLI 必须共用实现，不维护另一份手写 Markdown 真源。运行 `node --test tools/test_practice.cjs` 可单独检查查询与导出。

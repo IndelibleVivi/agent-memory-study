@@ -19,7 +19,9 @@
   const surfacesById = new Map(data.atlas.failureSurfaces.map((surface) => [surface.id, surface]));
   const pathsById = new Map(data.atlas.readingPaths.map((path) => [path.id, path]));
   const studiesById = new Map(data.studies.map((study) => [study.id, study]));
-  const routeKeys = ["material", "study", "scenario", "phase", "thread", "path", "q", "topic", "surface", "depth"];
+  const questionsById = new Map((data.questions || []).map(item => [item.id, item]));
+  const findingsById = new Map((data.findings || []).map(item => [item.id, item]));
+  const routeKeys = ["question", "finding", "practice", "material", "study", "scenario", "phase", "thread", "path", "q", "topic", "surface", "depth"];
   const depthOrder = ["abstract", "skim", "read", "worked"];
   const svgNamespace = "http://www.w3.org/2000/svg";
   const constellationViewBox = { width: 1200, height: 680 };
@@ -54,6 +56,7 @@
   const refs = {
     atlasView: document.querySelector("#atlas-view"),
     materialView: document.querySelector("#material-view"),
+    inquiryView: document.querySelector("#inquiry-view"),
     studyView: document.querySelector("#study-view"),
     studyIndex: document.querySelector("#study-index"),
     atlasTitle: document.querySelector("#atlas-title"),
@@ -126,6 +129,8 @@
     const params = new URLSearchParams(window.location.search);
     const material = materialsById.has(params.get("material")) ? params.get("material") : null;
     const study = !material && studiesById.has(params.get("study")) ? params.get("study") : null;
+    const question = !material && !study && questionsById.has(params.get("question")) ? params.get("question") : null;
+    const finding = !material && !study && !question && findingsById.has(params.get("finding")) ? params.get("finding") : null;
     const scenarios = study ? studiesById.get(study).scenarios : [];
     const scenario = scenarios.some(item => item.id === params.get("scenario")) ? params.get("scenario") : null;
     const phase = params.get("phase") === "after" ? "after" : "before";
@@ -135,6 +140,7 @@
     const explicitSurface = surfacesById.has(params.get("surface")) ? params.get("surface") : "";
     const depth = depthOrder.includes(params.get("depth")) ? params.get("depth") : "";
     return {
+      question, finding, practice: params.get("practice") || "",
       material,
       study,
       scenario,
@@ -151,6 +157,9 @@
   function routeUrl(nextRoute, hash = "") {
     const url = new URL(window.location.href);
     routeKeys.forEach((key) => url.searchParams.delete(key));
+    if (nextRoute.question) url.searchParams.set("question", nextRoute.question);
+    if (nextRoute.finding) url.searchParams.set("finding", nextRoute.finding);
+    if (nextRoute.practice) url.searchParams.set("practice", nextRoute.practice);
     if (nextRoute.material) url.searchParams.set("material", nextRoute.material);
     if (nextRoute.study) {
       url.searchParams.set("study", nextRoute.study);
@@ -185,9 +194,11 @@
   }
 
   function routeHref(type, id) {
-    const next = { ...route, material: null, study: null, scenario: null, phase: "before", thread: null, path: null };
+    const next = { ...route, question: null, finding: null, material: null, study: null, scenario: null, phase: "before", thread: null, path: null };
     if (type === "material") next.material = id;
     if (type === "study") next.study = id;
+    if (type === "question") next.question = id;
+    if (type === "finding") next.finding = id;
     if (type === "thread") {
       next.thread = id;
       next.surface = id;
@@ -264,6 +275,7 @@
     renderConstellation();
     renderPaths();
     renderStudyIndex();
+    renderInquiryIndex();
     syncControls();
     renderLibrary();
   }
@@ -839,13 +851,16 @@
   function renderLibrary() {
     const hits = window.ReadingSearch.search(searchIndex, route.q, route);
     const materialCount = hits.filter(hit => hit.kind === "material").length;
-    const studyCount = hits.length - materialCount;
-    refs.librarySummary.textContent = `${data.materials.length} 份材料与 ${data.studies.length} 个共读专题；按问题进入，不按阅读深度排名。`;
-    refs.resultCount.textContent = `${materialCount} 份材料 · ${studyCount} 个专题`;
+    const studyCount = hits.filter(hit => hit.kind === "study").length;
+    const questionCount = hits.filter(hit => hit.kind === "question").length;
+    const findingCount = hits.filter(hit => hit.kind === "finding").length;
+    refs.librarySummary.textContent = `${data.materials.length} 份材料 · ${data.studies.length} 个共读 · ${questionsById.size} 个问题专题 · ${findingsById.size} 条实践判断。`;
+    refs.resultCount.textContent = `${materialCount} 材料 · ${studyCount} 共读 · ${questionCount} 问题 · ${findingCount} 判断`;
     refs.emptyState.hidden = hits.length !== 0;
     refs.materialIndex.replaceChildren(...hits.map(hit => {
-      const row = hit.kind === "material" ? createMaterialRow(hit.item) : createStudyRow(hit.item);
+      const row = hit.kind === "material" ? createMaterialRow(hit.item) : hit.kind === "study" ? createStudyRow(hit.item) : createInquiryRow(hit.item, hit.kind);
       row.dataset.resultKind = hit.kind;
+      row.setAttribute("role", "listitem");
       if (hit.snippet) {
         const copy = row.querySelector(".material-row-copy");
         copy.append(createTextElement("p", `命中：${hit.matchLabels.join(" · ")}`, "search-match-label"),
@@ -894,6 +909,10 @@
   }
 
   function renderMaterial(material) {
+    const connections = [...(data.questions || []).filter(item => item.materialIds.includes(material.id)).map(item => createInquiryRow(item, "question")),
+      ...(data.findings || []).filter(item => item.materialIds.includes(material.id)).map(item => createInquiryRow(item, "finding"))];
+    document.querySelector("#paper-inquiries").hidden = !connections.length;
+    document.querySelector("#material-inquiries").replaceChildren(...connections);
     const studies = data.studies.filter(study => study.readings.some(reading => reading.materialId === material.id));
     document.querySelector("#paper-studies").hidden = !studies.length;
     document.querySelector("#material-studies").replaceChildren(...studies.map(study => {
@@ -1310,8 +1329,159 @@
     takeaways.append(items, el("p", study.closing, "study-closing"));
     const contribute = createExternalLink("https://github.com/IndelibleVivi/agent-memory-study/blob/main/CONTRIBUTING.md", "带着来源或反例参与共读 ↗");
     takeaways.append(contribute); fragment.append(takeaways);
+    const questions = (data.questions || []).filter(item => item.studyIds.includes(study.id));
+    if (questions.length) {
+      const onward = el("section", "", "study-takeaways");
+      onward.append(el("h2", "这个问题，还在继续"), ...questions.map(item => createInquiryRow(item, "question")));
+      fragment.append(onward);
+    }
     refs.studyView.replaceChildren(fragment);
     refs.routeStatus.textContent = `${study.title}，${scenario.title}，${phase === "after" ? "应用事件后" : "事件前"}。${study.policies.map(policy => `${policy.label}：${verdicts[window.RevisionStudy.run(scenario, policy.id, phase).verdict]}`).join("；")}。`;
+  }
+
+  function createInquiryRow(item, kind) {
+    const row = createTextElement("article", "", "material-row inquiry-result");
+    const copy = createTextElement("div", "", "material-row-copy");
+    copy.append(createRouteLink(kind, item.id, item.title, "material-row-title"),
+      createTextElement("p", kind === "question" ? item.question : item.when));
+    row.append(createTextElement("span", kind === "question" ? "问题" : "判断", "material-row-number"), copy,
+      createTextElement("p", kind === "question" ? "持续研究 · 当前判断可修订" : "编者建议 · 目标侧待验证", "material-row-topics"));
+    return row;
+  }
+
+  function briefActions(query, findingId = null) {
+    const actions = createTextElement("div", "", "brief-actions");
+    for (const [format, label] of [["markdown", "下载 Markdown"], ["json", "下载 JSON"]]) {
+      const button = createTextElement("button", label, "brief-download");
+      button.type = "button";
+      button.addEventListener("click", () => {
+        const brief = window.Practice.brief(data, query, {findingId});
+        const content = format === "json" ? JSON.stringify(brief, null, 2) + "\n" : window.Practice.markdown(brief);
+        const url = URL.createObjectURL(new Blob([content], {type: format === "json" ? "application/json" : "text/markdown;charset=utf-8"}));
+        const link = document.createElement("a"); link.href = url;
+        link.download = `ams-${findingId || "practice-brief"}.${format === "json" ? "json" : "md"}`;
+        document.body.append(link); link.click(); link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+      actions.append(button);
+    }
+    return actions;
+  }
+
+  function renderInquiryIndex() {
+    const el = createTextElement;
+    document.querySelector("#question-index").replaceChildren(...(data.questions || []).map((item, index) => {
+      const row = el("article", "", "question-entry");
+      const heading = el("div", "");
+      const title = el("h3", ""); title.append(createRouteLink("question", item.id, item.title));
+      heading.append(el("p", `问题 ${String(index + 1).padStart(2, "0")} / 持续研究`, "content-kind"), title, el("p", item.question));
+      const current = el("div", "", "question-current");
+      current.append(el("p", "目前的认识", "content-kind"), el("p", item.judgment),
+        createRouteLink("question", item.id, "读论述、证据与下一问 →", "study-enter"));
+      row.append(heading, current); return row;
+    }));
+    const input = document.querySelector("#practice-query"); input.value = route.practice;
+    const examples = ["结果被重复条目占满", "新版说明覆盖了旧版经验", "来源删除后，缓存还有影响吗"];
+    document.querySelector("#practice-examples").replaceChildren(...examples.map(query => {
+      const button = el("button", query); button.type = "button";
+      button.addEventListener("click", () => runPracticeQuery(query)); return button;
+    }));
+    const hits = window.Practice.query(data, route.practice, 3);
+    document.querySelector("#practice-result-count").textContent = route.practice
+      ? `${hits.length} 条相关判断 · 请核对适用条件` : "先看看这三条判断，或带着问题来找";
+    const results = document.querySelector("#practice-results");
+    results.replaceChildren(...hits.map(({finding, matches}) => {
+      const row = el("article", "", "practice-result"); const title = el("h4", "");
+      title.append(createRouteLink("finding", finding.id, `${finding.title} →`));
+      row.append(title, el("p", finding.action), el("p", `适用：${finding.when}`, "practice-scope"));
+      if (route.practice && matches?.length) row.append(el("p", `匹配线索：${matches.join("、")}`, "practice-scope"));
+      return row;
+    }));
+    if (!hits.length) results.append(el("p", "没有找到相关判断。试试“重复候选”“版本更正”或“来源撤回”；当前只整理了这三条，空结果不代表这个问题没有研究。", "practice-empty"));
+    document.querySelector("#practice-export").replaceChildren();
+    if (hits.length) document.querySelector("#practice-export").append(briefActions(route.practice),
+      el("p", "导出当前结果，连同署名、依据和边界。", "practice-scope"));
+  }
+
+  function runPracticeQuery(query) {
+    navigate({question: null, finding: null, material: null, study: null, thread: null, path: null,
+      practice: query.trim()}, {focus: false, hash: "practice"});
+    document.querySelector("#practice-query").focus({preventScroll: true});
+  }
+
+  function evidenceList(evidence) {
+    const list = createTextElement("div", "", "inquiry-evidence-list");
+    evidence.forEach(item => {
+      const row = createTextElement("section", "", "inquiry-evidence");
+      const title = createTextElement("h3", "");
+      const url = item.url.startsWith("https://") ? item.url
+        : `https://github.com/IndelibleVivi/agent-memory-study/blob/main/${item.url}`;
+      title.append(createExternalLink(url, `${item.label} ↗`));
+      row.append(title, createTextElement("p", item.observation), createTextElement("p", item.limit, "inquiry-limit"));
+      list.append(row);
+    });
+    return list;
+  }
+
+  function renderInquiry(item, kind) {
+    const el = createTextElement;
+    const fragment = document.createDocumentFragment();
+    const back = createRouteLink("home", "", "← 回到研究与实践", "back-link"); back.dataset.scrollTarget = "inquiries";
+    const header = el("header", "", "inquiry-heading");
+    const title = el("h1", item.title); title.id = "inquiry-title"; title.tabIndex = -1;
+    header.append(el("p", kind === "question" ? "A living question / 问题专题" : "A judgment to borrow / 实践判断", "content-kind"), title,
+      el("p", kind === "question" ? item.question : item.claim, "inquiry-dek"),
+      el("p", `${item.byline} · 更新 ${item.updated} · ${kind === "question" ? "开放问题 / 跨源编者论述" : "编者建议 / 目标侧待验证"}`, "inquiry-meta"));
+    fragment.append(back, header);
+    const nav = el("nav", "", "study-jump"); nav.setAttribute("aria-label", "研究与实践目录");
+    const anchors = kind === "question" ? [["inquiry-judgment","目前的认识"],["inquiry-evidence","已有证据"],["inquiry-next","下一问"],["inquiry-practice","带回实践"]]
+      : [["inquiry-use","怎样借用"],["inquiry-evidence","依据与边界"],["inquiry-applications","取用记录"]];
+    anchors.forEach(([id, label]) => { const link = el("a", label); link.href = `#${id}`; nav.append(link); }); fragment.append(nav);
+    const section = (id, title) => { const node = el("section", "", "inquiry-section"); node.id = id; node.append(el("h2", title)); return node; };
+    if (kind === "question") {
+      const current = section("inquiry-judgment", "目前的认识");
+      current.append(el("p", item.judgment, "inquiry-lead"), el("p", item.intro));
+      const explanations = el("div", "", "inquiry-explanations");
+      item.explanations.forEach(part => { const block = el("section", ""); block.append(el("h3", part.title), el("p", part.text)); explanations.append(block); });
+      current.append(explanations); fragment.append(current);
+    } else {
+      const use = section("inquiry-use", "怎样借用"); const list = el("dl", "", "inquiry-use");
+      for (const [key, label] of [["when","什么时候想起它"],["action","它改变哪个选择"],["avoid","不要这样使用"],["validation","在目标侧怎样检查"]]) {
+        list.append(el("dt", label), el("dd", item[key]));
+      }
+      use.append(list, el("p", item.limit, "inquiry-limit"), briefActions("", item.id)); fragment.append(use);
+    }
+    const evidence = section("inquiry-evidence", "这件事，是怎么知道的？");
+    evidence.append(evidenceList(item.evidence));
+    const materials = el("div", "", "inquiry-materials"); materials.append(el("p", "回到材料与精读", "content-kind"));
+    item.materialIds.forEach(id => materials.append(createRouteLink("material", id, materialsById.get(id).title)));
+    evidence.append(materials); fragment.append(evidence);
+    if (kind === "question") {
+      const next = section("inquiry-next", "下一次，怎样让认识改变？");
+      next.append(el("p", item.nextTest.question, "inquiry-lead"));
+      for (const [key,label] of [["comparison","怎样比较"],["success","看什么结果"],["reviseWhen","何时改主意"]]) next.append(el("h3", label),el("p",item.nextTest[key]));
+      next.append(el("p",item.nextTest.boundary,"inquiry-limit")); fragment.append(next);
+      const practice = section("inquiry-practice", "已有的理解，可以怎样带回去？");
+      practice.append(el("p", "下面是可以独立引用的编者判断。已有实验支持限定范围内的认识；具体迁移方法仍需在目标系统验证。"),
+        ...item.findingIds.map(id => createInquiryRow(findingsById.get(id), "finding")));
+      item.studyIds.forEach(id => practice.append(createRouteLink("study", id, `亲手比较：${studiesById.get(id).title} →`, "inquiry-onward")));
+      fragment.append(practice);
+    } else {
+      const applications = section("inquiry-applications", "取用之后，发生了什么？");
+      const statuses = {adopted:"已采用",rejected:"未采用",inconclusive:"尚无定论",cited:"已引用"};
+      if (!item.applications.length) applications.append(el("p", "尚无公开的目标侧取用记录。没有记录不等于已验证，也不等于没有价值。"));
+      item.applications.forEach(app => {
+        const block = el("section", "", "inquiry-evidence"); const heading = el("h3", "");
+        const url = app.url.startsWith("https://") ? app.url : `https://github.com/IndelibleVivi/agent-memory-study/blob/main/${app.url}`;
+        heading.append(createExternalLink(url, `${app.title} ↗`));
+        block.append(el("p", `${statuses[app.status]} · ${app.date}`, "content-kind"), heading,
+          el("p", app.decision), el("p", app.observation), el("p", app.limit, "inquiry-limit")); applications.append(block);
+      });
+      applications.append(el("p", "引用过、采用过、有帮助是不同结论。负反馈与不采用也值得保留；迁移反馈由目标项目决定公开范围。", "inquiry-limit"));
+      item.questionIds.forEach(id => applications.append(createRouteLink("question", id, `继续追问：${questionsById.get(id).title} →`, "inquiry-onward")));
+      fragment.append(applications);
+    }
+    refs.inquiryView.replaceChildren(fragment);
   }
 
   function render(options = {}) {
@@ -1319,12 +1489,27 @@
     const material = materialsById.get(route.material);
     const showingMaterial = Boolean(material);
     const study = !material && studiesById.get(route.study);
+    const question = !material && !study && questionsById.get(route.question);
+    const finding = !material && !study && !question && findingsById.get(route.finding);
+    const inquiry = question || finding;
+    refs.inquiryView.hidden = !inquiry;
     refs.studyView.hidden = !study;
-    refs.atlasView.hidden = showingMaterial || Boolean(study);
+    refs.atlasView.hidden = showingMaterial || Boolean(study) || Boolean(inquiry);
     refs.materialView.hidden = !showingMaterial;
-    document.body.classList.toggle("is-reading", showingMaterial || Boolean(study));
+    document.body.classList.toggle("is-reading", showingMaterial || Boolean(study) || Boolean(inquiry));
     closeMenu();
 
+    if (inquiry) {
+      renderInquiry(inquiry, question ? "question" : "finding");
+      document.title = `${inquiry.title} · Agent Memory Study`;
+      refs.routeStatus.textContent = `已打开${question ? "问题专题" : "实践判断"}：${inquiry.title}`;
+      if (focus) {
+        window.scrollTo({top: 0, behavior: "auto"});
+        document.querySelector("#inquiry-title").focus({preventScroll: true});
+      }
+      if (hash) window.requestAnimationFrame(() => fragmentTarget(hash)?.scrollIntoView());
+      return;
+    }
     if (study) {
       renderStudy(study);
       document.title = `${study.title} · Agent Memory Study`;
@@ -1376,13 +1561,17 @@
   }
 
   function updateFilters(changes) {
-    navigate({ ...changes, material: null, study: null, scenario: null, phase: "before" }, { replace: true, focus: false });
+    navigate({ ...changes, question: null, finding: null, material: null, study: null, scenario: null, phase: "before" }, { replace: true, focus: false });
   }
 
   function closeMenu() {
     refs.siteNav.classList.remove("is-open");
     refs.menuButton.setAttribute("aria-expanded", "false");
   }
+
+  document.querySelector("#practice-form").addEventListener("submit", event => {
+    event.preventDefault(); runPracticeQuery(document.querySelector("#practice-query").value);
+  });
 
   refs.search.addEventListener("input", (event) => updateFilters({ q: event.target.value }));
   refs.libraryControls.addEventListener("submit", (event) => event.preventDefault());
@@ -1405,25 +1594,30 @@
   function activateRouteLink(link) {
     const type = link.dataset.route;
     const id = link.dataset.routeId;
+    if (type === "question" || type === "finding") {
+      navigate({material: null, study: null, question: type === "question" ? id : null,
+        finding: type === "finding" ? id : null, scenario: null, phase: "before", thread: null, path: null}, {focus: true});
+      return;
+    }
     if (type === "study") {
-      navigate({material: null, study: id, scenario: null, phase: "before", thread: null, path: null}, {focus: true});
+      navigate({question: null, finding: null, material: null, study: id, scenario: null, phase: "before", thread: null, path: null}, {focus: true});
       return;
     }
     if (type === "material") {
-      navigate({ material: id, study: null, scenario: null, phase: "before", thread: null, path: null }, { focus: true });
+      navigate({ question: null, finding: null, material: id, study: null, scenario: null, phase: "before", thread: null, path: null }, { focus: true });
       return;
     }
     if (type === "thread") {
-      navigate({ material: null, study: null, scenario: null, phase: "before", thread: id, path: null, surface: id }, { focus: true });
+      navigate({ question: null, finding: null, material: null, study: null, scenario: null, phase: "before", thread: id, path: null, surface: id }, { focus: true });
       return;
     }
     if (type === "path") {
-      navigate({ material: null, study: null, scenario: null, phase: "before", thread: null, path: id }, { focus: true });
+      navigate({ question: null, finding: null, material: null, study: null, scenario: null, phase: "before", thread: null, path: id }, { focus: true });
       return;
     }
     if (type === "home") {
       const scrollTarget = link.dataset.scrollTarget || "";
-      navigate({ material: null, study: null, scenario: null, phase: "before", thread: null, path: null }, {
+      navigate({ question: null, finding: null, material: null, study: null, scenario: null, phase: "before", thread: null, path: null }, {
         focus: true,
         hash: scrollTarget ? `#${scrollTarget}` : "",
       });

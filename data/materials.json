@@ -4,7 +4,7 @@
   "editorialNote": "以下内容来自逐篇明确标注阅读范围与 noteDepth 的 reading notes，是阅读导航，不是论文摘要的替代；未读或未复核的实验、附录与实现不应被当作已验证。具体主张、数字和限定请回到随附 PDF。",
   "atlas": {
     "thesis": "Agent memory fails in layers.",
-    "dek": "把记住、取回、修订与行动拆开看。这里不是排行榜，也不把未读变成债。",
+    "dek": "把记住、取回、修订与行动拆开看。沿着一个问题继续研究，也把有依据的判断带回实践；未读不是债。",
     "editorialLabel": "编者研究地图 · 跨源 synthesis，不是任何单篇论文的主张",
     "easterEgg": {
       "heroWord": "fails",
@@ -5510,6 +5510,238 @@
       ],
       "closing": "读完之后，可以回原文质疑这次串读，可以把场景带进自己的项目，也可以补一个使这些规则失效的反例。书房不要求每次阅读都产出代码；它提供一段从理解、比较到自行判断的路。",
       "artifactUrl": "research/correction-scope-study/README.md"
+    }
+  ],
+  "findings": [
+    {
+      "id": "retrieval-candidate-competition",
+      "title": "旧经验还在，也可能失去被使用的机会",
+      "byline": "Agent Memory Study editors",
+      "updated": "2026-09-21",
+      "status": "proposed-transfer",
+      "questionIds": [
+        "experience-to-capability"
+      ],
+      "materialIds": [
+        "continual-learning-experience-reuse"
+      ],
+      "triggers": [
+        "重复",
+        "候选",
+        "挤占",
+        "占满",
+        "去重",
+        "检索",
+        "旧经验",
+        "duplicate",
+        "retrieval",
+        "top-k",
+        "candidate"
+      ],
+      "claim": "保存、进入候选、排进返回结果和进入 active context 是不同环节。有限返回名额可能被重复候选占满；只按 key 合并又可能丢掉不同的适用条件。",
+      "when": "候选池增长后，结果越来越相似，原本可用的经验却很难取到；或准备给记忆检索加去重时。",
+      "action": "先检查必要条目是否还在、是否进入候选、排名与最终 context。把“相同内容的重复”和“相同主题、不同条件的经验”分开，再选择去重粒度或检索组织。",
+      "avoid": "不要只凭 key 相同合并经验，也不要把返回条目命中当作任务成功。扩大 top-k 可能只推迟挤占发生。",
+      "validation": "在目标检索器固定查询与返回预算，分别加入完全重复、同义改写、无关增长和同 key 不同条件；保存候选排名与实际 context，再做任务完成与旧任务回测。",
+      "limit": "这是由有限反例支持的诊断建议。没有证明某个通用去重器、embedding retriever 或整个 memory 系统更好；目标侧收益待检验。",
+      "evidence": [
+        {
+          "label": "经验检索竞争：4 个原创场景、108 次 SQLite BM25 选择",
+          "url": "research/experience-reuse-retrieval-study/README.md",
+          "observation": "重复候选让必要清洗经验从第 2 位退到第 4、6 位；按 key 去重又会漏掉同 key 下上锁房间所需的方法。无关增长控制保持目标排名。",
+          "limit": "有限 synthetic witnesses；108 次选择共享四个场景。返回预算是记录条数，不是等 token 或等计算预算；没有运行 agent 任务。"
+        },
+        {
+          "label": "逐次排名与选择 receipt",
+          "url": "research/experience-reuse-retrieval-study/results.json",
+          "observation": "保存原始排名、各策略选择与 hit，允许逐场景检查。",
+          "limit": "同一组构造场景的详细记录，不是另一份独立证据。"
+        }
+      ],
+      "applications": [
+        {
+          "title": "AMS 的实践 brief：先决定什么占一个返回名额",
+          "status": "adopted",
+          "date": "2026-09-21",
+          "url": "docs/practice-brief-use.md",
+          "decision": "一个 finding 是一个候选，它的多份 evidence 不展开成多个候选；不同适用条件的 finding 保留独立 ID，不按标题或主题合并。",
+          "observation": "此决定已用于本次本地查询与导出实现；具体重复证据、同主题不同条件的合同由可运行测试检查。",
+          "limit": "工程采用记录。测试检查名额与候选行为，不证明真实开发效率、检索质量或 agent 能力得到提升。"
+        }
+      ]
+    },
+    {
+      "id": "revision-needs-scope",
+      "title": "新说明出现，不代表旧范围已经失效",
+      "byline": "Agent Memory Study editors",
+      "updated": "2026-09-21",
+      "status": "proposed-transfer",
+      "questionIds": [
+        "experience-to-capability"
+      ],
+      "materialIds": [
+        "truth-maintenance-system",
+        "statefuse-conflict-preserving-memory",
+        "useful-memories-become-faulty",
+        "recuris-memory-evolution"
+      ],
+      "triggers": [
+        "新版",
+        "旧版",
+        "版本",
+        "更正",
+        "修订",
+        "覆盖",
+        "适用范围",
+        "条件",
+        "最新",
+        "revision",
+        "scope",
+        "version",
+        "latest"
+      ],
+      "claim": "修订应当改变有证据支持的适用范围。时间较新不自动撤回旧版本的有效说明；来源与条件标签也可能有误。",
+      "when": "工具参数、配置 schema 或工作经验随版本改变，但旧环境仍然在使用；或多个来源对同一范围给出不同建议时。",
+      "action": "保留适用条件、修订关系与支持来源。区分更正、状态变化和不同范围并存；当前范围有冲突时展示冲突，并用可独立检查的环境证据确认条件。",
+      "avoid": "不要用“最后写入”替代适用判断，不把所有历史顺手覆盖；也不要因为有 scope 字段就假定 scope 正确。只有暂缓，没有完成任务，仍不算能力收益。",
+      "validation": "在目标工具上同时保留旧版、新版、错误标签、独立替代支持和范围内冲突的任务；比较现有方法与候选方案的完成、误用和暂缓，工具答案在建议形成后才用于评分。",
+      "limit": "已有输出只支持给定条件下的规则差异。自然语言条件识别、真实模型先验与工具检查成本尚未测量；没有通用“带 scope 就更好”的结论。",
+      "evidence": [
+        {
+          "label": "一条更正之后：7 个场景、56 个确定性规则输出",
+          "url": "research/correction-scope-study/README.md",
+          "observation": "新版说明与旧版任务可以共存；全局最新会误导旧版任务。按范围规则保留旧建议，却也会受错误版本标签误导。",
+          "limit": "scope、来源有效性和工具 contract 由 fixture 给定；规则不理解自然语言，也没有模型先验。暂缓不等于完成任务。"
+        },
+        {
+          "label": "可亲手切换的共读",
+          "url": "https://indeliblevivi.github.io/agent-memory-study/?study=after-a-correction",
+          "observation": "浏览器与 Node runner 使用同一套规则，可比较事件前后、不同 scope 与撤回。",
+          "limit": "交互演示沿用原始 fixture，不能额外视为模型实验。"
+        }
+      ],
+      "applications": []
+    },
+    {
+      "id": "retraction-needs-recomputation",
+      "title": "来源对象消失，不保证派生影响消失",
+      "byline": "Agent Memory Study editors",
+      "updated": "2026-09-21",
+      "status": "proposed-transfer",
+      "questionIds": [
+        "experience-to-capability"
+      ],
+      "materialIds": [
+        "cache-to-cache"
+      ],
+      "triggers": [
+        "来源",
+        "撤回",
+        "删除",
+        "派生",
+        "重算",
+        "缓存",
+        "残留",
+        "cache",
+        "retraction",
+        "recompute",
+        "derived",
+        "delete"
+      ],
+      "claim": "当保留状态的计算曾依赖来源，删除来源对象未必消除这种计算依赖。在本次 cache 实验里，来源 slots 已删除，保留 cache 仍随来源内容改变。",
+      "when": "设计来源撤回、缓存复用或派生记忆失效时，需要说明“删除完成”究竟保证哪一层。",
+      "action": "列出来源到派生物的计算关系，明确失效或重算范围；把“删除后复用”与“来源从未参与计算”的参照比较。先在目标系统确认依赖，再决定是否需要重算。",
+      "avoid": "不要把文本摘要、向量索引和 KV cache 视为同一种机制；不要把可检测的数值差异直接叫作恢复了旧事实或删除失效。",
+      "validation": "保持查询与其他输入相同，仅替换来源内容，比较删除后复用、无来源重算和阻断依赖的控制；同时检查行为与数值指标，并排除位置、shape 和精度变化。",
+      "limit": "目标侧尚未执行迁移对照。现有依据限于固定模型与合成输入中的 cache 依赖；它提出一个检查问题，不能为其他系统直接下结论。",
+      "evidence": [
+        {
+          "label": "来源撤回：200 个单模型 cache 干预输出",
+          "url": "research/c2c-cache-retraction-study/README.md",
+          "observation": "固定 SmolLM2-135M-Instruct 的 20/20 来源配对在裁去来源 slots 后仍有分布差异，3/20 首个 greedy token 改变；重算与屏蔽控制通过。",
+          "limit": "原创单模型机制实验，不是 C2C benchmark 复现。残余依赖不等于正确恢复事实，亦未验证文本摘要、向量索引或权重遗忘。"
+        },
+        {
+          "label": "完整 compact receipt 与配对控制",
+          "url": "research/c2c-cache-retraction-study/results.json",
+          "observation": "包含各处理的输入、位置、输出、候选分数与逐层差异。",
+          "limit": "读取已保存 receipt 不等于重新 inference；实验经历了公开的探索与数值修订。"
+        }
+      ],
+      "applications": []
+    }
+  ],
+  "questions": [
+    {
+      "id": "experience-to-capability",
+      "title": "旧经验，怎样继续帮助当前任务？",
+      "question": "经验在什么条件下能够提高当前能力？环境、版本或适用范围改变以后，怎样继续受益，又不被过去误导？",
+      "intro": "一条经验从被保存到参与行动，中间经过候选、选择、理解与适用判断。我们把检索竞争、更正与范围两项已执行研究放在一起，追问这些环节怎样接上真实任务；cache 撤回则提供一个跨层借鉴必须止步的边界。",
+      "judgment": "目前能说明的是：经验还在不保证取得到，较新的说明不保证适用于当前范围，派生状态的撤回还可能需要单独处理。我们尚未证明，把条件与修订关系加入 memory 就能提高真实 agent 的任务完成率。",
+      "byline": "Agent Memory Study editors",
+      "updated": "2026-09-21",
+      "status": "open",
+      "explanations": [
+        {
+          "title": "也许先卡在“取不到”",
+          "text": "检索竞争的构造场景把失败定位到有限名额：重复候选排在必要经验之前。这个解释支持先检查候选与 context，但无法解释“证据已经在面前，模型仍然用错”的情况。"
+        },
+        {
+          "title": "也许取到了，却用错范围",
+          "text": "共读演示中，全局最新在旧版任务上会出错；按范围处理能避开这个反例，却依赖正确标签。需要把检索不到、条件识别错误和选择策略错误分别测量，不能统一归因于 memory 不够多。"
+        },
+        {
+          "title": "也许结构并没有带来净收益",
+          "text": "更丰富的记录可能增加解析负担、工具调用或暂缓。真实模型也可能本来就能靠先验与工具完成任务。因此比较必须有 no-memory 与现有注入基线，记录完成率、误用、暂缓及成本，允许候选方案没有收益。"
+        },
+        {
+          "title": "另一个层次：被删掉的是什么",
+          "text": "单模型 cache 实验提示，删除来源 slots 与消除来源对保留状态的计算影响是两件事。这是相邻机制的证据，不支持把文本经验和神经状态混为一谈；迁移时必须重新建立目标系统的依赖证据。"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "经验检索竞争：4 个原创场景、108 次 SQLite BM25 选择",
+          "url": "research/experience-reuse-retrieval-study/README.md",
+          "observation": "重复候选让必要清洗经验从第 2 位退到第 4、6 位；按 key 去重又会漏掉同 key 下上锁房间所需的方法。无关增长控制保持目标排名。",
+          "limit": "有限 synthetic witnesses；108 次选择共享四个场景。返回预算是记录条数，不是等 token 或等计算预算；没有运行 agent 任务。"
+        },
+        {
+          "label": "一条更正之后：7 个场景、56 个确定性规则输出",
+          "url": "research/correction-scope-study/README.md",
+          "observation": "新版说明与旧版任务可以共存；全局最新会误导旧版任务。按范围规则保留旧建议，却也会受错误版本标签误导。",
+          "limit": "scope、来源有效性和工具 contract 由 fixture 给定；规则不理解自然语言，也没有模型先验。暂缓不等于完成任务。"
+        },
+        {
+          "label": "来源撤回：200 个单模型 cache 干预输出",
+          "url": "research/c2c-cache-retraction-study/README.md",
+          "observation": "固定 SmolLM2-135M-Instruct 的 20/20 来源配对在裁去来源 slots 后仍有分布差异，3/20 首个 greedy token 改变；重算与屏蔽控制通过。",
+          "limit": "原创单模型机制实验，不是 C2C benchmark 复现。残余依赖不等于正确恢复事实，亦未验证文本摘要、向量索引或权重遗忘。"
+        }
+      ],
+      "materialIds": [
+        "continual-learning-experience-reuse",
+        "truth-maintenance-system",
+        "statefuse-conflict-preserving-memory",
+        "useful-memories-become-faulty",
+        "recuris-memory-evolution",
+        "cache-to-cache"
+      ],
+      "studyIds": [
+        "after-a-correction"
+      ],
+      "findingIds": [
+        "retrieval-candidate-competition",
+        "revision-needs-scope",
+        "retraction-needs-recomputation"
+      ],
+      "nextTest": {
+        "question": "携带适用条件与修订关系的经验，能否改善版本变化中的可执行工具任务？",
+        "comparison": "后续 pilot 可比较不注入经验、现有朴素检索／摘要、条件化候选方案，并用正确证据分支诊断“取不到”与“用不好”。第一轮只改变一个主要机制；若比较整套方案，就把结论限定为整套方案。",
+        "success": "任务实际完成是主要结果；另报旧范围误用、暂缓、延迟与 token。注入分支对齐预算，任务族作为样本单位，不把同一场景的许多改写计成独立任务。",
+        "reviseWhen": "如果证据可得时现有方法同样完成任务，或候选方案的收益被误用、暂缓与成本抵消，就缩小或撤回“条件化处理值得采用”的建议；若失败集中在条件识别，研究重点转向这一环节。",
+        "boundary": "研究方向，尚未运行真实模型 pilot；没有冻结未查看任务族，也没有效果或显著性结论。现有 deterministic 场景不充当真实 no-memory agent。"
+      }
     }
   ]
 }

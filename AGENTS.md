@@ -4,7 +4,7 @@
 
 ## Canonical 与 generated surfaces
 
-- `data/materials.json` 是公开材料、阅读深度、failure-surface membership、evidence metadata 与 `studies` 共读专题的 canonical source。
+- `data/materials.json` 是公开材料、阅读深度、failure-surface membership、evidence metadata、`studies` 共读专题、`questions` 问题专题与 `findings` 实践判断的 canonical source。
 - `assets/materials-data.js` 和 `agent-memory-study.rdf` 是 generated projections；不要手工编辑。
 - 需要重建 browser / Zotero artifacts 时，运行：
 
@@ -81,3 +81,11 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 - `materials[].designTransfer` 是可选的编者建议，必须有署名、整理日期、适用情境、具体做法、未执行对照、依据与边界；`status` 固定为 `proposed-not-run`。它不改变 `readingScope`、`noteDepth`、paper-reported findings 或既有 public-test receipts。
 - `skim` / `abstract` 的该栏目必须显示初读范围提示。字段缺失时隐藏栏目，避免空白模板被当成研究结果；不要为满足统一外观补写没有依据的建议。
 - material 页的共读连接直接使用 `studies.readings` 的 takeaway / limit / locator，不另设重复的连接文案来源。
+
+## 问题专题与实践 brief
+
+- `questions` 将已有证据组织为当前判断、竞争解释与下一问；`findings` 提供独立可引用的有范围建议。两者引用 material / study / research artifacts，不复制结果真源，不改变 `noteDepth`、`amsEvidence` 或历史 receipt。
+- `questions.status` 为 `open`，`findings.status` 为 `proposed-transfer`；`applications` 分开记录引用、采用、不采用与无定论，不自动证明有效或升级 suggestion。公开采用记录必须有可检查的公开对象、决定、观察、限制和链接；私人目标项目与日志不进入 canonical。
+- `assets/practice.js` 是 browser 与 `tools/export_practice.cjs` 共用的唯一 query / brief / Markdown 实现。每个 finding 占一个候选名额，重复 evidence 不增加排名；不同条件的独立 finding 不按标题/主题合并。查询模块无网络、无持久化（页面 query URL / history 的边界见 README）；这是本地 lexical matching，不宣称 semantic retrieval。
+- 详情与导出保留署名、日期、适用条件、反例、目标侧检查和 evidence 限制。全站搜索仍用 `assets/reading-search.js` 的跨字段 AND；复合 filters 必须由同一篇引用 material 满足。
+- 改动上述合同后运行 `python3 -B tools/verify_reader.py`；修改 UI 时运行 `tools/test_reader_browser.py`，覆盖 question / finding / practice 深链接、下载、回退、旧 material / study / atlas、desktop / mobile。维护规则见 `docs/research-practice.md`。

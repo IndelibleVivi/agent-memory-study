@@ -72,7 +72,7 @@ def main():
                                     };
                                   }
                                 }''', base + query)
-                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js']:
+                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js', 'practice.js']:
                                     page.add_script_tag(content=(ROOT / 'assets' / name).read_text())
                                 page.add_script_tag(content=offline_app)
                             else:
@@ -185,8 +185,97 @@ def main():
                         layout('filtered search'); record('multifield query, empty state, text safety and filter URL')
                         if width in (1440, 390):
                             page.screenshot(path=str(output / f'search-{width}.png'))
+                        go('#inquiries')
+                        expect(page.locator('#question-index a[data-route=question]')).to_have_count(len(data['questions']) * 2)
+                        expect(page.locator('#practice-results .practice-result')).to_have_count(3)
+                        page.locator('#question-index a[data-route=question]').first.click()
+                        expect(page.locator('#inquiry-title')).to_have_text(data['questions'][0]['title'])
+                        expect(page.locator('#inquiry-next')).to_contain_text('尚未运行真实模型 pilot')
+                        layout('question dossier'); record('question entry, current judgment, evidence and next test')
+                        if width in (1440, 390):
+                            page.screenshot(path=str(output / f'question-{width}.png'))
+                        page.locator('#inquiry-practice a[data-route=finding]').first.click()
+                        expect(page.locator('#inquiry-title')).to_have_text(data['findings'][0]['title'])
+                        expect(page.locator('#inquiry-applications')).to_contain_text('已采用')
+                        expect(page.locator('#inquiry-applications')).to_contain_text('不证明真实开发效率')
+                        layout('finding'); record('question to finding, scope, evidence and adopted boundary')
+                        if width in (1440, 390):
+                            page.screenshot(path=str(output / f'finding-{width}.png'))
+                        if not args.offline_render:
+                            for label, suffix in [('下载 JSON', 'json'), ('下载 Markdown', 'md')]:
+                                with page.expect_download() as download_event:
+                                    page.get_by_role('button', name=label, exact=True).click()
+                                download = download_event.value
+                                destination = output / f'finding-{width}.{suffix}'
+                                download.save_as(destination)
+                                content = destination.read_text()
+                                assert 'retrieval-candidate-competition' in content
+                                assert 'Agent Memory Study editors' in content
+                                assert '不证明真实开发效率' in content
+                                assert 'https://' in content
+                                if suffix == 'json':
+                                    assert len(json.loads(content)['findings']) == 1
+                            page.go_back()
+                            expect(page.locator('#inquiry-title')).to_have_text(data['questions'][0]['title'])
+                            page.go_forward()
+                            expect(page.locator('#inquiry-title')).to_have_text(data['findings'][0]['title'])
+                            record('finding Markdown/JSON downloads and real history')
+                        for kind, records in [('question', data['questions']), ('finding', data['findings'])]:
+                            for item in records:
+                                go('?' + kind + '=' + item['id'])
+                                expect(page.locator('#inquiry-title')).to_have_text(item['title'])
+                                if not args.offline_render:
+                                    page.reload(wait_until='domcontentloaded')
+                                    expect(page.locator('#inquiry-title')).to_have_text(item['title'])
+                                layout(kind + ' direct ' + item['id'])
+                        record('all question/finding direct links, reload and layout')
+                        go('?material=continual-learning-experience-reuse')
+                        page.locator('#material-inquiries a[data-route=question]').first.click()
+                        expect(page.locator('#inquiry-title')).to_have_text(data['questions'][0]['title'])
+                        page.locator('.inquiry-materials a[data-route=material]').first.click()
+                        expect(page.locator('#material-title')).to_contain_text('When continual learning')
+                        record('material/question reciprocal links')
+                        go('#practice')
+                        problem = '候选增加之后，结果被重复条目占满'
+                        page.locator('#practice-query').fill(problem)
+                        page.locator('#practice-query').press('Enter')
+                        expect(page.locator('#practice-results a[data-route=finding]').first).to_contain_text('旧经验还在')
+                        assert '[object Object]' not in page.locator('#practice-results').inner_text()
+                        assert parse_qs(urlparse(current_url()).query)['practice'] == [problem]
+                        assert page.evaluate('document.activeElement.id') == 'practice-query'
+                        layout('practice query'); record('natural problem query, match explanation, focus and URL')
+                        if width in (1440, 390):
+                            page.screenshot(path=str(output / f'practice-{width}.png'))
+                        if not args.offline_render:
+                            with page.expect_download() as download_event:
+                                page.locator('#practice-export').get_by_role('button', name='下载 JSON').click()
+                            destination = output / f'query-{width}.json'
+                            download_event.value.save_as(destination)
+                            brief = json.loads(destination.read_text())
+                            assert brief['query'] == problem
+                            assert brief['findings'][0]['id'] == 'retrieval-candidate-competition'
+                            page.reload(wait_until='domcontentloaded')
+                            expect(page.locator('#practice-query')).to_have_value(problem)
+                            expect(page.locator('#practice-results .practice-result')).to_have_count(len(brief['findings']))
+                            record('query export matches visible results and reload')
+                        page.locator('#practice-query').fill('火星天气 superconductivity')
+                        page.locator('#practice-query').press('Enter')
+                        expect(page.locator('#practice-results')).to_contain_text('没有找到相关判断')
+                        expect(page.locator('#practice-export button')).to_have_count(0)
+                        page.locator('#practice-examples button').nth(1).click()
+                        expect(page.locator('#practice-results a').first).to_contain_text('新说明出现')
+                        page.locator('#practice-examples button').nth(2).click()
+                        expect(page.locator('#practice-results a').first).to_contain_text('来源对象消失')
+                        record('honest no-match state and working example queries')
+                        for text, kind in [('旧经验，怎样继续帮助当前任务？', 'question'), ('新说明出现，不代表旧范围已经失效', 'finding')]:
+                            go('#library')
+                            page.locator('#search').fill(text)
+                            expect(page.locator('#material-index [data-result-kind=' + kind + ']')).to_have_count(1)
+                            page.locator('#material-index a[data-route=' + kind + ']').first.click()
+                            expect(page.locator('#inquiry-title')).to_have_text(text)
+                        record('global search to new content kinds')
                         for query in ['?material=missing', '?study=after-a-correction&scenario=missing&phase=bad',
-                                      '?thread=retrieval-active-context', '?path=from-revision', '#%', '#missing[bracket]']:
+                                      '?question=missing', '?finding=missing', '?thread=retrieval-active-context', '?path=from-revision', '#%', '#missing[bracket]']:
                             go(query); layout(query)
                         record('invalid and legacy routes render')
                         context.close()
