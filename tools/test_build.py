@@ -66,10 +66,10 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260918-c2c-1'),
+            source.count('assets/materials-data.js?v=20260920-state-transfer-1'),
             1,
         )
-        self.assertNotIn('assets/materials-data.js?v=20260912-agentic-1', source)
+        self.assertNotIn('assets/materials-data.js?v=20260918-c2c-1', source)
 
     def test_stylesheet_cache_key_tracks_mobile_evidence_fix(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")

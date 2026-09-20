@@ -19,9 +19,10 @@
 - [邻居没变，为什么分数过期了？](research/mosaic-score-dependency-study/README.md)对 MOSAIC 的公开评分式执行 9 个原创场景、27 组缓存处理：frontier 最大值和 previous community 都可能让远处节点的完整分数过期；保留全量参照、依赖补全与有效控制，不将公式实验称为作者实现或 benchmark 复现；
 - [做过、做成、做对](research/agemem-reward-observation-audit/README.md)直接运行固定 AgeMem reward 模块的 16 个原创消息输入：失败维护消息、context reset 与语义利用代理分别暴露不同的评价边界；公开完整输入、返回值、配对控制和复跑命令，不把函数级测试称为真实 mutation 或训练复现；
 - [来源删了，计算影响还在吗？](research/c2c-cache-retraction-study/README.md)受 C2C 启发，对固定 SmolLM2-135M-Instruct 执行 200 个原创 cache 干预输出：删去来源 slots 后，20 组配对仍有来源相关分布差异；记录重算、位置、mask 与数值控制，不将残余依赖称为成功恢复事实。[配套源码审计](research/c2c-source-contract-audit/README.md)直接检查固定 C2C aligner / projector 的函数级行为；两者均不复现论文 benchmark；
-- [跨模型 prefill reuse 的分阶段 runner](research/kv-prefill-transfer/README.md)为 Qwen3-0.6B → 1.7B 准备串行采集、磁盘分块 ridge 与三分支评价；21项本地测试、完整256-token随机控制和公开数据准备已完成。真实1.7B单文档验证了native cache的精确磁盘交接，并记录了BF16分段/整段数值差与资源实测；跨模型 mapper 尚未拟合，新论文尚未列入材料或提升阅读深度；
+- [跨模型 prefill reuse 的分阶段 runner](research/kv-prefill-transfer/README.md)为 Qwen3-0.6B → 1.7B 准备串行采集、磁盘分块 ridge 与三分支评价；21项本地测试、完整256-token随机控制和公开数据准备已完成。真实1.7B单文档验证了native cache的精确磁盘交接，并记录了BF16分段/整段数值差与资源实测；跨模型 mapper 尚未拟合，论文现已收录为 [read 材料](https://indeliblevivi.github.io/agent-memory-study/?material=cross-model-kv-prefill-reuse)，不把 runner 或单模型检查当作迁移质量结果；
+- 新增 [Cross-Model KV Cache Transfer](https://indeliblevivi.github.io/agent-memory-study/?material=cross-model-kv-prefill-reuse) 与 [The Pain Axis](https://indeliblevivi.github.io/agent-memory-study/?material=pain-axis) 两篇 `read` 材料：分别连接前缀状态交接与内部干预后的行动变化，保留作者结果、编者推论和未执行对照的边界；
 - 一个没有 backend、继续由 GitHub Pages 托管的静态 reader；唯一 analytics 是 Cloudflare Web Analytics 的 aggregate beacon，不使用 cookie 或 localStorage 识别、画像访客；
-- 24 份 canonical materials：10 份按原许可随站提供的 PDF，另 14 份从 reader 直达 official full text；
+- 26 份 canonical materials：10 份按原许可随站提供的 PDF，另 16 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
 
 这些札记是阅读导航，不是逐篇全文批注，也不代替原文。转述、问题和编辑判断不能冒充作者主张；需要引用时，请回到每条记录链接的 official source。
@@ -47,7 +48,7 @@ Constellation 是同一 canonical data 的 semantic projection：failure surface
 
 ## PDF 怎样分发
 
-这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。24 份 canonical materials 中，10 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；另 14 篇只链接作者、publisher、arXiv 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
+这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。26 份 canonical materials 中，10 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；另 16 篇只链接作者、publisher、arXiv 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
 
 不要单独下载 `agent-memory-study.rdf`：其中 10 个 attachment 使用相对路径。请下载 `main` branch ZIP、解压后再导入 RDF；具体步骤与导入后应出现的结构见 [ZOTERO-IMPORT.md](./ZOTERO-IMPORT.md)。tagged Zotero ZIP 只在显式发版时更新，可能暂时落后于 `main`。Doyle 1979 只链接 MIT DSpace 的 official scan，本地 OCR derivative 不在 repo 或分享包里。
 

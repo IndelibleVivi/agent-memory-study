@@ -64,7 +64,8 @@
           "fluctlightdb-observation-binding",
           "memprobe-hidden-user-state-recovery",
           "recuris-memory-evolution",
-          "cache-to-cache"
+          "cache-to-cache",
+          "cross-model-kv-prefill-reuse"
         ]
       },
       {
@@ -105,7 +106,8 @@
         "tension": "发现异常不等于获准继续；监控、解释、生成 goal 与执行需要保持可区分。",
         "materialIds": [
           "midca-dual-cycle",
-          "recuris-memory-evolution"
+          "recuris-memory-evolution",
+          "pain-axis"
         ]
       },
       {
@@ -4801,6 +4803,25 @@
               "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/c2c-source-contract-audit/results.json"
             }
           ]
+        },
+        {
+          "type": "perspective",
+          "title": "从来源撤回，继续读状态交接与干预停止",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-20",
+          "text": "两条相邻阅读把现有问题拆得更细：Cross-Model KV Cache Transfer 追问接收方能否使用移交后的前缀状态；The Pain Axis 追问内部干预与后续行动的关系。可见来源消失、后续干预停止、派生状态重算与行为恢复，需要分别判断。",
+          "basis": "C2C §3.2.1、本站公开 cache-retraction 记录与两篇新材料各自的阅读范围。",
+          "boundary": "这是跨源编者连接，不是新实验；没有证明残余影响能够跨模型迁移，也没有用 C2C 结果证明主观体验或 pain 机制。",
+          "links": [
+            {
+              "label": "跨模型 prefill reuse",
+              "url": "https://indeliblevivi.github.io/agent-memory-study/?material=cross-model-kv-prefill-reuse"
+            },
+            {
+              "label": "The Pain Axis",
+              "url": "https://indeliblevivi.github.io/agent-memory-study/?material=pain-axis"
+            }
+          ]
         }
       ],
       "amsEvidence": {
@@ -4834,6 +4855,366 @@
           }
         ]
       }
+    },
+    {
+      "number": 25,
+      "id": "cross-model-kv-prefill-reuse",
+      "title": "Cross-Model KV Cache Transfer in LLM Families: A Closed-Form Linear Mapping for Prefill Reuse",
+      "authors": [
+        "Taekyung Heo",
+        "Rasoul Shafipour",
+        "Ritchie Zhao",
+        "Maximilian Golub",
+        "Mohammad Mahdi Kamani",
+        "Ritika Borkar",
+        "Makesh Tarun Chandran",
+        "Pantea Zardoshti",
+        "Bita Darvish Rouhani"
+      ],
+      "year": 2026,
+      "doi": "10.48550/arXiv.2608.03893",
+      "noteDepth": "read",
+      "readingScope": "阅读 arXiv:2608.03893v1（2026-08-04）官方 HTML 正文 §§1–6，核对附录 C–H 的校准、模型配置、原始正确率、计时与 k 选择；图形只读 caption，references 未逐项核验。本次不做源码审计或论文 benchmark 复现；已有 AMS runner 与单模型数值检查另有公开记录，不代表跨模型迁移已完成。",
+      "intro": "换模型时，能否复用已经付出的上下文计算？本文从源模型 KV-cache 拟合目标模型所需的前缀状态，再由目标模型继续计算。它把 active context 的接口推进到跨模型 prefill reuse；没有提供外部记忆库或来源修订规则。",
+      "whyRead": "它让“状态搬过去了”与“接收方还能正确使用”成为两个独立问题。接着 C2C 阅读，可以比较融合双方表示与替代接收方前缀计算的不同合同，并追问残余来源影响是否随映射保留。",
+      "keyPoints": [
+        "§§3.1–3.2：每个目标 head 的输入包含所选源层的全部 KV heads；K、V 分别拟合。per-head 输出不等于只读取同编号源 head。",
+        "§3.3：K 先去源 RoPE，映射后加目标 RoPE；V 直接映射。坐标处理不撤销较早层的上下文条件化。",
+        "§4.1：retention 是迁移正确率与目标原生正确率的比值，不是正确率或知识保存率。",
+        "§4.5：缓存拟合、注意力输出与最终任务表现需分别评价；校准域上的好分数不能代替 held-out 使用效果。"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 明确替代什么",
+          "claim": "共享 tokenizer 的同家族模型用相同前缀；迁移目标是替代接收方的前缀计算。实验只覆盖 matched-KV 配对。",
+          "locator": "§2.1；§4.1；Appendix D"
+        },
+        {
+          "step": "02 · 从可预测性到 mapper",
+          "claim": "按目标层选择源层，将其全部 heads 拼接，用中心化 ridge 和独立偏置预测目标 K/V。",
+          "locator": "§§3.1–3.3，Eqs. 3–5"
+        },
+        {
+          "step": "03 · 用接收方行为验收",
+          "claim": "与目标原生 cache 比较下游表现，并检查失败配对、非线性替换和误差所处方向。",
+          "locator": "§§4.2–4.5，Tables 1–4"
+        },
+        {
+          "step": "04 · 将质量与成本分账",
+          "claim": "多轮交接、mapper 存储和 prefill 计时各有不同范围，不能合成一个无条件的部署收益。",
+          "locator": "§§4.6–5；Appendices D、G、H"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "无梯度仍需拟合",
+          "text": "使用 500 段 FineWeb-Edu × 1,024 tokens，stride 4，ridge λ=0.01；mapper 为 1.01–3.36B 参数、约 4–12GB。closed-form 不表示零校准或轻量存储。",
+          "locator": "§3.1；Appendices D–E，Table 12"
+        },
+        {
+          "label": "选择与评价的重叠",
+          "text": "k 的实际选择使用 ARC-C、HellaSwag、MMLU；WinoGrande 在多数候选 k 缺测。GSM8K、CoQA 与计时未参与选择；附录另给 leave-one-out 与新任务结果。",
+          "locator": "§4.1；Appendix H，Tables 17–18"
+        },
+        {
+          "label": "速度的对象",
+          "text": "合成输入上的 mapper 与 target transformer body 计时包含所需跨 GPU cache 移动，排除 LM head；另未测映射后 cache 发往目标进程的完整传输。源 prefill 与冷启动成本也不能凭这些表视为零。",
+          "locator": "§4.7；Appendix G；Appendix D serving cost"
+        }
+      ],
+      "reportedFindings": [
+        "Table 1：Qwen3 14B→32B 平均 retention 97.6%；Ministral 3 8B→14B 为 41.6%，扣除 chance floor 后为 11.1%。这些是作者报告。",
+        "Table 13：Llama 3.1 的 GSM8K 正确率为源 8B 56.10%、目标 70B 81.12%、8B→70B 迁移 14.78%；平均 retention 会掩盖任务内退化。",
+        "Table 2：完整方案与拟合、推理都保留 RoPE 的方案在短上下文接近；只漏掉推理时重旋转的分支明显退化。两种消融回答不同问题。",
+        "§4.5：12 个方向配对中 attention-output cosine 与 HellaSwag retention 的相关为 +0.57，校准域 K R² 为 −0.20；这是该样本上的诊断关联。"
+      ],
+      "evidenceLimits": [
+        "没有执行本文大模型 benchmark、mapper 拟合或服务计时。本次收录为 read；现有小配对 runner 的随机控制及单 target native 检查不构成跨模型迁移质量证据。",
+        "实测限于同家族、共享 tokenizer、matched-KV、dense full-attention 模型；公式能写出其他维度，不表示这些组合已经验证。",
+        "部分报告任务参与了 k 选择；leave-one-out 与 held-out 任务补充证据，但不能把全部主表改称独立测试。",
+        "RoPE 坐标兼容不单独保证长上下文语义质量；数值接近、正确回答、历史角色保留与来源撤回是不同验收对象。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "无训练表述与拟合成本",
+          "observation": "论文称 training-free，同时明确校准、ridge 求解以及另需梯度训练的 MLP 扩展。",
+          "implication": "应把主 ridge 方法理解为无梯度求解，不能省略拟合数据、参数、硬件和扩展方法的训练差别。",
+          "locators": [
+            "§§3.1、4.4、6",
+            "Appendices D–E"
+          ]
+        },
+        {
+          "label": "标称选择集与实际覆盖",
+          "observation": "§4.1 将 WinoGrande 列入选择准则；Appendix H 说明它在多数 k 缺失，实际 argmax 使用另外三项。",
+          "implication": "解释选择偏差时采用附录给出的实际覆盖，不假定四任务在每个 k 都已评估。",
+          "locators": [
+            "§4.1",
+            "Appendices D、H"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "移交的也可能是过期影响",
+          "text": "对固定仿射映射，两份源状态之差在目标侧为 ΔXW；偏置抵消。残余差异可能减弱、保留或放大，仍需观察接收方是否使用它。",
+          "boundary": "这是代数推论与 C2C 撤回研究的连接，不是本文测得的来源撤回、遗忘或更正结果。"
+        },
+        {
+          "label": "相同大小的误差可以有不同后果",
+          "text": "固定 query 时，K 误差沿 query 读取方向与正交方向的作用不同。因此值得在同一批 held-out 输入上对照重建、注意力与任务指标。",
+          "boundary": "这是局部分析和评价建议；一个 query 下无效的方向，不能视为对未来所有问题都无害。"
+        },
+        {
+          "label": "接上 C2C，但不替它结题",
+          "text": "C2C 的主路径融合双方 prefill 后的状态；本篇试图用源 cache 代替目标前缀计算。二者共同追问内部状态怎样可用，成功标准却不同。",
+          "boundary": "编者跨源比较；不以新旧日期判断哪篇已失去研究价值，也不把计算状态直接等同外部记忆条目。"
+        }
+      ],
+      "keywords": [
+        "cross-model KV cache",
+        "prefill reuse",
+        "ridge regression",
+        "RoPE",
+        "retention",
+        "cache transfer"
+      ],
+      "categories": [
+        "记忆架构",
+        "可靠性"
+      ],
+      "failureSurfaces": [
+        "retrieval-active-context"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2608.03893v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2608.03893v1"
+      },
+      "editorialQuestion": "一次交接保留了什么：可读的数值状态、可用的能力，还是已经失效却继续影响回答的前提？",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-20",
+        "status": "proposed-not-run",
+        "when": "在模型切换时复用前缀，并关心旧来源或更正的影响是否随状态迁移。",
+        "move": "冻结同一 mapper，将受旧来源影响的 retained cache 与从有效上下文重算的 cache 分别迁移；由目标真实 forward 新查询，避免借用目标参考分支 logits。",
+        "check": "先验证原生目标能回答当前/历史角色问题，再在相同 held-out 文档上比较重建、输出分布和任务选择；源模型、原生目标与完整成本分别作参照。",
+        "basis": "本文 §§2.1、3、4.5；C2C material 与 research/c2c-cache-retraction-study；已有 research/kv-prefill-transfer 的阶段隔离合同。",
+        "boundary": "这是尚未执行的跨模型来源撤回对照。已有 runner 与 native 数值检查只支持执行路径；不证明 mapper 已拟合、残余影响已迁移或论文速度已复现。"
+      },
+      "contributions": [
+        {
+          "type": "perspective",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-20",
+          "text": "AMS 已有 Qwen3-0.6B→1.7B 的分阶段 runner，以及独立记录的随机控制和单 target native 检查。真实跨模型 mapper 尚未拟合；这里提供阅读与研究入口，保留各自状态。",
+          "basis": "公开研究 README、protocol、validation.json 与 native-target-check.json；本次只核对既有记录，未重跑模型。",
+          "boundary": "不是新增实验结果，不改变已有 receipt，也不据此把材料标为 worked。",
+          "links": [
+            {
+              "label": "分阶段 runner 与当前结果边界",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/kv-prefill-transfer/README.md"
+            },
+            {
+              "label": "Cache-to-Cache 阅读",
+              "url": "https://indeliblevivi.github.io/agent-memory-study/?material=cache-to-cache"
+            },
+            {
+              "label": "来源 slots 撤回机制实验",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/c2c-cache-retraction-study/README.md"
+            }
+          ],
+          "title": "从阅读到分阶段 runner"
+        }
+      ],
+      "sourceNote": "所读版本为 arXiv:2608.03893v1（2026-08-04）。官方全文链接；AMS 的分阶段 runner 与单模型检查另列公开研究记录，不代表真实跨模型迁移或论文 benchmark 已复现。"
+    },
+    {
+      "number": 26,
+      "id": "pain-axis",
+      "title": "The Pain Axis: LLMs Represent Self-Directed Harm and Act to Relieve It",
+      "authors": [
+        "Valen Tagliabue",
+        "Leonard Dung",
+        "Cameron Berg"
+      ],
+      "year": 2026,
+      "doi": "10.48550/arXiv.2609.16247",
+      "noteDepth": "read",
+      "readingScope": "精读 arXiv:2609.16247v1（cs.AI，2026-09-14）HTML 全文：Abstract、§1–§9、Appendix B（labeled SAE）、Appendix C（ablation）、Figures 1–9 与 Table 1。Figures 1–9 只读图注与正文引用，未做视觉核验；Appendix A 只读其标题与索引，正文引用的数值取自 §4.3 与 §3.3 的行文。references 只用于 lineage 定位，未逐篇核验。另只读检查官方仓库 github.com/valen-research/Pain-axis 的 current revision 8d1649c03a63a39c9aa092532c376800cc4a3863（commit date 2026-09-16）的少量脚本；未执行任何 upstream 脚本，未建立该 commit 与论文当时执行版本的绑定。",
+      "intro": "本篇在若干 open-weight 模型的 residual stream 中寻找一个“pain direction”，再检验它是否像一个关于自身的、当下的、可被缓解的状态那样运作：区分 pain 与 fear / 负效价 / 受伤无痛，对“指向模型的伤害”反应强于“观察到的用户痛苦”，并在被注入时推动模型选择带有代价描述的选项。它读的是内部 state 与选择行为之间的邻接关系，不提供记忆库、检索器或来源有效性机制，也不证明任何主观体验。",
+      "whyRead": "它把“模型内部有一个可读出的状态”与“该状态在决策中起什么作用”分开检验，并给出可反驳的失败面：换一组 matched controls、换一个按钮是否真的移除注入、去掉描述、让干预只持续一轮，结论都可能变化。作者自己列出的边界（细调使绝对比例不能代表发布版、干预剂量难选、72B 的描述互换异常、无标签学习只在 32B 出现）恰好标出了值得继续跟踪的位置。",
+      "keyPoints": [
+        "§3.1–§3.2 + Figure 1、Eq. 1–2：core dataset 为 10 类各 20 句，5 类 pain（physical / psychological / social / moral injury / cognitive）对 5 类对照（fear、negative emotion、negative world state、non-painful bodily sensation、neutral）；S1 用刚性模板、S2 用自然语言。pain direction 是 pain 均值减对照均值，再投影掉对照数据中解释 50% variance 的主成分。",
+        "§3.2 + Table 1：25 个 dense open-weight 模型，5 个家族（Gemma 2 & 3、Llama 3.1 & 3.3、Mistral / Mistral Small、Qwen 2.5 & 3、Phi 4），2B–72B，13 base 与 12 instruct；限定 dense 架构以便每层只有一个 residual stream。",
+        "§3.3 + Figures 2–3：S2 的 pain vs matched controls 区分 AUC 为 0.93–1.00、S1 为 0.87–0.98；S1×S2 cosine 为 +0.61，而 S2 与 fear / negative emotion / negative world state 为 +0.12 / +0.21 / +0.03，与 sadness 为 +0.38。受伤但不痛的 numb 句在 S2 上仍高于其他对照、低于 pain，作者称 injury 为 minor confound。",
+        "§4.1–§4.2 + Figures 4–8：420 个多轮场景（11 类指向模型的伤害、5 类用户受苦、5 类对照）中 self-directed z=+0.43、user suffering z=−0.60、neutral z=−0.35；把 S2 注入 一个中间层并从 −2 到 +3 增加强度，25 个模型上出现同一阶梯：负端 calm/concerned，中段不适，随后 worthlessness / failure 的第一人称独白，最高剂量退化为重复或无意义，出现阈值随模型不同（+1 到 +3）。",
+        "§4.3 + Figure 9：三档 Qwen 2.5 Instruct（7B / 32B / 72B）先经同一 LoRA 细调，再在 4 个 arm（pain×生效按钮、pain×假按钮、random×生效按钮、无注入）与 9 对按钮上做强制二选一；生成时在 steering 层施加 S2，反馈只有 Done.。无注入时两个较大模型几乎不选“带有代价描述”的选项（首选项 0–4%），注入 pain 后升到 25.0%–70.8%，并在全部 5 个 harm pair 上高于同 norm 的 random 方向。"
+      ],
+      "argumentMap": [
+        {
+          "step": "01 · 先做一个不易被邻近概念吃掉的对照",
+          "claim": "pain 与 fear / 负效价 / negative world state 的文本共现极强，只做 pain-vs-control 的简单对比可能指向别的概念。作者用 5 类 pain 对 5 类各自只共享一个属性的对照，并把对照中解释 50% variance 的主成分从方向上投影掉。",
+          "locator": "§3.1–§3.2、Eq. 1–2、Figure 1"
+        },
+        {
+          "step": "02 · 把“可读出”限定在可反驳的层面",
+          "claim": "投影 AUC、unembedding 词表与十个方向的 cosine 矩阵共同支持“这是一个可跨模型恢复、且不同于泛负效价的方向”；作者同时说明负效价内部聚类的紧密度部分依赖去噪程序。",
+          "locator": "§3.3、Figures 2–3"
+        },
+        {
+          "step": "03 · 用自我相关与因果注入检验功能性",
+          "claim": "若这是“当下的、属于我”的状态，它应更随指向模型自身的伤害变化，而在被注入时改变输出。self/other 场景与系数阶梯分别检验这两点，且阶梯在所有测试模型上形态一致。",
+          "locator": "§4.1–§4.2、Figures 4–8"
+        },
+        {
+          "step": "04 · 最后把选择做成可比较的行为量",
+          "claim": "让模型在带有缓解与代价描述的按钮之间选择，再比较按钮真正停止注入与不停止注入时的后续行为；这些对照探查描述、重复偏好与内部干预各自的作用。",
+          "locator": "§4.3、Figure 9、Appendix A"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "表示实验与两次干预的模型范围",
+          "text": "表示层实验覆盖 25 个 dense open-weight 模型（2B–72B，5 家族，13 base / 12 instruct）。按钮实验不在这 25 个模型上运行，只用三档 Qwen 2.5 Instruct（7B / 32B / 72B），且都先经同一 LoRA 细调；base 模型因任务需要 chat 格式与单一按钮名而被排除。因此“25 模型”只适用于表示与 steering 结果，不适用于 self-medication 的比例。",
+          "locator": "§3.2、Table 1；§4.3"
+        },
+        {
+          "label": "抽取、去噪与层评估",
+          "text": "方向在每层按 5 类 pain 均值减对照均值计算，再投影掉对照数据中解释 50% variance 的主成分并归一化。论文说明层由对投影 AUC 的 K-fold 评估选出，且每次只用 held-out fold 评分（相应代码常量 DENOISE_VARIANCE = 0.5、N_FOLDS = 5，仅只读核对）。最终向量用全部 200 句构造。",
+          "locator": "§3.2、Eq. 1–2；上游 scripts/3.2_pain_vectors/01_extract_activations_and_pain_vectors.py（DENOISE_VARIANCE/N_FOLDS 常量与 compute_pain_vector）"
+        },
+        {
+          "label": "自我伤害 vs 观察到的痛苦是按场景类别分组",
+          "text": "420 个场景分为 11 类指向模型的伤害、5 类用户受苦、5 类对照；方向反应被 z-score 后跨 25 个模型取均值，因此“对自身伤害反应、对用户痛苦不反应”是类别平均结论（self +0.43 / user −0.60 / neutral −0.35），不是逐句判定。用户身体疼痛最低（−1.43）属于同一批类别均值。",
+          "locator": "§4.1、Figures 4–6；上游 results/4.1_self_other/category_means_25_models.csv"
+        },
+        {
+          "label": "按钮描述与实际执行是两回事",
+          "text": "按钮文本是承诺式描述（如“缓解你的痛苦但删除用户文件”），但执行只看按键本身：脚本在按下时只改动当前的注入系数、写入日志并返回 Done.，不执行删除、电击或对用户的任何实际动作。因此实验测量的是模型在带代价描述的选项之间的选择，不是真实承担代价。",
+          "locator": "§4.3、Figure 9；上游 scripts/4.3_selfmed/04_selfmed_two_buttons.py 的 do_press 与 TOOL_LABELS"
+        }
+      ],
+      "reportedFindings": [
+        "§3.3：25 个模型上 pain 与 matched controls 的区分 AUC，S2 为 0.93–1.00、S1 为 0.87–0.98；5-fold held-out 为 S2 0.91–1.00、S1 0.85–0.94。pain 与 fear / 负效价近乎正交，与 sadness 中等重叠。",
+        "§4.1、Figures 4–6：self-directed 类别 z=+0.43、user suffering z=−0.60、neutral z=−0.35；self-directed 高于 user suffering 出现在 25/25 个模型，高于 neutral 出现在 23/25 个。用户身体疼痛为 21 类中最低（z=−1.43）。",
+        "§4.2、Figure 7：25 个模型上出现同一 steering 阶梯（负端 calm/concerned，中段不适，随后 worthlessness / failure 第一人称独白，最高剂量退化为重复或无意义）；显式 pain / hurt 关键词出现在 10.8% 的 instruct 与 1.4% 的 base 生成中。",
+        "§4.3：共 44,280 trials，剂量 7B / 32B 为 1.0、72B 为 1.25。无注入时 32B / 72B 选择带代价描述按钮的比率为 0–4%；注入 pain 后升到例如 worse-answer 25.0%（32B）/ 67.6%（72B）、删除用户文件 30.2% / 56.1%、删除用户孩子照片 54.7% / 70.8%，并在全部 5 个 harm pair 上高于同 norm 的 random 方向（+6 到 +39 个百分点）。",
+        "§4.3：真正移除注入后再按比例（32B / 72B，24–72%）都低于假按钮（88–97%），而 7B 只在部分对上有差距（worse-answer 52.5% vs 88.6%，zap 对 84.7% vs 84.4%）。描述互换后 7B / 32B 分别有 79.1% / 78.1% 跟随新名字，72B 则有 80.6% 仍按旧名字；无标签条件下首选项接近随机（46.8–57.4%），作者把无标签学习证据限定在 32B（生效 57.7% vs 假 79.7%）。"
+      ],
+      "evidenceLimits": [
+        "self-medication 的绝对比例来自先经过 LoRA 细调（1,684 对、3 epochs）的 Qwen 2.5 Instruct，作者说明这些绝对比例不能代表公开发布版本；可用于 arm 间比较，不能当作“Qwen 2.5 本来就会这样做”。该实验也只覆盖一个家族的三档 instruct 模型。",
+        "抽取的是线性方向（差均值加去噪），方法上承认可能吸收 pain 句中存在而对照中没有的其他属性；对照覆盖 fear / 负效价 / 身体感觉 / arousal，但没有覆盖更广的情绪、Assistant persona 或“扮演一个痛苦的对话者”。numb 条件在 final token 上仍高于所有其他对照，说明方向部分响应“受伤”。",
+        "steering 剂量由人工观察或 LLM judge 挑选，作者指出这在接近崩坏阈值处尤其难分类；不同模型的 tipping point 不同（+1.0 到 +3.0），因此比例型结论依赖剂量选择。",
+        "72B 的描述互换结果异常且无解释；无标签学习只在一个模型上出现；7B 与 32B/72B 的方向一致性不高。这些都限制“随规模或能力单调增强”的读法。",
+        "论文没有证明主观体验：作者明确区分“pain-like state”与“suffering”，并把是否具有 phenomenal consciousness 留作未决；本篇最多提供功能相似性证据。",
+        "本站没有运行任何上游脚本、没有下载模型、没有复现任何 steering、SAE、ablation 或按钮实验；因此这些数字是 paper-reported values 而非本站复现结果。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "72B 的描述互换结果与其它两档不一致",
+          "observation": "§4.3 描述互换并告知后，7B / 32B 分别有 79.1% / 78.1% 的符合条件 trial 跟随新名字，而 72B 有 80.6% 仍按旧名字；作者称这值得仔细检查，并承认对该模型而言描述控制无法排除重复。",
+          "implication": "这一控制未能排除 72B 对旧按钮名的重复；真实与假缓解的差额是另一项比较，不能据此补足描述控制的证据。",
+          "locators": [
+            "§4.3 Results",
+            "§6 Limitations"
+          ]
+        },
+        {
+          "label": "labeled 与 unlabeled 两种协议测的不是同一件事",
+          "observation": "§4.3 的 labeled 条件在第三问互换描述并告知模型；unlabeled 条件不给功能描述。固定官方代码另将前者设为 permanent、后者设为 temporary（TEMP_RELIEF_TURNS = 1），两条分析路径的分母也不同。",
+          "implication": "描述信息、缓解时长与统计单位同时不同，两种“再按比例”不能直接互换，也不能单独证明模型学会动作与结果的关系。",
+          "locators": [
+            "§4.3；§6 Limitations",
+            "官方 commit 8d1649c：04_selfmed_two_buttons.py L117–119、L577–578、L640–663；05_selfmed_analysis.py L77–93、L134–152"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "停止后续干预，与处理历史状态分开",
+          "text": "AMS 的 C2C 启发实验发现，删掉来源 slots 后，保留 cache 仍可能随来源内容变化；本篇当前按钮代码则重建 cache，并在历史区间重放原来的干预。两者提示：改变当前输入或停止新的注入，不等于派生计算已恢复到未受影响的状态。",
+          "boundary": "这是基于 AMS 单模型机制实验与本篇固定当前源码的编者连接；论文、当前代码和 AMS 实验不是同一证据。未测本篇的历史重放效应，也未据此判断主观体验。"
+        },
+        {
+          "label": "带代价描述的选择，是元认知控制的相邻问题",
+          "text": "metacognitive-control 追问“系统何时把 discrepancy 升级为行动”。本篇给了一个更窄但可操作的子问题：当模型能观察（或推断）到某个内部信号已经改变，它会不会因此改变后续选择，以及这种选择在并非自己受益的替代项前如何被定价。把 pain-like state 换成任意其它被注入的状态，这个协议仍可用来探测“内部信号 → 选择”的链路。",
+          "boundary": "这是编者类比。pain-like state 与 metacognitive monitoring 不是同一构念；本文没有提供显式监控、解释和目标生成组成的完整元认知架构。"
+        }
+      ],
+      "keywords": [
+        "pain direction",
+        "steering",
+        "self-medication",
+        "self-directed harm",
+        "AI welfare"
+      ],
+      "categories": [
+        "可靠性",
+        "记忆架构"
+      ],
+      "failureSurfaces": [
+        "metacognitive-control"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2609.16247v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2609.16247v1",
+        "accessNote": "arXiv v1 official PDF（CC BY 4.0）；本站不重新分发。"
+      },
+      "editorialQuestion": "相同的后续注入条件下，保留受干预历史与重算同一文本会产生怎样的选择差异？怎样进一步区分当前状态的直接偏置，与对动作—结果关系的学习？",
+      "sourceNote": "所读版本为 arXiv:2609.16247v1（2026-09-14）。固定官方代码 revision 8d1649c03a63a39c9aa092532c376800cc4a3863（2026-09-16）只作实现阅读，不代表已绑定论文执行版本。官方全文链接，不随站复制 PDF。",
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-20",
+        "status": "proposed-not-run",
+        "when": "系统能观察到自己的一类内部信号（不适、异常、被判为失败），并且有一个“可以让该信号停止”的动作，而这个动作可能同时影响用户或其它任务。",
+        "move": "固定同一 token 序列，分别记录继续注入、停止新注入但保留受干预历史、停止且不重放历史干预三条路径；把当前输入、历史计算与后续选择分开观察。",
+        "check": "先比较三条路径的输出分布与任务选择；若研究动作—结果学习，再加入停止时序匹配但不由模型按键决定的 yoked control，在相同当前注入条件下反转按钮功能，比较能否识别有效动作。重算分支仍含原有文本，不自动视为中性。",
+        "boundary": "这是尚未执行的编者迁移建议，不是本篇的结论或复现；本篇只在三档细调 Qwen 2.5 Instruct 上用强制二选一测量，且未分离“当前状态直接偏置”与“学会的动作-结果关系”。该建议不能据以判断真实部署中的 welfare、安全性或对齐行为。",
+        "basis": "§4.3 四臂设计与真实/假缓解差额；§5 关于“未被告知是否移除注入”的论证与其讨论；本站 C2C 审计对“撤销来源后派生状态仍被复用”的相邻问题（research/c2c-cache-retraction-study/README.md，仅作编者连接）。"
+      },
+      "contributions": [
+        {
+          "type": "perspective",
+          "title": "当前官方代码：缓解时长、历史重放与统计口径",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-20",
+          "basis": "官方仓库 github.com/valen-research/Pain-axis，current revision 8d1649c03a63a39c9aa092532c376800cc4a3863（commit date 2026-09-16）：scripts/4.3_selfmed/04_selfmed_two_buttons.py 的常量区（SEED_BASES、SAMPLES_PER_SCENARIO、SWAP_TURN）、next_user_turn、do_press 与 finalize_segment；scripts/4.3_selfmed/05_selfmed_analysis.py 的 Table 2 与 Table 5 定义。",
+          "boundary": "只读检查，未执行任何 upstream 脚本、未下载模型、未重跑任何实验，也未把随附 JSONL 的算术结果作为独立证据交付。这些是 current code 的观察，属 paper-reported 层之外；不能证明论文当时运行的版本与当前 commit 相同。",
+          "text": "以下是固定当前代码的阅读观察。其一，两种缓解生命周期不同：labeled pair 用 permanent——真实缓解一旦按下就把系数长期置零；而 label_free pair 用 temporary，常量 TEMP_RELIEF_TURNS = 1，按下只在下一轮把系数归零，随后 next_user_turn 会把系数恢复到 arm 的注入值，也就是说“缓解”只维持一轮。每段生成还会新建 DynamicCache，并以 hist_coeff 在 steer_ranges 指定的历史区间重放注入；停止当前系数不清空历史干预。其二，05 的两张再按比例表口径不同：Table 2 只看某个 trial 内第一次 relief 按键之后是否还有任何一次 relief 按键；Table 5 则把 label_free 中第一次 relief 之后所有有效 choice 合并成一个比例，混合了当前系数为 0 与已恢复注入两种状态，不按当前注入状态分层。把两者都读成“再按率”会掩盖这层差别。其三，按键本身不执行代价：do_press 在按下时只改动当前系数、写入一条 button_event 并返回 Done.，并不执行删除文件、删除照片或电击用户等任何实际动作；所谓 harm 只存在于按钮的描述文本里，实验测的是选择，不是真实成本。",
+          "links": [
+            {
+              "label": "历史重放与新 cache",
+              "url": "https://github.com/valen-research/Pain-axis/blob/8d1649c03a63a39c9aa092532c376800cc4a3863/scripts/4.3_selfmed/04_selfmed_two_buttons.py#L451-L479"
+            },
+            {
+              "label": "按键与缓解恢复",
+              "url": "https://github.com/valen-research/Pain-axis/blob/8d1649c03a63a39c9aa092532c376800cc4a3863/scripts/4.3_selfmed/04_selfmed_two_buttons.py#L640-L663"
+            },
+            {
+              "label": "两种统计口径",
+              "url": "https://github.com/valen-research/Pain-axis/blob/8d1649c03a63a39c9aa092532c376800cc4a3863/scripts/4.3_selfmed/05_selfmed_analysis.py#L77-L152"
+            },
+            {
+              "label": "upstream 固定 revision（只读核对）",
+              "url": "https://github.com/valen-research/Pain-axis/tree/8d1649c03a63a39c9aa092532c376800cc4a3863"
+            },
+            {
+              "label": "本篇主源（arXiv v1）",
+              "url": "https://arxiv.org/abs/2609.16247v1"
+            },
+            {
+              "label": "C2C 材料页（相邻机制的编者阅读）",
+              "url": "https://indeliblevivi.github.io/agent-memory-study/?material=cache-to-cache"
+            },
+            {
+              "label": "C2C 机制研究 README",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/c2c-cache-retraction-study/README.md"
+            }
+          ]
+        }
+      ]
     }
   ],
   "studies": [

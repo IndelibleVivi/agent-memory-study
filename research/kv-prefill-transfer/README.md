@@ -4,6 +4,8 @@
 
 这个 runner 为 [arXiv:2608.03893v1](https://arxiv.org/html/2608.03893v1) 的 Qwen3-0.6B → 1.7B 小配对研究准备完整执行路径：公开文档切分、两个模型先后采集、磁盘分块拟合、三路 held-out 评价。模型、样本量、序列长度和固定 k 都缩小了；不声称复现论文表格。协议、指标定义与解释边界见 [protocol.md](protocol.md)。
 
+论文的 [AMS 阅读页](../../index.html?material=cross-model-kv-prefill-reuse) 现已收录为 `read`；本目录继续单独记录实现与已执行检查，尚无真实跨模型迁移质量结果。
+
 ## 已执行证据
 
 本地控制与数据准备摘要见 [validation.json](validation.json)，真实单target的受限实测见 [native-target-check.json](native-target-check.json)（2026-09-18 UTC执行，次日整理）。完整输出在操作者的仓库外run目录；以下数字不包含pretrained迁移效果。
