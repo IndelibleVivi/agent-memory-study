@@ -52,4 +52,4 @@ PR 运行只上传构建产物用于检查，不部署。手动触发也只有 `
 
 回退时优先以普通 revert commit 回退到已验证的静态实现，再经同一 workflow 部署。首次迁移若需完整恢复旧方式，应一并恢复迁移前源码（使用普通 revert，保留历史）和 Pages 的 `main` 根目录 branch source，并等待原 branch build 完成；只改设置或只回退源码不能证明恢复完成。回读线上页面和旧深链接后才确认。
 
-项目位于 `github.io` 的子路径，爬虫规则由 origin 根部 `/robots.txt` 决定；本项目不发布容易误解的子目录 robots.txt。可将本项目的 `sitemap.xml` 提交到它自己的 Google URL-prefix property。验证所有权、Google 接收 sitemap、抓取、收录和实际排名是不同状态，不由构建成功推断。
+项目位于 `github.io` 的子路径，爬虫规则由 origin 根部 `/robots.txt` 决定；本项目不发布容易误解的子目录 robots.txt。可将本项目的 `sitemap.xml` 提交到它自己的 Google URL-prefix property。`index.html` 中的公开 `google-site-verification` 标记由构建保留，用于该 property 的所有权验证；成功后也应保留。验证所有权、Google 接收 sitemap、抓取、收录和实际排名是不同状态，不由构建成功推断。
