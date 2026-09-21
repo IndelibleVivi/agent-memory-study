@@ -57,6 +57,7 @@
       objects("共读正文", item.sections, ["title", "text"]);
       objects("带走判断", item.takeaways, ["title", "text"]);
       objects("串读", item.readings, ["label", "takeaway", "limit"]);
+      objects("跨源阅读", item.externalReadings, ["label", "kind", "locator", "takeaway", "limit"]);
       objects("场景", item.scenarios, ["title", "description", "lesson"]);
       ["labTitle", "labIntro", "boundary", "closing"].forEach(k => add("共读实验", item[k]));
       for (const reading of item.readings || []) {

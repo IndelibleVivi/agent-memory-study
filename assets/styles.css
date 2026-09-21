@@ -2709,3 +2709,33 @@ noscript {
   .inquiry-result { grid-template-columns: 36px minmax(0, 1fr); }
   .inquiry-result .material-row-topics { grid-column: 2; padding-top: 0; }
 }
+
+/* Recorded learning results share the reading room's table and source rhythm. */
+.decision-support { padding: 18px 0; border-block: 1px solid var(--hairline-soft); line-height: 1.8; }
+.decision-lab .study-phases { margin: 24px 0 16px; }
+.decision-phase-note { max-width: 80ch; line-height: 1.8; }
+.decision-table-wrap { max-width: 100%; overflow-x: auto; margin: 28px 0; }
+.decision-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.6; }
+.decision-table caption { text-align: left; padding: 0 0 14px; font-size: 17px; }
+.decision-table th, .decision-table td { text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--hairline-soft); vertical-align: top; }
+.decision-table thead { background: var(--paper-deep, #edf1ef); }
+.decision-table th { font-weight: 500; }
+.decision-table tbody th { min-width: 160px; }
+.decision-table td { min-width: 95px; font-variant-numeric: tabular-nums; }
+.decision-inputs { margin: 22px 0; border-top: 1px solid var(--hairline-soft); padding-top: 16px; }
+.decision-inputs summary { cursor: pointer; line-height: 1.8; }
+.decision-inputs pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 420px; overflow-y: auto; font-size: 12px; padding: 16px; background: #edf1ef; }
+.decision-table-wrap:focus-visible, .decision-inputs summary:focus-visible { outline: none; box-shadow: inset 3px 0 var(--ink-muted, #4d6872); }
+.decision-lab .study-controls { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; }
+.decision-lab select { width: 100%; max-width: 520px; min-width: 0; }
+@media (max-width: 640px) {
+  .decision-lab .study-controls { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .decision-table { font-size: 13px; }
+  .decision-table th, .decision-table td { padding: 10px; }
+  .decision-table tbody th { min-width: 130px; }
+}
+
+.decision-scroll-hint { display: none; }
+@media (max-width: 640px) {
+  .decision-scroll-hint { display: block; position: sticky; left: 0; font-size: 12px; color: var(--ink-muted, #4d6872); margin-bottom: 12px; }
+}

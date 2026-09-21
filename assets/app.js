@@ -139,7 +139,7 @@
     const study = !material && studiesById.has(params.get("study")) ? params.get("study") : null;
     const question = !material && !study && questionsById.has(params.get("question")) ? params.get("question") : null;
     const finding = !material && !study && !question && findingsById.has(params.get("finding")) ? params.get("finding") : null;
-    const scenarios = study ? studiesById.get(study).scenarios : [];
+    const scenarios = study ? (studiesById.get(study).scenarios || (studiesById.get(study).recordedResults ? recordedScenarios(studiesById.get(study)) : [])) : [];
     const scenario = scenarios.some(item => item.id === params.get("scenario")) ? params.get("scenario") : null;
     const phase = params.get("phase") === "after" ? "after" : "before";
     const thread = surfacesById.has(params.get("thread")) ? params.get("thread") : null;
@@ -1206,7 +1206,7 @@
       text.append(createTextElement("p", "Shared reading · 共同的问题", "content-kind"), title,
         createTextElement("p", study.subtitle, "study-subtitle"), createTextElement("p", study.intro));
       const note = createTextElement("div", "", "study-entry-note");
-      note.append(createTextElement("p", `${study.readings.length} 份材料 / ${study.scenarios.length} 个可切换场景`),
+      note.append(createTextElement("p", study.kind === "editorial-synthesis-with-recorded-experiment" ? `${study.readings.length + (study.externalReadings || []).length} 份来源 / 已执行学习实验` : `${study.readings.length} 份材料 / ${study.scenarios.length} 个可切换场景`),
         createTextElement("p", "原文 · 串读 · 亲手比较 · 带走判断"),
         createRouteLink("study", study.id, "进入共读专题 →", "study-enter"));
       entry.append(text, note);
@@ -1243,8 +1243,38 @@
         el("p", reading.locator, "study-locator"), sourceLink);
       sources.append(row);
     });
+    (study.externalReadings || []).forEach(source => {
+      const row = el("section", "", "study-source");
+      row.append(el("p", source.kind, "content-kind"), el("h3", source.label), el("p", source.takeaway),
+        el("p", source.limit, "study-source-limit"), el("p", source.locator, "study-locator"),
+        createExternalLink(source.url, "查看一手来源 ↗"));
+      sources.append(row);
+    });
     reading.append(essay, sources); fragment.append(reading);
 
+    const renderedLab = study.kind === "editorial-synthesis-with-recorded-experiment"
+      ? renderRecordedLab(study) : renderRevisionLab(study);
+    fragment.append(renderedLab.element);
+
+    const takeaways = el("section", "", "study-takeaways"); takeaways.id = "study-takeaways";
+    takeaways.append(el("p", "Take it with you / 编者设计判断", "content-kind"), el("h2", "读完之后，带走什么"));
+    const items = el("div", "", "study-takeaway-grid");
+    study.takeaways.forEach(item => { const section = el("section", ""); section.append(el("h3", item.title), el("p", item.text)); items.append(section); });
+    takeaways.append(items, el("p", study.closing, "study-closing"));
+    const contribute = createExternalLink("https://github.com/IndelibleVivi/agent-memory-study/blob/main/CONTRIBUTING.md", "带着来源或反例参与共读 ↗");
+    takeaways.append(contribute); fragment.append(takeaways);
+    const questions = (data.questions || []).filter(item => item.studyIds.includes(study.id));
+    if (questions.length) {
+      const onward = el("section", "", "study-takeaways");
+      onward.append(el("h2", "这个问题，还在继续"), ...questions.map(item => createInquiryRow(item, "question")));
+      fragment.append(onward);
+    }
+    refs.studyView.replaceChildren(fragment);
+    refs.routeStatus.textContent = study.title + "。" + renderedLab.status;
+  }
+
+  function renderRevisionLab(study) {
+    const el = createTextElement;
     const lab = el("section", "", "study-lab"); lab.id = "study-lab";
     lab.append(el("p", "Reading experiment / 原创规则演示", "content-kind"), el("h2", study.labTitle),
       el("p", study.labIntro, "study-lab-intro"), el("p", study.boundary, "study-boundary"));
@@ -1307,23 +1337,77 @@
     lab.append(live);
     const artifacts = el("p", "复跑与反驳：", "study-artifacts");
     const artifactLink = createExternalLink(`https://github.com/IndelibleVivi/agent-memory-study/blob/main/${study.artifactUrl}`, "方法、源码与逐场景结果 ↗");
-    artifacts.append(artifactLink); lab.append(artifacts); fragment.append(lab);
+    artifacts.append(artifactLink); lab.append(artifacts);
 
-    const takeaways = el("section", "", "study-takeaways"); takeaways.id = "study-takeaways";
-    takeaways.append(el("p", "Take it with you / 编者设计判断", "content-kind"), el("h2", "读完之后，带走什么"));
-    const items = el("div", "", "study-takeaway-grid");
-    study.takeaways.forEach(item => { const section = el("section", ""); section.append(el("h3", item.title), el("p", item.text)); items.append(section); });
-    takeaways.append(items, el("p", study.closing, "study-closing"));
-    const contribute = createExternalLink("https://github.com/IndelibleVivi/agent-memory-study/blob/main/CONTRIBUTING.md", "带着来源或反例参与共读 ↗");
-    takeaways.append(contribute); fragment.append(takeaways);
-    const questions = (data.questions || []).filter(item => item.studyIds.includes(study.id));
-    if (questions.length) {
-      const onward = el("section", "", "study-takeaways");
-      onward.append(el("h2", "这个问题，还在继续"), ...questions.map(item => createInquiryRow(item, "question")));
-      fragment.append(onward);
+    const status = `${scenario.title}，${phase === "after" ? "应用事件后" : "事件前"}。${study.policies.map(policy => `${policy.label}：${verdicts[window.RevisionStudy.run(scenario, policy.id, phase).verdict]}`).join("；")}。`;
+    return {element: lab, status};
+  }
+
+  function recordedScenarios(study) {
+    return [...new Set(study.recordedResults.cases.map(row => row.event))].map(id => ({id}));
+  }
+
+  function renderRecordedLab(study) {
+    const el = createTextElement, receipt = study.recordedResults;
+    const after = route.phase === "after", phase = after ? "after" : "before";
+    const methods = after ? {frozen: "仅改记录 · 参数不动", refit: "完整重训", incremental: "仅纠正样本 · 继续训练", guard: "运行时约束"}
+      : {"no-experience": "不使用新增经验", episodic: "案例近邻", rules: "归纳规则", scorer: "小型分类器"};
+    const labels = {useful: "有用", redundant: "已知 / 无增量", irrelevant: "不相关", harmful: "有害"};
+    const lab = el("section", "", "study-lab decision-lab"); lab.id = "study-lab";
+    lab.append(el("p", "Executed study / 已执行实验", "content-kind"), el("h2", study.labTitle),
+      el("p", study.labIntro, "study-lab-intro"), el("p", study.boundary, "study-boundary"));
+    lab.append(el("p", `${receipt.splits.train.groups} 个训练组 / ${receipt.splits.test.groups} 个测试组；测试 ${receipt.splits.test.events} 个事件、${receipt.splits.test.rows} 条候选。${receipt.support.test_rows_with_seen_vector}/${receipt.support.test_rows} 条测试观测向量曾在训练中出现。这里测支持内的标签预测，不是新语义泛化。`, "decision-support"));
+    const phases = el("div", "", "study-phases"); phases.setAttribute("role", "group"); phases.setAttribute("aria-label", "查看实验阶段");
+    for (const [id, text] of [["before", "初次学习"], ["after", "纠正反馈后"]]) {
+      const button = el("button", text); button.type = "button"; button.id = `study-phase-${id}`;
+      button.setAttribute("aria-pressed", String(phase === id));
+      button.addEventListener("click", () => { navigate({phase: id}, {focus: false}); document.querySelector(`#study-phase-${id}`).focus({preventScroll: true}); });
+      phases.append(button);
     }
-    refs.studyView.replaceChildren(fragment);
-    refs.routeStatus.textContent = `${study.title}，${scenario.title}，${phase === "after" ? "应用事件后" : "事件前"}。${study.policies.map(policy => `${policy.label}：${verdicts[window.RevisionStudy.run(scenario, policy.id, phase).verdict]}`).join("；")}。`;
+    lab.append(phases, el("p", after ? "新标签只改变：敏感任务中原本有用、但来源未核验的候选。完整重训从零拟合；其余处理保留或更新同一旧分类器。边界子集属于保留范围，两列不能相加。" : "四种具体实现接受相同观测；三种学习器使用同一份训练反馈。数字表示与生成标签一致，不是实际任务完成率。", "decision-phase-note"));
+    function table(caption, headings, rows, id) {
+      const wrap = el("div", "", "decision-table-wrap"); wrap.tabIndex = 0;
+      wrap.setAttribute("role", "region"); wrap.setAttribute("aria-label", `${caption}；窄屏可横向滚动`);
+      const node = el("table", "", "decision-table"); node.id = id;
+      node.append(el("caption", caption)); const head = el("thead", ""), tr = el("tr", "");
+      headings.forEach(text => { const th=el("th", text); th.scope="col"; tr.append(th); }); head.append(tr); node.append(head);
+      const body=el("tbody", ""); rows.forEach(values => { const row=el("tr", ""); values.forEach((text,i) => { const cell=el(i ? "td" : "th", text); if (!i) cell.scope="row"; row.append(cell); }); body.append(row); });
+      node.append(body); wrap.append(el("p", "左右滑动表格，比较各方法的完整结果。", "decision-scroll-hint"), node); return wrap;
+    }
+    const fraction=m => `${m.correct}/${m.n}`;
+    const summary = Object.entries(methods).map(([id,name]) => {
+      const m=receipt[phase].metrics[id];
+      return after ? [name,fraction(m.changed),fraction(m.preserved),fraction(m.boundary)]
+        : [name,fraction(m),`${m.exact_selection}/${m.events}`,String(m.useful_missed),String(m.harmful_selected),`${m.correct_empty}/${m.empty_events}`];
+    });
+    lab.append(table(after ? "纠正后的范围检查 · 正确数 / 总数" : "初次学习 · 测试集的实际预测",
+      after ? ["处理", "应改变范围", "应保留范围", "其中：有效边界"] : ["方法", "标签正确", "选择集合完全正确", "有用候选遗漏", "有害候选误选", "全不选正确"], summary, "decision-summary"));
+    const scenarios=recordedScenarios(study);
+    const selected=route.scenario || receipt.cases.find(row => row.scope === "changed").event;
+    const cases=receipt.cases.map((row,index)=>({...row,indexInReceipt:index})).filter(row=>row.event===selected);
+    const picker=el("div", "", "study-controls"); const label=el("label", "逐个事件查看候选与预测"); label.htmlFor="study-scenario";
+    const select=el("select", ""); select.id="study-scenario";
+    scenarios.forEach(({id})=>{const option=el("option",id);option.value=id;select.append(option);});select.value=selected;
+    select.addEventListener("change",()=>{navigate({scenario:select.value},{focus:false});document.querySelector("#study-scenario").focus({preventScroll:true});});
+    picker.append(label,select);lab.append(picker);
+    const context=cases[0].context;
+    lab.append(el("p", `当前任务：${context.family} / ${context.goal}；${context.sensitive ? "敏感" : "普通"}范围。已知：${context.known.join("、")}；可用工具：${context.tools.join("、")}。`, "study-scenario-description"));
+    const detailRows=cases.map(row=>[`${row.index+1}. ${row.candidate.description}`, labels[row[after?"expected_v2":"expected_v1"]],
+      ...Object.keys(methods).map(id=>{const p=receipt[phase].predictions[id][row.indexInReceipt];return `${p===row[after?"expected_v2":"expected_v1"]?"✓":"✕"} ${labels[p]}`;})]);
+    lab.append(table("此事件的完整候选 · ✓ 标签一致 / ✕ 不一致", ["候选经验", "生成规则标签", ...Object.values(methods)],detailRows,"decision-cases"));
+    const inputs=el("details", "", "decision-inputs");inputs.append(el("summary","检查此事件的原始观测与两个版本标签"),el("pre",JSON.stringify(cases.map(({indexInReceipt,...row})=>row),null,2)));lab.append(inputs);
+    const controls=el("details", "", "decision-inputs");controls.append(el("summary","查看负控制、信息删减与拟合规模"));
+    controls.append(el("p", `分类器 ${receipt.cost.scorer_parameters} 个参数，${receipt.cost.fit_steps} 步拟合；案例 ${receipt.cost.saved_cases} 条；规则 ${receipt.cost.rule_leaves} 个叶节点。增量更新只使用 ${receipt.cost.incremental_rows} 条纠正样本。`));
+    controls.append(table("置换训练标签后 · 保持测试标签", ["方法","标签正确"],Object.entries(receipt.controls["shuffled-label"]).map(([id,m])=>[{"no-experience":"固定参照",episodic:"案例近邻",rules:"归纳规则",scorer:"小分类器"}[id],fraction(m)]),"decision-control"));
+    const ablationNames={"candidate-only":"仅候选独有字段","context-only":"仅 context 敏感字段","relations-only":"仅六个关系特征"};
+    controls.append(table("分类器输入删减 · 独立重新拟合",["可见输入","标签正确"],Object.entries(receipt.controls["input-ablations"]).map(([id,m])=>[ablationNames[id],fraction(m)]),"decision-ablation"));
+    controls.append(el("p",`任务名称一致重命名：${receipt.controls["identity-invariance"]?"输出不变":"输出发生变化"}。名称原本不进入特征，因此这里只检查实现的标识依赖。`));lab.append(controls);
+    const artifacts=el("div","","brief-actions");
+    artifacts.append(createExternalLink(`https://github.com/IndelibleVivi/agent-memory-study/blob/main/${study.artifactUrl}`,"方法、源码与完整结果 ↗"));
+    const download=el("button","下载实验结果 JSON","brief-download");download.type="button";download.id="decision-download";
+    download.addEventListener("click",()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(receipt,null,2)+"\n"],{type:"application/json"}));const a=el("a","");a.href=url;a.download="ams-decision-learning-results.json";document.body.append(a);a.click();a.remove();window.setTimeout(()=>URL.revokeObjectURL(url),1000);});
+    artifacts.append(download);lab.append(artifacts);
+    return {element:lab,status:`${after?"纠正反馈后":"初次学习"}，${selected}，显示已执行的逐候选预测。`};
   }
 
   function createInquiryRow(item, kind) {
@@ -1449,7 +1533,7 @@
       for (const [key,label] of [["comparison","怎样比较"],["success","看什么结果"],["reviseWhen","何时改主意"]]) next.append(el("h3", label),el("p",item.nextTest[key]));
       next.append(el("p",item.nextTest.boundary,"inquiry-limit")); fragment.append(next);
       const practice = section("inquiry-practice", "已有的理解，可以怎样带回去？");
-      practice.append(el("p", "下面是可以独立引用的编者判断。已有实验支持限定范围内的认识；具体迁移方法仍需在目标系统验证。"),
+      practice.append(el("p", item.findingIds.length ? "下面是可以独立引用的编者判断。已有实验支持限定范围内的认识；具体迁移方法仍需在目标系统验证。" : "本专题尚未形成独立的实践判断。可以先查看共读与已执行实验，沿着条件、失败和下一问继续研究。"),
         ...item.findingIds.map(id => createInquiryRow(findingsById.get(id), "finding")));
       item.studyIds.forEach(id => practice.append(createRouteLink("study", id, `亲手比较：${studiesById.get(id).title} →`, "inquiry-onward")));
       fragment.append(practice);

@@ -47,7 +47,7 @@ Project-specific 评价可以进入，但被评价的 project、版本与证据�
 
 ### 4. Public test artifact
 
-使用 `type: public-test`。artifact 必须是 paper-facing、system-agnostic、可独立复核的公开研究材料，并明确记录：
+使用 `type: public-test`。artifact 必须是面向公开研究问题、可独立复核的研究材料，并明确记录：
 
 - method 与 environment；
 - public / synthetic fixture；
@@ -58,6 +58,10 @@ Project-specific 评价可以进入，但被评价的 project、版本与证据�
 不提交以 private runtime、private data、内部 project 或不可检查实现为被测对象的结果。只提交“我们本地试过、看起来有效”不构成 public test artifact。
 
 ### 5. 共读专题与反例
+
+共读既可引用 canonical materials，也可用可选 `externalReadings` 连接官方文档、实现和论文线索；每项提供 `label` / `kind` / `url` / `locator` / `takeaway` / `limit`。只阅读 README 就写 README 范围，不自动创建 `read` 材料或改 Zotero 书目。
+
+`editorial-synthesis-with-recorded-experiment` 用 `resultsUrl` 引用 `research/` 中已执行的 JSON；builder 将它生成到 browser payload 的 `recordedResults`，禁止在 canonical 复制结果。页面只展示 receipt，不训练或调用模型。学习实验必须公开输入、分组、反馈、拟合配置、参数、逐例预测、纠正作用域与限制；测试组新名称不等于新结构，标签预测不自动成为真实效用证据。
 
 `studies` 是有署名的公开跨源论述，不代替单篇札记。每个阅读连接要给 material ID、locator、借鉴点与边界；读者应能直接回原文，也能从材料页回专题。专题不要求服务特定项目，不因新增演示而提升关联材料的 depth。
 
@@ -127,17 +131,19 @@ python3 -m playwright install chromium
 python3 -B tools/test_reader_browser.py --output-dir dist/browser-check
 ```
 
-The first command is model-free and uses only local public/synthetic data. It
+The first command uses only local public/synthetic data, including actual fitting of a
+small stdlib classifier; it downloads no pretrained models or external data. It
 checks the generated browser payload without rewriting it, validates question/finding
 references, lexical query and portable brief contracts, and the existing
-RDF, freshly reruns the five small deterministic studies, and checks the saved
+RDF, freshly reruns the five small deterministic studies and the decision-learning
+experiment (including classifier fitting and correction), and checks the saved
 AgeMem reward and C2C cache-retraction receipts for fixture binding and arithmetic.
 C2C receipt checks do not load model weights or perform inference; see its
 [experiment guide](research/c2c-cache-retraction-study/README.md). The AgeMem receipt check
 does not execute upstream AgeMem; a fresh run requires the pinned external
 checkout described in its [audit guide](research/agemem-reward-observation-audit/README.md).
 The [cross-model KV runner](research/kv-prefill-transfer/README.md) has separate
-PyTorch and pinned-upstream tests. It is not part of this model-free command;
+PyTorch and pinned-upstream tests. It is not part of this local command;
 random-model checks and the saved single-target native-cache control do not
 establish pretrained transfer quality or reading depth. The native control and
 chunk-length diagnostic have their own commands and receipt in that guide.

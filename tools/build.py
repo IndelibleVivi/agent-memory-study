@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import re
 import struct
@@ -264,20 +265,35 @@ def validate_studies(data: dict[str, Any], material_ids: set[str]) -> None:
         if not re.fullmatch(r"[a-z0-9-]+", study["id"]) or study["id"] in seen:
             raise ValueError("invalid or duplicate study id")
         seen.add(study["id"])
-        if study["kind"] != "editorial-synthesis-with-deterministic-demo":
+        if study["kind"] not in {"editorial-synthesis-with-deterministic-demo", "editorial-synthesis-with-recorded-experiment"}:
             raise ValueError("unsupported study kind")
         artifact = PurePosixPath(study["artifactUrl"])
         if artifact.is_absolute() or ".." in artifact.parts or artifact.parts[0] != "research" or not (ROOT / artifact).is_file():
             raise ValueError("study artifact must be an existing public research file")
         for field, keys in [("sections", {"title", "text"}), ("takeaways", {"title", "text"}),
-                            ("readings", {"materialId", "label", "locator", "takeaway", "limit"}),
-                            ("policies", {"id", "label", "description"})]:
+                            ("readings", {"materialId", "label", "locator", "takeaway", "limit"})]:
             if not isinstance(study.get(field), list) or not study[field]:
                 raise ValueError(f"study {field} must be non-empty")
             for item in study[field]:
                 assert_exact_text_object(item, keys, f"study {field}")
         if any(item["materialId"] not in material_ids for item in study["readings"]):
             raise ValueError("study references unknown material")
+        for source in study.get("externalReadings", []):
+            assert_exact_text_object(source, {"label", "kind", "url", "locator", "takeaway", "limit"}, "external reading")
+            if not is_https_url(source["url"]):
+                raise ValueError("external reading requires a public HTTPS source")
+        if "recordedResults" in study:
+            raise ValueError("recordedResults belongs to the generated browser projection")
+        if study["kind"] == "editorial-synthesis-with-recorded-experiment":
+            result = PurePosixPath(study.get("resultsUrl", ""))
+            if result.is_absolute() or ".." in result.parts or result.parts[:1] != ("research",) or result.suffix != ".json" or not (ROOT / result).is_file():
+                raise ValueError("recorded study requires an existing public research JSON")
+            load_recorded_results(study)
+            continue
+        if not isinstance(study.get("policies"), list) or not study["policies"]:
+            raise ValueError("study policies must be non-empty")
+        for policy in study["policies"]:
+            assert_exact_text_object(policy, {"id", "label", "description"}, "study policy")
         if [p["id"] for p in study["policies"]] != ["none", "frozen", "latest", "scoped"]:
             raise ValueError("study policies differ from supported engine")
         if not isinstance(study.get("scenarios"), list) or not study["scenarios"]:
@@ -904,8 +920,27 @@ def load_and_validate(path: Path) -> dict[str, Any]:
     return data
 
 
+def load_recorded_results(study: dict[str, Any]) -> dict[str, Any]:
+    result = json.loads((ROOT / study["resultsUrl"]).read_text(encoding="utf-8"))
+    if result.get("schema") != "ams-decision-results/2" or not result.get("cases"):
+        raise ValueError("unsupported recorded experiment result")
+    for phase, methods in [("before", {"no-experience", "episodic", "rules", "scorer"}),
+                           ("after", {"frozen", "refit", "incremental", "guard"})]:
+        predictions = result[phase]["predictions"]
+        if set(predictions) != methods or set(result[phase]["metrics"]) != methods:
+            raise ValueError("recorded experiment methods differ from its display contract")
+        if any(len(rows) != len(result["cases"]) for rows in predictions.values()):
+            raise ValueError("recorded predictions do not match case order")
+    assert_public_text(result)
+    return result
+
+
 def write_browser_data(data: dict[str, Any], output: Path) -> None:
-    encoded = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    projection = copy.deepcopy(data)
+    for study in projection["studies"]:
+        if study["kind"] == "editorial-synthesis-with-recorded-experiment":
+            study["recordedResults"] = load_recorded_results(study)
+    encoded = json.dumps(projection, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     output.write_text(f"window.READING_ROOM = {encoded};\n", encoding="utf-8")
 
 

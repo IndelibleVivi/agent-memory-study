@@ -1,16 +1,17 @@
 # Agent Memory Study
 
-一个关于 long-term memory、belief revision、prospective memory 与 cognitive architecture 的公开研究书房：读原文，围绕问题继续研究，把有依据的判断带回实践。
+一个围绕 agent memory、learning 与 cognitive architecture 的公开研究空间：读原文，检查实现，运行实验，把有依据的判断带回实践。
 
 [打开 Reading Room](https://indeliblevivi.github.io/agent-memory-study/) · [阅读项目介绍 PDF](./publications/agent-memory-study-project-introduction.zh-CN.pdf) · [下载当前 main branch](https://github.com/IndelibleVivi/agent-memory-study/archive/refs/heads/main.zip) · [下载最近一次 tagged Zotero 包](https://github.com/IndelibleVivi/agent-memory-study/releases/latest/download/agent-memory-study-zotero.zip)
 
 ## 这里有什么
 
-- 一个持续更新的[问题专题：旧经验，怎样继续帮助当前任务？](https://indeliblevivi.github.io/agent-memory-study/?question=experience-to-capability)，连接已执行研究、竞争解释、当前判断与下一次会改变认识的观察；
+- 两个持续更新的问题专题：[旧经验，怎样继续帮助当前任务？](https://indeliblevivi.github.io/agent-memory-study/question/experience-to-capability/)与[经验怎样长成判断习惯？](https://indeliblevivi.github.io/agent-memory-study/question/experience-becomes-policy/)，连接已执行研究、竞争解释、当前判断与下一次会改变认识的观察；
 - 三条可独立引用的实践判断，覆盖候选挤占、修订范围和来源撤回；可从[研究与实践入口](https://indeliblevivi.github.io/agent-memory-study/#inquiries)按问题查询，导出带署名、适用条件、证据和限制的 Markdown / JSON；[AMS 自身的取用记录](docs/practice-brief-use.md)说明一个实际采用决定，同时保留“已采用不等于已证明有帮助”的边界；
 - 一组从唯一 canonical public data 生长的 source-linked materials；
 - 一张 failure-surface 研究地图、一幅 data-driven research constellation，以及三条可自由进入和离开的 reading paths；
 - 面向所有读者的共读专题：原文与精读互链、跨源论述、可亲手切换的场景对照、适用条件与失败反例；首题为[一条更正之后](https://indeliblevivi.github.io/agent-memory-study/?study=after-a-correction)，不要求读者有私人项目或把每次阅读转成代码；
+- 新共读[没有再读那段往事，它为什么还是改变了选择？](https://indeliblevivi.github.io/agent-memory-study/study/experience-becomes-policy/)连接论文、Jev 官方接口文档、jevlike 开源说明与本站[学习和纠正实验](research/decision-learning-study/README.md)。页面可切换阶段、查看逐例预测和下载已执行结果；本机 runner 真正拟合小型分类器，浏览器只展示保存结果。给定结构化特征的标签预测不等于自然语言理解、真实效用或权重遗忘；
 - 可按主题、failure surface、depth、标题或作者进入材料；
 - 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；达到 `read` 的 entry 展示 argument map 与为什么值得读，并按实际证据补充方法与监督、原文内部张力；尚未执行的公开 protocol 明确标成 `proposed-not-run`；已经执行的 public / synthetic test 则保留署名、method、environment、raw / derived result、controls、limitations 与可复核 artifact links；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 每篇现有材料都有“读完，可以怎样借用”：适用情境、可借用的做法、尚未执行的迁移对照、依据与边界；`skim` / `abstract` 显示初读线索提示，编者建议不改变阅读深度或历史测试结论；
@@ -41,7 +42,9 @@
 
 已有的 `?material=`、`?study=`、`?question=`、`?finding=` 链接继续可用，在发布站点由浏览器转成对应的物理路径。本地直接打开源码 `index.html` 或用简单 HTTP server 预览源码时，继续使用 query routes。仅阅读页面列入 [sitemap](https://indeliblevivi.github.io/agent-memory-study/sitemap.xml)；搜索、筛选和场景状态不生成重复索引页。构建、验收和发布边界见 [网站说明](docs/website.md)。
 
-全部内容检索覆盖材料、共读、问题专题与实践判断，支持空格分隔的跨字段多词匹配，并展示命中位置。实践入口另提供本地关键词匹配，接受带关键短语的中英文问题，最多返回三条相关判断；它不调用模型、embedding 或远端搜索，也不承诺理解任意自然语言。
+共读可通过 `externalReadings` 连接官方文档、实现与论文线索，逐项保留类型、阅读范围、来源和限制；这些引用不增加 bibliographic materials / Zotero counts，也不自动提升原材料的阅读深度。
+
+全部内容检索覆盖材料、共读（含跨源阅读）、问题专题与实践判断，支持空格分隔的跨字段多词匹配，并展示命中位置。实践入口另提供本地关键词匹配，接受带关键短语的中英文问题，最多返回三条相关判断；它不调用模型、embedding 或远端搜索，也不承诺理解任意自然语言。
 搜索与筛选也写入 query parameters；material、study、question、finding、practice、scenario / phase、thread、path 使用 browser history，back / forward 可以恢复对应视图。
 
 Cloudflare Web Analytics 收集 visits、page views、referrers、国家/设备类别和 Web Vitals 等 aggregate 信号，不使用 cookie 或 localStorage 识别、画像访客。它不记录 query string，本站也没有 custom events。公开的 material / study / question / finding 路径可以出现在 page-view 统计中；practice、搜索、筛选和 scenario / phase 参数不进入这些统计。这不等于知道某位访客读完了哪篇内容。
@@ -81,6 +84,13 @@ python3 -m http.server 8080
 ```
 
 然后访问 `http://localhost:8080/`。
+
+学习与纠正实验可以用 Python stdlib 重新拟合并核对保存结果：
+
+```bash
+python3 -B research/decision-learning-study/study.py --check
+python3 -B -m unittest discover -s research/decision-learning-study -p 'test_*.py'
+```
 
 共读专题的 deterministic 演示可以无依赖复跑：
 
@@ -275,9 +285,9 @@ Bundled papers keep their file-level Creative Commons licenses; linked works rem
 ## Reader 验证
 
 `python3 -B tools/verify_reader.py` 校验 canonical、证据归属绑定、问题/判断引用、全站搜索、实践查询/导出与 generated payload，
-并复跑五组无模型的确定性研究，另检查 AgeMem 与 C2C 已保存 receipt 的输入绑定与算术；
+并复跑五组无模型的确定性研究及一组 stdlib 小型分类器学习/纠正实验（含真实参数拟合），另检查 AgeMem 与 C2C 已保存 receipt 的输入绑定与算术；
 C2C receipt 校验不加载权重或执行 inference，fresh run 见[实验说明](research/c2c-cache-retraction-study/README.md)。
-跨模型 KV runner 需要 PyTorch 和固定外部源码，使用[独立验收命令](research/kv-prefill-transfer/README.md#先验收再使用真实权重)，不包含在该无模型入口内。
+跨模型 KV runner 需要 PyTorch 和固定外部源码，使用[独立验收命令](research/kv-prefill-transfer/README.md#先验收再使用真实权重)，不包含在该本地验证入口内。
 AgeMem 官方模块的 fresh run 需要外部固定 checkout，见[复跑说明](research/agemem-reward-observation-audit/README.md#复跑)。真实浏览器测试与受限环境的验证边界见
 [贡献指南](CONTRIBUTING.md#evidence-ownership-and-reader-checks)。
 Reading Room validation 检查源码与生成站点；PR 只生成可检查的 artifact，main 在全部检查通过后发布同一 artifact。仓库 Pages 需启用 GitHub Actions，首次切换与回退见 [网站说明](docs/website.md)。

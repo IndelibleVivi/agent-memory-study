@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Model-free reader checks; no private data, models, remote sources or deployment."""
+"""Local reader checks; synthetic classifier fitting, no pretrained models or remote services."""
 import json
 from pathlib import Path
 import subprocess
@@ -28,7 +28,8 @@ def main():
     for study, runner in [('trustmem-transition-study', 'audit.py'),
                           ('experience-reuse-retrieval-study', 'study.py'),
                           ('proactive-prefix-study', 'study.py'),
-                          ('mosaic-score-dependency-study', 'study.py')]:
+                          ('mosaic-score-dependency-study', 'study.py'),
+                          ('decision-learning-study', 'study.py')]:
         directory = f'research/{study}'
         run([python, '-B', f'{directory}/{runner}', '--check'])
         run([python, '-B', '-m', 'unittest', 'discover', '-s', directory, '-p', 'test_*.py'])
@@ -38,7 +39,7 @@ def main():
     run([python, '-B', 'research/agemem-reward-observation-audit/audit.py', '--verify-checked'])
     run([python, '-B', 'research/c2c-cache-retraction-study/study.py', '--verify-checked'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/c2c-cache-retraction-study', '-p', 'test_*.py'])
-    print('PASS: reader contracts, generated data, five fresh deterministic studies and checked AgeMem/C2C receipts')
+    print('PASS: reader contracts, generated data, five deterministic studies, synthetic classifier refits and checked AgeMem/C2C receipts')
 
 
 if __name__ == '__main__':

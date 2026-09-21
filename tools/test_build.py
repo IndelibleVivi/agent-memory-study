@@ -39,6 +39,23 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             with self.subTest(mutation=mutate), self.assertRaises(ValueError):
                 self.validate_copy(invalid)
 
+    def test_recorded_study_uses_result_projection_without_canonical_copy(self):
+        study = next(s for s in self.data["studies"] if s["id"] == "experience-becomes-policy")
+        self.assertNotIn("recordedResults", study)
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "payload.js"
+            build.write_browser_data(self.data, output)
+            projected = json.loads(output.read_text().removeprefix("window.READING_ROOM = ").rstrip(";\n"))
+        result = next(s for s in projected["studies"] if s["id"] == study["id"])["recordedResults"]
+        self.assertEqual(result, json.loads((build.ROOT / study["resultsUrl"]).read_text()))
+        for mutation in (lambda s: s.update(recordedResults=result),
+                         lambda s: s.update(resultsUrl="../private.json"),
+                         lambda s: s["externalReadings"][0].update(url="file:///private"),
+                         lambda s: s.update(kind="unknown")):
+            invalid=copy.deepcopy(self.data)
+            mutation(next(s for s in invalid["studies"] if s["id"]==study["id"]))
+            with self.assertRaises(ValueError): self.validate_copy(invalid)
+
     def test_design_transfer_requires_attribution_basis_and_unrun_boundary(self):
         for field in ("byline", "date", "status", "when", "move", "check", "boundary", "basis"):
             invalid = copy.deepcopy(self.data)
@@ -66,7 +83,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260921-research-practice-1'),
+            source.count('assets/materials-data.js?v=20260921-decision-learning-1'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260918-c2c-1', source)
@@ -74,7 +91,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_stylesheet_cache_key_tracks_mobile_evidence_fix(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/styles.css?v=20260921-research-practice-1'),
+            source.count('assets/styles.css?v=20260921-decision-learning-1'),
             1,
         )
         self.assertNotIn('assets/styles.css?v=20260909-evidence-discovery-1', source)
@@ -2270,10 +2287,10 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
 
     def test_practice_cache_keys_track_the_current_release(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
-        for asset in ("materials-data.js", "styles.css", "practice.js", "reading-search.js", "app.js"):
+        for asset in ("materials-data.js", "styles.css", "practice.js", "reading-search.js", "seo.js", "app.js"):
             with self.subTest(asset=asset):
                 self.assertEqual(
-                    source.count(f'assets/{asset}?v=' + ('20260921-static-reader-1' if asset == 'app.js' else '20260921-research-practice-1')),
+                    source.count(f'assets/{asset}?v=20260921-decision-learning-1'),
                     1,
                 )
 

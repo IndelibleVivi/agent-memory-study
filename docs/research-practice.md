@@ -21,7 +21,7 @@ flowchart LR
 | 层 | 内容与状态 | 不承载什么 |
 | --- | --- | --- |
 | material | 原文、阅读范围、paper findings、独立 AMS evidence；可选单篇 `designTransfer` 保持 `proposed-not-run` | 不因被专题引用就提升阅读深度 |
-| study | 跨源共读与已经声明的交互演示 | 不自动变成真实 agent 实验 |
+| study | 跨源共读、规则演示或已执行实验的逐例展示 | 不自动变成真实 agent 实验 |
 | question | `open`；当前判断、竞争解释、证据、下一次怎样比较与改主意 | 不把下一问写成已执行结果 |
 | finding | `proposed-transfer`；有依据的建议及目标侧检查 | 不因已有机制实验就声称目标项目收益 |
 | application | `cited`、`adopted`、`rejected` 或 `inconclusive`；具体公开决定、观察和限制 | 不把引用、采用、有效与因果收益混同 |
@@ -60,6 +60,14 @@ python3 -B tools/verify_reader.py
 python3 -B tools/test_reader_browser.py --output-dir /tmp/ams-browser-check
 ```
 
-纯问题/判断更新不改变 Zotero 书目，但 browser payload 仍由 builder 生成；若同时改书目，按 repo 约定用明确 provenance 的 RDF source 同次重建 RDF。统一校验检查引用、证据字段、查询、导出及既有 model-free reader 合同。浏览器测试检查真实 HTTP 子路径、直接链接、查询/下载、history 与桌面/手机布局。自动校验不判断自然语言结论是否真实，编辑者仍需逐项核对原证据。
+纯问题/判断更新不改变 Zotero 书目，但 browser payload 仍由 builder 生成；若同时改书目，按 repo 约定用明确 provenance 的 RDF source 同次重建 RDF。统一校验检查引用、证据字段、查询、导出和本地研究（含小型分类器实际拟合）。浏览器测试检查真实 HTTP 子路径、直接链接、查询/下载、history 与桌面/手机布局。自动校验不判断自然语言结论是否真实，编辑者仍需逐项核对原证据。
 
 本轮的具体采用记录见 [AMS 的实践 brief](practice-brief-use.md)。真实模型 pilot 和跨模型 KV 拟合未在这轮运行；已执行范围见 [KV runner](../research/kv-prefill-transfer/README.md) 和专题各自引用的研究说明。
+
+## 从材料到学习实验
+
+「经验怎样长成判断习惯？」继续使用 question → study → research artifact 的引用结构。论文材料保持既有阅读深度；共读的 `externalReadings` 单独记录产品文档、独立实现和论文线索的实际阅读范围。外部引用不增加 Zotero 书目数。
+
+共读支持两种明确的研究载体：旧 `editorial-synthesis-with-deterministic-demo` 在页面调用 revision engine；新 `editorial-synthesis-with-recorded-experiment` 通过 `resultsUrl` 指向已执行结果。Builder 读取该 JSON 并生成 `recordedResults`，保证 file mode、browser 与静态 HTML 使用同一结果。不要在 canonical 或 renderer 手抄实验数字。实验变化先改 runner / protocol / results，再重建页面投影。
+
+学习与纠正实验的标签、模型参数和逐例输出属于本站研究，不写入任何论文的 `reportedFindings`。生成标签下的准确率只表示对该定义的符合；新任务族名字、重复初始化和更多预测行都不自动增加独立任务或证明现实迁移。实践建议仍需适用条件与目标侧验证。

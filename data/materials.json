@@ -1,6 +1,6 @@
 {
   "title": "Agent Memory Study",
-  "intro": "这组材料不按排行榜排列，而是沿着状态、写入、检索、行动、抽象、元认知与信念修订等故障面来读。",
+  "intro": "围绕 agent memory、learning 与 cognitive architecture 的公开研究空间：读原文，检查实现，运行实验，让有依据的判断继续进入实践。",
   "editorialNote": "以下内容来自逐篇明确标注阅读范围与 noteDepth 的 reading notes，是阅读导航，不是论文摘要的替代；未读或未复核的实验、附录与实现不应被当作已验证。具体主张、数字和限定请回到随附 PDF。",
   "atlas": {
     "thesis": "Agent memory fails in layers.",
@@ -5510,6 +5510,129 @@
       ],
       "closing": "读完之后，可以回原文质疑这次串读，可以把场景带进自己的项目，也可以补一个使这些规则失效的反例。书房不要求每次阅读都产出代码；它提供一段从理解、比较到自行判断的路。",
       "artifactUrl": "research/correction-scope-study/README.md"
+    },
+    {
+      "id": "experience-becomes-policy",
+      "number": "02",
+      "title": "没有再读那段往事，它为什么还是改变了选择？",
+      "subtitle": "从案例、规则到参数：经验怎样留下判断习惯，又怎样被教回来。",
+      "byline": "Agent Memory Study editors",
+      "date": "2026-09-21",
+      "kind": "editorial-synthesis-with-recorded-experiment",
+      "intro": "一次判断结束后，可以留下完整案例、可读规则，或者一组更新过的参数。下一次遇到相近情境，这些载体会以不同方式参与选择。本专题把论文、产品接口与开源实现放在一起，再用原创的结构化实验追踪学习前后和纠正之后的变化。",
+      "sections": [
+        {
+          "title": "经验参与选择的三个时刻",
+          "text": "案例通常在决定之前被取回，规则在读取或执行时起作用，参数则在此前的训练中被改变。三者都可以承载经验，代价与可检查性却不同。我们关心经历、载体与后续行为之间的具体联系：哪些选择变了，换一个情境是否还成立，来源失效时又该更新哪个对象。程序性记忆是理解这件事的一套架构语言；它不意味着每个训练模型都拥有某个个体的生活经验。"
+        },
+        {
+          "title": "判别接口与从经历中学习，是两个变量",
+          "text": "Jev 的官方文档描述 state 加 typed questions，返回 Choice、Score 或 Noul 等结构化结果。固定地调用这种接口，可以改变决策方式，却不证明模型从当前使用者的反馈中学习。jevlike 是独立的选项评分实验：可变选项对上下文进行 attention，再输出选项概率；它没有复现 Jev 未公开的设计。把反馈变成训练样本并更新小头，是另一项需要单独记录与评价的操作。"
+        },
+        {
+          "title": "这里已有几条相遇的研究线",
+          "text": "CoALA 区分 memory、内部动作与 decision cycle；MNL 把失败压缩成可检索 guidance；AgeMem 通过 reward 学习记忆管理动作；InsightEmb 把经验检索与当前行动用途联系起来；轻量 proactive trigger 则研究何时调用下游 agent。它们使用不同数据、反馈和评价单位。本专题借它们提出比较问题，不把跨论文的分数拼成模型排行榜。"
+        },
+        {
+          "title": "相关、值得带入与值得说出口",
+          "text": "一条记忆可能与话题相关，却已经包含在当前上下文中；也可能帮助选择下一步，而无需在回复中复述。实验先把问题收窄为逐条候选的增量用途，允许全部不用。候选生成保持给定，因此它无法证明找回遗漏记忆的能力；结构化的已知内容和适用范围也由 fixture 提供，不能把分类正确称为自然语言理解或对话体验改善。"
+        },
+        {
+          "title": "同一批反馈，四条复用路径",
+          "text": "没有新增经验的参照、保存案例的近邻、从训练样本归纳的可读规则，以及真正优化参数的小型分类器，接受可比较的观测。规则不能偷看评价答案，分类器也不能从测试结果挑选参数。方法在归纳偏好、存储和计算上仍然不同，所以观察只支持这些具体实现的比较；不能把任何差距全部归因于“经验放在了哪里”。"
+        },
+        {
+          "title": "改了记录以后，什么仍停在过去",
+          "text": "纠正反馈之后，仍加载旧参数、从修正数据重新拟合、用少量纠正样本继续训练，以及在运行时覆盖选择，是不同处理。应当分别检查需要改变的范围和仍然有效的范围。输出被约束改正，只说明这次干预有效；参数变化也不自动证明某条来源的影响已被彻底遗忘。本站原有 cache 撤回实验提供相邻问题意识，不是权重遗忘的证据。"
+        },
+        {
+          "title": "从这个实验继续往外走",
+          "text": "下面保留已执行实验的输入、预测与可复跑来源。它能检查一个受控特征空间里反馈、拟合和纠正的关系；真实对话仍需要从原文识别这些特征、评价遗漏和误用、连接下游任务，并观察人在场时的感受。下一步可以替换输入表示或接入 agent，每次改变一个主要机制，并保留原参照。"
+        }
+      ],
+      "readings": [
+        {
+          "materialId": "coala-cognitive-architecture",
+          "label": "CoALA · 经验可以留在程序里",
+          "locator": "§4.1、§4.5；本站条目保持 skim 范围",
+          "takeaway": "模型参数、实现动作的程序与实施决策的程序可以放进同一架构讨论。",
+          "limit": "概念框架不证明小样本个性化学习有效，也不替代具体实验。"
+        },
+        {
+          "materialId": "mistake-notebook-learning",
+          "label": "MNL · 把失败写成下一次可读的指导",
+          "locator": "§§3.1–3.3、Eq. 5；本站已有 promotion cohort audit",
+          "takeaway": "经验可以通过可读 guidance 影响后续行为；接受一次更新需要说明比较的是哪批任务。",
+          "limit": "同批次改善不保证留出表现；本实验的规则归纳并非 MNL 实现。"
+        },
+        {
+          "materialId": "agentic-memory",
+          "label": "AgeMem · 学会管理记忆的动作",
+          "locator": "§§3.2–3.5、Appendix A.2；本站 reward audit",
+          "takeaway": "学习的对象可以是检索、过滤、更新等内部动作；反馈指标决定它受到怎样的训练。",
+          "limit": "trajectory reward 不识别每个动作的独立贡献；本站不在此重跑 RL。"
+        },
+        {
+          "materialId": "insightemb-action-intent-retrieval",
+          "label": "InsightEmb · 当前用途怎样进入检索",
+          "locator": "§§3.1、3.3–3.4；Limitations",
+          "takeaway": "经验是否能解除当前任务的困难，比主题重合提供了另一种监督方向。",
+          "limit": "一次 solver outcome、问题级标签与当前时刻的增量用途不能直接等同。"
+        },
+        {
+          "materialId": "proactive-wake-anchor",
+          "label": "Proactive trigger · 小模型选择何时行动",
+          "locator": "§§3–5；Appendix E.2–E.10",
+          "takeaway": "轻量部件可以承担调用前的 trigger 与 routing，计算分工本身值得比较。",
+          "limit": "离线 trigger 或下游 judge 指标不等于人在持续使用中的认可。"
+        }
+      ],
+      "externalReadings": [
+        {
+          "label": "Jev · 结构化判断接口",
+          "kind": "官方产品文档",
+          "url": "https://docs.typesafe.ai/introduction",
+          "locator": "Introduction：TypeSafe primitives、Atomic questions；访问 2026-09-21",
+          "takeaway": "把 state 上的具体问题作为结构化决策接口，适合讨论决策部件的职责。",
+          "limit": "这里只核对接口说明；未调用服务、验证速度/校准主张或个人持续学习。"
+        },
+        {
+          "label": "jevlike · 可训练的选项评分部件",
+          "kind": "独立开源实现",
+          "url": "https://github.com/vinnylarouge/jevlike",
+          "locator": "README：Architecture、Data format、Use your own data、Limitations；访问 2026-09-21",
+          "takeaway": "用候选查询上下文并输出选项概率；支持可选冻结编码器。相关记录按组切分、打乱上下文对照为小实验提供可借用的检查。",
+          "limit": "本轮阅读 README，未完成代码审计或运行上游训练。本站实验采用独立的结构化分类器，不复现 attention head，也不验证仓库速度和效果数字。"
+        },
+        {
+          "label": "Policy Distillation · 已有策略怎样被压缩",
+          "kind": "论文线索",
+          "url": "https://arxiv.org/abs/1511.06295v2",
+          "locator": "Rusu et al.，2016，v2 Abstract；本轮仅摘要范围",
+          "takeaway": "将已有强化学习策略迁移到更小网络，为“经验所形成的行为能否换一种载体”提供历史参照。",
+          "limit": "原研究在 Atari 环境；这里只作机制线索，不据此声称个人记忆、选择小头或纠正实验有效。"
+        }
+      ],
+      "labTitle": "查看一次真实拟合留下的选择",
+      "labIntro": "这是一项本机实际执行的原创结构化学习实验。页面展示保存下来的结果，可以切换学习与纠正阶段、逐例比较；不会在浏览器重新训练模型，也不采集访客输入。",
+      "boundary": "已执行范围：给定结构化观测的小型分类学习与纠正对照。未执行：Jev 服务、jevlike 复现、pretrained language encoder、真实对话或 agent 任务。测试组名称不同不自动代表新的语义结构。",
+      "artifactUrl": "research/decision-learning-study/README.md",
+      "resultsUrl": "research/decision-learning-study/results.json",
+      "closing": "每一次经历是否值得压缩，要看它让哪些选择变得更好，也要看后来改错的成本。保留可读来源、训练反馈与版本关系，让新的判断仍然能够被追问。",
+      "takeaways": [
+        {
+          "title": "先说清楚学的是什么",
+          "text": "分开候选生成、用途选择与最终表达。固定候选的分类结果，只回答中间这一环。"
+        },
+        {
+          "title": "纠正需要找到真正的载体",
+          "text": "记录、规则、参数和运行时约束分别有更新路径。覆盖输出与更新参数应留下不同证据。"
+        },
+        {
+          "title": "把相同与失败也留下",
+          "text": "简单规则、案例或小头可能同样有效，也可能各自失败；实验的价值在于明确条件，而非宣布一种载体普遍更好。"
+        }
+      ]
     }
   ],
   "findings": [
@@ -5741,6 +5864,66 @@
         "success": "任务实际完成是主要结果；另报旧范围误用、暂缓、延迟与 token。注入分支对齐预算，任务族作为样本单位，不把同一场景的许多改写计成独立任务。",
         "reviseWhen": "如果证据可得时现有方法同样完成任务，或候选方案的收益被误用、暂缓与成本抵消，就缩小或撤回“条件化处理值得采用”的建议；若失败集中在条件识别，研究重点转向这一环节。",
         "boundary": "研究方向，尚未运行真实模型 pilot；没有冻结未查看任务族，也没有效果或显著性结论。现有 deterministic 场景不充当真实 no-memory agent。"
+      }
+    },
+    {
+      "id": "experience-becomes-policy",
+      "title": "经验怎样长成判断习惯？",
+      "question": "同一批经验保留为案例、规则或参数时，怎样改变未见情境中的选择；反馈被纠正之后，这种改变又怎样更新？",
+      "intro": "我们沿着现有经验复用问题，继续追踪经历如何进入决策部件。论文、实现与本站实验在这里互相提问：看见一次更好的输出还不够，还要确认它从哪里学来、适用于哪里，又怎样改回来。",
+      "judgment": "在本站给定且训练支持内的结构化特征上，案例近邻与小分类器都预测对了原标签。仅对更正样本继续拟合改对了目标范围，却损伤了保留范围；完整重训也出现边界退化。这里的学习与纠正路径可复核，但没有证明新语义泛化、真实任务收益或来源影响的彻底遗忘。",
+      "byline": "Agent Memory Study editors",
+      "updated": "2026-09-21",
+      "status": "open",
+      "explanations": [
+        {
+          "title": "也许案例已经足够",
+          "text": "相似情境下，取回完整案例可能比压缩参数更容易保留例外；效果仍受检索方式、预算和距离表示影响。"
+        },
+        {
+          "title": "也许收益来自表示，而非学习方法",
+          "text": "把范围、相关性和已知状态直接作为结构化特征，会提前解决自然语言中最难的识别工作。高分类分数可能只说明给定表示足够。"
+        },
+        {
+          "title": "也许参数捕捉了稳定区别",
+          "text": "若固定训练反馈后，小头在新组合中仍改善选择，可以进一步检查哪些观测支持迁移；新组名或新措辞本身不是结构迁移证据。"
+        },
+        {
+          "title": "也许只是输出被暂时挡住",
+          "text": "运行时约束可以使当前选择合规，同时保留旧参数。要讨论学习或撤回，必须区分输出行为、参数更新和来源依赖。"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "本站受控学习与纠正实验",
+          "url": "research/decision-learning-study/README.md",
+          "observation": "同一公开数据比较恒定参照、案例、归纳规则与实际梯度拟合的小分类器；纠正处理分别报告应改变、应保留与有效边界的逐例结果。原参数保持、真实 warm start 与结果回放均有检查。",
+          "limit": "原创结构化任务；不评价语言表征、真实用户体验或 agent 完成率。"
+        },
+        {
+          "label": "经验取用的既有问题专题",
+          "url": "https://indeliblevivi.github.io/agent-memory-study/question/experience-to-capability/",
+          "observation": "候选竞争、适用范围与来源撤回构成新研究线的相邻问题。",
+          "limit": "已有 BM25、规则与 cache 证据不能替代 learned policy 的实测。"
+        }
+      ],
+      "materialIds": [
+        "coala-cognitive-architecture",
+        "mistake-notebook-learning",
+        "agentic-memory",
+        "insightemb-action-intent-retrieval",
+        "proactive-wake-anchor"
+      ],
+      "studyIds": [
+        "experience-becomes-policy"
+      ],
+      "findingIds": [],
+      "nextTest": {
+        "question": "从给定结构化特征换成原始文本后，观察到的选择与纠正行为还能保留多少？",
+        "comparison": "保留本实验作为表示已给定的参照，比较固定文本 encoder 加简单分类器与可读案例；任务族和纠正范围保持明确，单列特征识别错误。",
+        "success": "在独立情境上同时报告有用候选遗漏、不必要注入、有害注入与旧范围退化；再接入下游任务验证净收益，并报告训练、编码、推理和更新成本。",
+        "reviseWhen": "若效果依赖人工给出的决定性标签，或在文本输入/纠正后的旧范围上消失，就缩小迁移建议；简单案例同样有效时不主张增加训练复杂度。",
+        "boundary": "下一步尚未执行；当前结果不包括 pretrained encoder 或真实对话。"
       }
     }
   ]

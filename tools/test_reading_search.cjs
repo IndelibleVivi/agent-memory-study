@@ -120,3 +120,15 @@ test('unknown filters and absent studies fail closed without changing the data',
   assert.equal(JSON.stringify(data),before);
   assert.equal(search.buildIndex({materials:[]}).length,0);
 });
+
+
+test('cross-source readings are searchable without treating source URLs as prose', () => {
+  const hits = search.search(index, 'jevlike');
+  assert.ok(hits.some(hit => hit.kind === 'study' && hit.item.id === 'experience-becomes-policy'));
+  const fake = {materials:[], studies:[{id:'cross-source',title:'A study',readings:[],
+    externalReadings:[{label:'Implementation entry',kind:'Source code',locator:'README only',
+      takeaway:'Option attention',limit:'Not reproduced',url:'https://example.org/secret-source-path'}]}]};
+  const idx = search.buildIndex(fake);
+  assert.equal(search.search(idx, 'attention README').length, 1);
+  assert.equal(search.search(idx, 'secret-source-path').length, 0);
+});

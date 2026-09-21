@@ -69,6 +69,8 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 ## 共读专题
 
 - `studies` 提供公共跨源文章、材料引用、scenario 与明确的演示边界；不要用专题自动提升 material `noteDepth`。
+- `externalReadings` 允许共读引用官方文档、开源实现与论文线索，必须保留类型、阅读范围与限制；不自动变成 Zotero 书目。`editorial-synthesis-with-recorded-experiment` 的 `resultsUrl` 指向已执行 `research/` JSON；`recordedResults` 仅由 builder 投影，不进入 canonical。录制结果展示与 `revision-study.js` 的实时规则演示分开。
+- `research/decision-learning-study/study.py` 是学习实验唯一训练/评价实现；网页不重新训练。修改实验后用 `--check` 重算并运行该目录 unittest，更新公开方法/结果；自然语言、agent 收益与权重遗忘不能由结构化标签预测代替。
 - `assets/revision-study.js` 是 browser 与 Node runner 共用的唯一规则实现。规则选择不得接收 `environment` 答案；工具检查发生在建议形成之后。
 - 场景、policy 或 engine 变化时，运行 `node --test tools/test_revision_study.cjs` 与 `node research/correction-scope-study/run.js`，同步已执行的 `research/correction-scope-study/results.json`。
 - 修改 routes / renderer 后实际验证 desktop / mobile、直接打开 study URL、scenario / phase、history 与旧 material / atlas 路径。共读是公开阅读入口，不接入 private project mapping、账号或持久化访客记录。
@@ -76,7 +78,7 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 ## 阅读到设计
 
 - 本站已执行观察与结果放入可选 `amsEvidence`，绑定同一署名的 `public-test` 和既有 `research/` artifact；`reportedFindings` 只承载 paper-reported findings，不把本站结果重复放入 paper-only sections。
-- 新增小型 deterministic study 时接入 `tools/verify_reader.py`，同步 README / CONTRIBUTING 的验证范围；该入口校验 canonical / generated data、evidence、search 与已列入的五组本地研究，另检查 AgeMem 与 C2C 已保存 receipt。Receipt 校验不算 upstream 重跑或模型 inference；该入口不运行全部外部源码审计或论文 benchmark。
+- 新增小型 deterministic study 时接入 `tools/verify_reader.py`，同步 README / CONTRIBUTING 的验证范围；该入口校验 canonical / generated data、evidence、search 与已列入的五组确定性研究和一组 stdlib 分类器训练/纠正实验，另检查 AgeMem 与 C2C 已保存 receipt。Receipt 校验不算 upstream 重跑或模型 inference；该入口不运行全部外部源码审计或论文 benchmark。
 
 - `materials[].designTransfer` 是可选的编者建议，必须有署名、整理日期、适用情境、具体做法、未执行对照、依据与边界；`status` 固定为 `proposed-not-run`。它不改变 `readingScope`、`noteDepth`、paper-reported findings 或既有 public-test receipts。
 - `skim` / `abstract` 的该栏目必须显示初读范围提示。字段缺失时隐藏栏目，避免空白模板被当成研究结果；不要为满足统一外观补写没有依据的建议。

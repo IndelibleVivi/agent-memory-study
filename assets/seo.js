@@ -43,7 +43,7 @@
     const title = item ? `${item.title} · ${kind === "material" ? "阅读笔记 · " : ""}${name}` : `${name} · Agent memory 阅读与研究`;
     const text = item
       ? (kind === "material" ? `阅读范围：${item.noteDepth}。${item.intro}` : item.question || item.claim || item.intro)
-      : "关于 agent memory、belief revision、prospective memory 与 experience reuse 的公开研究书房：逐篇阅读笔记、问题专题、可复核研究和有范围的实践判断。";
+      : "关于 agent memory、learning 与 cognitive architecture 的公开研究空间：原文与实现、可复跑实验、问题专题和有范围的实践判断。";
     const normalized = text.replace(/\s+/g, " ").trim();
     const description = normalized.length > 200 ? normalized.slice(0, 197) + "…" : normalized;
     const canonical = new URL(item ? pathFor(route) : "", site).href;
