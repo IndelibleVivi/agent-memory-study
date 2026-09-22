@@ -39,7 +39,9 @@ def main():
     run([python, '-B', 'research/agemem-reward-observation-audit/audit.py', '--verify-checked'])
     run([python, '-B', 'research/c2c-cache-retraction-study/study.py', '--verify-checked'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/c2c-cache-retraction-study', '-p', 'test_*.py'])
-    print('PASS: reader contracts, generated data, five deterministic studies, synthetic classifier refits and checked AgeMem/C2C receipts')
+    run([python, '-B', 'research/jev-memory-contract-study/study.py', '--verify-checked'])
+    run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/jev-memory-contract-study', '-p', 'test_*.py'])
+    print('PASS: reader contracts, generated data, five deterministic studies, synthetic classifier refits and checked AgeMem/C2C/Jev receipts')
 
 
 if __name__ == '__main__':

@@ -1,0 +1,3425 @@
+{
+  "schema": "ams-jev-contract-results/1",
+  "fixtures_sha256": "fadd66bca1d0e8230beec82e488bc2911ebf11c466242a827a887bafb9d4e74c",
+  "method": {
+    "purpose": "Source-bound characterization of Jev-Mem's write/admission and consolidation decisions; the model step is scripted, not executed.",
+    "controller": {
+      "note": "Scripted numeric defaults are 0.9 except listed zero-default control; coverage-token questions default to zero; per-case overrides take precedence. Choice uses the stated selection probability. These are supplied values, not model predictions.",
+      "coverage_tokens": [
+        "redundancy",
+        "contradiction",
+        "obsolete",
+        "causes",
+        "caused_by",
+        "before",
+        "after",
+        "overlaps",
+        "same_episode",
+        "temporal_order",
+        "entity"
+      ],
+      "default_value": 0.9
+    },
+    "determinism": "Real UUIDs remain in upstream execution. Receipt-only labels n1, n2 ... follow build order and replace all node references, including persisted decisions and summary provenance. Link UUIDs and internal dedup hashes are omitted; typed endpoints and relations are retained. Fixture timestamps are fixed; a generated summary has no supplied timestamp.",
+    "minimum_runtime": "numpy, networkx, tqdm (upstream's declared deps). No typesafe-sdk, faiss or sentence-transformers needed."
+  },
+  "boundary": {
+    "is_jev_inference": false,
+    "is_embedding_accuracy": false,
+    "is_benchmark": false,
+    "is_model_forgetting": false,
+    "find_candidates_is_semantic_retrieval": false,
+    "notes": [
+      "A high obsolete probability is a returned judgement about the new/candidate pair, not a deletion.",
+      "The encoder is upstream's MockEncoder; candidate selection is not a real semantic-retrieval result.",
+      "No scalar in this receipt measures a model's semantic ability."
+    ]
+  },
+  "source": {
+    "repo": "https://github.com/libingzheren/Jev-Mem",
+    "commit": "81574eb23f3fd8d1a6c4d54a1e7d6f2dd539e9bb",
+    "expected_commit": "81574eb23f3fd8d1a6c4d54a1e7d6f2dd539e9bb",
+    "commit_matches_pin": true,
+    "commit_subject": "Add Hugging Face Paper badge to README",
+    "dirty": false,
+    "files": [
+      {
+        "path": "memory/memory_builder.py",
+        "purpose": "MemoryBuilder.build, MemoryBuilder.consolidate",
+        "sha256": "7ded92afb0615b84507ed53176a92f087b19c3e3ec0ac1bb777c200ab77a7228",
+        "bytes": 59188,
+        "line_count": 1387,
+        "classes": {
+          "MemoryBuilder": 26
+        },
+        "functions": {
+          "__init__": 33,
+          "build": 119,
+          "_store_jev_node": 189,
+          "_build_magma": 220,
+          "consolidate": 228,
+          "_simple_entity_extraction": 293,
+          "extract_event": 326,
+          "create_episode_node": 501,
+          "create_session_nodes": 551,
+          "create_event_from_episode": 601,
+          "_index_text_basic": 672,
+          "index_event": 697,
+          "create_temporal_links": 730,
+          "create_context_links": 762,
+          "create_semantic_links": 815,
+          "create_causal_links": 862,
+          "create_entity_links": 914,
+          "create_temporal_proximity_links": 957,
+          "detect_qa_links": 998,
+          "create_episode_event_links": 1045,
+          "create_session_links": 1079,
+          "batch_create_links": 1104,
+          "build_memory": 1143,
+          "save": 1292,
+          "load": 1328,
+          "add_sessions_to_existing_memory": 1360
+        }
+      },
+      {
+        "path": "memory/jev_mem_policies.py",
+        "purpose": "WritePolicy, find_candidates, node_state",
+        "sha256": "c1cde01f332448eb733e721e48e265bf134dac7e9eb3e702639c397fe1dfed2b",
+        "bytes": 8950,
+        "line_count": 186,
+        "classes": {
+          "MemoryAdmission": 12,
+          "MemoryTypeScores": 26,
+          "GraphNeeds": 34,
+          "WritePolicy": 96
+        },
+        "functions": {
+          "timestamp_value": 43,
+          "node_state": 50,
+          "cosine": 61,
+          "find_candidates": 69,
+          "allocate_graph_budgets": 161,
+          "score": 19,
+          "__init__": 97,
+          "memory_type": 100,
+          "assess_observation": 108,
+          "relations": 125,
+          "add": 145
+        }
+      },
+      {
+        "path": "memory/jev_mem_config.py",
+        "purpose": "JevMemConfig",
+        "sha256": "d413ce263433e682e256e6a780e6e4c8a9dcf0448e796d7ea51d4fe1b67bc428",
+        "bytes": 4132,
+        "line_count": 92,
+        "classes": {
+          "JevMemConfig": 11
+        },
+        "functions": {
+          "__post_init__": 49,
+          "_integer": 73,
+          "load": 79,
+          "to_dict": 90
+        }
+      },
+      {
+        "path": "memory/keyword_enrichment.py",
+        "purpose": "KeywordEnricher",
+        "sha256": "93b0f62409b192a8b1cbabc7bfbf245f49d57d4bb528c8d719a2f67806e92304",
+        "bytes": 9275,
+        "line_count": 270,
+        "classes": {
+          "KeywordEnricher": 14
+        },
+        "functions": {
+          "test_enrichment": 210,
+          "__init__": 17,
+          "extract_keywords": 32,
+          "extract_bigrams": 92,
+          "enrich_content": 118,
+          "enrich_query": 167
+        }
+      },
+      {
+        "path": "memory/jev_questions.py",
+        "purpose": "Noul/Choice question definitions",
+        "sha256": "2e8f4b8483e1da30f4e2d7d9d9ece227c3890dbb641f3d96ac7bbccff5ce8e9c",
+        "bytes": 11712,
+        "line_count": 164,
+        "classes": {},
+        "functions": {
+          "noul": 10,
+          "observation_questions": 14,
+          "admission_questions": 19,
+          "memory_type_questions": 44,
+          "relation_questions": 66,
+          "consolidation_questions": 86,
+          "routing_questions": 112,
+          "stopping_questions": 129,
+          "traversal_questions": 146,
+          "choice_fixture": 160
+        }
+      },
+      {
+        "path": "memory/mock_encoder.py",
+        "purpose": "MockEncoder",
+        "sha256": "8e92f2677ef7956e72e0c7a51dc3e07e7741e9e08ba2ca5bea96f48ccb4c09c9",
+        "bytes": 605,
+        "line_count": 19,
+        "classes": {
+          "MockEncoder": 7
+        },
+        "functions": {
+          "encode": 10
+        }
+      },
+      {
+        "path": "memory/graph_db.py",
+        "purpose": "EventNode, Link, LinkType, NodeType, NetworkXGraphDB",
+        "sha256": "71b97499268b6e891e2093247c13e7a591a4ed33429d8339af1b7dc089f3b42e",
+        "bytes": 25738,
+        "line_count": 708,
+        "classes": {
+          "NodeType": 19,
+          "LinkType": 27,
+          "LinkSubType": 34,
+          "LinkStatus": 59,
+          "EventNode": 66,
+          "EpisodeNode": 102,
+          "SessionNode": 169,
+          "Link": 208,
+          "TraversalConstraints": 260,
+          "GraphDBInterface": 303,
+          "NetworkXGraphDB": 369
+        },
+        "functions": {
+          "to_dict": 224,
+          "from_dict": 242,
+          "__post_init__": 217,
+          "allows_link": 272,
+          "add_node": 379,
+          "add_link": 388,
+          "get_node": 410,
+          "get_link": 414,
+          "get_neighbors": 418,
+          "update_node": 443,
+          "update_link": 456,
+          "delete_node": 475,
+          "delete_link": 491,
+          "traverse": 513,
+          "find_path": 565,
+          "get_subgraph": 591,
+          "__init__": 372,
+          "get_temporal_chain": 612,
+          "find_causal_paths": 645,
+          "export_to_json": 667,
+          "import_from_json": 677,
+          "save": 701,
+          "load": 705,
+          "dfs_causal": 649,
+          "edge_filter": 574
+        }
+      },
+      {
+        "path": "memory/vector_db.py",
+        "purpose": "NumpyVectorDB",
+        "sha256": "439b55276d8e6dd396737fd49d23625c76f4ea152c21655cd0a067fa76252827",
+        "bytes": 21972,
+        "line_count": 625,
+        "classes": {
+          "IndexType": 36,
+          "VectorEntry": 43,
+          "VectorDBInterface": 82,
+          "FAISSVectorDB": 133,
+          "NumpyVectorDB": 390,
+          "VectorEncoder": 533
+        },
+        "functions": {
+          "create_vector_db": 600,
+          "to_dict": 53,
+          "from_dict": 66,
+          "add_vector": 403,
+          "add_vectors": 420,
+          "search": 428,
+          "get_vector": 463,
+          "update_vector": 471,
+          "delete_vector": 483,
+          "exists": 490,
+          "size": 494,
+          "clear": 498,
+          "__init__": 536,
+          "_rebuild_index": 322,
+          "save": 503,
+          "load": 517,
+          "encode": 570,
+          "encode_batch": 580,
+          "encode_with_timeout": 594
+        }
+      },
+      {
+        "path": "memory/trg_memory.py",
+        "purpose": "TemporalResonanceGraphMemory",
+        "sha256": "ba96ad8325c6e2a55bc12eb36ec1e0b1100cb6281e491d98581afd346e8b75f1",
+        "bytes": 37877,
+        "line_count": 987,
+        "classes": {
+          "EventExtractionResult": 49,
+          "QueryContext": 59,
+          "TemporalResonanceGraphMemory": 67
+        },
+        "functions": {
+          "__init__": 70,
+          "add_event": 152,
+          "query": 234,
+          "_extract_event": 309,
+          "_simple_extract_event": 368,
+          "_create_temporal_links": 387,
+          "_create_semantic_links": 421,
+          "_async_causal_inference": 462,
+          "fast_path_ingestion": 486,
+          "slow_path_consolidation": 547,
+          "_get_neighborhood": 585,
+          "_infer_latent_edges": 610,
+          "_create_entity_edges": 643,
+          "_infer_causality": 676,
+          "_synthesize_narrative": 775,
+          "consolidate_narrative_nodes": 830,
+          "_create_narrative_node": 860,
+          "save": 916,
+          "load": 934,
+          "get_statistics": 958,
+          "_count_node_types": 968,
+          "_count_link_types": 975,
+          "wait_for_async_tasks": 982
+        }
+      },
+      {
+        "path": "memory/temporal_parser.py",
+        "purpose": "TemporalParser",
+        "sha256": "9ae3b55060c83acebd10da3c91d1d8e2aecc3eeb2fb10595341c6b2606c849ac",
+        "bytes": 16040,
+        "line_count": 428,
+        "classes": {
+          "TemporalParser": 16
+        },
+        "functions": {
+          "__init__": 21,
+          "parse_session_timestamp": 45,
+          "extract_temporal_reference": 90,
+          "_extract_weekday_reference": 120,
+          "_extract_absolute_date": 160,
+          "extract_all_dates": 206,
+          "describe_references": 247,
+          "normalize_date_format": 315,
+          "calculate_duration": 334,
+          "is_temporal_question": 371,
+          "extract_time_constraints": 391
+        }
+      },
+      {
+        "path": "memory/episode_segmenter.py",
+        "purpose": "Episode (imported by memory_builder)",
+        "sha256": "d02be12205a42360f449f4790b7b6ad537250ef6361e75862840f6a8483ac58d",
+        "bytes": 12058,
+        "line_count": 332,
+        "classes": {
+          "Episode": 15,
+          "MessageBuffer": 30,
+          "BoundaryDetector": 71,
+          "EpisodeSegmenter": 186
+        },
+        "functions": {
+          "__init__": 190,
+          "add": 38,
+          "size": 55,
+          "is_full": 59,
+          "clear": 63,
+          "get_messages": 67,
+          "detect_boundary": 80,
+          "_check_explicit_signals": 98,
+          "_semantic_boundary_check": 128,
+          "process_turn": 205,
+          "flush_remaining": 243,
+          "finalize": 254,
+          "create_episode": 260,
+          "_generate_title_and_summary": 297,
+          "reset": 329
+        }
+      },
+      {
+        "path": "memory/answer_formatter.py",
+        "purpose": "AnswerFormatter",
+        "sha256": "6fefa322f79deee8332f6fe05d7ffa0176515d175c99492c6b16497e31a7cfad",
+        "bytes": 39752,
+        "line_count": 985,
+        "classes": {
+          "AnswerFormatter": 16
+        },
+        "functions": {
+          "__init__": 21,
+          "extract_answer": 53,
+          "_extract_from_malformed_json": 84,
+          "_extract_from_json": 195,
+          "_normalize_answer": 284,
+          "_is_not_found": 312,
+          "_remove_prefixes": 325,
+          "_normalize_date": 342,
+          "_normalize_duration": 370,
+          "_normalize_identity": 404,
+          "_normalize_name": 444,
+          "_general_normalization": 473,
+          "build_qa_prompt": 499,
+          "_get_original_text": 664,
+          "_get_semantic_enrichment": 699,
+          "validate_adversarial_answer": 736,
+          "format_context_for_qa": 802,
+          "validate_answer": 957
+        }
+      },
+      {
+        "path": "memory/jev_client.py",
+        "purpose": "JevClient, ProbabilityResult (inspected; carrier substituted)",
+        "sha256": "6e72ec6305ffb70931f5d9d18840001e1eaa1dd74b4f0d26c83bb837652149ea",
+        "bytes": 11958,
+        "line_count": 271,
+        "classes": {
+          "JevUnavailable": 32,
+          "CallBudget": 37,
+          "ProbabilityResult": 54,
+          "DecisionLog": 63,
+          "JevClient": 79
+        },
+        "functions": {
+          "remaining_seconds": 44,
+          "consume": 47,
+          "__init__": 80,
+          "emit": 68,
+          "_get_sdk": 92,
+          "close": 102,
+          "__enter__": 108,
+          "__exit__": 111,
+          "probabilities": 114,
+          "evaluate": 121,
+          "_question_payload": 198,
+          "_probability": 213,
+          "_validate": 219,
+          "_retry_after": 244,
+          "_log": 260,
+          "_failure": 265
+        }
+      }
+    ],
+    "executed": [
+      {
+        "path": "memory/memory_builder.py",
+        "symbols": "MemoryBuilder.build, MemoryBuilder.consolidate"
+      },
+      {
+        "path": "memory/jev_mem_policies.py",
+        "symbols": "WritePolicy, find_candidates, node_state"
+      },
+      {
+        "path": "memory/jev_mem_config.py",
+        "symbols": "JevMemConfig"
+      },
+      {
+        "path": "memory/keyword_enrichment.py",
+        "symbols": "KeywordEnricher"
+      },
+      {
+        "path": "memory/jev_questions.py",
+        "symbols": "Noul/Choice question definitions"
+      },
+      {
+        "path": "memory/mock_encoder.py",
+        "symbols": "MockEncoder"
+      },
+      {
+        "path": "memory/graph_db.py",
+        "symbols": "EventNode, Link, LinkType, NodeType, NetworkXGraphDB"
+      },
+      {
+        "path": "memory/vector_db.py",
+        "symbols": "NumpyVectorDB"
+      },
+      {
+        "path": "memory/trg_memory.py",
+        "symbols": "TemporalResonanceGraphMemory"
+      },
+      {
+        "path": "memory/temporal_parser.py",
+        "symbols": "TemporalParser"
+      },
+      {
+        "path": "memory/episode_segmenter.py",
+        "symbols": "Episode (imported by memory_builder)"
+      },
+      {
+        "path": "memory/answer_formatter.py",
+        "symbols": "AnswerFormatter"
+      }
+    ],
+    "substituted": [
+      {
+        "boundary": "typesafe_sdk carrier",
+        "replaces": "typesafe_sdk Noul / Choice / ChoiceAnswer / error classes",
+        "why": "The SDK is not installed and must not be installed; the model step is scripted. Question payloads still come from the real jev_questions.py."
+      },
+      {
+        "boundary": "system-one controller",
+        "replaces": "JevClient.probabilities / JevClient.evaluate live path",
+        "why": "No online model, network or credentials. Scripted answers carry the same Noul float / ChoiceAnswer shape the real jev_mock path produces."
+      },
+      {
+        "boundary": "deterministic node labels in the receipt",
+        "replaces": "the runtime uuid4 node ids inside the receipt only",
+        "why": "Upstream EventNode keeps its real uuid4 ids end-to-end; the runner maps each runtime id to n1, n2 ... in creation order and reports those labels. The mapping is applied to the snapshot output, never to the executed source, so no upstream behaviour depends on it."
+      },
+      {
+        "boundary": "LLM layer",
+        "replaces": "utils.memory_layer.LLMController",
+        "why": "memory_builder / trg_memory import it at module scope; it is never used because llm_enabled=False; its constructor raises if reached."
+      },
+      {
+        "boundary": "summary generation",
+        "replaces": "System-Two summarizer",
+        "why": "The callback joins the two source strings and records its inputs; it does not call a model."
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "default-off-admission-still-follows-judgment",
+      "title": "Admission 关闭：类型分数全零仍写入",
+      "role": "control-negative",
+      "group": "build-admission",
+      "intervention": "关闭 admission，给定四种 memory type 分数均为 0；检查合法 observation 是否仍保存。",
+      "input": {
+        "config": {
+          "write_enabled": true,
+          "admission_enabled": false,
+          "read_enabled": false,
+          "jev_mock": true,
+          "fallback_to_magma": true,
+          "candidate_top_k": 10,
+          "consolidation_threshold": 0.85,
+          "consolidation_interval": 0
+        },
+        "sequence": [
+          {
+            "id": "n1",
+            "text": "Alice plans to move to Lisbon later this year.",
+            "timestamp": "2026-09-01T09:00:00"
+          }
+        ]
+      },
+      "before": {
+        "stored_ids": [],
+        "vector_ids": [],
+        "summary_ids": [],
+        "links": []
+      },
+      "after": {
+        "stored_ids": [
+          "n1"
+        ],
+        "vector_ids": [
+          "n1"
+        ],
+        "summary_ids": [],
+        "links": []
+      },
+      "observations": {
+        "build_outcomes": [
+          {
+            "text": "Alice plans to move to Lisbon later this year.",
+            "build": "stored",
+            "id": "n1",
+            "has_jev_mem": true
+          }
+        ],
+        "consolidation_decisions": [],
+        "summarizer_calls": [],
+        "controller_calls": [
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.0
+          }
+        ],
+        "audit_events": [
+          "memory_constructed"
+        ],
+        "nodes": {
+          "n1": {
+            "content": "Alice plans to move to Lisbon later this year.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.0,
+              "semantic": 0.0,
+              "procedural": 0.0,
+              "preference": 0.0
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "Alice plans to move to Lisbon later this year.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": []
+          }
+        },
+        "vector_count": 1
+      },
+      "checks": {
+        "jev_write_path_used": true,
+        "original_texts_retained": true,
+        "node_vector_membership_matches": true,
+        "node_added_count": true,
+        "vector_added_count": true,
+        "written_despite_zero_judgement": true,
+        "admission_not_queried": true
+      }
+    },
+    {
+      "id": "admission-on-mean-text-rejected-cleanly",
+      "title": "Admission 打开：低分拒绝且不写入",
+      "role": "control-positive",
+      "group": "build-admission",
+      "intervention": "admission_enabled=True; admission_scores all 0.0 (redundancy 1.0) so admission score 0.0 < threshold 0.60.",
+      "input": {
+        "config": {
+          "write_enabled": true,
+          "admission_enabled": true,
+          "read_enabled": false,
+          "jev_mock": true,
+          "fallback_to_magma": true,
+          "candidate_top_k": 10,
+          "consolidation_threshold": 0.85,
+          "consolidation_interval": 0
+        },
+        "sequence": [
+          {
+            "id": "n1",
+            "text": "This observation should be discarded.",
+            "timestamp": "2026-09-02T09:00:00"
+          }
+        ]
+      },
+      "before": {
+        "stored_ids": [],
+        "vector_ids": [],
+        "summary_ids": [],
+        "links": []
+      },
+      "after": {
+        "stored_ids": [],
+        "vector_ids": [],
+        "summary_ids": [],
+        "links": []
+      },
+      "observations": {
+        "build_outcomes": [
+          {
+            "text": "This observation should be discarded.",
+            "build": "rejected"
+          }
+        ],
+        "consolidation_decisions": [],
+        "summarizer_calls": [],
+        "controller_calls": [
+          {
+            "operation": "observation",
+            "question": "should_store",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "observation",
+            "question": "future_utility",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "observation",
+            "question": "importance",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "observation",
+            "question": "novelty",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "observation",
+            "question": "redundancy",
+            "kind": "noul",
+            "value": 1.0
+          },
+          {
+            "operation": "observation",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "observation",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "observation",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "observation",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          }
+        ],
+        "audit_events": [
+          "memory_rejected"
+        ],
+        "nodes": {},
+        "vector_count": 0
+      },
+      "checks": {
+        "jev_write_path_used": true,
+        "original_texts_retained": true,
+        "node_vector_membership_matches": true,
+        "build_rejected": true,
+        "rejection_leaves_no_trace": true
+      }
+    },
+    {
+      "id": "admission-on-meaningful-observation-admitted",
+      "title": "Admission 打开：高分允许写入",
+      "role": "control-negative",
+      "group": "build-admission",
+      "intervention": "admission_enabled=True; admission vector set to 1.0 so admission score 1.0 >= threshold.",
+      "input": {
+        "config": {
+          "write_enabled": true,
+          "admission_enabled": true,
+          "read_enabled": false,
+          "jev_mock": true,
+          "fallback_to_magma": true,
+          "candidate_top_k": 10,
+          "consolidation_threshold": 0.85,
+          "consolidation_interval": 0
+        },
+        "sequence": [
+          {
+            "id": "n1",
+            "text": "Bob adopted a rescue greyhound named Pepper.",
+            "timestamp": "2026-09-03T09:00:00"
+          }
+        ]
+      },
+      "before": {
+        "stored_ids": [],
+        "vector_ids": [],
+        "summary_ids": [],
+        "links": []
+      },
+      "after": {
+        "stored_ids": [
+          "n1"
+        ],
+        "vector_ids": [
+          "n1"
+        ],
+        "summary_ids": [],
+        "links": []
+      },
+      "observations": {
+        "build_outcomes": [
+          {
+            "text": "Bob adopted a rescue greyhound named Pepper.",
+            "build": "stored",
+            "id": "n1",
+            "has_jev_mem": true
+          }
+        ],
+        "consolidation_decisions": [],
+        "summarizer_calls": [],
+        "controller_calls": [
+          {
+            "operation": "observation",
+            "question": "should_store",
+            "kind": "noul",
+            "value": 1.0
+          },
+          {
+            "operation": "observation",
+            "question": "future_utility",
+            "kind": "noul",
+            "value": 1.0
+          },
+          {
+            "operation": "observation",
+            "question": "importance",
+            "kind": "noul",
+            "value": 1.0
+          },
+          {
+            "operation": "observation",
+            "question": "novelty",
+            "kind": "noul",
+            "value": 1.0
+          },
+          {
+            "operation": "observation",
+            "question": "redundancy",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "observation",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "observation",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "observation",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "observation",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          }
+        ],
+        "audit_events": [
+          "memory_constructed"
+        ],
+        "nodes": {
+          "n1": {
+            "content": "Bob adopted a rescue greyhound named Pepper.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": {
+              "should_store": 1.0,
+              "future_utility": 1.0,
+              "importance": 1.0,
+              "novelty": 1.0,
+              "redundancy": 0.0
+            },
+            "admission_score": 1.0,
+            "raw_content": "Bob adopted a rescue greyhound named Pepper.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": []
+          }
+        },
+        "vector_count": 1
+      },
+      "checks": {
+        "jev_write_path_used": true,
+        "original_texts_retained": true,
+        "node_vector_membership_matches": true,
+        "node_added_count": true,
+        "vector_added_count": true,
+        "admission_recorded": true
+      }
+    },
+    {
+      "id": "obsolete-high-keeps-evidence-and-persists-decision",
+      "title": "obsolete 概率很高时，原始证据仍被保留，只落一条判断",
+      "role": "boundary",
+      "group": "consolidation-obsolete",
+      "intervention": "consolidate(); pair_0_obsolete=0.95, everything else 0.0, representation=keep_separate. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "input": {
+        "config": {
+          "write_enabled": true,
+          "admission_enabled": false,
+          "read_enabled": false,
+          "jev_mock": true,
+          "fallback_to_magma": true,
+          "candidate_top_k": 10,
+          "consolidation_threshold": 0.85,
+          "consolidation_interval": 0
+        },
+        "sequence": [
+          {
+            "id": "n1",
+            "text": "Dana lives in Porto and commutes by train.",
+            "timestamp": "2026-09-05T09:00:00"
+          },
+          {
+            "id": "n2",
+            "text": "Dana now lives in Braga after the summer move.",
+            "timestamp": "2026-09-06T09:00:00",
+            "consolidate": true
+          }
+        ]
+      },
+      "before": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "after": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "REDUNDANT_WITH",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "observations": {
+        "build_outcomes": [
+          {
+            "text": "Dana lives in Porto and commutes by train.",
+            "build": "stored",
+            "id": "n1",
+            "has_jev_mem": true
+          },
+          {
+            "text": "Dana now lives in Braga after the summer move.",
+            "build": "stored",
+            "id": "n2",
+            "has_jev_mem": true
+          }
+        ],
+        "consolidation_decisions": [
+          [
+            {
+              "candidate_id": "n1",
+              "redundant": 0.9,
+              "contradiction": 0.0,
+              "obsolete": 0.95,
+              "link": 0.9,
+              "representation": {
+                "type": "choice",
+                "choice": "keep_separate",
+                "probabilities": {
+                  "keep_separate": 1.0,
+                  "merge": 0.0,
+                  "promote": 0.0,
+                  "uncertain": 0.0
+                },
+                "confidence": 1.0
+              }
+            }
+          ]
+        ],
+        "summarizer_calls": [],
+        "controller_calls": [
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_causes",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_caused_by",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_redundant",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_contradiction",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_obsolete",
+            "kind": "noul",
+            "value": 0.95
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_link",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_representation",
+            "kind": "choice",
+            "option": "keep_separate",
+            "confidence": 1.0
+          }
+        ],
+        "audit_events": [
+          "memory_constructed",
+          "memory_constructed",
+          "consolidation"
+        ],
+        "nodes": {
+          "n1": {
+            "content": "Dana lives in Porto and commutes by train.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "Dana lives in Porto and commutes by train.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": []
+          },
+          "n2": {
+            "content": "Dana now lives in Braga after the summer move.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "Dana now lives in Braga after the summer move.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": [
+              {
+                "candidate_id": "n1",
+                "redundant": 0.9,
+                "contradiction": 0.0,
+                "obsolete": 0.95,
+                "link": 0.9,
+                "representation": {
+                  "type": "choice",
+                  "choice": "keep_separate",
+                  "probabilities": {
+                    "keep_separate": 1.0,
+                    "merge": 0.0,
+                    "promote": 0.0,
+                    "uncertain": 0.0
+                  },
+                  "confidence": 1.0
+                }
+              }
+            ]
+          }
+        },
+        "vector_count": 2
+      },
+      "checks": {
+        "jev_write_path_used": true,
+        "original_texts_retained": true,
+        "node_vector_membership_matches": true,
+        "no_node_removed": true,
+        "no_vector_removed": true,
+        "decision_recorded": true,
+        "obsolete_probability_recorded": true,
+        "obsolete_does_not_change_counts": true,
+        "no_summarizer_available": true,
+        "no_summary_created": true
+      }
+    },
+    {
+      "id": "obsolete-low-keeps-evidence-and-relation",
+      "title": "obsolete 概率很低时，存储变化与高 obsolete 相同",
+      "role": "control",
+      "group": "consolidation-obsolete",
+      "intervention": "consolidate(); pair_0_obsolete=0.05, everything else 0.0, representation=keep_separate. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "input": {
+        "config": {
+          "write_enabled": true,
+          "admission_enabled": false,
+          "read_enabled": false,
+          "jev_mock": true,
+          "fallback_to_magma": true,
+          "candidate_top_k": 10,
+          "consolidation_threshold": 0.85,
+          "consolidation_interval": 0
+        },
+        "sequence": [
+          {
+            "id": "n1",
+            "text": "Dana lives in Porto and commutes by train.",
+            "timestamp": "2026-09-05T09:00:00"
+          },
+          {
+            "id": "n2",
+            "text": "Dana now lives in Braga after the summer move.",
+            "timestamp": "2026-09-06T09:00:00",
+            "consolidate": true
+          }
+        ]
+      },
+      "before": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "after": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "REDUNDANT_WITH",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "observations": {
+        "build_outcomes": [
+          {
+            "text": "Dana lives in Porto and commutes by train.",
+            "build": "stored",
+            "id": "n1",
+            "has_jev_mem": true
+          },
+          {
+            "text": "Dana now lives in Braga after the summer move.",
+            "build": "stored",
+            "id": "n2",
+            "has_jev_mem": true
+          }
+        ],
+        "consolidation_decisions": [
+          [
+            {
+              "candidate_id": "n1",
+              "redundant": 0.9,
+              "contradiction": 0.0,
+              "obsolete": 0.05,
+              "link": 0.9,
+              "representation": {
+                "type": "choice",
+                "choice": "keep_separate",
+                "probabilities": {
+                  "keep_separate": 1.0,
+                  "merge": 0.0,
+                  "promote": 0.0,
+                  "uncertain": 0.0
+                },
+                "confidence": 1.0
+              }
+            }
+          ]
+        ],
+        "summarizer_calls": [],
+        "controller_calls": [
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_causes",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_caused_by",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_redundant",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_contradiction",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_obsolete",
+            "kind": "noul",
+            "value": 0.05
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_link",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_representation",
+            "kind": "choice",
+            "option": "keep_separate",
+            "confidence": 1.0
+          }
+        ],
+        "audit_events": [
+          "memory_constructed",
+          "memory_constructed",
+          "consolidation"
+        ],
+        "nodes": {
+          "n1": {
+            "content": "Dana lives in Porto and commutes by train.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "Dana lives in Porto and commutes by train.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": []
+          },
+          "n2": {
+            "content": "Dana now lives in Braga after the summer move.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "Dana now lives in Braga after the summer move.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": [
+              {
+                "candidate_id": "n1",
+                "redundant": 0.9,
+                "contradiction": 0.0,
+                "obsolete": 0.05,
+                "link": 0.9,
+                "representation": {
+                  "type": "choice",
+                  "choice": "keep_separate",
+                  "probabilities": {
+                    "keep_separate": 1.0,
+                    "merge": 0.0,
+                    "promote": 0.0,
+                    "uncertain": 0.0
+                  },
+                  "confidence": 1.0
+                }
+              }
+            ]
+          }
+        },
+        "vector_count": 2
+      },
+      "checks": {
+        "jev_write_path_used": true,
+        "original_texts_retained": true,
+        "node_vector_membership_matches": true,
+        "no_node_removed": true,
+        "no_vector_removed": true,
+        "decision_recorded": true,
+        "obsolete_probability_recorded": true,
+        "obsolete_does_not_change_counts": true,
+        "no_summarizer_available": true,
+        "no_summary_created": true
+      }
+    },
+    {
+      "id": "contradiction-high-keeps-both-accounts",
+      "title": "高 contradiction 保留两份 account，并加一条 CONTRADICTS 语义链",
+      "role": "boundary",
+      "group": "consolidation-contradiction",
+      "intervention": "consolidate(); pair_0_contradiction=0.95, representation=keep_separate. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "input": {
+        "config": {
+          "write_enabled": true,
+          "admission_enabled": false,
+          "read_enabled": false,
+          "jev_mock": true,
+          "fallback_to_magma": true,
+          "candidate_top_k": 10,
+          "consolidation_threshold": 0.85,
+          "consolidation_interval": 0
+        },
+        "sequence": [
+          {
+            "id": "n1",
+            "text": "The team shipped release 3.2 on the first of August.",
+            "timestamp": "2026-09-07T09:00:00"
+          },
+          {
+            "id": "n2",
+            "text": "The team did not ship release 3.2 in August.",
+            "timestamp": "2026-09-08T09:00:00",
+            "consolidate": true
+          }
+        ]
+      },
+      "before": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "after": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "CONTRADICTS",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "observations": {
+        "build_outcomes": [
+          {
+            "text": "The team shipped release 3.2 on the first of August.",
+            "build": "stored",
+            "id": "n1",
+            "has_jev_mem": true
+          },
+          {
+            "text": "The team did not ship release 3.2 in August.",
+            "build": "stored",
+            "id": "n2",
+            "has_jev_mem": true
+          }
+        ],
+        "consolidation_decisions": [
+          [
+            {
+              "candidate_id": "n1",
+              "redundant": 0.9,
+              "contradiction": 0.95,
+              "obsolete": 0.0,
+              "link": 0.9,
+              "representation": {
+                "type": "choice",
+                "choice": "keep_separate",
+                "probabilities": {
+                  "keep_separate": 1.0,
+                  "merge": 0.0,
+                  "promote": 0.0,
+                  "uncertain": 0.0
+                },
+                "confidence": 1.0
+              }
+            }
+          ]
+        ],
+        "summarizer_calls": [],
+        "controller_calls": [
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_causes",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_caused_by",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_redundant",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_contradiction",
+            "kind": "noul",
+            "value": 0.95
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_obsolete",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_link",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_representation",
+            "kind": "choice",
+            "option": "keep_separate",
+            "confidence": 1.0
+          }
+        ],
+        "audit_events": [
+          "memory_constructed",
+          "memory_constructed",
+          "consolidation"
+        ],
+        "nodes": {
+          "n1": {
+            "content": "The team shipped release 3.2 on the first of August.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "The team shipped release 3.2 on the first of August.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": []
+          },
+          "n2": {
+            "content": "The team did not ship release 3.2 in August.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "The team did not ship release 3.2 in August.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": [
+              {
+                "candidate_id": "n1",
+                "redundant": 0.9,
+                "contradiction": 0.95,
+                "obsolete": 0.0,
+                "link": 0.9,
+                "representation": {
+                  "type": "choice",
+                  "choice": "keep_separate",
+                  "probabilities": {
+                    "keep_separate": 1.0,
+                    "merge": 0.0,
+                    "promote": 0.0,
+                    "uncertain": 0.0
+                  },
+                  "confidence": 1.0
+                }
+              }
+            ]
+          }
+        },
+        "vector_count": 2
+      },
+      "checks": {
+        "jev_write_path_used": true,
+        "original_texts_retained": true,
+        "node_vector_membership_matches": true,
+        "no_node_removed": true,
+        "no_vector_removed": true,
+        "decision_recorded": true,
+        "contradiction_subtype_link": true,
+        "no_summarizer_available": true,
+        "no_summary_created": true
+      }
+    },
+    {
+      "id": "merge-without-summarizer-persists-links-only",
+      "title": "要求 merge 但没有 summarizer 时，只落判断与链接",
+      "role": "boundary",
+      "group": "consolidation-summary",
+      "intervention": "consolidate(summarizer=None); pair_0_redundant=0.9, representation=merge with confidence 1.0. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "input": {
+        "config": {
+          "write_enabled": true,
+          "admission_enabled": false,
+          "read_enabled": false,
+          "jev_mock": true,
+          "fallback_to_magma": true,
+          "candidate_top_k": 10,
+          "consolidation_threshold": 0.85,
+          "consolidation_interval": 0
+        },
+        "sequence": [
+          {
+            "id": "n1",
+            "text": "Eli keeps the weekly grocery list in the kitchen drawer.",
+            "timestamp": "2026-09-09T09:00:00"
+          },
+          {
+            "id": "n2",
+            "text": "Eli stores the weekly grocery list in the kitchen drawer.",
+            "timestamp": "2026-09-10T09:00:00",
+            "consolidate": true
+          }
+        ]
+      },
+      "before": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "after": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "REDUNDANT_WITH",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "observations": {
+        "build_outcomes": [
+          {
+            "text": "Eli keeps the weekly grocery list in the kitchen drawer.",
+            "build": "stored",
+            "id": "n1",
+            "has_jev_mem": true
+          },
+          {
+            "text": "Eli stores the weekly grocery list in the kitchen drawer.",
+            "build": "stored",
+            "id": "n2",
+            "has_jev_mem": true
+          }
+        ],
+        "consolidation_decisions": [
+          [
+            {
+              "candidate_id": "n1",
+              "redundant": 0.9,
+              "contradiction": 0.0,
+              "obsolete": 0.0,
+              "link": 0.9,
+              "representation": {
+                "type": "choice",
+                "choice": "merge",
+                "probabilities": {
+                  "keep_separate": 0.0,
+                  "merge": 1.0,
+                  "promote": 0.0,
+                  "uncertain": 0.0
+                },
+                "confidence": 1.0
+              }
+            }
+          ]
+        ],
+        "summarizer_calls": [],
+        "controller_calls": [
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_causes",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_caused_by",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_redundant",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_contradiction",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_obsolete",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_link",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_representation",
+            "kind": "choice",
+            "option": "merge",
+            "confidence": 1.0
+          }
+        ],
+        "audit_events": [
+          "memory_constructed",
+          "memory_constructed",
+          "consolidation"
+        ],
+        "nodes": {
+          "n1": {
+            "content": "Eli keeps the weekly grocery list in the kitchen drawer.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "Eli keeps the weekly grocery list in the kitchen drawer.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": []
+          },
+          "n2": {
+            "content": "Eli stores the weekly grocery list in the kitchen drawer.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "Eli stores the weekly grocery list in the kitchen drawer.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": [
+              {
+                "candidate_id": "n1",
+                "redundant": 0.9,
+                "contradiction": 0.0,
+                "obsolete": 0.0,
+                "link": 0.9,
+                "representation": {
+                  "type": "choice",
+                  "choice": "merge",
+                  "probabilities": {
+                    "keep_separate": 0.0,
+                    "merge": 1.0,
+                    "promote": 0.0,
+                    "uncertain": 0.0
+                  },
+                  "confidence": 1.0
+                }
+              }
+            ]
+          }
+        },
+        "vector_count": 2
+      },
+      "checks": {
+        "jev_write_path_used": true,
+        "original_texts_retained": true,
+        "node_vector_membership_matches": true,
+        "no_node_removed": true,
+        "no_vector_removed": true,
+        "decision_recorded": true,
+        "merge_representation_recorded": true,
+        "no_summarizer_available": true,
+        "no_summary_created": true
+      }
+    },
+    {
+      "id": "merge-with-summarizer-creates-derived-representation",
+      "title": "要求 merge 且提供 summarizer 时，落一条派生 summary node",
+      "role": "boundary",
+      "group": "consolidation-summary",
+      "intervention": "consolidate(summarizer=deterministic join); pair_0_redundant=0.9, representation=merge with confidence 1.0. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "input": {
+        "config": {
+          "write_enabled": true,
+          "admission_enabled": false,
+          "read_enabled": false,
+          "jev_mock": true,
+          "fallback_to_magma": true,
+          "candidate_top_k": 10,
+          "consolidation_threshold": 0.85,
+          "consolidation_interval": 0
+        },
+        "sequence": [
+          {
+            "id": "n1",
+            "text": "Eli keeps the weekly grocery list in the kitchen drawer.",
+            "timestamp": "2026-09-09T09:00:00"
+          },
+          {
+            "id": "n2",
+            "text": "Eli stores the weekly grocery list in the kitchen drawer.",
+            "timestamp": "2026-09-10T09:00:00",
+            "consolidate": true
+          }
+        ]
+      },
+      "before": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "after": {
+        "stored_ids": [
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "summary_ids": [
+          "n3"
+        ],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "REDUNDANT_WITH",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n3",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n3",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n3",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n3",
+            "target": "n2",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n3",
+            "target": "n2",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n3",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "observations": {
+        "build_outcomes": [
+          {
+            "text": "Eli keeps the weekly grocery list in the kitchen drawer.",
+            "build": "stored",
+            "id": "n1",
+            "has_jev_mem": true
+          },
+          {
+            "text": "Eli stores the weekly grocery list in the kitchen drawer.",
+            "build": "stored",
+            "id": "n2",
+            "has_jev_mem": true
+          }
+        ],
+        "consolidation_decisions": [
+          [
+            {
+              "candidate_id": "n1",
+              "redundant": 0.9,
+              "contradiction": 0.0,
+              "obsolete": 0.0,
+              "link": 0.9,
+              "representation": {
+                "type": "choice",
+                "choice": "merge",
+                "probabilities": {
+                  "keep_separate": 0.0,
+                  "merge": 1.0,
+                  "promote": 0.0,
+                  "uncertain": 0.0
+                },
+                "confidence": 1.0
+              }
+            }
+          ]
+        ],
+        "summarizer_calls": [
+          [
+            "Eli stores the weekly grocery list in the kitchen drawer.",
+            "Eli keeps the weekly grocery list in the kitchen drawer."
+          ]
+        ],
+        "controller_calls": [
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_causes",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_caused_by",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_redundant",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_contradiction",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_obsolete",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_link",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_representation",
+            "kind": "choice",
+            "option": "merge",
+            "confidence": 1.0
+          },
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_causes",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_caused_by",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "relations",
+            "question": "pair_1_semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_1_causes",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "relations",
+            "question": "pair_1_caused_by",
+            "kind": "noul",
+            "value": 0.0
+          }
+        ],
+        "audit_events": [
+          "memory_constructed",
+          "memory_constructed",
+          "memory_constructed",
+          "consolidation_summary",
+          "consolidation"
+        ],
+        "nodes": {
+          "n1": {
+            "content": "Eli keeps the weekly grocery list in the kitchen drawer.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "Eli keeps the weekly grocery list in the kitchen drawer.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": []
+          },
+          "n2": {
+            "content": "Eli stores the weekly grocery list in the kitchen drawer.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "Eli stores the weekly grocery list in the kitchen drawer.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": [
+              {
+                "candidate_id": "n1",
+                "redundant": 0.9,
+                "contradiction": 0.0,
+                "obsolete": 0.0,
+                "link": 0.9,
+                "representation": {
+                  "type": "choice",
+                  "choice": "merge",
+                  "probabilities": {
+                    "keep_separate": 0.0,
+                    "merge": 1.0,
+                    "promote": 0.0,
+                    "uncertain": 0.0
+                  },
+                  "confidence": 1.0
+                }
+              }
+            ]
+          },
+          "n3": {
+            "content": "Eli stores the weekly grocery list in the kitchen drawer. / Eli keeps the weekly grocery list in the kitchen drawer.",
+            "source": "jev_mem_consolidation",
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "Eli stores the weekly grocery list in the kitchen drawer. / Eli keeps the weekly grocery list in the kitchen drawer.",
+            "source_memory_ids": [
+              "n2",
+              "n1"
+            ],
+            "parent_interaction_id": "n2",
+            "consolidation": []
+          }
+        },
+        "vector_count": 3
+      },
+      "checks": {
+        "jev_write_path_used": true,
+        "original_texts_retained": true,
+        "node_vector_membership_matches": true,
+        "no_node_removed": true,
+        "no_vector_removed": true,
+        "decision_recorded": true,
+        "merge_representation_recorded": true,
+        "summary_count_expected": true,
+        "summarizer_called_expected": true,
+        "summary_preserves_source_ids": true,
+        "summary_added_alongside_originals": true
+      }
+    },
+    {
+      "id": "contradiction-blocks-merge-summary",
+      "title": "即使 representation=merge，高 contradiction 仍阻止 summary",
+      "role": "boundary",
+      "group": "consolidation-summary",
+      "intervention": "consolidate(summarizer=deterministic join); pair_0_redundant=0.9, pair_0_contradiction=0.95, representation=merge. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "input": {
+        "config": {
+          "write_enabled": true,
+          "admission_enabled": false,
+          "read_enabled": false,
+          "jev_mock": true,
+          "fallback_to_magma": true,
+          "candidate_top_k": 10,
+          "consolidation_threshold": 0.85,
+          "consolidation_interval": 0
+        },
+        "sequence": [
+          {
+            "id": "n1",
+            "text": "The lab moved the freezer to the second floor in June.",
+            "timestamp": "2026-09-11T09:00:00"
+          },
+          {
+            "id": "n2",
+            "text": "The lab did not move the freezer in June.",
+            "timestamp": "2026-09-12T09:00:00",
+            "consolidate": true
+          }
+        ]
+      },
+      "before": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "after": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "ENTITY",
+            "sub_type": "SHARED_ENTITY",
+            "origin": "exact_identifier"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "CONTRADICTS",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "observations": {
+        "build_outcomes": [
+          {
+            "text": "The lab moved the freezer to the second floor in June.",
+            "build": "stored",
+            "id": "n1",
+            "has_jev_mem": true
+          },
+          {
+            "text": "The lab did not move the freezer in June.",
+            "build": "stored",
+            "id": "n2",
+            "has_jev_mem": true
+          }
+        ],
+        "consolidation_decisions": [
+          [
+            {
+              "candidate_id": "n1",
+              "redundant": 0.9,
+              "contradiction": 0.95,
+              "obsolete": 0.0,
+              "link": 0.9,
+              "representation": {
+                "type": "choice",
+                "choice": "merge",
+                "probabilities": {
+                  "keep_separate": 0.0,
+                  "merge": 1.0,
+                  "promote": 0.0,
+                  "uncertain": 0.0
+                },
+                "confidence": 1.0
+              }
+            }
+          ]
+        ],
+        "summarizer_calls": [],
+        "controller_calls": [
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_causes",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_caused_by",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_redundant",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_contradiction",
+            "kind": "noul",
+            "value": 0.95
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_obsolete",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_link",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_representation",
+            "kind": "choice",
+            "option": "merge",
+            "confidence": 1.0
+          }
+        ],
+        "audit_events": [
+          "memory_constructed",
+          "memory_constructed",
+          "consolidation"
+        ],
+        "nodes": {
+          "n1": {
+            "content": "The lab moved the freezer to the second floor in June.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "The lab moved the freezer to the second floor in June.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": []
+          },
+          "n2": {
+            "content": "The lab did not move the freezer in June.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "The lab did not move the freezer in June.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": [
+              {
+                "candidate_id": "n1",
+                "redundant": 0.9,
+                "contradiction": 0.95,
+                "obsolete": 0.0,
+                "link": 0.9,
+                "representation": {
+                  "type": "choice",
+                  "choice": "merge",
+                  "probabilities": {
+                    "keep_separate": 0.0,
+                    "merge": 1.0,
+                    "promote": 0.0,
+                    "uncertain": 0.0
+                  },
+                  "confidence": 1.0
+                }
+              }
+            ]
+          }
+        },
+        "vector_count": 2
+      },
+      "checks": {
+        "jev_write_path_used": true,
+        "original_texts_retained": true,
+        "node_vector_membership_matches": true,
+        "no_node_removed": true,
+        "no_vector_removed": true,
+        "decision_recorded": true,
+        "contradiction_subtype_link": true,
+        "merge_representation_recorded": true,
+        "summary_count_expected": true,
+        "summarizer_called_expected": true
+      }
+    },
+    {
+      "id": "low-confidence-merge-blocked-by-threshold",
+      "title": "merge 的 choice confidence 低于阈值时，即使有 summarizer 也不落 summary",
+      "role": "boundary",
+      "group": "consolidation-summary",
+      "intervention": "consolidate(summarizer=deterministic join); pair_0_redundant=0.9, representation=merge with choice probability 0.5 (keep_separate 0.5). 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "input": {
+        "config": {
+          "write_enabled": true,
+          "admission_enabled": false,
+          "read_enabled": false,
+          "jev_mock": true,
+          "fallback_to_magma": true,
+          "candidate_top_k": 10,
+          "consolidation_threshold": 0.85,
+          "consolidation_interval": 0
+        },
+        "sequence": [
+          {
+            "id": "n1",
+            "text": "The greenhouse tomatoes are watered every morning.",
+            "timestamp": "2026-09-13T09:00:00"
+          },
+          {
+            "id": "n2",
+            "text": "The greenhouse tomatoes get watered each morning.",
+            "timestamp": "2026-09-14T09:00:00",
+            "consolidate": true
+          }
+        ]
+      },
+      "before": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "after": {
+        "stored_ids": [
+          "n1",
+          "n2"
+        ],
+        "vector_ids": [
+          "n1",
+          "n2"
+        ],
+        "summary_ids": [],
+        "links": [
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "PRECEDES",
+            "origin": null
+          },
+          {
+            "source": "n1",
+            "target": "n2",
+            "type": "TEMPORAL",
+            "sub_type": "TEMPORALLY_CLOSE",
+            "origin": null
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "REDUNDANT_WITH",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "SEMANTIC",
+            "sub_type": "RELATED_TO",
+            "origin": "scripted"
+          },
+          {
+            "source": "n2",
+            "target": "n1",
+            "type": "TEMPORAL",
+            "sub_type": "SUCCEEDS",
+            "origin": null
+          }
+        ]
+      },
+      "observations": {
+        "build_outcomes": [
+          {
+            "text": "The greenhouse tomatoes are watered every morning.",
+            "build": "stored",
+            "id": "n1",
+            "has_jev_mem": true
+          },
+          {
+            "text": "The greenhouse tomatoes get watered each morning.",
+            "build": "stored",
+            "id": "n2",
+            "has_jev_mem": true
+          }
+        ],
+        "consolidation_decisions": [
+          [
+            {
+              "candidate_id": "n1",
+              "redundant": 0.9,
+              "contradiction": 0.0,
+              "obsolete": 0.0,
+              "link": 0.9,
+              "representation": {
+                "type": "choice",
+                "choice": "merge",
+                "probabilities": {
+                  "keep_separate": 0.166667,
+                  "merge": 0.49999899999999997,
+                  "promote": 0.166667,
+                  "uncertain": 0.166667
+                },
+                "confidence": 0.5
+              }
+            }
+          ]
+        ],
+        "summarizer_calls": [],
+        "controller_calls": [
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "episodic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "procedural",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "memory_type",
+            "question": "preference",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_semantic",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_causes",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_caused_by",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "relations",
+            "question": "pair_0_entity",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_redundant",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_contradiction",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_obsolete",
+            "kind": "noul",
+            "value": 0.0
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_link",
+            "kind": "noul",
+            "value": 0.9
+          },
+          {
+            "operation": "consolidation",
+            "question": "pair_0_representation",
+            "kind": "choice",
+            "option": "merge",
+            "confidence": 0.5
+          }
+        ],
+        "audit_events": [
+          "memory_constructed",
+          "memory_constructed",
+          "consolidation"
+        ],
+        "nodes": {
+          "n1": {
+            "content": "The greenhouse tomatoes are watered every morning.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "The greenhouse tomatoes are watered every morning.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": []
+          },
+          "n2": {
+            "content": "The greenhouse tomatoes get watered each morning.",
+            "source": null,
+            "has_jev_mem": true,
+            "memory_type": {
+              "episodic": 0.9,
+              "semantic": 0.9,
+              "procedural": 0.9,
+              "preference": 0.9
+            },
+            "admission": null,
+            "admission_score": null,
+            "raw_content": "The greenhouse tomatoes get watered each morning.",
+            "source_memory_ids": [],
+            "parent_interaction_id": null,
+            "consolidation": [
+              {
+                "candidate_id": "n1",
+                "redundant": 0.9,
+                "contradiction": 0.0,
+                "obsolete": 0.0,
+                "link": 0.9,
+                "representation": {
+                  "type": "choice",
+                  "choice": "merge",
+                  "probabilities": {
+                    "keep_separate": 0.166667,
+                    "merge": 0.49999899999999997,
+                    "promote": 0.166667,
+                    "uncertain": 0.166667
+                  },
+                  "confidence": 0.5
+                }
+              }
+            ]
+          }
+        },
+        "vector_count": 2
+      },
+      "checks": {
+        "jev_write_path_used": true,
+        "original_texts_retained": true,
+        "node_vector_membership_matches": true,
+        "no_node_removed": true,
+        "no_vector_removed": true,
+        "decision_recorded": true,
+        "merge_representation_recorded": true,
+        "summary_count_expected": true,
+        "summarizer_called_expected": true
+      }
+    }
+  ],
+  "invariants": {
+    "obsolete_high_keeps_evidence": true,
+    "obsolete_low_keeps_evidence": true,
+    "obsolete_scalar_lives_only_in_decision": true,
+    "contradiction_or_low_confidence_blocks_summary": true,
+    "rejection_leaves_state_identical": true
+  },
+  "summary": {
+    "cases": 10,
+    "cases_with_failing_checks": [],
+    "invariants_hold": true
+  }
+}

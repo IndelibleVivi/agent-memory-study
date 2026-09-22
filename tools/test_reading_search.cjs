@@ -132,3 +132,9 @@ test('cross-source readings are searchable without treating source URLs as prose
   assert.equal(search.search(idx, 'attention README').length, 1);
   assert.equal(search.search(idx, 'secret-source-path').length, 0);
 });
+
+test('Jev reading and source study can be found through their memory boundary', () => {
+  const hits = search.search(index, 'Jev obsolete');
+  assert.ok(hits.some(hit => hit.kind === 'material' && hit.item.id === 'jev-mem-system-one-control'));
+  assert.ok(hits.some(hit => hit.kind === 'study' && hit.item.id === 'who-controls-memory'));
+});

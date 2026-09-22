@@ -922,6 +922,29 @@ def load_and_validate(path: Path) -> dict[str, Any]:
 
 def load_recorded_results(study: dict[str, Any]) -> dict[str, Any]:
     result = json.loads((ROOT / study["resultsUrl"]).read_text(encoding="utf-8"))
+    if result.get("schema") == "ams-jev-contract-results/1":
+        if not isinstance(result.get("cases"), list) or not result["cases"]:
+            raise ValueError("source contract study requires cases")
+        seen = set()
+        for case in result["cases"]:
+            for field in ("id", "title", "intervention"):
+                if not isinstance(case.get(field), str) or not case[field].strip():
+                    raise ValueError("source contract case requires identity and intervention")
+            if not re.fullmatch(r"[a-z0-9-]+", case["id"]) or case["id"] in seen:
+                raise ValueError("invalid or duplicate source contract case id")
+            seen.add(case["id"])
+            for phase in ("before", "after"):
+                snapshot = case.get(phase, {})
+                for field in ("stored_ids", "vector_ids", "summary_ids"):
+                    assert_string_list(snapshot.get(field), f"source contract {phase}.{field}", allow_empty=True)
+                if not isinstance(snapshot.get("links"), list):
+                    raise ValueError("source contract snapshot requires links")
+            if not isinstance(case.get("observations"), dict):
+                raise ValueError("source contract requires observations")
+            if not isinstance(case.get("checks"), dict) or not case["checks"] or any(type(v) is not bool for v in case["checks"].values()):
+                raise ValueError("source contract requires boolean checks")
+        assert_public_text(result)
+        return result
     if result.get("schema") != "ams-decision-results/2" or not result.get("cases"):
         raise ValueError("unsupported recorded experiment result")
     for phase, methods in [("before", {"no-experience", "episodic", "rules", "scorer"}),

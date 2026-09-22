@@ -95,6 +95,20 @@ def main():
                                 expect(page.locator('#decision-cases tbody tr')).to_have_count(12)
                                 assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
                                 checks.append({'width':width,'recorded_learning_history_reload':True})
+                                jev = json.loads((ROOT/'research/jev-memory-contract-study/results.json').read_text())
+                                case = jev['cases'][-1]
+                                page.goto(base+'study/who-controls-memory/?scenario='+case['id']+'&phase=after',wait_until='load')
+                                expect(page.locator('#study-scenario')).to_have_value(case['id'])
+                                expect(page.locator('#contract-state h3')).to_have_text('调用后的快照')
+                                expect(page.locator('link[rel=canonical]')).to_have_attribute('href',base.replace(origin, 'https://indeliblevivi.github.io')+'study/who-controls-memory/')
+                                page.locator('#study-phase-before').click(); page.go_back()
+                                expect(page.locator('#study-phase-after')).to_have_attribute('aria-pressed','true')
+                                page.reload(); expect(page.locator('#study-scenario')).to_have_value(case['id'])
+                                with page.expect_download() as event:
+                                    page.locator('#contract-download').click()
+                                assert json.loads(Path(event.value.path()).read_text()) == jev
+                                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
+                                checks.append({'width':width,'jev_source_history_reload_export':True})
                                 page.goto(base+'question/experience-to-capability/',wait_until='load')
                                 page.locator('#inquiry-practice a[data-route=finding]').first.click()
                                 expect(page.locator('#inquiry-title')).to_have_text(data['findings'][0]['title'])

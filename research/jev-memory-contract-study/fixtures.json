@@ -1,0 +1,317 @@
+{
+  "schema": "ams-jev-contract-fixtures/1",
+  "date": "2026-09-22",
+  "source": {
+    "repo": "https://github.com/libingzheren/Jev-Mem",
+    "commit": "81574eb23f3fd8d1a6c4d54a1e7d6f2dd539e9bb",
+    "commit_subject": "Add Hugging Face Paper badge to README",
+    "paper": {
+      "arxiv_id": "2609.23986",
+      "title": "Jev-Mem: System-One-Controlled Agentic Memory for Efficient AI Agents",
+      "authors": [
+        "Dongming Jiang",
+        "Yi Li",
+        "Bingzhe Li"
+      ],
+      "public_material_id": "jev-mem-system-one-control",
+      "note": "Paper id, title and authors are taken from the pinned upstream README and CITATION.bib. This experiment did not open the paper text (no network); it is a source-bound characterization, not a paper reading."
+    }
+  },
+  "runtime": {
+    "note": "Fresh execution requires numpy, networkx and tqdm; no dependency installation, weights, online inference or credentials are required by this experiment.",
+    "verified_with": "an existing numpy 2.5.3 / networkx 3.6.1 environment",
+    "timestamp_note": "All observation timestamps are explicit, timezone-naive synthetic inputs. The summary callback supplies text only; upstream gives that derived node timestamp=None."
+  },
+  "defaults": {
+    "note": "Explicit configuration of this source experiment; not a full reproduction of the shipped profile or paper run.",
+    "write_enabled": true,
+    "admission_enabled": false,
+    "read_enabled": false,
+    "jev_mock": true,
+    "fallback_to_magma": true,
+    "candidate_top_k": 10,
+    "consolidation_threshold": 0.85,
+    "consolidation_interval": 0
+  },
+  "controller": {
+    "note": "Scripted numeric defaults are 0.9 except listed zero-default control; coverage-token questions default to zero; per-case overrides take precedence. Choice uses the stated selection probability. These are supplied values, not model predictions.",
+    "coverage_tokens": [
+      "redundancy",
+      "contradiction",
+      "obsolete",
+      "causes",
+      "caused_by",
+      "before",
+      "after",
+      "overlaps",
+      "same_episode",
+      "temporal_order",
+      "entity"
+    ],
+    "default_value": 0.9
+  },
+  "cases": [
+    {
+      "id": "default-off-admission-still-follows-judgment",
+      "title": "Admission 关闭：类型分数全零仍写入",
+      "role": "control-negative",
+      "group": "build-admission",
+      "why_this_case": "upstream build() only reads admission scores when admission_enabled; with it off the memory is stored regardless of what the system-one answer would have been. This is the negative control for a later rejection.",
+      "intervention": "关闭 admission，给定四种 memory type 分数均为 0；检查合法 observation 是否仍保存。",
+      "config": {
+        "controller_default": 0.0
+      },
+      "sequence": [
+        {
+          "id": "n1",
+          "text": "Alice plans to move to Lisbon later this year.",
+          "timestamp": "2026-09-01T09:00:00"
+        }
+      ]
+    },
+    {
+      "id": "admission-on-mean-text-rejected-cleanly",
+      "title": "Admission 打开：低分拒绝且不写入",
+      "role": "control-positive",
+      "group": "build-admission",
+      "why_this_case": "With admission_enabled the admission score gates the write; a zeroed admission vector must leave no node, vector or link behind.",
+      "intervention": "admission_enabled=True; admission_scores all 0.0 (redundancy 1.0) so admission score 0.0 < threshold 0.60.",
+      "config": {
+        "admission_enabled": true,
+        "admission_scores": {
+          "should_store": 0.0,
+          "future_utility": 0.0,
+          "importance": 0.0,
+          "novelty": 0.0,
+          "redundancy": 1.0
+        }
+      },
+      "sequence": [
+        {
+          "id": "n1",
+          "text": "This observation should be discarded.",
+          "timestamp": "2026-09-02T09:00:00"
+        }
+      ]
+    },
+    {
+      "id": "admission-on-meaningful-observation-admitted",
+      "title": "Admission 打开：高分允许写入",
+      "role": "control-negative",
+      "group": "build-admission",
+      "why_this_case": "Positive control that complements the rejection: same code path, admission vector set to one, so the observation must be stored with its admission/type metadata.",
+      "intervention": "admission_enabled=True; admission vector set to 1.0 so admission score 1.0 >= threshold.",
+      "config": {
+        "admission_enabled": true,
+        "admission_scores": {
+          "should_store": 1.0,
+          "future_utility": 1.0,
+          "importance": 1.0,
+          "novelty": 1.0,
+          "redundancy": 0.0
+        }
+      },
+      "sequence": [
+        {
+          "id": "n1",
+          "text": "Bob adopted a rescue greyhound named Pepper.",
+          "timestamp": "2026-09-03T09:00:00"
+        }
+      ]
+    },
+    {
+      "id": "obsolete-high-keeps-evidence-and-persists-decision",
+      "title": "obsolete 概率很高时，原始证据仍被保留，只落一条判断",
+      "role": "boundary",
+      "group": "consolidation-obsolete",
+      "why_this_case": "consolidate() records the obsolete probability in the node's consolidation decision but never deletes the candidate; this pins the difference between a returned probability and a storage change.",
+      "intervention": "consolidate(); pair_0_obsolete=0.95, everything else 0.0, representation=keep_separate. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "config": {
+        "consolidation_overrides": {
+          "obsolete": 0.95
+        },
+        "consolidation_representation": "keep_separate"
+      },
+      "sequence": [
+        {
+          "id": "n1",
+          "text": "Dana lives in Porto and commutes by train.",
+          "timestamp": "2026-09-05T09:00:00"
+        },
+        {
+          "id": "n2",
+          "text": "Dana now lives in Braga after the summer move.",
+          "timestamp": "2026-09-06T09:00:00",
+          "consolidate": true
+        }
+      ]
+    },
+    {
+      "id": "obsolete-low-keeps-evidence-and-relation",
+      "title": "obsolete 概率很低时，存储变化与高 obsolete 相同",
+      "role": "control",
+      "group": "consolidation-obsolete",
+      "why_this_case": "Paired control for the obsolete case: only the recorded decision differs; the node/vector/summary counts must not. This isolates the scalar from the storage effect.",
+      "intervention": "consolidate(); pair_0_obsolete=0.05, everything else 0.0, representation=keep_separate. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "config": {
+        "consolidation_overrides": {
+          "obsolete": 0.05
+        },
+        "consolidation_representation": "keep_separate"
+      },
+      "sequence": [
+        {
+          "id": "n1",
+          "text": "Dana lives in Porto and commutes by train.",
+          "timestamp": "2026-09-05T09:00:00"
+        },
+        {
+          "id": "n2",
+          "text": "Dana now lives in Braga after the summer move.",
+          "timestamp": "2026-09-06T09:00:00",
+          "consolidate": true
+        }
+      ]
+    },
+    {
+      "id": "contradiction-high-keeps-both-accounts",
+      "title": "高 contradiction 保留两份 account，并加一条 CONTRADICTS 语义链",
+      "role": "boundary",
+      "group": "consolidation-contradiction",
+      "why_this_case": "With contradiction above threshold the subtype becomes CONTRADICTS and a semantic link is added; both source nodes must remain.",
+      "intervention": "consolidate(); pair_0_contradiction=0.95, representation=keep_separate. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "config": {
+        "consolidation_overrides": {
+          "contradiction": 0.95
+        },
+        "consolidation_representation": "keep_separate"
+      },
+      "sequence": [
+        {
+          "id": "n1",
+          "text": "The team shipped release 3.2 on the first of August.",
+          "timestamp": "2026-09-07T09:00:00"
+        },
+        {
+          "id": "n2",
+          "text": "The team did not ship release 3.2 in August.",
+          "timestamp": "2026-09-08T09:00:00",
+          "consolidate": true
+        }
+      ]
+    },
+    {
+      "id": "merge-without-summarizer-persists-links-only",
+      "title": "要求 merge 但没有 summarizer 时，只落判断与链接",
+      "role": "boundary",
+      "group": "consolidation-summary",
+      "why_this_case": "consolidate() only builds a derived representation inside 'if summarizer and ...'; without a summarizer the merge decision is recorded but no summary node exists.",
+      "intervention": "consolidate(summarizer=None); pair_0_redundant=0.9, representation=merge with confidence 1.0. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "config": {
+        "consolidation_overrides": {
+          "redundant": 0.9
+        },
+        "consolidation_representation": "merge"
+      },
+      "sequence": [
+        {
+          "id": "n1",
+          "text": "Eli keeps the weekly grocery list in the kitchen drawer.",
+          "timestamp": "2026-09-09T09:00:00"
+        },
+        {
+          "id": "n2",
+          "text": "Eli stores the weekly grocery list in the kitchen drawer.",
+          "timestamp": "2026-09-10T09:00:00",
+          "consolidate": true
+        }
+      ]
+    },
+    {
+      "id": "merge-with-summarizer-creates-derived-representation",
+      "title": "要求 merge 且提供 summarizer 时，落一条派生 summary node",
+      "role": "boundary",
+      "group": "consolidation-summary",
+      "why_this_case": "Paired with the no-summarizer case; identical answers, but the presence of a summarizer must add exactly one derived node with source=jev_mem_consolidation.",
+      "intervention": "consolidate(summarizer=deterministic join); pair_0_redundant=0.9, representation=merge with confidence 1.0. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "config": {
+        "consolidation_overrides": {
+          "redundant": 0.9
+        },
+        "consolidation_representation": "merge",
+        "summarizer": "join"
+      },
+      "sequence": [
+        {
+          "id": "n1",
+          "text": "Eli keeps the weekly grocery list in the kitchen drawer.",
+          "timestamp": "2026-09-09T09:00:00"
+        },
+        {
+          "id": "n2",
+          "text": "Eli stores the weekly grocery list in the kitchen drawer.",
+          "timestamp": "2026-09-10T09:00:00",
+          "consolidate": true
+        }
+      ]
+    },
+    {
+      "id": "contradiction-blocks-merge-summary",
+      "title": "即使 representation=merge，高 contradiction 仍阻止 summary",
+      "role": "boundary",
+      "group": "consolidation-summary",
+      "why_this_case": "The summary branch requires scores['contradiction'] < threshold. A merge choice with a high contradiction must not reach the summarizer.",
+      "intervention": "consolidate(summarizer=deterministic join); pair_0_redundant=0.9, pair_0_contradiction=0.95, representation=merge. 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "config": {
+        "consolidation_overrides": {
+          "redundant": 0.9,
+          "contradiction": 0.95
+        },
+        "consolidation_representation": "merge",
+        "summarizer": "join"
+      },
+      "sequence": [
+        {
+          "id": "n1",
+          "text": "The lab moved the freezer to the second floor in June.",
+          "timestamp": "2026-09-11T09:00:00"
+        },
+        {
+          "id": "n2",
+          "text": "The lab did not move the freezer in June.",
+          "timestamp": "2026-09-12T09:00:00",
+          "consolidate": true
+        }
+      ]
+    },
+    {
+      "id": "low-confidence-merge-blocked-by-threshold",
+      "title": "merge 的 choice confidence 低于阈值时，即使有 summarizer 也不落 summary",
+      "role": "boundary",
+      "group": "consolidation-summary",
+      "why_this_case": "The summary branch also requires representation.probabilities[choice] >= consolidation_threshold. A merge with choice probability 0.5 must be blocked.",
+      "intervention": "consolidate(summarizer=deterministic join); pair_0_redundant=0.9, representation=merge with choice probability 0.5 (keep_separate 0.5). 调用前已通过真实 build 保存两条 observation；只比较随后一次 consolidate 前后。",
+      "config": {
+        "consolidation_overrides": {
+          "redundant": 0.9
+        },
+        "consolidation_representation": "merge",
+        "consolidation_confidence": 0.5,
+        "summarizer": "join"
+      },
+      "sequence": [
+        {
+          "id": "n1",
+          "text": "The greenhouse tomatoes are watered every morning.",
+          "timestamp": "2026-09-13T09:00:00"
+        },
+        {
+          "id": "n2",
+          "text": "The greenhouse tomatoes get watered each morning.",
+          "timestamp": "2026-09-14T09:00:00",
+          "consolidate": true
+        }
+      ]
+    }
+  ]
+}

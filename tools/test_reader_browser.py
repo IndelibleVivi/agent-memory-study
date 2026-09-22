@@ -307,9 +307,39 @@ def main():
                         for item in new_findings:
                             expect(page.locator('#inquiry-practice')).to_contain_text(item['title'])
                         expect(page.locator('#inquiry-practice')).to_contain_text('具体迁移方法仍需在目标系统验证')
-                        page.locator('#inquiry-practice a[data-route=study]').click()
+                        page.locator('#inquiry-practice a[data-route=study]').filter(has_text='没有再读那段往事').click()
                         expect(page.locator('#decision-summary')).to_be_visible()
                         record('new study direct URL, question link and honest findings state')
+                        contract = json.loads((ROOT/'research/jev-memory-contract-study/results.json').read_text())
+                        first, last = contract['cases'][0], contract['cases'][-1]
+                        go('?study=who-controls-memory&scenario='+last['id']+'&phase=after')
+                        expect(page.locator('#study-scenario')).to_have_value(last['id'])
+                        expect(page.locator('#contract-state h3')).to_have_text('调用后的快照')
+                        expect(page.locator('#contract-comparison')).to_contain_text(
+                            f"存储节点 {len(last['before']['stored_ids'])} → {len(last['after']['stored_ids'])}")
+                        page.locator('#study-scenario').select_option(first['id'])
+                        expect(page.locator('.study-scenario-description')).to_have_text(first['intervention'])
+                        assert page.evaluate('document.activeElement.id') == 'study-scenario'
+                        page.locator('#study-phase-before').click()
+                        expect(page.locator('#contract-state h3')).to_have_text('调用前的快照')
+                        assert page.evaluate('document.activeElement.id') == 'study-phase-before'
+                        page.locator('#contract-observations summary').click()
+                        expect(page.locator('#contract-observations pre')).to_contain_text(first['id'])
+                        layout('source contract case and expanded receipt')
+                        if not args.offline_render:
+                            page.go_back()
+                            expect(page.locator('#contract-state h3')).to_have_text('调用后的快照')
+                            page.reload(wait_until='domcontentloaded')
+                            expect(page.locator('#study-scenario')).to_have_value(first['id'])
+                            with page.expect_download() as download:
+                                page.locator('#contract-download').click()
+                            assert json.loads(Path(download.value.path()).read_text()) == contract
+                        page.locator('#study-lab').scroll_into_view_if_needed()
+                        page.screenshot(path=str(output/f'jev-contract-{width}.png'))
+                        go('?material=jev-mem-system-one-control')
+                        page.locator('#material-studies a[data-route=study]').filter(has_text='谁在管理记忆').click()
+                        expect(page.locator('#contract-download')).to_be_visible()
+                        record('Jev source contract deep link, case, phase, focus, raw receipt, history and exact export')
                         go('?material=continual-learning-experience-reuse')
                         page.locator('#material-inquiries a[data-route=question]').first.click()
                         expect(page.locator('#inquiry-title')).to_have_text(data['questions'][0]['title'])

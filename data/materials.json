@@ -43,7 +43,8 @@
           "memory-beyond-recall",
           "statefuse-conflict-preserving-memory",
           "memora-from-recall-to-forgetting",
-          "useful-memories-become-faulty"
+          "useful-memories-become-faulty",
+          "jev-mem-system-one-control"
         ]
       },
       {
@@ -65,7 +66,8 @@
           "memprobe-hidden-user-state-recovery",
           "recuris-memory-evolution",
           "cache-to-cache",
-          "cross-model-kv-prefill-reuse"
+          "cross-model-kv-prefill-reuse",
+          "jev-mem-system-one-control"
         ]
       },
       {
@@ -107,7 +109,8 @@
         "materialIds": [
           "midca-dual-cycle",
           "recuris-memory-evolution",
-          "pain-axis"
+          "pain-axis",
+          "jev-mem-system-one-control"
         ]
       },
       {
@@ -5215,6 +5218,225 @@
           ]
         }
       ]
+    },
+    {
+      "number": 27,
+      "id": "jev-mem-system-one-control",
+      "kind": "paper",
+      "title": "Jev-Mem: System-One-Controlled Agentic Memory for Efficient AI Agents",
+      "authors": [
+        "Dongming Jiang",
+        "Yi Li",
+        "Bingzhe Li"
+      ],
+      "shortAuthor": "Jiang 等",
+      "year": 2026,
+      "doi": "10.48550/arXiv.2609.23986",
+      "noteDepth": "worked",
+      "readingScope": "完整阅读 arXiv:2609.23986v1 的 Abstract、§§1–5、Appendices A–B；References 只用于定位，未逐篇核实。PDF 16 页，read-integrity preflight PASS，声明、枚举与 reader 页数均为 16；视觉核对物理页 1、4、8、16 的身份、架构、结果表与末页。另检查官方 Jev-Mem commit 81574eb23f3fd8d1a6c4d54a1e7d6f2dd539e9bb 的 write/policy/questions/client/retrieval/consolidation、相关存储与评测调用；没有宣称全 repo 审计。TypeSafe 模型与接口文档访问于 2026-09-22；此 commit 与论文运行版本的对应关系未建立。 本站另执行固定源码的 10 个给定判断案例：真实 builder/policy/consolidation、NetworkX graph 与 NumPy vector store；scripted controller、SDK carrier、MockEncoder 和拼接摘要边界明确标注。fresh 复跑与保存结果一致，未执行真实语义检索、持久化 save/load 或模型调用。",
+      "intro": "Jev-Mem 将高频的记忆判断交给 typed System-One controller：先保存 observation，再判断如何关联；检索时按问题分配预算、检查证据并决定是否继续。负责生成答案的 System Two 与保存节点的 memory plane 各有职责。它提出了一种控制记忆使用的方法，而调用固定 Jev 接口并不意味着模型从用户经历中更新参数。",
+      "keyPoints": [
+        "保存与选择分开：四类 memory type 是可重叠的注释；原文、时间和 provenance 留在同一个 canonical observation 中，选择性主要发生在关系构建和检索阶段。（§§3.1–3.2；Appendix B.2）",
+        "先发现候选，再判断关系：向量、关键词、实体与时间信号缩小待判断集合；Jev 为有界候选提供语义与因果等预测，代码负责阈值、建边和预算。（§3.2）",
+        "检索有反馈：routing、anchors、evidence assessment 与 graph expansion 形成循环；足够回答、继续寻找无益和资源耗尽是不同停止理由。（§3.3；Eqs. 11–27）",
+        "周期维护保留原始证据：重复、冲突、obsolete 与表示选择是维护信号；需要文字抽象时才可交给 System Two。论文并未把这条维护路径定义成模型参数遗忘。（§3.2；Appendix B.3）"
+      ],
+      "keywords": [
+        "Jev",
+        "System One",
+        "memory controller",
+        "typed decisions",
+        "consolidation",
+        "evidence stopping"
+      ],
+      "categories": [
+        "记忆架构",
+        "可靠性"
+      ],
+      "failureSurfaces": [
+        "write-consolidation",
+        "retrieval-active-context",
+        "metacognitive-control"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2609.23986v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2609.23986v1"
+      },
+      "sourceNote": "2026-09-21 发布的 arXiv v1 preprint；本站保留 official full-text link。论文、当前公开实现与 hosted Jev 接口分别标注证据范围。",
+      "editorialQuestion": "控制器已经判断旧信息 obsolete 之后，执行器改变了哪些节点、关系和可见范围；这种变化是否真正让下一次任务用对了记忆？",
+      "whyRead": "它让“记忆系统”多出一个值得单独研究的对象：决定经验何时、以什么角色参与工作的控制器。把生成与有界判断分开，有望缩短高频决策路径，也让判断可以被检查。不过接口返回合法数值、图发生了变化和答案变好仍是三种证据。读这篇时，最有用的追问是把它们逐一接起来。",
+      "argumentMap": [
+        {
+          "step": "找到高频的小判断",
+          "claim": "记忆管理常需要分类、关系、相关性或停止判断，输出空间有界；逐 token 生成可能给这些动作增加开销。",
+          "locator": "§§1–2.2"
+        },
+        {
+          "step": "把控制与存储分开",
+          "claim": "System One 对给定状态与问题提供 typed outputs；共享节点与多种关系组成 data plane，System Two 承担回答和必要的文本抽象。",
+          "locator": "§3.1；Figure 2"
+        },
+        {
+          "step": "用保留与受控探索连接读写",
+          "claim": "写入保留 observation 并有选择地建关系；读路径逐轮判断证据、扩展候选并受预算限制。",
+          "locator": "§§3.2–3.3；Eqs. 5–27"
+        },
+        {
+          "step": "观察整套系统的质量和耗时",
+          "claim": "LoCoMo 表格同时报告 judge score、build time 与 query latency；这些系统级比较还不足以隔离 Jev 模型本身的贡献。",
+          "locator": "§4；Tables 1–2"
+        }
+      ],
+      "methodNotes": [
+        {
+          "label": "Typed judgment is not personal training",
+          "text": "官方文档中的 Jev 接收 state 与 Choice / Score / Noul。Noul 表达对命题的估计，不直接表示某条记忆的价值大小；分布集中程度也不是任务正确率。2026-09-22 的 Models 文档明确不提供按客户数据 fine-tuning / LoRA，同一权重服务各账户。",
+          "locator": "TypeSafe Introduction、Models、Confidence、Noul（官方接口旁读，非论文训练结果）"
+        },
+        {
+          "label": "The shipped profile matters",
+          "text": "固定 commit 的 config/jev_mem.json 启用 Jev 读写而关闭 admission；裸 JevMemConfig 的默认值不同。profile 使用 candidate_top_k=10、evidence_sufficient_threshold=0.95、continue_threshold=0.15、consolidation_interval=20。候选上限限制模型关系判断数量，不代表本地 candidate discovery 复杂度恒定。",
+          "locator": "config/jev_mem.json；memory/jev_mem_config.py；memory/jev_mem_policies.py:69–93（源码观察）"
+        },
+        {
+          "label": "A stopped search can still lack evidence",
+          "text": "充分性需同时满足 sufficient 阈值和 missing/contradiction 约束；continue_useful 很低也会结束，资源预算另可截断。当前代码记录 stopping reason 与 fallback events，模型失败后 routing、traversal、stopping 采用不同处理。",
+          "locator": "§3.3；memory/jev_mem_retrieval.py:21–198；memory/jev_client.py:265–270"
+        },
+        {
+          "label": "Evaluation requires explicit answer and timer choices",
+          "text": "当前 LoCoMo CLI 默认 best_of_n=3、llm_judge，候选答案选择使用 expected 参考答案；作者文档建议单答案评价显式 best-of-n 1。processing_time 在 retrieval 前开始、answer evaluation 后落值，controller latency_seconds 又在生成前结束。两者不能不加说明地替代论文 query latency。",
+          "locator": "jev_mem/benchmarks/locomo.py:390–392；memory/test_harness.py:115–170、323–412、465–558；docs/evaluation.md"
+        }
+      ],
+      "reportedFindings": [
+        "Table 1 报告 LoCoMo overall judge score 为 Jev-Mem 0.777、MAGMA 0.700；Jev-Mem Temporal 为 0.637，低于 MAGMA 0.650。是作者报告的回答评价，本站未复现。（§4；Table 1）",
+        "Table 2 报告 Jev-Mem build 158 s、query 0.93 s；Nemori build 1044 s，MAGMA query 1.47 s。这些时间是作者报告，本站未复现。（Table 2）"
+      ],
+      "evidenceLimits": [
+        "v1 结果表只有 LoCoMo；仓库有 LongMemEval runner，但文档明确不是论文已报告的第二套结果，且其 lenient scorer 不是官方指标。",
+        "缺少能隔离 Jev、候选生成、关系结构、预算与停止策略各自贡献的完整组件消融，也未提供足以把当前 commit 默认参数绑定到论文结果的运行 manifest。",
+        "当前 profile 使用 jev-latest；固定源码 commit 不等于固定 hosted model 版本。真实比较需要记录具体模型版本、请求配置与运行时间，不能只保存代码。",
+        "官方模型文档列出日期比较、间接推理、噪声上下文、对抗内容等弱项；英语表现最好，中文与中英混合 memory 负载需要另测。独立命题输出不保证逻辑互补。",
+        "Jev 是 hosted inference；node_state 会带入记忆正文、时间与实体等字段。本文不使用私人数据，没有执行 Jev、answerer、judge、真实 embedding 或论文 benchmark。",
+        "固定源码观察与有界 synthetic execution 不能证明真实检索误用、删除所有持久化副本、模型权重遗忘或论文结果无效。"
+      ],
+      "sourceTensions": [
+        {
+          "label": "正文与表格的结果并不完全一致",
+          "observation": "v1 §4.2 将 Temporal 写为 0.650 并称持平最好；Table 1 的 Jev-Mem 是 0.637。Multi-Hop / Open-Domain / Single-Hop 在正文为 0.625 / 0.610 / 0.797，在表格为 0.623 / 0.618 / 0.802。",
+          "implication": "本站数字引用明确采用表格；不能把正文的最优性描述不加核对地带进综述。差异本身不能确定哪一组对应作者原始运行。",
+          "locators": [
+            "§4.2；Table 1；PDF 物理页 8"
+          ]
+        },
+        {
+          "label": "设计中的 temporal Choice 与当前实现",
+          "observation": "§3.2 描述 implicit temporal order 的 Choice；检查的 relation_questions 只有 semantic、causes、caused_by 与必要的 entity identity。写入路径另以本地 sequence / proximity 创建时间边。",
+          "implication": "论文设计和当前代码分别保留身份；未建立历史运行版本对应关系，不能据此反推论文实验采用了哪条实现。",
+          "locators": [
+            "§3.2",
+            "https://github.com/libingzheren/Jev-Mem/blob/81574eb23f3fd8d1a6c4d54a1e7d6f2dd539e9bb/memory/jev_questions.py#L66",
+            "https://github.com/libingzheren/Jev-Mem/blob/81574eb23f3fd8d1a6c4d54a1e7d6f2dd539e9bb/memory/memory_builder.py#L194"
+          ]
+        }
+      ],
+      "editorialInferences": [
+        {
+          "label": "把旧信息的角色写进执行语义",
+          "text": "保留历史原文与撤销它对当前任务的适用性可以同时成立。若 obsolete 或 contradiction 应影响当前选择，需要定义作用对象、适用时间、检索过滤与派生摘要如何更新。",
+          "boundary": "这是编者设计推论；当前源码的非破坏性维护不是完整遗忘实现，也不等于已经观察到真实回答误用。"
+        },
+        {
+          "label": "把模型与执行器分别换掉",
+          "text": "先固定图、候选、context 预算和 answerer，只比较规则、通用模型结构化输出与 Jev；随后才单独开放写入组织变化。这样能辨认语义判断与结构改变分别带来了什么。",
+          "boundary": "这一真实 controller 比较尚未执行；本站有界源码实验使用指定判断值，不测模型语义能力。"
+        }
+      ],
+      "openProtocols": [
+        {
+          "title": "固定证据池之后，Jev 的判断增加了什么？",
+          "status": "proposed-not-run",
+          "question": "在相同候选、图与回答预算下，Jev 是否减少误连、漏证据和过早停止，并改善最后的回答？",
+          "method": "冻结原创 corpus/query、目标答案与各模型版本，先仅替换 controller（规则、通用模型 typed output、Jev），使用单答案评价；分别记录控制推理、检索、生成和 judge 时间。再独立放开写入组织，避免同时换掉全部组件。",
+          "fixtures": "延迟才有价值的经历、重复事实、仅限本次的偏好更正、事件时间与观察时间不同、话题相近但证据缺失、正文诱导控制器抬高优先级；另分中文和中英混合负载。",
+          "controls": "相同 candidate pool / graph / answerer；排除 gold-aware answer selection；记录 fallback，分开证据充分、继续无益与资源停止；保留仍适用的旧范围。",
+          "measures": "关系误连、应取未取、停止时缺证据、最终引用与回答、实际状态变化及分段 latency；不把检索命中或结构化字段合法当作 agent 成功。",
+          "limitations": "未运行，涉及外部模型及费用时需要独立执行范围。小型 source contract test 不替代这项比较。"
+        }
+      ],
+      "designTransfer": {
+        "byline": "Agent Memory Study editors",
+        "date": "2026-09-22",
+        "status": "proposed-not-run",
+        "when": "记忆系统需要高频判断哪些关系值得建立、证据是否已足够，或新信息是否改变旧记录的适用性。",
+        "move": "将有界语义判断暴露成显式输入和 typed outputs，由代码定义预算、状态变化与来源保留；同时记录停止原因及模型调用失败后的实际路径。",
+        "check": "在同一任务和候选池上替换 controller，逐例对齐判断、提交的变化、下一次检索和最终引用；加入仅当前任务有效的更正，检查旧范围是否仍然成立。",
+        "basis": "Jev-Mem §§3.1–3.3、Appendix B；固定公开代码的 write / consolidation / retrieval 路径。",
+        "boundary": "目标系统迁移未执行；保留证据不自动保证当前使用正确，结构化返回也不证明预测已经校准。"
+      },
+      "contributions": [
+        {
+          "type": "public-test",
+          "title": "给定判断之后，当前代码怎样改变记忆？",
+          "byline": "Agent Memory Study editors",
+          "date": "2026-09-22",
+          "basis": "固定官方 Jev-Mem commit 81574eb23f3fd8d1a6c4d54a1e7d6f2dd539e9bb；AMS 原创 synthetic fixtures。",
+          "boundary": "原函数与真实内存后端上的定向对照；Jev 判断和摘要回调为指定输入，不是模型准确率或 benchmark 复现。",
+          "method": "每例重新构造后端。3 例比较 admission；7 例先保存两条 observation，再对照一次 consolidate 的节点、向量成员、关系、正文与来源。运行时保留 UUID，仅在 receipt 规范化；fresh check 比较完整结果。",
+          "environment": "Python 3.12、NumPy 2.5.3、NetworkX 3.6.1 与 tqdm；上游源码留在外部 checkout。没有模型、权重下载或服务调用。",
+          "fixture": "10 个原创英文输入与显式配置，包含迁居、发布、清单和温室记录。输入文本只承载执行测试；不代表自然语言理解评价。",
+          "controls": "Admission 关闭/type 全零、打开/低分与打开/高分；obsolete 0.05/0.95；merge 有无回调、冲突门槛与选择概率门槛。",
+          "rawResult": "10 例 fresh 执行与保存结果一致。obsolete 两例均为 2→2 节点且保留两个向量成员；允许且提供回调的 merge 为 2→3，n3 保存 n2/n1 两个来源；其他 merge 对照为 2→2。",
+          "derivedResult": "指定判断会形成记录、关系或派生表示；obsolete 高分在此路径没有移除旧记录，merge 也没有替换原文。判断值与删除/失效的执行语义需要分别解释。",
+          "limitations": "未执行 Jev、语义 encoder、query engine、answerer、judge、磁盘 save/load、模型训练或参数遗忘。定向案例不能估计真实错误率或否定论文数字。",
+          "links": [
+            {
+              "label": "方法、控制和复跑",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/jev-memory-contract-study/README.md"
+            },
+            {
+              "label": "公开 runner",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/jev-memory-contract-study/study.py"
+            },
+            {
+              "label": "完整输入与返回",
+              "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/jev-memory-contract-study/results.json"
+            }
+          ]
+        }
+      ],
+      "amsEvidence": {
+        "byline": "Agent Memory Study editors",
+        "artifactUrl": "research/jev-memory-contract-study/README.md",
+        "observations": [
+          "在两次 build 之后只改 obsolete 判断值，0.05 与 0.95 的 consolidate 都留下 n1/n2 及对应向量；记录的判断不同，关系拓扑相同。",
+          "满足合并阈值且有拼接回调时生成 n3，原始 n1/n2 正文保持不变；派生节点记录 source_memory_ids=[n2,n1]。"
+        ],
+        "findings": [
+          "这条源码路径实现了非破坏性整理。若目标是使旧事实退出当前使用范围，仍需要实际读取路径的独立定义与测试；本次未观察真实误答。"
+        ],
+        "methods": [
+          {
+            "label": "Real source, supplied decisions",
+            "text": "直接加载固定 checkout，执行原 builder/policy 与真实 NetworkX/NumPy 后端；SDK carrier、controller 和摘要回调被明确替换。MockEncoder 不代表语义编码。",
+            "locator": "research/jev-memory-contract-study/protocol.md；results.json.source"
+          },
+          {
+            "label": "Execution and saved-receipt verification",
+            "text": "完整 --check 复跑源函数；--verify-checked 与 12 项 unittest 仅检查保存结果及篡改反例，不需要 upstream 或第三方库。",
+            "locator": "research/jev-memory-contract-study/study.py；test_study.py"
+          }
+        ],
+        "reasoning": [
+          {
+            "step": "沿判断找到状态变化",
+            "claim": "返回 obsolete、创建关系、增加 summary 和移除旧记录是可区分的事件；本轮只对已执行的事件作结论。",
+            "locator": "results.json.cases / observations / before / after"
+          }
+        ]
+      }
     }
   ],
   "studies": [
@@ -5645,6 +5867,134 @@
           "text": "简单规则、案例或小头可能同样有效，也可能各自失败；实验的价值在于明确条件，而非宣布一种载体普遍更好。"
         }
       ]
+    },
+    {
+      "id": "who-controls-memory",
+      "number": "03",
+      "title": "谁在管理记忆？快判断、慢推理与旧信息的退场",
+      "subtitle": "Jev-Mem 专题 · 从写入、关联和检索，走到判断怎样变成状态变化",
+      "byline": "Agent Memory Study editors",
+      "date": "2026-09-22",
+      "kind": "editorial-synthesis-with-recorded-experiment",
+      "intro": "一句“这条信息已经过时”进入系统后，会发生什么？Jev 给了记忆管理一种有界判断接口；存储、关联、检索与生成仍由具体执行路径接起来。沿着这些接口读下去，可以把“有记忆”拆成可观察的能力，也能看清哪些能力尚未得到证明。",
+      "sections": [
+        {
+          "title": "先认清三个角色",
+          "text": "Jev 是接收状态与问题的 hosted decision model；Jev-Mem 是使用它的 memory architecture；System Two 是最后组织答案或生成抽象的模型。官方 Jev 文档说明同一权重服务各账户，不提供客户 fine-tuning / LoRA。把更多经历放进 state，改变了这一次判断的输入，还不能叫模型学会了你的经历。 同一批问题共享 state，但彼此独立；需要前一步答案才能决定的问题，要由调用方分阶段组织。"
+        },
+        {
+          "title": "写入：先留下经历，之后再决定用途",
+          "text": "论文保留合法 observation，给它记忆类型、时间和来源。当前随附 profile 关闭 admission；可选的拒绝入口存在，却不是这个配置的默认行为。这样做保留了“现在看不出价值，未来才需要”的可能，同时也把筛选负担交给后续关联与检索。类型分数低不自动意味着条目该消失。"
+        },
+        {
+          "title": "关联：控制器只判断它见到的候选",
+          "text": "向量、实体、关键词和时间先圈出附近记录，Jev 再判断语义与因果等关系，代码按阈值建边。候选生成漏掉某段关键经历，后面的判断再精确也无从补救。AMS 既有候选竞争实验提醒我们：保存、进入候选、排进 context 是不同节点；它没有测 Jev 的 embedding 或关系质量。"
+        },
+        {
+          "title": "检索：停下来，不总是因为已经知道",
+          "text": "Jev-Mem 按 query 分配图预算，从 anchors 开始，反复检查已有证据并扩展。充分回答、继续探索无益和预算耗尽都可能结束循环。把所有停止都算成“证据完整”，会掩盖缺证据但无路可找的状态。模型失败还会改变 routing、traversal 或 stopping 的处理，必须保留实际走过的路径。"
+        },
+        {
+          "title": "维护：过时的判断，先落在哪里",
+          "text": "当前 consolidation 询问重复、矛盾、obsolete 和表示选择；它记录判断、添加关系，在另有 summarizer 且门槛满足时增加派生节点。下面的源码实验给定判断值，观察执行路径怎样改变节点和索引。它刻意把“能否判断对”留给另一个实验，先回答“这个判断究竟能让代码做什么”。"
+        },
+        {
+          "title": "遗忘：要退出的是哪个范围",
+          "text": "设六月记录是“出差选靠窗”，九月说“这次受伤，选过道”。这是编者例子，未做模型测试。我们可能需要当前订票采用过道、保留六月的历史解释、让临时条件结束后原偏好仍有效。当前 context 不出现、以后不再检索、持久化副本清除、已训练参数影响撤回，各自需要机制；一个 obsolete 标量不能替它们完成工作。"
+        },
+        {
+          "title": "论文的速度与质量，先保留报告身份",
+          "text": "Table 1–2 报告 LoCoMo overall 0.777、build 158 s、query 0.93 s；本站未复现。v1 正文与表格若干数值不同，当前源码的默认 best-of-n 使用参考答案选择，计时字段也有不同边界。没有运行 manifest，不能用现有默认值反推论文一定怎样运行；也不能把整套系统的收益全归功于 Jev。"
+        },
+        {
+          "title": "AMS 因而可以多问一层",
+          "text": "AgeMem 关心学到的管理策略，已有学习专题关心经验如何改变后续选择，Jev 则提供固定模型上的可组合控制接口。把它们连起来后，下一问会更具体：判断准确了吗，执行改变了吗，后续任务受益了吗？三种证据分别成立，再讨论能迁移什么。"
+        }
+      ],
+      "readings": [
+        {
+          "materialId": "jev-mem-system-one-control",
+          "label": "Jev-Mem：把记忆控制拆成有界判断",
+          "locator": "§§3.1–3.3、Appendix B；Tables 1–2；固定源码及本站实验",
+          "takeaway": "沿着 observation、关系候选、检索反馈与非破坏性维护，定位每个控制判断的执行去处。",
+          "limit": "论文结果未复现；源码执行只检验指定判断后的行为，不测试 Jev 预测准确率。"
+        },
+        {
+          "materialId": "agentic-memory",
+          "label": "AgeMem：判断策略怎样接受反馈",
+          "locator": "AMS 既有精读与 reward observation audit；本轮未重读全文",
+          "takeaway": "将策略收到的反馈、动作是否完成与结果是否正确分开，避免把一个反馈分数当成完整管理能力。",
+          "limit": "AgeMem 的训练机制不等于调用固定 Jev 接口；本站 reward audit 也不证明真正 mutation。"
+        },
+        {
+          "materialId": "continual-learning-experience-reuse",
+          "label": "Experience reuse：有记录，为什么仍读不到",
+          "locator": "AMS 既有检索竞争研究，4 场景、108 次 SQLite BM25 选择",
+          "takeaway": "候选池和排序会限制后续 controller 能看见什么；新增经历可能挤占旧证据。",
+          "limit": "BM25 教学实验不是 Jev-Mem 真实候选或语义检索评价。"
+        },
+        {
+          "materialId": "memora-from-recall-to-forgetting",
+          "label": "Memora：回忆与遗忘各自怎样验收",
+          "locator": "AMS 既有 Memora 精读与 forgetting contract audit",
+          "takeaway": "把需要保留的历史与需要撤回的当前作用分开，追踪变化是否传到实际使用位置。",
+          "limit": "不同实现拥有不同 contract；不能用 Memora 的结果代替 Jev-Mem 的证据。"
+        }
+      ],
+      "externalReadings": [
+        {
+          "label": "TypeSafe · Jev 接口与模型边界",
+          "kind": "官方模型文档",
+          "url": "https://docs.typesafe.ai/models",
+          "locator": "Models / Customizing Jev / Language support；并读 Introduction、Confidence 与 Noul；2026-09-22",
+          "takeaway": "固定模型通过 state、Choice / Score / Noul 给出有界输出；修改上下文与 criteria 不等于客户参数训练。",
+          "limit": "接口保证不等于目标任务正确率；官方说明英语最好，中英混合 memory 负载尚需评价。"
+        },
+        {
+          "label": "TypeSafe · Noul 与 confidence 怎样读",
+          "kind": "官方接口语义说明",
+          "url": "https://docs.typesafe.ai/primitives/noul",
+          "locator": "Reading a Noul；并读 https://docs.typesafe.ai/confidence；2026-09-22",
+          "takeaway": "命题成立的估计、价值大小和预测正确率是不同量；阈值需要目标侧评价。",
+          "limit": "没有测量这些输出在本专题任务上的校准误差，不能把示例概率直接转成成功率。"
+        },
+        {
+          "label": "Jev 1.13 · 官方已知弱项",
+          "kind": "官方模型限制说明",
+          "url": "https://docs.typesafe.ai/model-jaggedness/jev-1.13",
+          "locator": "日期比较、间接推理、噪声上下文与 adversarial input；2026-09-22",
+          "takeaway": "时间和一致性等 memory 要求仍需明确的执行规则与针对性评价。",
+          "limit": "官方举例不是本专题运行结果；不能据此推算本场景错误率。"
+        },
+        {
+          "label": "Jev-Mem · 固定实现与评价说明",
+          "kind": "官方开源实现",
+          "url": "https://github.com/libingzheren/Jev-Mem/blob/81574eb23f3fd8d1a6c4d54a1e7d6f2dd539e9bb/docs/evaluation.md",
+          "locator": "commit 81574eb；同时检查 config、builder、policies、retrieval、client 与 harness",
+          "takeaway": "复跑前先区分 active profile、单答案设置、fallback、停止原因和不同计时字段。",
+          "limit": "当前代码未与论文运行版本绑定；mock controller 也不会自动关闭 answerer / judge 的真实调用。"
+        }
+      ],
+      "labTitle": "判断给定以后，记忆实际怎样变化？",
+      "labIntro": "切换已执行的 synthetic case，比较调用前后的节点、向量成员和派生摘要，再展开完整判断与返回记录。页面展示保存的源码执行结果；不在浏览器调用 Jev 或重新运行实验。",
+      "boundary": "10 个 source-informed contract cases：指定 controller responses，执行固定 upstream 函数及真实 NetworkX/NumPy 内存后端，使用 MockEncoder 和拼接摘要回调。结果仅证明这些输入下的控制行为；不是 Jev 语义准确率、真实检索、持久化清除、模型遗忘或论文 benchmark 复现。",
+      "artifactUrl": "research/jev-memory-contract-study/README.md",
+      "resultsUrl": "research/jev-memory-contract-study/results.json",
+      "takeaways": [
+        {
+          "title": "给判断一个可观察的去处",
+          "text": "本次高低 obsolete 对照都保留了原记录与向量成员。想让过时信息退出当前使用范围，需要指明哪个对象和哪条读取路径发生变化。"
+        },
+        {
+          "title": "保留原文，也检查当前适用性",
+          "text": "历史证据与当前选择可以有不同角色。观察派生摘要、旧节点及其来源关系，不把新增 summary 当成清除了旧记录。"
+        },
+        {
+          "title": "再做真正的 controller 比较",
+          "text": "冻结候选、图、answerer 和预算，分别比较规则、通用模型 typed output 与 Jev；同时测判断、执行和答案。这个实验尚未运行。"
+        }
+      ],
+      "closing": "这里扩展的“记忆”包含经验如何被管理和投入使用。结构化语义判断提供一个可组合的部件；它的价值要由实际执行与后续任务继续回答。"
     }
   ],
   "findings": [
@@ -6024,7 +6374,8 @@
         "proactive-wake-anchor"
       ],
       "studyIds": [
-        "experience-becomes-policy"
+        "experience-becomes-policy",
+        "who-controls-memory"
       ],
       "findingIds": [
         "correction-needs-retention-checks",

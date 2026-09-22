@@ -63,6 +63,8 @@ Project-specific 评价可以进入，但被评价的 project、版本与证据�
 
 `editorial-synthesis-with-recorded-experiment` 用 `resultsUrl` 引用 `research/` 中已执行的 JSON；builder 将它生成到 browser payload 的 `recordedResults`，禁止在 canonical 复制结果。页面只展示 receipt，不训练或调用模型。学习实验必须公开输入、分组、反馈、拟合配置、参数、逐例预测、纠正作用域与限制；测试组新名称不等于新结构，标签预测不自动成为真实效用证据。
 
+Jev 源码实验使用 `ams-jev-contract-results/1`：公开固定源码身份、执行函数、替身边界、指定判断、逐 case 的 before/after 与实际断言。调用前后快照里的节点和向量成员不等于真实持久化或语义检索结果。页面允许选择 case、阶段、检查原始 receipt 并下载同一结果；不把它归类为模型学习实验。
+
 `studies` 是有署名的公开跨源论述，不代替单篇札记。每个阅读连接要给 material ID、locator、借鉴点与边界；读者应能直接回原文，也能从材料页回专题。专题不要求服务特定项目，不因新增演示而提升关联材料的 depth。
 
 首题“一条更正之后”的场景定义见 [`research/correction-scope-study/README.md`](research/correction-scope-study/README.md)。可提交使某条规则失败的公开 synthetic 反例；区分规则可见来源与独立工具 contract，不为制造胜者改写答案。新增演示机制需要相应的公开方法与可复跑实现，不能只填一份看起来已运行的结果。
@@ -137,7 +139,9 @@ checks the generated browser payload without rewriting it, validates question/fi
 references, lexical query and portable brief contracts, and the existing
 RDF, freshly reruns the five small deterministic studies and the decision-learning
 experiment (including classifier fitting and correction), and checks the saved
-AgeMem reward and C2C cache-retraction receipts for fixture binding and arithmetic.
+AgeMem reward, C2C cache-retraction and Jev source-contract receipts for fixture binding and internal consistency.
+The [Jev source experiment](research/jev-memory-contract-study/README.md) requires a
+pinned external checkout for fresh execution; the reader command verifies the saved receipt only.
 C2C receipt checks do not load model weights or perform inference; see its
 [experiment guide](research/c2c-cache-retraction-study/README.md). The AgeMem receipt check
 does not execute upstream AgeMem; a fresh run requires the pinned external

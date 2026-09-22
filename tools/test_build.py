@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 from tools import build
@@ -63,6 +64,28 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             with self.subTest(missing=field), self.assertRaises(ValueError):
                 self.validate_copy(invalid)
 
+    def test_source_contract_receipt_projection_and_display_contract(self):
+        study = next(s for s in self.data['studies'] if s['id'] == 'who-controls-memory')
+        result = json.loads((build.ROOT / study['resultsUrl']).read_text())
+        self.assertEqual(build.load_recorded_results(study), result)
+        self.assertNotIn('recordedResults', study)
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            target = root / 'result.json'
+            mutations = [
+                lambda r: r.update(cases=[]),
+                lambda r: r['cases'].append(r['cases'][0]),
+                lambda r: r['cases'][0]['after'].pop('vector_ids'),
+                lambda r: r['cases'][0].update(checks={'valid': 'true'}),
+                lambda r: r['cases'][0].update(observations=None),
+            ]
+            for mutate in mutations:
+                invalid = copy.deepcopy(result)
+                mutate(invalid)
+                target.write_text(json.dumps(invalid))
+                with mock.patch.object(build, 'ROOT', root), self.assertRaises(ValueError):
+                    build.load_recorded_results({'resultsUrl': 'result.json'})
+
     def test_design_transfer_cannot_claim_an_executed_result(self):
         invalid = copy.deepcopy(self.data)
         invalid["materials"][0]["designTransfer"]["status"] = "passed"
@@ -83,7 +106,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260922-practice-findings-1'),
+            source.count('assets/materials-data.js?v=20260922-jev-control-1'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260918-c2c-1', source)
@@ -91,7 +114,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_stylesheet_cache_key_tracks_mobile_evidence_fix(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/styles.css?v=20260922-practice-findings-1'),
+            source.count('assets/styles.css?v=20260922-jev-control-1'),
             1,
         )
         self.assertNotIn('assets/styles.css?v=20260909-evidence-discovery-1', source)
@@ -2290,7 +2313,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         for asset in ("materials-data.js", "styles.css", "practice.js", "reading-search.js", "seo.js", "app.js"):
             with self.subTest(asset=asset):
                 self.assertEqual(
-                    source.count(f'assets/{asset}?v=20260922-practice-findings-1'),
+                    source.count(f'assets/{asset}?v=20260922-jev-control-1'),
                     1,
                 )
 

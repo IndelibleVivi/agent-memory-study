@@ -12,6 +12,7 @@
 - 一张 failure-surface 研究地图、一幅 data-driven research constellation，以及三条可自由进入和离开的 reading paths；
 - 面向所有读者的共读专题：原文与精读互链、跨源论述、可亲手切换的场景对照、适用条件与失败反例；首题为[一条更正之后](https://indeliblevivi.github.io/agent-memory-study/?study=after-a-correction)，不要求读者有私人项目或把每次阅读转成代码；
 - 新共读[没有再读那段往事，它为什么还是改变了选择？](https://indeliblevivi.github.io/agent-memory-study/study/experience-becomes-policy/)连接论文、Jev 官方接口文档、jevlike 开源说明与本站[学习和纠正实验](research/decision-learning-study/README.md)。页面可切换阶段、查看逐例预测和下载已执行结果；本机 runner 真正拟合小型分类器，浏览器只展示保存结果。给定结构化特征的标签预测不等于自然语言理解、真实效用或权重遗忘；
+- [谁在管理记忆？快判断、慢推理与旧信息的退场](https://indeliblevivi.github.io/agent-memory-study/study/who-controls-memory/)专题沿着 Jev-Mem 的写入、关联、检索与维护，区分语义判断、实际状态变化和后续任务收益。配套[源码实验](research/jev-memory-contract-study/README.md)给定 controller responses，执行固定 upstream 函数，记录节点、索引成员、关系与派生摘要；页面可切换案例、调用前后并下载原始结果，不把给定判断下的变化称为 Jev inference、真实检索或模型遗忘；
 - 可按主题、failure surface、depth、标题或作者进入材料；
 - 每份材料都明确标注 `noteDepth` 与 reading scope，并分开 source-backed paraphrase、paper-reported findings、evidence limits 与 editorial synthesis / inference；达到 `read` 的 entry 展示 argument map 与为什么值得读，并按实际证据补充方法与监督、原文内部张力；尚未执行的公开 protocol 明确标成 `proposed-not-run`；已经执行的 public / synthetic test 则保留署名、method、environment、raw / derived result、controls、limitations 与可复核 artifact links；字段尚未整理时，reader 会诚实降级，不从空缺补写结论；
 - 每篇现有材料都有“读完，可以怎样借用”：适用情境、可借用的做法、尚未执行的迁移对照、依据与边界；`skim` / `abstract` 显示初读线索提示，编者建议不改变阅读深度或历史测试结论；
@@ -25,7 +26,7 @@
 - [跨模型 prefill reuse 的分阶段 runner](research/kv-prefill-transfer/README.md)为 Qwen3-0.6B → 1.7B 准备串行采集、磁盘分块 ridge 与三分支评价；21项本地测试、完整256-token随机控制和公开数据准备已完成。真实1.7B单文档验证了native cache的精确磁盘交接，并记录了BF16分段/整段数值差与资源实测；跨模型 mapper 尚未拟合，论文现已收录为 [read 材料](https://indeliblevivi.github.io/agent-memory-study/?material=cross-model-kv-prefill-reuse)，不把 runner 或单模型检查当作迁移质量结果；
 - 新增 [Cross-Model KV Cache Transfer](https://indeliblevivi.github.io/agent-memory-study/?material=cross-model-kv-prefill-reuse) 与 [The Pain Axis](https://indeliblevivi.github.io/agent-memory-study/?material=pain-axis) 两篇 `read` 材料：分别连接前缀状态交接与内部干预后的行动变化，保留作者结果、编者推论和未执行对照的边界；
 - 一个没有 backend、继续由 GitHub Pages 托管的静态 reader；唯一 analytics 是 Cloudflare Web Analytics 的 aggregate beacon，不使用 cookie 或 localStorage 识别、画像访客；
-- 26 份 canonical materials：10 份按原许可随站提供的 PDF，另 16 份从 reader 直达 official full text；
+- 27 份 canonical materials：10 份按原许可随站提供的 PDF，另 17 份从 reader 直达 official full text；
 - `main` 中的 RDF 会随 canonical materials 重建，并保持 stored PDF 与 official PDF link 的 delivery 边界。
 
 这些札记是阅读导航，不是逐篇全文批注，也不代替原文。转述、问题和编辑判断不能冒充作者主张；需要引用时，请回到每条记录链接的 official source。
@@ -75,7 +76,7 @@ node tools/export_practice.cjs --finding output-guard-is-not-unlearning --format
 
 ## PDF 怎样分发
 
-这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。26 份 canonical materials 中，10 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；另 16 篇只链接作者、publisher、arXiv 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
+这里采用 hybrid distribution，不把“网上能下载”冒充“可以再分发”。27 份 canonical materials 中，10 篇有明确的 `CC BY 4.0` 或 `CC BY-NC-SA 4.0` 许可，因此原样放在 `papers/`；另 17 篇只链接作者、publisher、arXiv 或 institutional repository 的 official full text。逐文件作者、来源与许可见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
 
 不要单独下载 `agent-memory-study.rdf`：其中 10 个 attachment 使用相对路径。请下载 `main` branch ZIP、解压后再导入 RDF；具体步骤与导入后应出现的结构见 [ZOTERO-IMPORT.md](./ZOTERO-IMPORT.md)。tagged Zotero ZIP 只在显式发版时更新，可能暂时落后于 `main`。Doyle 1979 只链接 MIT DSpace 的 official scan，本地 OCR derivative 不在 repo 或分享包里。
 
@@ -289,7 +290,8 @@ Bundled papers keep their file-level Creative Commons licenses; linked works rem
 ## Reader 验证
 
 `python3 -B tools/verify_reader.py` 校验 canonical、证据归属绑定、问题/判断引用、全站搜索、实践查询/导出与 generated payload，
-并复跑五组无模型的确定性研究及一组 stdlib 小型分类器学习/纠正实验（含真实参数拟合），另检查 AgeMem 与 C2C 已保存 receipt 的输入绑定与算术；
+并复跑五组无模型的确定性研究及一组 stdlib 小型分类器学习/纠正实验（含真实参数拟合），另检查 AgeMem、C2C 与 Jev 已保存 receipt 的输入绑定和内部一致性；
+Jev 的完整源码复跑需要外部 pinned checkout，命令与替身范围见[实验说明](research/jev-memory-contract-study/README.md)；reader 入口只验证其保存 receipt。
 C2C receipt 校验不加载权重或执行 inference，fresh run 见[实验说明](research/c2c-cache-retraction-study/README.md)。
 跨模型 KV runner 需要 PyTorch 和固定外部源码，使用[独立验收命令](research/kv-prefill-transfer/README.md#先验收再使用真实权重)，不包含在该本地验证入口内。
 AgeMem 官方模块的 fresh run 需要外部固定 checkout，见[复跑说明](research/agemem-reward-observation-audit/README.md#复跑)。真实浏览器测试与受限环境的验证边界见

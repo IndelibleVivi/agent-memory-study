@@ -1206,7 +1206,8 @@
       text.append(createTextElement("p", "Shared reading · 共同的问题", "content-kind"), title,
         createTextElement("p", study.subtitle, "study-subtitle"), createTextElement("p", study.intro));
       const note = createTextElement("div", "", "study-entry-note");
-      note.append(createTextElement("p", study.kind === "editorial-synthesis-with-recorded-experiment" ? `${study.readings.length + (study.externalReadings || []).length} 份来源 / 已执行学习实验` : `${study.readings.length} 份材料 / ${study.scenarios.length} 个可切换场景`),
+      const recordedLabel = study.recordedResults?.schema === "ams-jev-contract-results/1" ? "已执行源码实验" : "已执行学习实验";
+      note.append(createTextElement("p", study.kind === "editorial-synthesis-with-recorded-experiment" ? `${study.readings.length + (study.externalReadings || []).length} 份来源 / ${recordedLabel}` : `${study.readings.length} 份材料 / ${study.scenarios.length} 个可切换场景`),
         createTextElement("p", "原文 · 串读 · 亲手比较 · 带走判断"),
         createRouteLink("study", study.id, "进入共读专题 →", "study-enter"));
       entry.append(text, note);
@@ -1344,10 +1345,62 @@
   }
 
   function recordedScenarios(study) {
+    if (study.recordedResults.schema === "ams-jev-contract-results/1") {
+      return study.recordedResults.cases.map(({id}) => ({id}));
+    }
     return [...new Set(study.recordedResults.cases.map(row => row.event))].map(id => ({id}));
   }
 
+  function renderContractLab(study) {
+    const el = createTextElement, receipt = study.recordedResults;
+    const selected = receipt.cases.find(row => row.id === route.scenario) || receipt.cases[0];
+    const phase = route.phase === "after" ? "after" : "before";
+    const lab = el("section", "", "study-lab contract-lab"); lab.id = "study-lab";
+    lab.append(el("p", "Executed source study / 已执行源码实验", "content-kind"), el("h2", study.labTitle),
+      el("p", study.labIntro, "study-lab-intro"), el("p", study.boundary, "study-boundary"));
+    const picker = el("div", "", "study-controls"), label = el("label", "选择一个源码对照");
+    label.htmlFor = "study-scenario";
+    const select = el("select", ""); select.id = "study-scenario";
+    receipt.cases.forEach(row => { const option = el("option", row.title); option.value = row.id; select.append(option); });
+    select.value = selected.id;
+    select.addEventListener("change", () => { navigate({scenario: select.value}, {focus: false}); document.querySelector("#study-scenario").focus({preventScroll: true}); });
+    picker.append(label, select); lab.append(picker);
+    const phases = el("div", "", "study-phases"); phases.setAttribute("role", "group"); phases.setAttribute("aria-label", "查看调用前后状态");
+    for (const [id, text] of [["before", "调用前"], ["after", "调用后"]]) {
+      const button = el("button", text); button.type = "button"; button.id = `study-phase-${id}`;
+      button.setAttribute("aria-pressed", String(phase === id));
+      button.addEventListener("click", () => { navigate({phase: id}, {focus: false}); document.querySelector(`#study-phase-${id}`).focus({preventScroll: true}); });
+      phases.append(button);
+    }
+    lab.append(el("p", selected.intervention, "study-scenario-description"), phases);
+    const comparison = el("p", `存储节点 ${selected.before.stored_ids.length} → ${selected.after.stored_ids.length}；向量成员 ${selected.before.vector_ids.length} → ${selected.after.vector_ids.length}；派生摘要 ${selected.before.summary_ids.length} → ${selected.after.summary_ids.length}；关系 ${selected.before.links.length} → ${selected.after.links.length}。`, "study-lesson");
+    comparison.id = "contract-comparison"; lab.append(comparison);
+    const state = el("section", "", "study-evidence"); state.id = "contract-state";
+    state.append(el("h3", phase === "after" ? "调用后的快照" : "调用前的快照"));
+    const list = el("ul", "", "study-evidence-list");
+    for (const [field, name] of [["stored_ids", "存储节点"], ["vector_ids", "向量成员"], ["summary_ids", "派生摘要"]]) {
+      const row = el("li", ""); row.append(el("span", name), el("code", selected[phase][field].join(" · ") || "无")); list.append(row);
+    }
+    state.append(list, el("p", "这些 ID 是原始运行 UUID 的统一显示标签。成员变化来自上游内存后端；向量仍在，不等于已验证语义检索会命中。", "study-locator")); lab.append(state);
+    const details = el("details", "", "decision-inputs"); details.id = "contract-observations";
+    details.append(el("summary", "检查给定判断、实际返回、关系与逐项断言"), el("pre", JSON.stringify(selected, null, 2))); lab.append(details);
+    const passed = Object.values(selected.checks).filter(Boolean).length, total = Object.keys(selected.checks).length;
+    lab.append(el("p", `本例执行断言 ${passed}/${total} 符合预期；这不是模型判断正确率。`, "study-contract"));
+    const method = el("details", "", "decision-inputs");
+    method.append(el("summary", "实验使用了哪些原函数与替身"), el("pre", JSON.stringify({source: receipt.source, method: receipt.method, boundary: receipt.boundary}, null, 2))); lab.append(method);
+    const artifacts = el("div", "", "brief-actions");
+    artifacts.append(createExternalLink(`https://github.com/IndelibleVivi/agent-memory-study/blob/main/${study.artifactUrl}`, "方法、源码与复跑命令 ↗"));
+    const download = el("button", "下载实验结果 JSON", "brief-download"); download.type = "button"; download.id = "contract-download";
+    download.addEventListener("click", () => {
+      const url = URL.createObjectURL(new Blob([JSON.stringify(receipt, null, 2) + "\n"], {type: "application/json"}));
+      const a = el("a", ""); a.href = url; a.download = "ams-jev-memory-contract-results.json"; document.body.append(a); a.click(); a.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+    artifacts.append(download); lab.append(artifacts);
+    return {element: lab, status: `${selected.title}，${phase === "after" ? "调用后" : "调用前"}，显示保存的源码执行结果。`};
+  }
+
   function renderRecordedLab(study) {
+    if (study.recordedResults.schema === "ams-jev-contract-results/1") return renderContractLab(study);
     const el = createTextElement, receipt = study.recordedResults;
     const after = route.phase === "after", phase = after ? "after" : "before";
     const methods = after ? {frozen: "仅改记录 · 参数不动", refit: "完整重训", incremental: "仅纠正样本 · 继续训练", guard: "运行时约束"}
