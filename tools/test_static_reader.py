@@ -5,6 +5,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
+import re
 import tempfile
 import threading
 from urllib.parse import urlparse, parse_qs
@@ -63,6 +64,16 @@ def main():
                                     assert u.path.startswith('/agent-memory-study/'), ref
                                     target = site / u.path.removeprefix('/agent-memory-study/')
                                     assert target.is_file() or (target / 'index.html').is_file(),ref
+                                # Check the new finding's claim and limit on its own
+                                # sitemap visit; no JavaScript or duplicate navigation.
+                                for item in data['findings']:
+                                    if (item['id'] in ('correction-needs-retention-checks',
+                                                       'output-guard-is-not-unlearning')
+                                            and urlparse(canonical).path.endswith(f'/finding/{item["id"]}/')):
+                                        expect(page.locator('h1:visible')).to_have_text(item['title'])
+                                        body = page.locator('main').inner_text()
+                                        assert item['claim'] in body and item['limit'] in body, item['id']
+                                        checks.append({'finding_static_body':item['id'],'javascript':False})
                             checks.append({'url':canonical,'javascript':enabled,'heading':initial_title})
                         if enabled:
                             for width in (1440,390,320):
@@ -109,6 +120,35 @@ def main():
                                 assert brief['findings'][0]['id'] == 'retrieval-candidate-competition'
                                 assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
                                 checks.append({'width':width,'legacy_study_history_reload_toc_home_practice_download':True})
+                                # With JS on, the practice desk must find each newer
+                                # finding by its keyword sample; the no-JS static body
+                                # check lives in the disabled-JS loop above.
+                                for query, finding_id, expected_title in [
+                                        ('纠正 增量 保留范围', 'correction-needs-retention-checks',
+                                         next(f['title'] for f in data['findings'] if f['id'] == 'correction-needs-retention-checks')),
+                                        ('输出约束 参数 遗忘', 'output-guard-is-not-unlearning',
+                                         next(f['title'] for f in data['findings'] if f['id'] == 'output-guard-is-not-unlearning'))]:
+                                    page.goto(base,wait_until='load')
+                                    page.locator('#practice-query').fill(query)
+                                    page.locator('#practice-query').press('Enter')
+                                    expect(page.locator('#practice-results a[data-route=finding]').first).to_contain_text(expected_title)
+                                    with page.expect_download() as event:
+                                        page.locator('#practice-export').get_by_role('button',name='下载 JSON',exact=True).click()
+                                    brief = json.loads(Path(event.value.path()).read_text())
+                                    assert brief['findings'][0]['id'] == finding_id, brief['findings'][0]['id']
+                                    page.goto(base+'question/experience-becomes-policy/',wait_until='load')
+                                    expect(page.locator('#inquiry-practice')).to_contain_text(expected_title)
+                                checks.append({'width':width,'new_findings_practice_and_question_hop':True})
+                                page.goto(base+'?practice=纠正 增量 保留范围#practice',wait_until='load')
+                                assert parse_qs(urlparse(page.url).query)['practice'] == ['纠正 增量 保留范围']
+                                page.reload()
+                                expect(page.locator('#practice-query')).to_have_value('纠正 增量 保留范围')
+                                retention = next(f for f in data['findings']
+                                                 if f['id'] == 'correction-needs-retention-checks')
+                                expect(page.locator('#practice-results a[data-route=finding]').first).to_have_attribute(
+                                    'href',re.compile(r'correction-needs-retention-checks'))
+                                expect(page.locator('#practice-results a[data-route=finding]').first).to_contain_text(retention['title'])
+                                checks.append({'width':width,'new_finding_practice_deep_link':True})
                             page.goto((ROOT/'index.html').as_uri()+'?material=pm-bench',wait_until='load')
                             expect(page.locator('#material-title')).to_contain_text('PM-bench')
                             page.goto((ROOT/'index.html').as_uri()+'?study=experience-becomes-policy&phase=after',wait_until='load')
@@ -126,6 +166,6 @@ def main():
         finally: server.shutdown();server.server_close();thread.join()
     args.output_dir.mkdir(parents=True,exist_ok=True)
     (args.output_dir/'results.json').write_text(json.dumps({'passed':True,'checks':checks,'errors':errors},ensure_ascii=False,indent=2)+'\n')
-    print(f'PASS: {len(urls)} initial HTML pages + hydration, 3 viewports, legacy routes/history, TOC, practice export, source file mode and 404')
+    print(f'PASS: {len(urls)} initial HTML pages + hydration, 3 viewports, legacy routes/history, TOC, practice export, new finding pages/query hop, source file mode and 404')
 
 if __name__ == '__main__': main()

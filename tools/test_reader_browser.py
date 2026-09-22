@@ -109,6 +109,13 @@ def main():
                         def record(name):
                             evidence['checks'].append({'width': width, 'check': name, 'passed': True})
 
+                        # The two newest practice findings, shared by the direct
+                        # question -> finding hop and the practice-desk checks.
+                        new_findings = [item for item in data['findings']
+                                        if item['id'] in ('correction-needs-retention-checks',
+                                                          'output-guard-is-not-unlearning')]
+                        assert len(new_findings) == 2
+
                         go()
                         expect(page.locator('#reading-entry a')).to_contain_text('一条更正之后')
                         if width <= 390:
@@ -229,6 +236,39 @@ def main():
                                     expect(page.locator('#inquiry-title')).to_have_text(item['title'])
                                 layout(kind + ' direct ' + item['id'])
                         record('all question/finding direct links, reload and layout')
+                        if not args.offline_render:
+                            # The new findings hang off the second question; check
+                            # question -> finding hopping, exact export and real
+                            # back/forward for each of them.
+                            for item in new_findings:
+                                go('?question=experience-becomes-policy')
+                                expect(page.locator('#inquiry-practice')).to_contain_text(item['title'])
+                                page.locator(
+                                    f'#inquiry-practice a[data-route=finding][href*="{item["id"]}"]'
+                                ).first.click()
+                                expect(page.locator('#inquiry-title')).to_have_text(item['title'])
+                                expect(page.locator('#inquiry-use')).to_contain_text(item['action'])
+                                expect(page.locator('#inquiry-use')).to_contain_text(item['validation'])
+                                expect(page.locator('#inquiry-evidence')).to_contain_text(item['evidence'][0]['observation'])
+                                expect(page.locator('#inquiry-evidence')).to_contain_text(item['evidence'][0]['limit'])
+                                expect(page.locator('.inquiry-heading')).to_contain_text(item['byline'])
+                                expect(page.locator('.inquiry-heading')).to_contain_text(item['updated'])
+                                with page.expect_download() as download_event:
+                                    page.locator('#inquiry-use').get_by_role('button', name='下载 Markdown').click()
+                                destination = output / f'finding-{item["id"]}-{width}.md'
+                                download_event.value.save_as(destination)
+                                content = destination.read_text()
+                                for token in [item['title'], item['byline'], item['updated'], item['limit'],
+                                              item['evidence'][0]['observation'], item['evidence'][0]['limit']]:
+                                    assert token in content, (item['id'], token)
+                                page.reload(wait_until='domcontentloaded')
+                                expect(page.locator('#inquiry-title')).to_have_text(item['title'])
+                                page.go_back()
+                                expect(page.locator('#inquiry-title')).to_have_text(
+                                    next(q['title'] for q in data['questions'] if q['id'] == 'experience-becomes-policy'))
+                                page.go_forward()
+                                expect(page.locator('#inquiry-title')).to_have_text(item['title'])
+                            record('question to new finding, exact export and real history')
                         go('#library')
                         page.locator('#search').fill('jevlike')
                         page.locator('#material-index a[data-route=study]').click()
@@ -263,7 +303,10 @@ def main():
                         expect(page.locator('#study-scenario')).to_have_value('export-ordinary-all-known')
                         expect(page.locator('#study-phase-after')).to_have_attribute('aria-pressed','true')
                         go('?question=experience-becomes-policy')
-                        expect(page.locator('#inquiry-practice')).to_contain_text('尚未形成独立的实践判断')
+                        expect(page.locator('#inquiry-practice a[data-route=finding]')).to_have_count(2)
+                        for item in new_findings:
+                            expect(page.locator('#inquiry-practice')).to_contain_text(item['title'])
+                        expect(page.locator('#inquiry-practice')).to_contain_text('具体迁移方法仍需在目标系统验证')
                         page.locator('#inquiry-practice a[data-route=study]').click()
                         expect(page.locator('#decision-summary')).to_be_visible()
                         record('new study direct URL, question link and honest findings state')
@@ -305,6 +348,28 @@ def main():
                         page.locator('#practice-examples button').nth(2).click()
                         expect(page.locator('#practice-results a').first).to_contain_text('来源对象消失')
                         record('honest no-match state and working example queries')
+                        # Two new practice findings must be reachable through the
+                        # practice desk in both languages, from the example chips
+                        # and from typed keyword queries, not just full sentences.
+                        assert '只整理了这三条' not in page.locator('#practice').inner_text()
+                        for idx, item in enumerate(new_findings):
+                            page.locator('#practice-examples button').nth(3 + idx).click()
+                            expect(page.locator('#practice-results a').first).to_contain_text(item['title'])
+                        for query, finding_id in [('纠正 增量 保留范围', 'correction-needs-retention-checks'),
+                                                  ('输出约束 参数 遗忘', 'output-guard-is-not-unlearning'),
+                                                  ('correction retention', 'correction-needs-retention-checks'),
+                                                  ('guard unlearning', 'output-guard-is-not-unlearning')]:
+                            page.locator('#practice-query').fill(query)
+                            page.locator('#practice-query').press('Enter')
+                            # Lexical top-3 contract: the target ranks first and
+                            # the visible set never exceeds three findings.
+                            target_title = next(item['title'] for item in data['findings']
+                                                if item['id'] == finding_id)
+                            expect(page.locator('#practice-results a').first).to_contain_text(
+                                target_title)
+                            result_count = page.locator('#practice-results .practice-result').count()
+                            assert 1 <= result_count <= 3, (query, result_count)
+                        record('new findings discoverable from examples and keyword queries')
                         for text, kind in [('旧经验，怎样继续帮助当前任务？', 'question'), ('新说明出现，不代表旧范围已经失效', 'finding')]:
                             go('#library')
                             page.locator('#search').fill(text)

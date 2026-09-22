@@ -7,7 +7,7 @@
 ## 这里有什么
 
 - 两个持续更新的问题专题：[旧经验，怎样继续帮助当前任务？](https://indeliblevivi.github.io/agent-memory-study/question/experience-to-capability/)与[经验怎样长成判断习惯？](https://indeliblevivi.github.io/agent-memory-study/question/experience-becomes-policy/)，连接已执行研究、竞争解释、当前判断与下一次会改变认识的观察；
-- 三条可独立引用的实践判断，覆盖候选挤占、修订范围和来源撤回；可从[研究与实践入口](https://indeliblevivi.github.io/agent-memory-study/#inquiries)按问题查询，导出带署名、适用条件、证据和限制的 Markdown / JSON；[AMS 自身的取用记录](docs/practice-brief-use.md)说明一个实际采用决定，同时保留“已采用不等于已证明有帮助”的边界；
+- 五条可独立引用的实践判断，覆盖候选挤占、修订范围、来源撤回，以及[纠正后的保留范围](https://indeliblevivi.github.io/agent-memory-study/finding/correction-needs-retention-checks/)与[输出约束、参数更新和遗忘的区别](https://indeliblevivi.github.io/agent-memory-study/finding/output-guard-is-not-unlearning/)；可从[研究与实践入口](https://indeliblevivi.github.io/agent-memory-study/#inquiries)按问题查询，导出带署名、适用条件、证据和限制的 Markdown / JSON；[AMS 自身的取用记录](docs/practice-brief-use.md)说明一个实际采用决定，同时保留“已采用不等于已证明有帮助”的边界；
 - 一组从唯一 canonical public data 生长的 source-linked materials；
 - 一张 failure-surface 研究地图、一幅 data-driven research constellation，以及三条可自由进入和离开的 reading paths；
 - 面向所有读者的共读专题：原文与精读互链、跨源论述、可亲手切换的场景对照、适用条件与失败反例；首题为[一条更正之后](https://indeliblevivi.github.io/agent-memory-study/?study=after-a-correction)，不要求读者有私人项目或把每次阅读转成代码；
@@ -61,9 +61,13 @@ Constellation 是同一 canonical data 的 semantic projection：failure surface
 ```bash
 node tools/export_practice.cjs --query '候选增加之后，结果被重复条目占满' --format markdown
 node tools/export_practice.cjs --finding revision-needs-scope --format json --out /tmp/ams-brief.json
+node tools/export_practice.cjs --query '增量更新之后，怎样检查保留范围' --format markdown
+node tools/export_practice.cjs --finding output-guard-is-not-unlearning --format json
 ```
 
 导出使用同一 canonical 内容和查询实现，保留 reader、材料与证据链接。匹配只在当前进程或浏览器运行，没有应用层查询日志或私人项目映射。网页查询写入可分享的 URL 和 browser history；直接打开或刷新时，该 URL 随页面请求交给静态托管服务。把 brief 放进目标项目原有的设计或测试流程即可，AMS 不自动修改其他 repo。
+
+空查询先展示前三条判断；可用示例问题或关键词查找其他判断，也可以从问题专题与“全部内容”进入全部五条。每次查询仍最多返回三条，导出内容与当前结果一致。学习与纠正专题的两条新判断来自已执行的结构化实验，提出的是目标侧验收方法；尚无公开采用记录，不表示自然语言任务收益或遗忘效果已经成立。
 
 研究专题与实践判断的结构、证据归属和修订方式见[维护说明](docs/research-practice.md)。实践建议保持 `proposed-transfer`；应用记录分别使用 `cited`、`adopted`、`rejected` 或 `inconclusive`，不自动晋级为效果证据。单篇的 `designTransfer` 继续保持 `proposed-not-run`。
 

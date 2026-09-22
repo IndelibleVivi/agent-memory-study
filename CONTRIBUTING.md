@@ -165,7 +165,7 @@ referenced materials satisfies all of them. The study does not inherit that
 material's reading depth. Keep these semantics in `assets/reading-search.js`, shared
 by the browser and its Node tests, rather than adding a second search truth.
 
-实践查询与全部内容搜索是不同用途：前者按 curated triggers 与文字重合返回少量判断，后者保持跨字段 AND 语义。维护 `assets/practice.js` 时保留重复证据与不同条件条目的控制；网页和 CLI 必须共用实现，不维护另一份手写 Markdown 真源。运行 `node --test tools/test_practice.cjs` 可单独检查查询与导出。
+实践查询与全部内容搜索是不同用途：前者按 curated triggers 与文字重合返回最多三条判断，后者保持跨字段 AND 语义。首页的展示条数与总数应区分；新增判断时检查示例查询、所属专题与全站搜索的入口，不把前三条默认结果当成完整目录。维护 `assets/practice.js` 时保留重复证据与不同条件条目的控制；网页和 CLI 必须共用实现，不维护另一份手写 Markdown 真源。运行 `node --test tools/test_practice.cjs` 可单独检查查询与导出；改动页面入口时用 `tools/test_reader_browser.py` 检查真实查询、跳转与下载。
 
 ### Static reader pages
 

@@ -2,6 +2,8 @@
 
 Agent Memory Study editors · 2026-09-21 · **已执行：原创结构化学习与纠正实验**。
 
+解读与实践连接更新于 2026-09-22；实验协议、输入与保存结果沿用 2026-09-21 版本。
+
 一份反馈可以保存成案例、归纳成可读规则，也可以参与参数拟合。本实验比较这些具体实现，
 再检查局部纠正改变了什么。它确实训练了小型分类器，**没有运行 Jev、jevlike、BGE、
 自然语言 agent 或私人对话**。标签由公开规则生成，正确率表示标签预测，不是现实效用。
@@ -61,6 +63,21 @@ python3 -B -m unittest discover -s research/decision-learning-study -p 'test_*.p
 固定超参数下的这个结果被保留，没有增加训练预算把它调成成功。它不证明所有增量学习
 必然失败。运行时约束直接使用了已知的新规则，信息形式与梯度更新不同；成功只证明
 这条精确约束在此任务上起作用，不是参数已纠正，更不是权重遗忘。
+
+## 怎样把这个观察带回实践
+
+表中 changed 与 preserved 分开回答“该改的改了吗”和“仍有效的保住了吗”；boundary 是
+preserved 内仍应有用的子集，不能把三列相加。查看共读的纠正阶段时，可沿同一候选比较
+旧参数、重训、增量和约束后的预测，再回到结果文件的 `cases` / `after.predictions` 核对。
+这里没有做 replay 对照，不能根据无 replay 分支的失败宣布 replay 是已验证的补救办法。
+
+两条可独立引用和导出的编者判断承接这些观察：
+
+- [改对更正项，还要检查原本正确的范围](https://indeliblevivi.github.io/agent-memory-study/finding/correction-needs-retention-checks/)：在目标系统分别检查纠正、保留和相邻边界，明确允许的损伤与更新成本，再决定是否接受更新。
+- [输出被挡住，不等于参数已纠正或来源已遗忘](https://indeliblevivi.github.io/agent-memory-study/finding/output-guard-is-not-unlearning/)：先明确要改变的对象；对输出约束、参数更新与来源影响分别设置检查，避免把一次输出合规当成遗忘证据。
+
+这些 brief 的状态为 `proposed-transfer`，尚无公开采用记录。具体目标侧对照未执行，
+不新增实验结果，也不把本实验的合成标签正确率升级成真实任务收益。
 
 ## 可检查的证据和限制
 

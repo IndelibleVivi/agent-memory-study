@@ -1452,14 +1452,16 @@
       row.append(heading, current); return row;
     }));
     const input = document.querySelector("#practice-query"); input.value = route.practice;
-    const examples = ["结果被重复条目占满", "新版说明覆盖了旧版经验", "来源删除后，缓存还有影响吗"];
+    // Example chips reuse the wording accepted by the canonical finding triggers.
+    const examples = ["结果被重复条目占满", "新版说明覆盖了旧版经验", "来源删除后，缓存还有影响吗",
+      "改对更正项却损伤保留范围", "输出被挡住，参数算纠正了吗"];
     document.querySelector("#practice-examples").replaceChildren(...examples.map(query => {
       const button = el("button", query); button.type = "button";
       button.addEventListener("click", () => runPracticeQuery(query)); return button;
     }));
     const hits = window.Practice.query(data, route.practice, 3);
     document.querySelector("#practice-result-count").textContent = route.practice
-      ? `${hits.length} 条相关判断 · 请核对适用条件` : "先看看这三条判断，或带着问题来找";
+      ? `${hits.length} 条相关判断 · 请核对适用条件` : `先看看这三条判断，或用关键词在全部 ${data.findings.length} 条中检索`;
     const results = document.querySelector("#practice-results");
     results.replaceChildren(...hits.map(({finding, matches}) => {
       const row = el("article", "", "practice-result"); const title = el("h4", "");
@@ -1468,7 +1470,7 @@
       if (route.practice && matches?.length) row.append(el("p", `匹配线索：${matches.join("、")}`, "practice-scope"));
       return row;
     }));
-    if (!hits.length) results.append(el("p", "没有找到相关判断。试试“重复候选”“版本更正”或“来源撤回”；当前只整理了这三条，空结果不代表这个问题没有研究。", "practice-empty"));
+    if (!hits.length) results.append(el("p", `没有找到相关判断。试试“重复候选”“版本更正”或“来源撤回”；当前整理了 ${data.findings.length} 条判断，也可用“全部内容”搜索；空结果不代表这个问题没有研究。`, "practice-empty"));
     document.querySelector("#practice-export").replaceChildren();
     if (hits.length) document.querySelector("#practice-export").append(briefActions(route.practice),
       el("p", "导出当前结果，连同署名、依据和边界。", "practice-scope"));

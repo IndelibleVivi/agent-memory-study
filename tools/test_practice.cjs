@@ -389,3 +389,28 @@ test('identical titles with different conditions keep separate candidate slots',
   assert.deepEqual(hits.map(hit => hit.finding.id), ['old-scope', 'new-scope']);
   assert.notEqual(hits[0].finding.when, hits[1].finding.when);
 });
+
+test('practice examples and bilingual learning queries discover their intended findings', () => {
+  const canonical = JSON.parse(readFileSync(CANONICAL, 'utf8'));
+  // The practice desk shows these exact chips as the example queries. This
+  // checks the current five still resolve, not a per-finding maintenance rule.
+  const samples = [
+    ['结果被重复条目占满', 'retrieval-candidate-competition'],
+    ['新版说明覆盖了旧版经验', 'revision-needs-scope'],
+    ['来源删除后，缓存还有影响吗', 'retraction-needs-recomputation'],
+    ['改对更正项却损伤保留范围', 'correction-needs-retention-checks'],
+    ['输出被挡住，参数算纠正了吗', 'output-guard-is-not-unlearning'],
+  ];
+  for (const [query, id] of samples) {
+    assert.ok(canonical.findings.some(finding => finding.id === id), `sample targets unknown finding ${id}`);
+    assert.equal(Practice.query(canonical, query)[0]?.finding.id, id, `${query} should discover ${id}`);
+  }
+  // The two new topics must be discoverable independently in both languages
+  // and must not collapse into the neighbouring retraction/recomputation one.
+  for (const query of ['纠正 增量 保留范围', 'replay retention']) {
+    assert.equal(Practice.query(canonical, query)[0]?.finding.id, 'correction-needs-retention-checks', query);
+  }
+  for (const query of ['输出约束 参数 遗忘', 'guard unlearning 来源遗忘']) {
+    assert.equal(Practice.query(canonical, query)[0]?.finding.id, 'output-guard-is-not-unlearning', query);
+  }
+});

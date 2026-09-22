@@ -71,3 +71,7 @@ python3 -B tools/test_reader_browser.py --output-dir /tmp/ams-browser-check
 共读支持两种明确的研究载体：旧 `editorial-synthesis-with-deterministic-demo` 在页面调用 revision engine；新 `editorial-synthesis-with-recorded-experiment` 通过 `resultsUrl` 指向已执行结果。Builder 读取该 JSON 并生成 `recordedResults`，保证 file mode、browser 与静态 HTML 使用同一结果。不要在 canonical 或 renderer 手抄实验数字。实验变化先改 runner / protocol / results，再重建页面投影。
 
 学习与纠正实验的标签、模型参数和逐例输出属于本站研究，不写入任何论文的 `reportedFindings`。生成标签下的准确率只表示对该定义的符合；新任务族名字、重复初始化和更多预测行都不自动增加独立任务或证明现实迁移。实践建议仍需适用条件与目标侧验证。
+
+该专题现在关联 `correction-needs-retention-checks` 与 `output-guard-is-not-unlearning`，分别提出纠正后的保留范围检查，以及输出约束、参数更新和来源遗忘的分层验收。两条判断直接引用既有实验的结果、协议或实现，保持 `proposed-transfer`；空 `applications` 明确表示尚无公开取用记录。添加解读和建议不修改历史 receipt，也不将目标侧检查写成已执行研究。
+
+实践入口的空查询仍展示 canonical 前三条，查询最多返回三条。新增判断通过示例查询、所属问题专题与全站搜索进入；维护时同步示例和数量文案，避免把“本次返回三条”写成“全站只有三条”。完整依据和限制在详情及 Markdown / JSON 导出中保持一致。
