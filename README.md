@@ -45,7 +45,7 @@
 
 共读可通过 `externalReadings` 连接官方文档、实现与论文线索，逐项保留类型、阅读范围、来源和限制；这些引用不增加 bibliographic materials / Zotero counts，也不自动提升原材料的阅读深度。
 
-第四个共读[概括之后，往事还记得准吗？](https://indeliblevivi.github.io/agent-memory-study/study/representation-and-use/)连接十三篇外部来源：四篇重点正文与附录／方法实读、一篇综述选读、八篇摘要核验。它将[原事件／概括／并存](research/representation-use-study/README.md)与[双语取用及跨语言纠正](research/multilingual-use-policy/README.md)分成两项研究协议。此类专题明确显示“研究方案尚未执行”，提供方法入口，不显示模拟实验控件或结果；当前没有新模型训练、个人效用评价或 VPS 运行结果。
+第四个共读[概括之后，往事还记得准吗？](https://indeliblevivi.github.io/agent-memory-study/study/representation-and-use/)连接十三篇外部来源：四篇重点正文与附录／方法实读、一篇综述选读、八篇摘要核验。它将[原事件／概括／并存](research/representation-use-study/README.md)与[双语取用及跨语言纠正](research/multilingual-use-policy/README.md)分成两项研究协议。此类专题明确显示“研究方案尚未执行”，提供方法入口，不显示模拟实验控件或结果；当前没有这两项研究的效用或答案质量实验结果。资源与输入可用性诊断不能替代这些结果。
 
 全部内容检索覆盖材料、共读（含跨源阅读）、问题专题与实践判断，支持空格分隔的跨字段多词匹配，并展示命中位置。实践入口另提供本地关键词匹配，接受带关键短语的中英文问题，最多返回三条相关判断；它不调用模型、embedding 或远端搜索，也不承诺理解任意自然语言。
 搜索与筛选也写入 query parameters；material、study、question、finding、practice、scenario / phase、thread、path 使用 browser history，back / forward 可以恢复对应视图。
