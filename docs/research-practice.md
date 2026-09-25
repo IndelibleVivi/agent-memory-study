@@ -68,7 +68,9 @@ python3 -B tools/test_reader_browser.py --output-dir /tmp/ams-browser-check
 
 「经验怎样长成判断习惯？」继续使用 question → study → research artifact 的引用结构。论文材料保持既有阅读深度；共读的 `externalReadings` 单独记录产品文档、独立实现和论文线索的实际阅读范围。外部引用不增加 Zotero 书目数。
 
-共读支持两种明确的研究载体：旧 `editorial-synthesis-with-deterministic-demo` 在页面调用 revision engine；新 `editorial-synthesis-with-recorded-experiment` 通过 `resultsUrl` 指向已执行结果。Builder 读取该 JSON 并生成 `recordedResults`，保证 file mode、browser 与静态 HTML 使用同一结果。不要在 canonical 或 renderer 手抄实验数字。实验变化先改 runner / protocol / results，再重建页面投影。
+共读支持三种明确的研究载体：`editorial-synthesis-with-deterministic-demo` 在页面调用 revision engine；`editorial-synthesis-with-recorded-experiment` 通过 `resultsUrl` 指向已执行结果。Builder 读取该 JSON 并生成 `recordedResults`，保证 file mode、browser 与静态 HTML 使用同一结果。不要在 canonical 或 renderer 手抄实验数字。实验变化先改 runner / protocol / results，再重建页面投影。
+
+`editorial-synthesis-with-proposed-experiment` 将跨源论述接到尚未执行的公开协议，只提供 `artifactUrl`，禁止结果及演示控件字段。页面用“下一项研究”入口与未执行状态，不展示空结果表。当前[表示与取用专题](../research/representation-use-study/README.md)连接十三篇外部来源与两项协议；各项的阅读范围由 canonical `externalReadings` 维护。只有实际执行并具备可检查的公开 artifacts 后，才按相应结果合同改成 recorded 类型；私人 inventory 和训练数据不进入这一转换。
 
 学习与纠正实验的标签、模型参数和逐例输出属于本站研究，不写入任何论文的 `reportedFindings`。生成标签下的准确率只表示对该定义的符合；新任务族名字、重复初始化和更多预测行都不自动增加独立任务或证明现实迁移。实践建议仍需适用条件与目标侧验证。
 

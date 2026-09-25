@@ -265,7 +265,7 @@ def validate_studies(data: dict[str, Any], material_ids: set[str]) -> None:
         if not re.fullmatch(r"[a-z0-9-]+", study["id"]) or study["id"] in seen:
             raise ValueError("invalid or duplicate study id")
         seen.add(study["id"])
-        if study["kind"] not in {"editorial-synthesis-with-deterministic-demo", "editorial-synthesis-with-recorded-experiment"}:
+        if study["kind"] not in {"editorial-synthesis-with-deterministic-demo", "editorial-synthesis-with-recorded-experiment", "editorial-synthesis-with-proposed-experiment"}:
             raise ValueError("unsupported study kind")
         artifact = PurePosixPath(study["artifactUrl"])
         if artifact.is_absolute() or ".." in artifact.parts or artifact.parts[0] != "research" or not (ROOT / artifact).is_file():
@@ -284,6 +284,10 @@ def validate_studies(data: dict[str, Any], material_ids: set[str]) -> None:
                 raise ValueError("external reading requires a public HTTPS source")
         if "recordedResults" in study:
             raise ValueError("recordedResults belongs to the generated browser projection")
+        if study["kind"] == "editorial-synthesis-with-proposed-experiment":
+            if any(key in study for key in ("resultsUrl", "scenarios", "policies")):
+                raise ValueError("proposed study cannot contain executed results or demo controls")
+            continue
         if study["kind"] == "editorial-synthesis-with-recorded-experiment":
             result = PurePosixPath(study.get("resultsUrl", ""))
             if result.is_absolute() or ".." in result.parts or result.parts[:1] != ("research",) or result.suffix != ".json" or not (ROOT / result).is_file():

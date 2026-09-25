@@ -69,6 +69,7 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 ## 共读专题
 
 - `studies` 提供公共跨源文章、材料引用、scenario 与明确的演示边界；不要用专题自动提升 material `noteDepth`。
+- `editorial-synthesis-with-proposed-experiment` 只承载跨源论述与未执行方案，`artifactUrl` 指向公开协议；不得包含 `resultsUrl`、`recordedResults`、`scenarios` 或 `policies`。页面标明未执行并提供方案入口，不制造可运行控件。私人语料、资源 inventory、标签与派生模型留在公开 repo 外。
 - `externalReadings` 允许共读引用官方文档、开源实现与论文线索，必须保留类型、阅读范围与限制；不自动变成 Zotero 书目。`editorial-synthesis-with-recorded-experiment` 的 `resultsUrl` 指向已执行 `research/` JSON；`recordedResults` 仅由 builder 投影，不进入 canonical。录制结果展示与 `revision-study.js` 的实时规则演示分开。
 - `research/decision-learning-study/study.py` 是学习实验唯一训练/评价实现；网页不重新训练。修改实验后用 `--check` 重算并运行该目录 unittest，更新公开方法/结果；自然语言、agent 收益与权重遗忘不能由结构化标签预测代替。
 - Jev 共读使用 `ams-jev-contract-results/1` 保存固定源码的给定判断对照；页面按 case 与 before/after 展示节点和原始 receipt，不重新运行源码。完整复跑需要外部 pinned checkout；本地 reader 入口只校验保存结果。不要把内存 graph/vector 的成员变化写成真实持久化、语义检索或 Jev inference。

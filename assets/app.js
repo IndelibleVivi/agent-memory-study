@@ -1207,8 +1207,13 @@
         createTextElement("p", study.subtitle, "study-subtitle"), createTextElement("p", study.intro));
       const note = createTextElement("div", "", "study-entry-note");
       const recordedLabel = study.recordedResults?.schema === "ams-jev-contract-results/1" ? "已执行源码实验" : "已执行学习实验";
-      note.append(createTextElement("p", study.kind === "editorial-synthesis-with-recorded-experiment" ? `${study.readings.length + (study.externalReadings || []).length} 份来源 / ${recordedLabel}` : `${study.readings.length} 份材料 / ${study.scenarios.length} 个可切换场景`),
-        createTextElement("p", "原文 · 串读 · 亲手比较 · 带走判断"),
+      const proposed = study.kind === "editorial-synthesis-with-proposed-experiment";
+      const sourceCount = study.readings.length + (study.externalReadings || []).length;
+      const studySummary = proposed ? `${sourceCount} 份来源 / 研究方案尚未执行`
+        : study.kind === "editorial-synthesis-with-recorded-experiment" ? `${sourceCount} 份来源 / ${recordedLabel}`
+        : `${study.readings.length} 份材料 / ${study.scenarios.length} 个可切换场景`;
+      note.append(createTextElement("p", studySummary),
+        createTextElement("p", proposed ? "原文 · 串读 · 下一项研究" : "原文 · 串读 · 亲手比较 · 带走判断"),
         createRouteLink("study", study.id, "进入共读专题 →", "study-enter"));
       entry.append(text, note);
       return entry;
@@ -1217,6 +1222,7 @@
 
   function renderStudy(study) {
     const el = createTextElement;
+    const proposed = study.kind === "editorial-synthesis-with-proposed-experiment";
     const fragment = document.createDocumentFragment();
     const back = createRouteLink("home", "", "← 回到公开书房", "back-link");
     const header = el("header", "", "study-heading");
@@ -1225,7 +1231,7 @@
       el("p", study.subtitle, "study-subtitle"), el("p", study.intro, "study-dek"),
       el("p", `${study.byline} · ${study.date} · 跨源编者论述`, "study-byline"));
     const jump = el("nav", "", "study-jump"); jump.setAttribute("aria-label", "共读专题目录");
-    for (const [id, text] of [["study-reading","一起读"],["study-lab","亲手比较"],["study-takeaways","带走判断"]]) {
+    for (const [id, text] of [["study-reading","一起读"],["study-lab",proposed ? "下一项研究" : "亲手比较"],["study-takeaways","带走判断"]]) {
       const link = el("a", text); link.href = `#${id}`; jump.append(link);
     }
     fragment.append(back, header, jump);
@@ -1253,8 +1259,9 @@
     });
     reading.append(essay, sources); fragment.append(reading);
 
-    const renderedLab = study.kind === "editorial-synthesis-with-recorded-experiment"
-      ? renderRecordedLab(study) : renderRevisionLab(study);
+    const renderedLab = proposed ? renderProposedLab(study)
+      : study.kind === "editorial-synthesis-with-recorded-experiment"
+        ? renderRecordedLab(study) : renderRevisionLab(study);
     fragment.append(renderedLab.element);
 
     const takeaways = el("section", "", "study-takeaways"); takeaways.id = "study-takeaways";
@@ -1272,6 +1279,16 @@
     }
     refs.studyView.replaceChildren(fragment);
     refs.routeStatus.textContent = study.title + "。" + renderedLab.status;
+  }
+
+  function renderProposedLab(study) {
+    const el = createTextElement;
+    const lab = el("section", "", "study-lab"); lab.id = "study-lab";
+    const protocol = el("a", "阅读研究方案与执行边界 →"); protocol.href = study.artifactUrl;
+    lab.append(el("p", "Proposed study / 研究方案尚未执行", "content-kind"),
+      el("h2", study.labTitle), el("p", study.labIntro),
+      el("p", study.boundary, "study-source-limit"), protocol);
+    return {element: lab, status: "研究方案尚未执行，无模型或实验结果。"};
   }
 
   function renderRevisionLab(study) {

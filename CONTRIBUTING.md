@@ -61,6 +61,8 @@ Project-specific 评价可以进入，但被评价的 project、版本与证据�
 
 共读既可引用 canonical materials，也可用可选 `externalReadings` 连接官方文档、实现和论文线索；每项提供 `label` / `kind` / `url` / `locator` / `takeaway` / `limit`。只阅读 README 就写 README 范围，不自动创建 `read` 材料或改 Zotero 书目。
 
+未执行的研究可使用 `editorial-synthesis-with-proposed-experiment`，以 `artifactUrl` 链接公开协议，明确研究单位、比较、控制、指标与执行缺口。该类型不接受结果或场景控件字段，页面显示“研究方案尚未执行”。论文发现、编者推论、已执行观察分别署明；真实私人语料及其派生数据不随方案公开。浏览器验收覆盖方案状态、协议链接、直接打开、刷新与历史导航。
+
 `editorial-synthesis-with-recorded-experiment` 用 `resultsUrl` 引用 `research/` 中已执行的 JSON；builder 将它生成到 browser payload 的 `recordedResults`，禁止在 canonical 复制结果。页面只展示 receipt，不训练或调用模型。学习实验必须公开输入、分组、反馈、拟合配置、参数、逐例预测、纠正作用域与限制；测试组新名称不等于新结构，标签预测不自动成为真实效用证据。
 
 Jev 源码实验使用 `ams-jev-contract-results/1`：公开固定源码身份、执行函数、替身边界、指定判断、逐 case 的 before/after 与实际断言。调用前后快照里的节点和向量成员不等于真实持久化或语义检索结果。页面允许选择 case、阶段、检查原始 receipt 并下载同一结果；不把它归类为模型学习实验。

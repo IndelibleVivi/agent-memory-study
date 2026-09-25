@@ -57,6 +57,20 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             mutation(next(s for s in invalid["studies"] if s["id"]==study["id"]))
             with self.assertRaises(ValueError): self.validate_copy(invalid)
 
+    def test_proposed_study_keeps_plan_separate_from_results_and_demo(self):
+        data = copy.deepcopy(self.data)
+        study = data["studies"][0]
+        study["kind"] = "editorial-synthesis-with-proposed-experiment"
+        study.pop("scenarios")
+        study.pop("policies")
+        self.validate_copy(data)
+        for field, value in (("resultsUrl", "research/decision-learning-study/results.json"),
+                             ("scenarios", []), ("policies", []), ("recordedResults", {})):
+            invalid = copy.deepcopy(data)
+            invalid["studies"][0][field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                self.validate_copy(invalid)
+
     def test_design_transfer_requires_attribution_basis_and_unrun_boundary(self):
         for field in ("byline", "date", "status", "when", "move", "check", "boundary", "basis"):
             invalid = copy.deepcopy(self.data)
@@ -106,7 +120,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260922-jev-control-1'),
+            source.count('assets/materials-data.js?v=20260925-representation-1'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260918-c2c-1', source)
@@ -114,7 +128,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_stylesheet_cache_key_tracks_mobile_evidence_fix(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/styles.css?v=20260922-jev-control-1'),
+            source.count('assets/styles.css?v=20260925-representation-1'),
             1,
         )
         self.assertNotIn('assets/styles.css?v=20260909-evidence-discovery-1', source)
@@ -2313,7 +2327,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         for asset in ("materials-data.js", "styles.css", "practice.js", "reading-search.js", "seo.js", "app.js"):
             with self.subTest(asset=asset):
                 self.assertEqual(
-                    source.count(f'assets/{asset}?v=20260922-jev-control-1'),
+                    source.count(f'assets/{asset}?v=20260925-representation-1'),
                     1,
                 )
 

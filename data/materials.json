@@ -5995,6 +5995,202 @@
         }
       ],
       "closing": "这里扩展的“记忆”包含经验如何被管理和投入使用。结构化语义判断提供一个可组合的部件；它的价值要由实际执行与后续任务继续回答。"
+    },
+    {
+      "id": "representation-and-use",
+      "number": "04",
+      "title": "概括之后，往事还记得准吗？",
+      "subtitle": "事件、概括与双语取用 · 从保存的形式走到当下的判断",
+      "byline": "Agent Memory Study editors",
+      "date": "2026-09-25",
+      "kind": "editorial-synthesis-with-proposed-experiment",
+      "intro": "一段经历可以留下原话、形成概括，也可以改变下次的选择。但这三种变化并不相同。沿着事件记忆、schema 和长上下文研究，我们追问：整合带来了什么，哪些细节仍应独立保存，进入输入的往事又为什么没有被正确使用？本专题连接十三篇来源，并提出两项尚未执行的研究。",
+      "sections": [
+        {
+          "title": "经历从哪里开始，又在哪里结束",
+          "text": "事件综述把连续经验的切分、跨事件关联和后来的提取放在同一幅图景中。边界可能暂时降低前一事件的可达性，也可能通过组织减少干扰；预测误差和情境变化提供不同解释，不能直接等同于一条聊天消息或一个文本窗口。对话研究因此需要分别判断连续分段和跨段事件归属，并保证在线判断只看当时已有的消息。"
+        },
+        {
+          "title": "概括省下来的，是哪些细节",
+          "text": "Bein 与 Niv 的 Perspective 用强化学习、潜在原因和降维理解 schema：从多次经历中形成可迁移的结构。它提供了研究假设，尚未直接证明某个记忆架构更好。我们可以据此问概括保留了哪些任务相关维度，却不能从概括没有日期、原词或人物，反推原事件已经被清除。"
+        },
+        {
+          "title": "能联系起来，也能分得清",
+          "text": "Liu 等人的 EEG 研究同时测跨事件推论与来源记忆。行为上，推论表现与来源辨识可以共同提高；神经相似性与细节表现的某些关联却呈相反方向。作者据此讨论整合与分离表征的并存。这使“只留摘要”不再是唯一候选，但并不证明 agent 同时放入两种表示就一定获益：重复、干扰和输入预算仍可能让并存更差。"
+        },
+        {
+          "title": "线索进来了，回答为什么仍然错",
+          "text": "Know but Don’t Tell 的 probe 从隐藏表示预测目标位置或文档 ID，表现可高于最终生成。这里可解码的是定位信息，不能说模型已经知道完整答案，更不能推成故意隐瞒。对 AMS 的直接启发是分开记录：证据有没有保留、有没有进入候选、有没有交给模型、答案是否正确使用。每一段都有可能失败。"
+        },
+        {
+          "title": "多份证据之间，谁先被听见",
+          "text": "ContextConflict 研究上下文内部的显性和隐式冲突，观察到偏向较早证据的现象，并分析内部表示与输出归因。它与参数知识冲突研究处理不同的问题。首条位置优势不能写成任何重排都无效；证据贡献均衡也不等于正确，真实来源的可靠性本来就可能不等。我们需要同时改变排列、有效时间和来源条件，再判断系统究竟跟随了什么。"
+        },
+        {
+          "title": "把互补视角留在各自的尺度",
+          "text": "人的 EEG 关联、schema 理论和模型 probing 并非同一种实验，不能拼成一个统一机制的证明。它们共同让问题更细：概括是否有助迁移，原事件是否支持来源辨识，额外表示是否真的被消费？事件综述作为背景；ICL、task vectors、Lost in the Middle、真实文档冲突和 LaRA 提供后续机制或控制线索；engram、预测误差与巩固研究目前只作摘要范围的候选。下方逐项保留阅读深度。"
+        },
+        {
+          "title": "同一句记忆，不同情境下可以有不同用途",
+          "text": "设一条原创例子是“开会时希望简短，周末喜欢慢慢聊”。当前任务、接收者和用途变了，合适的取用也会变。做背景有帮助，不一定意味着应该主动提及；没有足够前文也不等于没有价值。评分对象因此是“这条记忆在此刻增加了什么”，不是永久的有用／噪音标签。已经选入的内容还会改变另一条的增量贡献。"
+        },
+        {
+          "title": "跨语言稳定，也要对条件变化敏感",
+          "text": "只把中文改成英文，意义和情境不变时，判断应尽量一致；只改变否定、人物、时间或范围时，又可能必须改变。混写需要单独核对，不能由多语言预训练或中英字符共现保证。中文反馈后的纠正也要同时测该变、该保留和邻近边界，并把同一事件的翻译、改写与窗口留在同一数据分组。"
+        },
+        {
+          "title": "从已经做过的实验，走到尚未做的实验",
+          "text": "本站的小分类器已证明给定结构化标签可以训练，也显示局部纠正会波及应保留部分；它没有证明自然语言判断或个人效用。Jev 源码对照则记录给定判断之后的节点变化，没有评价控制器本身。下一步把公开原创诊断、真实材料的可用性检查和带情境的人类反馈分开：前两层可发现输入问题，第三层才支持有范围的效用学习。激活次数与未曝光记录都不能代替反馈。"
+        }
+      ],
+      "readings": [
+        {
+          "materialId": "jev-mem-system-one-control",
+          "label": "Jev-Mem：概括怎样与原记录并存",
+          "locator": "AMS 既有共读与给定判断的源码对照；本轮未重读全文",
+          "takeaway": "原节点、派生摘要、控制判断与实际使用分别留证据。",
+          "limit": "保存并存不证明推论或来源辨识获益；给定判断不是模型 inference。"
+        },
+        {
+          "materialId": "continual-learning-experience-reuse",
+          "label": "Experience reuse：先确认候选有没有到场",
+          "locator": "AMS 既有候选竞争研究与精读；本轮未重读全文",
+          "takeaway": "先冻结候选评价取用，再接回检索，区分检索遗漏与评分错误。",
+          "limit": "SQLite BM25 结果不代表双语语义检索或新 scorer 的表现。"
+        },
+        {
+          "materialId": "coala-cognitive-architecture",
+          "label": "CoALA：表示、读取和行动分别在哪里",
+          "locator": "AMS 既有材料札记；本轮未重读全文",
+          "takeaway": "以组件责任组织观察，避免把存储格式、学习机制和行动收益当成同一个能力。",
+          "limit": "架构分类只帮助定义问题，不提供本方案有效性的实验证据。"
+        }
+      ],
+      "externalReadings": [
+        {
+          "label": "Event perception and event memory in real-world experience",
+          "kind": "综述 · 选读正文",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12290826/",
+          "locator": "Bailey & Smith, 2024；Event perception structures event memory、Prior knowledge；图注；2026-09-25",
+          "takeaway": "事件切分、边界后的提取和跨事件比较各有机制；先验知识对分段的证据并不一致。",
+          "limit": "选读理论与先验知识段落；老化、临床部分未系统阅读，图未视觉核对；不是 agent 实验。"
+        },
+        {
+          "label": "Schemas, reinforcement learning and the medial prefrontal cortex",
+          "kind": "Perspective · 正文实读",
+          "url": "https://doi.org/10.1038/s41583-024-00893-z",
+          "locator": "Bein & Niv, 2025；期刊 pp.141–152、Box 1–5、Fig.1–2 图注；作者实验室 PDF",
+          "takeaway": "降维、层级和潜在原因提供理解 schema 学习与使用的理论框架。",
+          "limit": "理论综合，无本文新实验；关键神经机制仍待直接检验；参考文献未逐条读，图未视觉核对。"
+        },
+        {
+          "label": "Episodic events are flexibly encoded in both integrated and separated neural representations",
+          "kind": "实证论文 · 正文实读",
+          "url": "https://www.nature.com/articles/s41467-026-68473-6",
+          "locator": "Liu, Johansson & Bramão, 2026；Introduction / Results / Discussion / Methods，Fig.3、5–6 图注",
+          "takeaway": "同一事件的整合与分离指标可共存；推论与来源记忆需要分别观察。",
+          "limit": "36 人 EEG 研究；行为与神经关联不可混用；补充材料未读，图未视觉核对，不是 agent 因果证据。"
+        },
+        {
+          "label": "Insights into LLM Long-Context Failures: When Transformers Know but Don’t Tell",
+          "kind": "机制研究 · 正文与附录实读",
+          "url": "https://arxiv.org/html/2406.14673v2",
+          "locator": "Lu et al., v2；§§1–6、Appendix A–E；Fig.2–4 图注；2026-09-25 核版本",
+          "takeaway": "目标位置可被线性解码，仍可能没有形成正确输出。",
+          "limit": "probe 测位置／ID，不等于答案知识；关联未定位因果机制，图未视觉核对；没有本站复跑。"
+        },
+        {
+          "label": "Large Language Models in Resolving Contextual Knowledge Conflicts",
+          "kind": "机制研究 · 正文与附录实读",
+          "url": "https://arxiv.org/html/2609.03148v1",
+          "locator": "Yang et al., v1；§§1–6、Limitations、Appendix A–E；Fig.2–4 与 D.8；2026-09-25 核版本",
+          "takeaway": "分开上下文内部的冲突类型，测量位置偏好与证据使用。",
+          "limit": "Balance 的等贡献假设未必适合可靠性不等的来源；白盒 steering 有规模与成本限制，图未视觉核对；没有本站复跑。"
+        },
+        {
+          "label": "ICLR: In-Context Learning of Representations",
+          "kind": "机制线索 · 摘要核验",
+          "url": "https://arxiv.org/abs/2501.00070v2",
+          "locator": "Park et al.；v2，2025-05-02；标题、版本与摘要",
+          "takeaway": "把上下文对表示的影响列为后续机制问题。",
+          "limit": "未读正文／方法，不能据此认定 AMS 的 embedding 或 head 已学会情境关系。"
+        },
+        {
+          "label": "Emergence and Effectiveness of Task Vectors in In-Context Learning: An Encoder–Decoder Perspective",
+          "kind": "机制线索 · 摘要核验",
+          "url": "https://proceedings.mlr.press/v267/han25h.html",
+          "locator": "Han et al., ICML 2025；PMLR metadata 与摘要",
+          "takeaway": "把 task vector 的形成与有效使用分开作为后续阅读问题。",
+          "limit": "本轮未读正文，不能用摘要证明持久化学习或私人记忆压缩有效。"
+        },
+        {
+          "label": "Lost in the Middle: How Language Models Use Long Contexts",
+          "kind": "对照线索 · 摘要核验",
+          "url": "https://aclanthology.org/2024.tacl-1.9/",
+          "locator": "Liu et al., TACL 2024；ACL metadata 与摘要",
+          "takeaway": "位置应成为表示和取用实验的成组控制。",
+          "limit": "未在此轮读正文／复跑；不能假设所有当前模型具有同样的位置曲线。"
+        },
+        {
+          "label": "Studying Large Language Model Behaviors Under Context-Memory Conflicts With Real Documents",
+          "kind": "冲突线索 · 摘要核验",
+          "url": "https://arxiv.org/abs/2404.16032v2",
+          "locator": "Kortukov et al., v2，2024-10-08；metadata 与摘要",
+          "takeaway": "区分参数知识与外部文档冲突，注意文档中的错误答案提及。",
+          "limit": "本轮未读正文；回答随上下文变化不等于参数更新，也不同于 ContextConflict 的上下文内部冲突。"
+        },
+        {
+          "label": "LaRA: Benchmarking Retrieval-Augmented Generation and Long-Context LLMs—No Silver Bullet for LC or RAG",
+          "kind": "预算对照线索 · 摘要核验",
+          "url": "https://arxiv.org/abs/2502.09977v2",
+          "locator": "Li et al., v2，2025-03-05；metadata 与摘要",
+          "takeaway": "将任务、文本类型与预算作为比较检索和长上下文的条件。",
+          "limit": "本轮未读正文；摘要不支持某一种方式在 AMS 上恒胜。"
+        },
+        {
+          "label": "Engram mechanisms of memory linking and identity",
+          "kind": "候选综述 · 摘要核验",
+          "url": "https://www.nature.com/articles/s41583-024-00814-0",
+          "locator": "Choucry, Nomoto & Inokuchi, 2024；期刊／PubMed metadata 与摘要",
+          "takeaway": "后续关注记忆关联与单次经历身份如何同时维持。",
+          "limit": "未读全文；已发现机构 PDF 线索但本轮未成功取得，不作机制结论。"
+        },
+        {
+          "label": "Prediction error and event segmentation in episodic memory",
+          "kind": "候选综述 · 摘要核验",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/38184184/",
+          "locator": "Nolden et al., 2024；PubMed metadata 与摘要",
+          "takeaway": "将预测误差、分段与情景记忆关系保留为后续阅读线索。",
+          "limit": "未读全文；不能把惊讶分数直接等同于事件边界或记忆价值。"
+        },
+        {
+          "label": "Systems consolidation reorganizes hippocampal engram circuitry",
+          "kind": "候选实证论文 · 摘要核验",
+          "url": "https://www.nature.com/articles/s41586-025-08993-1",
+          "locator": "Ko et al., 2025；publisher metadata 与摘要",
+          "takeaway": "后续区分巩固中的组织变化、细节和概括。",
+          "limit": "未读全文；动物神经回路的摘要不能直接支持软件删除、摘要替换或遗忘效果。"
+        }
+      ],
+      "labTitle": "让两项研究各自回答一个问题",
+      "labIntro": "表示研究比较原事件、仅概括与二者并存，测来源、适用性和跨事件推论；取用研究比较冻结多语言表示上的简单头、反馈案例和相似度基线，测条件敏感性与跨语言纠正。方法、分组和失败判据已写入协议；模型、材料、标签与运行预算尚未冻结。",
+      "boundary": "研究方案尚未执行。没有本专题模型预测、训练分数、个人效用标签或资源实测。页面上的例子是编者原创说明；四篇重点来源读到方法／结果／限制，其余来源保留选读或摘要范围，均不是本站复现。",
+      "artifactUrl": "research/representation-use-study/README.md",
+      "takeaways": [
+        {
+          "title": "留下原词和可追溯关系",
+          "text": "翻译、语义说明与摘要是派生视图。低分不自动授权删除；保留原文也仍需检查它能否在合适情境被找到和使用。"
+        },
+        {
+          "title": "同时检查不变与该变",
+          "text": "语言版本需要意义核对，条件变化需要有范围的反馈。只看平均分或语言一致性，会掩盖无差别输出与纠正扩散。"
+        },
+        {
+          "title": "允许并存和训练都没有帮助",
+          "text": "在相同信息与实际 token 预算下保留负结果。公开诊断不代表真实偏好；真实效用和最终答案收益仍需独立证据。"
+        }
+      ],
+      "closing": "记忆不只在“留下多少”里，也在“此刻如何读它”里。这里先把可检验的问题写清楚：保留经历的身份，让概括承担它能承担的工作，再用有情境的反馈检验每一次取用。"
     }
   ],
   "findings": [
@@ -6310,7 +6506,8 @@
         "cache-to-cache"
       ],
       "studyIds": [
-        "after-a-correction"
+        "after-a-correction",
+        "representation-and-use"
       ],
       "findingIds": [
         "retrieval-candidate-competition",
@@ -6375,7 +6572,8 @@
       ],
       "studyIds": [
         "experience-becomes-policy",
-        "who-controls-memory"
+        "who-controls-memory",
+        "representation-and-use"
       ],
       "findingIds": [
         "correction-needs-retention-checks",

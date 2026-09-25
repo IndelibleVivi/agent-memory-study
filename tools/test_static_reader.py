@@ -109,6 +109,15 @@ def main():
                                 assert json.loads(Path(event.value.path()).read_text()) == jev
                                 assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
                                 checks.append({'width':width,'jev_source_history_reload_export':True})
+                                page.goto(base+'study/representation-and-use/',wait_until='load')
+                                expect(page.locator('#study-lab')).to_contain_text('研究方案尚未执行')
+                                expect(page.locator('#study-lab select, #study-lab button, #study-lab table')).to_have_count(0)
+                                protocol_url = page.locator('#study-lab a').evaluate('(a) => a.href')
+                                assert context.request.get(protocol_url).status == 200
+                                page.reload()
+                                expect(page.locator('#study-title')).to_have_text('概括之后，往事还记得准吗？')
+                                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
+                                checks.append({'width':width,'proposed_study_status_protocol_reload':True})
                                 page.goto(base+'question/experience-to-capability/',wait_until='load')
                                 page.locator('#inquiry-practice a[data-route=finding]').first.click()
                                 expect(page.locator('#inquiry-title')).to_have_text(data['findings'][0]['title'])
