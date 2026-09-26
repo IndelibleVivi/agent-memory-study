@@ -126,6 +126,11 @@ semantic attribution of a sentence, so editorial source review remains required.
 A `worked` entry must have an attributed `public-test` artifact. Moving an existing
 result between sections does not change its reading depth or historical receipts.
 
+The reader verification entry also checks the offline casebook's source/context and
+review-sidecar contracts with original synthetic fixtures. Private casebooks, generated
+review HTML and labels stay outside the repository. This is contract validation, not
+a multilingual scorer or answerer experiment; the study remains proposed-not-run.
+
 Reader changes should pass:
 
 ```bash
@@ -133,6 +138,7 @@ python3 -B tools/verify_reader.py
 python3 -m pip install -r tools/browser-requirements.txt
 python3 -m playwright install chromium
 python3 -B tools/test_reader_browser.py --output-dir dist/browser-check
+python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebook
 ```
 
 The first command uses only local public/synthetic data, including actual fitting of a
@@ -157,6 +163,11 @@ The command does not rerun all external-source audits or any paper benchmark. Th
 this checkout under `/agent-memory-study/` and checks real browser navigation,
 search, question/finding links, practice query and Markdown/JSON downloads, shared scenario state, reload and back/forward on desktop and mobile
 viewports. All third-party browser requests, including analytics, are blocked.
+
+The casebook browser check uses only original synthetic fixtures and opens generated
+HTML through `file://`. It checks editing, explicit confirmation, invalidation after
+edits, JSON download/reload, filters, text escaping, keyboard use and three viewport
+sizes. It does not read private material or certify human acceptance of labels.
 
 On hosts that prohibit browser navigation, `--offline-render` is an explicitly
 labelled DOM/interaction fallback. Its receipt lists HTTP, reload and history as

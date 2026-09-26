@@ -47,6 +47,8 @@
 
 第四个共读[概括之后，往事还记得准吗？](https://indeliblevivi.github.io/agent-memory-study/study/representation-and-use/)连接十三篇外部来源：四篇重点正文与附录／方法实读、一篇综述选读、八篇摘要核验。它将[原事件／概括／并存](research/representation-use-study/README.md)与[双语取用及跨语言纠正](research/multilingual-use-policy/README.md)分成两项研究协议。此类专题明确显示“研究方案尚未执行”，提供方法入口，不显示模拟实验控件或结果；当前没有这两项研究的效用或答案质量实验结果。资源与输入可用性诊断不能替代这些结果。
 
+双语研究提供独立的[离线案例校准工具](research/multilingual-use-policy/README.md#离线案例校准工具)：用 Python 标准库检查来源窗口与回顾性情境，生成本地 HTML 并导出带审阅状态的 JSON。它不接入 reading room 的在线标注，也不训练模型；私人输入、生成页面与标注文件由使用者在 repo 外保存。
+
 全部内容检索覆盖材料、共读（含跨源阅读）、问题专题与实践判断，支持空格分隔的跨字段多词匹配，并展示命中位置。实践入口另提供本地关键词匹配，接受带关键短语的中英文问题，最多返回三条相关判断；它不调用模型、embedding 或远端搜索，也不承诺理解任意自然语言。
 搜索与筛选也写入 query parameters；material、study、question、finding、practice、scenario / phase、thread、path 使用 browser history，back / forward 可以恢复对应视图。
 
@@ -293,9 +295,11 @@ Bundled papers keep their file-level Creative Commons licenses; linked works rem
 
 `python3 -B tools/verify_reader.py` 校验 canonical、证据归属绑定、问题/判断引用、全站搜索、实践查询/导出与 generated payload，
 并复跑五组无模型的确定性研究及一组 stdlib 小型分类器学习/纠正实验（含真实参数拟合），另检查 AgeMem、C2C 与 Jev 已保存 receipt 的输入绑定和内部一致性；
+同时用原创合成案例检查离线 casebook 的来源、情境与 review 合同；这不等于运行双语 scorer 或确认真实材料的效用标签。
 Jev 的完整源码复跑需要外部 pinned checkout，命令与替身范围见[实验说明](research/jev-memory-contract-study/README.md)；reader 入口只验证其保存 receipt。
 C2C receipt 校验不加载权重或执行 inference，fresh run 见[实验说明](research/c2c-cache-retraction-study/README.md)。
 跨模型 KV runner 需要 PyTorch 和固定外部源码，使用[独立验收命令](research/kv-prefill-transfer/README.md#先验收再使用真实权重)，不包含在该本地验证入口内。
 AgeMem 官方模块的 fresh run 需要外部固定 checkout，见[复跑说明](research/agemem-reward-observation-audit/README.md#复跑)。真实浏览器测试与受限环境的验证边界见
 [贡献指南](CONTRIBUTING.md#evidence-ownership-and-reader-checks)。
+离线校准页另以 `python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebook` 检查合成材料的标注、确认、下载与重载；沿用上述 Playwright 环境，CI 也运行此检查。
 Reading Room validation 检查源码与生成站点；PR 只生成可检查的 artifact，main 在全部检查通过后发布同一 artifact。仓库 Pages 需启用 GitHub Actions，首次切换与回退见 [网站说明](docs/website.md)。

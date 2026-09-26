@@ -35,6 +35,8 @@ jobs:
           python3 -m playwright install --with-deps chromium
       - name: Check real navigation on the Pages subpath
         run: python3 -B tools/test_reader_browser.py --output-dir dist/browser-check
+      - name: Check offline casebook review and downloads with synthetic data
+        run: python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebook
       - name: Keep browser evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

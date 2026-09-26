@@ -23,6 +23,8 @@ def main():
             raise SystemExit('Generated browser data drift: run python3 tools/build.py and commit the projection.')
     run([python, '-B', '-m', 'unittest', 'tools.test_build', 'tools.test_evidence',
          'tools.test_practice_data'])
+    run([python, '-B', '-m', 'unittest', 'discover', '-s',
+         'research/multilingual-use-policy', '-p', 'test_casebook.py'])
     run(['node', '--test', 'tools/test_revision_study.cjs', 'tools/test_reading_search.cjs',
          'tools/test_practice.cjs', 'tools/test_seo.cjs'])
     for study, runner in [('trustmem-transition-study', 'audit.py'),
