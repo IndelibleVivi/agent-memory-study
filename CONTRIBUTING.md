@@ -165,7 +165,7 @@ search, question/finding links, practice query and Markdown/JSON downloads, shar
 viewports. All third-party browser requests, including analytics, are blocked.
 
 The casebook browser check uses only original synthetic fixtures and opens generated
-HTML through `file://`. It checks editing, explicit confirmation, invalidation after
+HTML directly as a local file. It checks editing, explicit confirmation, invalidation after
 edits, JSON download/reload, filters, text escaping, keyboard use and three viewport
 sizes. It does not read private material or certify human acceptance of labels.
 
