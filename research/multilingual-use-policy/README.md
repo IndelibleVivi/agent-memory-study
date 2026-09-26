@@ -43,8 +43,8 @@ python3 -B research/multilingual-use-policy/casebook.py check-reviews   --casebo
 python3 -B -m unittest discover -s research/multilingual-use-policy -p 'test_*.py'
 ```
 
-方括号表示可选参数，不是 shell 命令的一部分。浏览器验收使用仓库既有
-[`tools/browser-requirements.txt`](../../tools/browser-requirements.txt) 与 Chromium：
+以上命令在仓库根目录运行；方括号表示可选参数，不是 shell 命令的一部分。浏览器验收使用仓库既有
+`tools/browser-requirements.txt` 与 Chromium（`tools/` 由 Git checkout 提供，不随静态站发布）：
 
 ```bash
 python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebook
