@@ -511,7 +511,7 @@ def _validate_map(room: dict[str, Any], study_ids: set[str], question_ids: set[s
             _slug(entry.get("id"), f"{where}.id")
             for key in ("title", "intro"):
                 _text(entry.get(key), f"{where}.{key}")
-            for key in ("english", "question", "entry"):
+            for key in ("english", "question", "entry", "notation"):
                 if key in entry:
                     _text(entry[key], f"{where}.{key}")
             for key in REFERENCE_FIELDS:
@@ -521,10 +521,12 @@ def _validate_map(room: dict[str, Any], study_ids: set[str], question_ids: set[s
                     _ref_list(entry[key], known, f"{where}.{key}")
     for index, start in enumerate(_list(room["starts"], "room.starts")):
         where = f"room.starts[{index}]"
-        _exact(start, {"studyId", "kicker", "prompt"}, where)
+        _exact(start, {"studyId", "kicker", "prompt"} | ({"notation"} if "notation" in start else set()), where)
         _ref_list([start["studyId"]], study_ids, f"{where}.studyId")
         _text(start["kicker"], f"{where}.kicker")
         _text(start["prompt"], f"{where}.prompt")
+        if "notation" in start:
+            _text(start["notation"], f"{where}.notation")
     for index, change in enumerate(_list(room["changes"], "room.changes")):
         where = f"room.changes[{index}]"
         _exact(change, {"date", "title", "text", "studyId"}, where)

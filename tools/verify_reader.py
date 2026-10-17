@@ -22,7 +22,7 @@ def main():
          'tools.test_practice_data'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s',
          'research/multilingual-use-policy', '-p', 'test_casebook.py'])
-    run(['node', '--test', 'tools/test_study_packets.cjs', 'tools/test_study_desk.cjs', 'tools/test_revision_study.cjs',
+    run(['node', '--test', 'tools/test_research_sculpture.cjs', 'tools/test_study_packets.cjs', 'tools/test_study_desk.cjs', 'tools/test_revision_study.cjs',
          'tools/test_reading_search.cjs', 'tools/test_practice.cjs', 'tools/test_seo.cjs'])
     for study, runner in [('trustmem-transition-study', 'audit.py'),
                           ('experience-reuse-retrieval-study', 'study.py'),

@@ -30,7 +30,7 @@ python3 -B tools/seo_build.py
 python3 -B tools/test_static_reader.py
 ```
 
-构建只请求本机 HTTP，捕获 renderer 生成的正文与 metadata，然后删除非活动／hidden 内容，避免文章初始 HTML 混入首页和另一份来源栏。`reader-shell.js` 从原始 `index.html` 派生，用于开启 JS 时恢复完整交互 shell；它不是第二份手工维护的文章模板。静态捕获里的 3D canvas 恢复为 SVG fallback，启用 JS 后才初始化 WebGL，保证无 JS 时也有完整封面。
+构建只请求本机 HTTP，捕获 renderer 生成的正文与 metadata，然后删除非活动／hidden 内容，避免文章初始 HTML 混入首页和另一份来源栏。`reader-shell.js` 从原始 `index.html` 派生，用于开启 JS 时恢复完整交互 shell；它不是第二份手工维护的文章模板。改动 reader assets 或 generated data 时更新 `index.html` 的 cache version；派生 shell 使用 app 相同的 version，避免旧 shell 与新 renderer 混用。静态捕获里的 3D canvas 恢复为 SVG fallback，启用 JS 后才初始化 WebGL，保证无 JS 时也有完整封面。
 
 首页和每份 material / study / question / finding 对应真实的 `index.html`。当前 27 份来源、12 篇文章、2 个问题、5 条判断共生成 47 个阅读页面，另有 `404.html`；总数按 canonical 枚举。详情目录还生成 `index.md` / `index.json`，通过页面研究包入口读取。构建期、CLI、browser 的包使用同一实现；不嵌入引用的论文全文或重复保存实验 receipt。
 
@@ -50,7 +50,11 @@ python3 -B tools/test_static_reader.py
 
 ## 动态与私人接续
 
-首屏 `continuity-sculpture.js` 是无外部依赖的 WebGL 曲面，表达延续与改变，不编码数据。Reduced-motion 默认静止，也可主动播放／暂停；离开视口或标签页停止 animation frame。WebGL 缺失或 context lost 时呈现 SVG。它不妨碍正文、搜索或路由。
+首屏 `continuity-sculpture.js` 把公开文章、来源、问题与实践判断投影成三维层片。叠置、展开、关联是同一批对象的三种布局；连线来自显式 ID 引用与已编译正文的内部链接，并合并重复关系，不推断语义相似度或支持强度。点击层片或文字选项可检查对象，打开对应正文；拖动及方向键旋转，Enter 选择下一片。视图与选取只在当前页面内存，不改变研究数据或写访客记录。
+
+WebGL 无额外依赖；reduced-motion 默认静止，仍可手动操作和切换视图，也可主动旋转／暂停。离屏或标签页隐藏时停止 animation frame。WebGL 缺失或 context lost 时呈现 SVG，保留文字选取与正文入口，停用无作用的三维控制。静态捕获移除这些 JS 操作面和层片标签，保留可读封面；启用 JS 后恢复同一 shell。`tools/test_research_sculpture.cjs` 验证身份、显式关联与布局，browser tests 验证拖动、键盘、对象选取与阅读路由。
+
+排版中的集合、索引映射和状态更新注记由 `study/map.json` 的可选 `notation` 提供，依据相连正文；它们不是新实验结果。大字轮廓随视图变化，手机重排控制与对象说明，正文阅读顺序保持完整。
 
 接续笔记只存在页面内存及主动下载的文件，不上传或写入 URL / localStorage。导入最多 128 KB，恢复已知对象、受支持的 anchor 与演算，文本不执行。刷新前未下载的修改会丢失。公开研究包与个人接续是两个独立出口，不把个人文字带入共享包。
 

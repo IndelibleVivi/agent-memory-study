@@ -59,6 +59,11 @@ def main():
                             if not enabled:
                                 if canonical.rstrip('/').endswith('agent-memory-study'):
                                     expect(page.locator('.sculpture-fallback')).to_be_visible()
+                                    expect(page.locator('[data-js-control]')).to_have_count(0)
+                                    expect(page.locator('.sculpture-labels')).to_have_count(0)
+                                    app_version=urlparse(page.locator('script[src*="/app.js"]').get_attribute('src')).query
+                                    shell_version=urlparse(page.locator('script[src*="/reader-shell.js"]').get_attribute('src')).query
+                                    assert app_version and app_version == shell_version
                                 else:
                                     expect(page.locator('#atlas-view')).to_have_count(0)
                                     expect(page.locator('.packet-actions a')).to_have_count(2)

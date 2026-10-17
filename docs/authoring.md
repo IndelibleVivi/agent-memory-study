@@ -47,7 +47,7 @@ python3 tools/author.py new-study a-question-about-retrieval \
 可选字段应有实际用途才加：
 
 - `readings` 引用已有 source ID，并给出 locator、takeaway、limit；`externalReadings` 记录官方文档、实现或论文线索的实际阅读范围。
-- `domains`、`directionIds` 引用地图已有 ID；领域与方向可以交叉，不表示掌握度。首页分组的阅读入口由 `map.json` 的显式对象列表维护。
+- `domains`、`directionIds` 引用地图已有 ID；领域与方向可以交叉，不表示掌握度。首页分组的阅读入口由 `map.json` 的显式对象列表维护；可选 `notation` 只放正文已有依据的简短公式／技术表述，不制造测量结果。
 - `continuation` 保存当前下一问、为什么值得继续及直接的 source / study 链接；`changes` 记录具体解释如何改变，不冒充个人学习历史。
 - `takeaways`、`boundary`、`closing` 按内容需要填写，缺省不制造空栏目。
 

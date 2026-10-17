@@ -5,6 +5,7 @@ import argparse
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -42,7 +43,8 @@ def build(output: Path, executable: str | None = None):
     source = (ROOT / 'index.html').read_text()
     shell = source.split('<main id="main-content" tabindex="-1">', 1)[1].split('</main>', 1)[0]
     shell_script = 'window.AMS_READER_SHELL = ' + json.dumps(shell, ensure_ascii=False).replace('</', '<\\/') + ';\n'
-    source = source.replace('<script src="assets/app.js', '<script src="assets/reader-shell.js"></script>\n    <script src="assets/app.js')
+    version = re.search(r'<script src="assets/app\.js([^"]*)"', source).group(1)
+    source = source.replace('<script src="assets/app.js', f'<script src="assets/reader-shell.js{version}"></script>\n    <script src="assets/app.js')
     source = source.replace('<html lang="zh-CN">', '<html lang="zh-CN" data-static-reader="true">')
     source = source.replace('<head>', f'<head>\n    <base href="{BASE_PATH}">', 1)
     with tempfile.TemporaryDirectory(prefix='ams-static-') as temporary:
@@ -85,8 +87,12 @@ def build(output: Path, executable: str | None = None):
                             const snapshot = document.documentElement.cloneNode(true);
                             snapshot.querySelectorAll('[hidden]').forEach(node => node.remove());
                             const sculpture = snapshot.querySelector('#continuity-sculpture');
-                            if (sculpture) { sculpture.dataset.renderer = 'fallback'; sculpture.dataset.motion = 'still'; }
-                            snapshot.querySelectorAll('.sculpture-toggle, .private-continuation').forEach(node => node.remove());
+                            if (sculpture) {
+                                sculpture.dataset.renderer = 'fallback'; sculpture.dataset.motion = 'still';
+                                sculpture.removeAttribute('tabindex'); sculpture.removeAttribute('aria-describedby');
+                                sculpture.setAttribute('role', 'img'); sculpture.setAttribute('aria-label', '公开研究的层叠视图');
+                            }
+                            snapshot.querySelectorAll('[data-js-control], .sculpture-labels, .private-continuation').forEach(node => node.remove());
                             return '<!doctype html>\\n' + snapshot.outerHTML;
                         }""")
                     if errors:

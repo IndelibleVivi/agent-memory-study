@@ -187,6 +187,49 @@ def main():
                                     expect(stage).to_have_attribute('data-motion','running')
                                     page.locator('.sculpture-toggle').click()
                                     expect(stage).to_have_attribute('data-motion','still')
+                                before_pose = stage.get_attribute('data-pose')
+                                stage.focus(); stage.press('ArrowRight')
+                                assert before_pose != stage.get_attribute('data-pose'), 'Keyboard rotation did not reach the geometry'
+                                page.locator('[data-sculpture-view="spread"]').click()
+                                expect(stage).to_have_attribute('data-view', 'spread')
+                                if width == 1440:
+                                    point = page.evaluate('''() => {
+                                        const api=ResearchSculpture, model=api.graph(READING_ROOM);
+                                        const stage=document.querySelector('#continuity-sculpture'), box=stage.getBoundingClientRect();
+                                        const [yaw,pitch]=stage.dataset.pose.split(',').map(Number);
+                                        const index=15, pose=api.layout(model,'spread',0)[index];
+                                        const xy=api.project(pose,yaw,pitch,box.width,box.height);
+                                        return {x:box.x+xy[0],y:box.y+xy[1],key:model.nodes[index].key};
+                                    }''')
+                                    page.mouse.click(point['x'],point['y'])
+                                    expect(stage).to_have_attribute('data-selection',point['key'])
+                                    box=stage.bounding_box(); before_pose=stage.get_attribute('data-pose')
+                                    page.mouse.move(box['x']+box['width']/2,box['y']+box['height']/2)
+                                    page.mouse.down(); page.mouse.move(box['x']+box['width']/2+80,box['y']+box['height']/2-30,steps=8); page.mouse.up()
+                                    assert before_pose != stage.get_attribute('data-pose'), 'Pointer drag did not rotate the model'
+                                page.locator('[data-sculpture-view="links"]').click()
+                                expect(stage).to_have_attribute('data-view','links')
+                                if width == 1440:
+                                    point = page.evaluate('''() => {
+                                        const api=ResearchSculpture, model=api.graph(READING_ROOM);
+                                        const stage=document.querySelector('#continuity-sculpture'), box=stage.getBoundingClientRect();
+                                        const selected=model.nodes.findIndex(node=>node.key===stage.dataset.selection);
+                                        const [yaw,pitch]=stage.dataset.pose.split(',').map(Number);
+                                        const xy=api.project(api.layout(model,'links',selected)[selected],yaw,pitch,box.width,box.height);
+                                        return {x:box.x+xy[0],y:box.y+xy[1]};
+                                    }''')
+                                    page.evaluate("document.querySelector('#continuity-sculpture canvas').getContext('webgl').getExtension('WEBGL_lose_context').loseContext()")
+                                    expect(stage).to_have_attribute('data-renderer','fallback')
+                                    page.mouse.move(point['x'],point['y'])
+                                    expect(page.locator('.sculpture-labels button')).to_have_count(0)
+                                    for button in page.locator('[data-sculpture-view]').all():
+                                        expect(button).to_be_disabled()
+                                    record('lost WebGL context keeps fallback stable during subsequent pointer input')
+                                expected_title=page.locator('#sculpture-title').inner_text()
+                                page.locator('#sculpture-open').click()
+                                expect(page.locator('h1:visible')).to_have_text(expected_title)
+                                go()
+                                record('research sculpture keyboard/drag rotation, actual object picking, linked view and reading route')
                             else:
                                 expect(page.locator('.sculpture-fallback')).to_be_visible()
                             stage_box = stage.bounding_box()

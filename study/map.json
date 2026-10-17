@@ -175,7 +175,8 @@
         "coala-cognitive-architecture",
         "storage-to-experience"
       ],
-      "questionIds": []
+      "questionIds": [],
+      "notation": "x → representation"
     },
     {
       "id": "relevance",
@@ -194,7 +195,8 @@
       ],
       "questionIds": [
         "experience-to-capability"
-      ]
+      ],
+      "notation": "retrieve(q, context)"
     },
     {
       "id": "change",
@@ -216,24 +218,28 @@
       ],
       "questionIds": [
         "experience-becomes-policy"
-      ]
+      ],
+      "notation": "state(t) → state(t+1)"
     }
   ],
   "starts": [
     {
       "studyId": "retrieval-and-relevance",
       "kicker": "从一个名字开始",
-      "prompt": "jieba、BM25、BGE-M3，究竟在做什么？"
+      "prompt": "jieba、BM25、BGE-M3，究竟在做什么？",
+      "notation": "R   = {a, d, e, f}\nD₃  = {a, b, c}\nD₃ ∩ R = {a}"
     },
     {
       "studyId": "what-an-index-learns",
       "kicker": "让新材料改变理解",
-      "prompt": "索引也能学习——它学习的还是同一件事吗？"
+      "prompt": "索引也能学习——它学习的还是同一件事吗？",
+      "notation": "key   → position\nquery → document_id"
     },
     {
       "studyId": "experience-becomes-policy",
       "kicker": "继续一项已有研究",
-      "prompt": "经历被保存以后，选择方式如何真的改变？"
+      "prompt": "经历被保存以后，选择方式如何真的改变？",
+      "notation": "D  → fit → θ\nΔD → revise → θ′"
     }
   ],
   "changes": [
@@ -250,5 +256,5 @@
       "studyId": "retrieval-and-relevance"
     }
   ],
-  "heroTitle": "What remains.\nWhat becomes."
+  "heroTitle": "MEMORY\nin the making."
 }

@@ -13,12 +13,12 @@
     <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
-    <link rel="stylesheet" href="assets/styles.css?v=20261018-rebirth" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261018-field" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
     <header class="site-header">
-      <a class="site-mark" href="./" data-route="home"><span class="mark-monogram" aria-hidden="true">a<span>m</span>s</span><span>Agent Memory<br>Study</span></a>
+      <a class="site-mark" href="./" data-route="home"><span class="mark-monogram" aria-hidden="true">a<span>m</span>s<span class="mark-dot">.</span></span><span>Agent Memory<br>Study</span></a>
       <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="site-nav"><span>目录</span><span aria-hidden="true">＋</span></button>
       <nav class="site-nav" id="site-nav" aria-label="主要导航">
         <a href="./#starts" data-route="home" data-scroll-target="starts">开始与继续</a>
@@ -31,21 +31,37 @@
     <main id="main-content" tabindex="-1">
       <div id="atlas-view">
         <section class="room-hero" aria-labelledby="atlas-title">
-          <div class="hero-copy"><p class="eyebrow">AN OPEN-ENDED STUDY / EST. 2026</p><h1 id="atlas-title" lang="en"></h1><p class="hero-question" id="hero-question"></p><p class="atlas-dek" id="atlas-dek"></p><a class="text-arrow" href="?study=ams-thesis" data-route="study" data-route-id="ams-thesis">进入 AMS 的研究纲领 <span>↗</span></a></div>
-          <figure class="hero-figure" aria-label="缓慢转动的连续曲面，表达延续与改变">
-            <div class="sculpture-stage" id="continuity-sculpture">
-              <svg class="sculpture-fallback" viewBox="0 0 600 600" aria-hidden="true"><defs><linearGradient id="silver-band" x1="0" y1="0" x2="1" y2=".8"><stop stop-color="#edece4"/><stop offset=".25" stop-color="#8a9794"/><stop offset=".48" stop-color="#e8ebe5"/><stop offset=".64" stop-color="#4e5b59"/><stop offset=".85" stop-color="#bec5bc"/><stop offset="1" stop-color="#f7f7f2"/></linearGradient></defs><path d="M148 370C45 203 230 71 360 126S568 323 439 418 223 524 148 370Z M201 336C275 436 393 428 421 309S332 195 254 209 160 278 201 336Z" fill="url(#silver-band)" fill-rule="evenodd"/><path d="M148 370C179 456 336 355 421 309" fill="none" stroke="#75837e" stroke-width="1"/></svg>
+          <div class="hero-register"><span>AMS / AN OPEN RESEARCH PRACTICE</span><span>INFORMATION · EXPERIENCE · INTELLIGENCE</span><span>EST. 2026 ↗</span></div>
+          <h1 id="atlas-title" lang="en"></h1>
+          <div class="hero-side-note"><span>01—</span><p>A study of what<br>we carry forward.</p><span class="hero-cross" aria-hidden="true">+</span></div>
+          <figure class="hero-figure" aria-label="由公开研究对象组成的三维层片">
+            <div class="sculpture-stage" id="continuity-sculpture" tabindex="0" role="group" aria-label="三维研究体：拖动旋转，点击层片选择；键盘方向键旋转，Enter 选择下一片" aria-describedby="sculpture-instructions">
+              <svg class="sculpture-fallback" viewBox="0 0 900 600" aria-hidden="true"><g fill="#d9dee8" fill-opacity=".58" stroke="#626d87" stroke-width=".8">
+                <path d="M270 205 510 125 690 230 450 320Z"/><path d="M266 222 510 142 686 247 450 337Z"/><path d="M262 239 510 159 682 264 450 354Z"/><path d="M258 256 510 176 678 281 450 371Z"/><path d="M254 273 510 193 674 298 450 388Z"/><path d="M250 290 510 210 670 315 450 405Z"/><path d="M246 307 510 227 666 332 450 422Z"/><path d="M242 324 510 244 662 349 450 439Z"/><path d="M238 341 510 261 658 366 450 456Z"/><path d="M234 358 510 278 654 383 450 473Z"/>
+              </g><path d="M250 290 510 210 670 315 450 405Z" fill="#4553ac" fill-opacity=".8" stroke="#2e3c89"/></svg>
               <canvas aria-hidden="true"></canvas>
             </div>
-            <figcaption><span>FIG. 01 <i>Continuity, in motion.</i></span><button class="sculpture-toggle" type="button" hidden aria-pressed="false">暂停动态 <span aria-hidden="true">Ⅱ</span></button></figcaption>
+            <figcaption class="sculpture-caption"><span><span data-research-count>46</span> OBJECTS / ONE CHANGING FIELD</span><span>每一片，都有一份真实的研究。</span></figcaption>
           </figure>
+          <div class="sculpture-inspector" data-js-control hidden>
+            <div class="inspector-head"><span id="sculpture-kind"></span><span id="sculpture-ordinal"></span></div>
+            <p id="sculpture-title" aria-live="polite"></p>
+            <div class="inspector-actions"><button type="button" data-sculpture-step="-1" aria-label="上一份研究">←</button><button type="button" data-sculpture-step="1" aria-label="下一份研究">→</button><a id="sculpture-open" href="?study=ams-thesis">打开研究 ↗</a></div>
+            <details class="sculpture-source"><summary>{ 查看结构 }</summary><pre><code id="sculpture-code"></code></pre><label for="sculpture-record">选择公开对象</label><select id="sculpture-record"></select></details>
+          </div>
+          <div class="sculpture-toolbar" data-js-control hidden>
+            <div class="sculpture-views" aria-label="研究体视图"><button type="button" data-sculpture-view="stack" aria-pressed="true"><span>01</span> 叠置</button><button type="button" data-sculpture-view="spread" aria-pressed="false"><span>02</span> 展开</button><button type="button" data-sculpture-view="links" aria-pressed="false"><span>03</span> 关联</button></div>
+            <p id="sculpture-instructions">拖动旋转 · 点击选取<br><span>连接来自显式引用，空间位置不是相似度。</span></p>
+            <div class="sculpture-motion"><button class="sculpture-toggle" type="button" aria-pressed="false">静止 Ⅱ</button><button id="sculpture-reset" type="button">复位 ↺</button></div>
+          </div>
+          <div class="hero-premise"><p class="hero-question" id="hero-question"></p><div><p class="atlas-dek" id="atlas-dek"></p><a class="text-arrow" href="?study=ams-thesis" data-route="study" data-route-id="ams-thesis">阅读研究纲领 <span>↗</span></a></div></div>
           <div class="hero-baseline"><span id="room-edition"></span><span id="room-invitation"></span></div>
         </section>
-        <section class="room-starts section-wrap" id="starts"><div class="section-heading"><div><p class="eyebrow">BEGIN ANYWHERE</p><h2>好奇，可以成为<br><em>一个开始。</em></h2></div><div class="resume-open"><label class="file-button" for="resume-file">打开接续文件 ↗</label><input class="sr-only" id="resume-file" type="file" accept=".json,application/json"><p id="resume-status" role="status">接续文件只在当前浏览器读取。</p></div></div><div id="room-start-list"></div></section>
-        <section class="room-directions" id="directions"><div class="section-heading"><div><p class="eyebrow">DIRECTIONS / 长期追问</p><h2>一些问题，<br>值得长久停留。</h2></div><p>方向是持续的关切。新的知识可以使它分叉、汇合，或暂时停驻。</p></div><div id="direction-list"></div><div id="direction-focus" tabindex="-1" hidden></div></section>
-        <section class="room-domains section-wrap" id="domains"><div class="section-heading"><div><p class="eyebrow">FIELDS / 知识定位</p><h2>知识的边界，<br><em>仍在向外。</em></h2></div><p>从 agent memory 出发，基础领域也可以独立深入。地图指路，允许交叉与暂未归类。</p></div><div class="domain-layout"><div id="domain-list"></div><div id="domain-focus" tabindex="-1"></div></div></section>
-        <section class="studies-home section-wrap" id="studies"><div class="section-heading"><div><p class="eyebrow">STUDY NOTES / 理解的形状</p><h2>学习留下的东西。</h2></div><p>一段解释、一项推导、一场对读，或一项有边界的实验。长短与形式，由内容决定。</p></div><div id="study-index"></div></section>
-        <section class="inquiries-home section-wrap" id="inquiries"><div class="section-heading"><div><p class="eyebrow">INQUIRIES / 持续探究</p><h2>还想往下问。</h2></div><p>已有的解释、竞争的解释，以及足以改变认识的下一步。</p></div><div id="question-index"></div><details class="practice-disclosure"><summary>带回工程与实践 <span>有范围的判断、依据与目标侧检查 ↗</span></summary>          <div class="practice-desk" id="practice" aria-labelledby="practice-title">
+        <section class="room-starts section-wrap" id="starts"><div class="section-heading"><div><p class="eyebrow">BEGIN ANYWHERE</p><h2>从一个词，<br><em>打开一个问题。</em></h2></div><div class="resume-open"><label class="file-button" for="resume-file">打开接续文件 ↗</label><input class="sr-only" id="resume-file" type="file" accept=".json,application/json"><p id="resume-status" role="status">接续文件只在当前浏览器读取。</p></div></div><div id="room-start-list"></div></section>
+        <section class="room-directions" id="directions"><div class="section-heading"><div><p class="eyebrow">DIRECTIONS / 长期追问</p><h2>长期追问<span class="heading-aside">Questions<br>worth keeping.</span></h2></div><p>方向是持续的关切。新的知识可以使它分叉、汇合，或暂时停驻。</p></div><div id="direction-list"></div><div id="direction-focus" tabindex="-1" hidden></div></section>
+        <section class="room-domains section-wrap" id="domains"><div class="section-heading"><div><p class="eyebrow">FIELDS / 知识定位</p><h2>研究没有<br><em>固定形状。</em></h2></div><p>从 agent memory 出发，基础领域也可以独立深入。地图指路，允许交叉与暂未归类。</p></div><div class="domain-layout"><div id="domain-list"></div><div id="domain-focus" tabindex="-1"></div></div></section>
+        <section class="studies-home section-wrap" id="studies"><div class="section-heading"><div><p class="eyebrow">STUDY NOTES / 理解的形状</p><h2><span class="display-word" lang="en">NOTES</span><span class="heading-translation">学习留下的东西。</span></h2></div><p>一段解释、一项推导、一场对读，或一项有边界的实验。长短与形式，由内容决定。</p></div><div id="study-index"></div></section>
+        <section class="inquiries-home section-wrap" id="inquiries"><div class="section-heading"><div><p class="eyebrow">INQUIRIES / 持续探究</p><h2>把问题，<br><em>再往前推一点。</em></h2></div><p>已有的解释、竞争的解释，以及足以改变认识的下一步。</p></div><div id="question-index"></div><details class="practice-disclosure"><summary>带回工程与实践 <span>有范围的判断、依据与目标侧检查 ↗</span></summary>          <div class="practice-desk" id="practice" aria-labelledby="practice-title">
             <div class="practice-intro"><p class="content-kind">Take it into practice</p><h3 id="practice-title">你遇到了什么问题？</h3><p>不用先想起论文名字。取回几条相关判断，带着做法、依据和边界继续工作。</p></div>
             <div class="practice-workspace">
               <form id="practice-form" role="search">
@@ -285,15 +301,15 @@
     <footer class="site-footer"><div><strong>Agent Memory Study</strong><p>信息、经验，与跨时间的智能。</p></div><nav aria-label="项目链接"><a href="https://github.com/IndelibleVivi/agent-memory-study">GitHub · 研究真源 ↗</a><a href="NOTICE.md">Notice</a><a href="THIRD_PARTY_NOTICES.md">PDF notices</a></nav></footer>
     <p class="sr-only" id="route-status" aria-live="polite"></p>
     <noscript>公开部署提供完整静态正文。源码模式需要 JavaScript；也可在 GitHub 的 study 目录阅读研究正文。</noscript>
-    <script src="assets/materials-data.js?v=20261018-rebirth"></script>
+    <script src="assets/materials-data.js?v=20261018-field"></script>
     <script src="assets/revision-study.js?v=20260908-studies-1"></script>
-    <script src="assets/reading-search.js?v=20261018-rebirth"></script>
-    <script src="assets/practice.js?v=20261018-rebirth"></script>
-    <script src="assets/study-packets.js?v=20261018-rebirth"></script>
-    <script src="assets/study-desk.js?v=20261018-rebirth"></script>
-    <script src="assets/seo.js?v=20261018-rebirth"></script>
-    <script src="assets/app.js?v=20261018-rebirth"></script>
-    <script src="assets/continuity-sculpture.js?v=20261018-rebirth"></script>
+    <script src="assets/reading-search.js?v=20261018-field"></script>
+    <script src="assets/practice.js?v=20261018-field"></script>
+    <script src="assets/study-packets.js?v=20261018-field"></script>
+    <script src="assets/study-desk.js?v=20261018-field"></script>
+    <script src="assets/seo.js?v=20261018-field"></script>
+    <script src="assets/app.js?v=20261018-field"></script>
+    <script src="assets/continuity-sculpture.js?v=20261018-field"></script>
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"4e0929eca0504d43aca1cc1a1f30ffaf"}'></script>
   </body>
 </html>

@@ -1178,13 +1178,16 @@
         titleLink.append(index % 2 ? el("span", part, "unbroken-term") : document.createTextNode(part));
       });
       title.append(titleLink);
-      node.append(el("p", `0${i+1} / ${start.kicker}`, "eyebrow"), title, el("p", item.intro), createRouteLink("study", item.id, "进入这次研究 ↗", "text-arrow")); return node;
+      node.append(el("p", `0${i+1} / ${start.kicker}`, "eyebrow"));
+      if(start.notation) node.append(el("pre", start.notation, "start-notation"));
+      node.append(title, el("p", item.intro), createRouteLink("study", item.id, "进入这次研究 ↗", "text-arrow")); return node;
     }));
     document.querySelector("#direction-list").replaceChildren(...data.room.directions.map((direction, i) => {
       const link = createRouteLink("direction", direction.id, "", "direction-row");
       if (route.direction === direction.id) link.setAttribute("aria-current", "true");
       const copy = el("span", "", "direction-copy"); copy.append(el("span", direction.title, "direction-title"), el("span", direction.intro));
-      link.append(el("span", `0${i+1}`, "direction-number"), copy, el("span", "↗", "direction-arrow")); return link;
+      const notation=el("span", direction.notation || "", "direction-notation");
+      link.append(el("span", `0${i+1}`, "direction-number"), copy, notation, el("span", "↗", "direction-arrow")); return link;
     }));
     const groupLinks = (group, target) => {
       target.replaceChildren(el("p", group.english || "", "eyebrow"), el("h3", group.title), el("p", group.question || group.intro, "group-question"));
@@ -1215,8 +1218,9 @@
   function renderStudyIndex() {
     const programme = new Set(["ams-thesis","how-we-study", ...data.room.directions.flatMap(item => item.studyIds.slice(0,1))]);
     const entries = data.studies.filter(item => !programme.has(item.id)).sort((a,b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title));
-    refs.studyIndex.replaceChildren(...entries.map(study => {
+    refs.studyIndex.replaceChildren(...entries.map((study,index) => {
       const entry = createTextElement("article", "", "study-entry");
+      entry.dataset.ordinal=String(index+1).padStart(2,"0");
       const heading = createTextElement("h3", ""); heading.append(createRouteLink("study", study.id, study.title));
       const copy = createTextElement("div", ""); copy.append(heading, createTextElement("p", study.intro));
       entry.append(createTextElement("p", studyLabel(study), "content-kind"), copy, createTextElement("time", study.date)); return entry;
@@ -1227,6 +1231,7 @@
     const el = createTextElement;
     const fragment = document.createDocumentFragment();
     const header = el("header", "", "study-heading");
+    header.dataset.word = study.kind === "learning-note" ? "NOTE" : "STUDY";
     const title = el("h1", study.title); title.id = "study-title"; title.tabIndex = -1;
     header.append(el("p", studyLabel(study), "content-kind"), title, el("p", study.intro, "study-dek"), el("p", `${study.byline} · ${study.date}`, "study-byline"));
     fragment.append(createRouteLink("home", "", "← 回到书房", "back-link"), header);
