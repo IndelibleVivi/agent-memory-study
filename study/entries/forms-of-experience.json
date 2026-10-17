@@ -1,0 +1,23 @@
+{
+  "id": "forms-of-experience",
+  "title": "经验怎样获得形式",
+  "kind": "research-essay",
+  "date": "2026-10-18",
+  "byline": "Agent Memory Study editors",
+  "intro": "原话、结构、向量与参数各自保留什么区别，又让什么泛化成为可能？",
+  "subtitle": "长期方向 01 · 表示、知识与概括",
+  "number": "07",
+  "bodyFile": "programme/directions/forms-of-experience.md",
+  "domains": [
+    "representation",
+    "memory",
+    "learning"
+  ],
+  "directionIds": [
+    "forms"
+  ],
+  "readings": [],
+  "externalReadings": [],
+  "takeaways": [],
+  "boundary": "这是 AMS 的编者论述。来源、原创推演与既有研究的边界在正文分别说明；不包含私人共学记录或新的模型实验。"
+}

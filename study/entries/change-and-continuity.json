@@ -1,0 +1,24 @@
+{
+  "id": "change-and-continuity",
+  "title": "系统怎样改变，同时保留值得继承的东西",
+  "kind": "research-essay",
+  "date": "2026-10-18",
+  "byline": "Agent Memory Study editors",
+  "intro": "写入、修订、学习与撤回分别改变什么状态？哪些关系应该在更新之后继续成立？",
+  "subtitle": "长期方向 03 · 改变、依赖与保留",
+  "number": "09",
+  "bodyFile": "programme/directions/change-and-continuity.md",
+  "domains": [
+    "data",
+    "memory",
+    "learning",
+    "control"
+  ],
+  "directionIds": [
+    "change"
+  ],
+  "readings": [],
+  "externalReadings": [],
+  "takeaways": [],
+  "boundary": "这是 AMS 的编者论述。来源、原创推演与既有研究的边界在正文分别说明；不包含私人共学记录或新的模型实验。"
+}

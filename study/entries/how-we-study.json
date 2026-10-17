@@ -1,0 +1,19 @@
+{
+  "id": "how-we-study",
+  "title": "AMS 怎样学习与生长",
+  "kind": "research-essay",
+  "date": "2026-10-18",
+  "byline": "Agent Memory Study editors",
+  "intro": "从一个名字或不解的结果开始，形成具体理解；让新材料改变已有解释，再留下能够继续的位置。",
+  "subtitle": "日常共学、专题、材料消化与研究连续性",
+  "number": "06",
+  "bodyFile": "programme/method.md",
+  "domains": [
+    "evaluation"
+  ],
+  "directionIds": [],
+  "readings": [],
+  "externalReadings": [],
+  "takeaways": [],
+  "boundary": "这是 AMS 的编者论述。来源、原创推演与既有研究的边界在正文分别说明；不包含私人共学记录或新的模型实验。"
+}

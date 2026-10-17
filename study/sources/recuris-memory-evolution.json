@@ -1,0 +1,182 @@
+{
+  "number": 23,
+  "id": "recuris-memory-evolution",
+  "title": "Recursive Experiential–Working Memory Evolution for Long-Horizon Agent Harnesses",
+  "authors": [
+    "Zhaochen Yu",
+    "Yingcheng Wu",
+    "Zhenfei Yin",
+    "Kaiyuan Chen",
+    "Zhe Zhao",
+    "Mengdi Wang",
+    "Shuicheng Yan",
+    "Ling Yang"
+  ],
+  "year": 2026,
+  "doi": "10.48550/arXiv.2608.24876",
+  "noteDepth": "read",
+  "readingScope": "精读 arXiv:2608.24876v1 official HTML 的正文 §§1–5、Appendices A–E、Tables 1–13 与 figure captions。未从图形内部读取额外数值；未复现模型、benchmark 或自动 evolution。共读专题的原创 deterministic 演示有独立范围，不提升本篇为 worked。",
+  "intro": "长任务里，经验可能存在却没有在需要时进入行动。Recuris 用 working state 对齐技能调用，再把状态、调用、观测与校验连成 trace，供固定 Meta-Agent 定位可修补的记忆组件。它改变外部 memory-control 层，基础模型与外层改进程序保持固定；不同 benchmark 实际启用的组件并不相同。",
+  "whyRead": "它把“经验内容好不好”推进到“经验何时被调用、执行后凭什么认定完成”。最值得借用的是这组可区分的接口；最需要谨慎的是把局部修补效果、广义递归叙事与不同预算下的成绩混成一个结论。",
+  "keyPoints": [
+    "§§2.1–2.2：可变对象包括 experiential skills E、working-state schema / update proposal W、invocation policy ρ 与 checker predicates C。当前状态和执行事件决定取用经验；执行尝试与已验证完成分开。",
+    "§2.3：结构化 trace 用来定位值得修补的位置。每项 edit 限于其诊断组件，一轮可以涉及多个组件；这不是每轮只改一个组件，也不是识别真实因果责任。",
+    "§§2.2–2.3：checker 提供证据，固定 commit kernel 决定状态提交；candidate patch 经 repair / regression 检查才可能进入下一轮。门控的有限测试证据不等于永久不退化。",
+    "§3.5 与 Appendix E：跨任务经验、同任务重试适应和一次性模板注入是不同 treatment。阅读总表时必须先确认具体运行了哪一种。"
+  ],
+  "argumentMap": [
+    {
+      "step": "01 · 状态成为查询",
+      "claim": "历史会混入完成事项与执行噪声；让未完成目标、证据与 blockers 组织技能需求。",
+      "locator": "§§1、2.2.1–2.2.2"
+    },
+    {
+      "step": "02 · 行动产生可定位证据",
+      "claim": "把 selected skill、tool action、observation、proposed state、checker 与 committed state 连起来，区分未调用、错误执行和错误完成标记。",
+      "locator": "§§2.2.3、2.3.1"
+    },
+    {
+      "step": "03 · 修补对象有边界",
+      "claim": "Meta-Agent 提议局部更新，基础模型与外层程序不变；下一轮行为产生新的 trace，构成作者所称 bounded recursion。",
+      "locator": "§§2.3.2–2.3.4"
+    },
+    {
+      "step": "04 · 效果必须回到实验单位",
+      "claim": "总表提供多数配对方向为正；组件 ablation、实际 admission history 与 matched-budget retry controls 才回答更窄的归因问题。",
+      "locator": "Tables 1–5、8–9；Appendices C–E"
+    }
+  ],
+  "methodNotes": [
+    {
+      "label": "Invocation 与完成状态分离",
+      "text": "τ² 的 PRE_WRITE 可在拟执行写操作前退回 NOT_EXECUTED 并注入相关经验；终端任务在首轮边界注入。工具回执再参与状态校验，语言上的“做了”不直接等于完成。",
+      "locator": "§2.2；Appendix E"
+    },
+    {
+      "label": "Split 与统计单位",
+      "text": "τ² 的 evolve / dev / held-out test 分离；重复 rollout 以任务为 cluster 做 bootstrap。SkillFlow family template 使用同族任务，不具备该 held-out-task 设计。",
+      "locator": "Appendices A、C、E"
+    },
+    {
+      "label": "诊断与修补不是因果识别",
+      "text": "fault localization 实验只保留 E / W / ρ 三类可靠注入，每类 9 cases、两次诊断；checker fault 没能稳定诱发预期效果而被排除。",
+      "locator": "§3.4.1；Table 4"
+    },
+    {
+      "label": "重试预算本身是 treatment",
+      "text": "Terminal-Bench 的 seed / adapted memory 要在相同四次机会下比较；同任务 verifier bit 与 retry 不提供跨任务泛化证据。",
+      "locator": "§3.5；Tables 8–9"
+    },
+    {
+      "label": "成本口径有缺口",
+      "text": "Appendix D 报告 context 与 tokens per success，但逐轮 injected skill payload 没有持久记录，不能从现有表格恢复精确的注入 token 对照。",
+      "locator": "Appendix D"
+    }
+  ],
+  "reportedFindings": [
+    "Table 1：37 个已完成 model–benchmark pairs 中 35 个点估计提升；这不等于 35 个 statistically significant improvements。",
+    "Table 2（retail）：WM-only 82.0%，full 83.6%；增量 +1.5 pp 的 CI [−2.4, +5.7] 包含零。相对较大整体提升并不证明 EM 在该设定下有已分辨的独立增益。",
+    "Table 4：结构化 trace 的三类定位准确率为 64.8%，raw trace 37.0%，仅 outcome 13.0%；范围是人工注入后保留的三类诊断。",
+    "§3.4.4：被接受的更新仍使 42 个 anchor 中 4 个跌出原稳定标准；9.5% 不是零回归。baseline rerun 的对应波动为 25.9%，小 dev set 限制了判断精度。",
+    "Table 8：87 个终端任务里，single-budget baseline 解出 30，四次机会 seed memory 解出 51，adapted memory 解出 53；matched-budget 的 +2.3 pp，p = 0.774。",
+    "Table 9：87 tasks 的 avg@4 为 46.1% → 48.9%，差值 CI [−0.6, +6.3] 包含零；一次挑选的强 case 不能代替总体证据。"
+  ],
+  "evidenceLimits": [
+    "未运行 Recuris 模型、任务环境、evolution 或 benchmark；上面数字全部是 paper-reported。",
+    "各 domain ablation 回答不同问题。airline 的 Table 2 intervals 均覆盖零，不能把 retail 的组件解释通用化。",
+    "required-read action recall 测量发出了必需查询，不直接测量模型理解了观测；injection ablation 同时改变选择和 context 体量。",
+    "未拒绝两种 Meta-Agent 的差异不构成等价检验；p = 0.72 与宽 CI 不足以证明实现可互换。",
+    "SkillFlow 的同族 template 提升不证明 held-out task transfer，也不证明完整 EM–WM / checker evolution 的效果。",
+    "小 dev gate、anchor 波动与重试预算都限制“安全持续变好”的叙述；这些实验没有验证无限轮自我改进。"
+  ],
+  "sourceTensions": [
+    {
+      "label": "总架构与实例不是同一层",
+      "observation": "正文用四组件 memory loop 组织方法；Appendix E 明确 SkillFlow 无 runtime WM / invocation controller / checker，也不运行这些组件的 evolution。",
+      "implication": "为每个 benchmark 单独标出启用组件，不能让统一名称替代 treatment identity。",
+      "locators": [
+        "§§2–3",
+        "Appendix E · SkillFlow"
+      ]
+    },
+    {
+      "label": "候选表现与实际接纳需要分开",
+      "observation": "Table 5 的 Run A / B 包含 post-hoc candidate evaluation，只有 Run C 在循环内接纳 patch；Run B 第四轮的 memory reach 为 0/86，任务成功率仍为 57.85%（Table 5）；该候选没有被调用到，Run C 也不是单调上涨。",
+      "implication": "候选分数不等于 live admission history；门控应被审查，而非从标题推定有效。",
+      "locators": [
+        "§3.4.2",
+        "Table 5"
+      ]
+    },
+    {
+      "label": "四类 caption，三类实际判定",
+      "observation": "Table 4 caption 列 E / W / ρ / C，正文说明 C 类未进入最终比较。",
+      "implication": "64.8% 的 denominator 属于三类、54 次判断，不能描述为四组件可靠归因。",
+      "locators": [
+        "§3.4.1",
+        "Table 4"
+      ]
+    },
+    {
+      "label": "Headline budget 与学习贡献",
+      "observation": "Table 8 的大幅总增益跨越一次与四次执行预算；相同四次机会时 seed 与 adapted 只差两题。",
+      "implication": "先比较同预算，再讨论 memory adaptation；目前总体增量尚未分辨。",
+      "locators": [
+        "§3.5",
+        "Tables 8–9"
+      ]
+    }
+  ],
+  "editorialInferences": [
+    {
+      "label": "把任务状态当作经验的入口",
+      "text": "经验库需要回答此刻哪个未完成目标需要它；为“取到”和“用上”分别留下证据，才有机会诊断失效。",
+      "boundary": "这是对方法接口的借鉴，不承诺某个产品接入后就提升成功率。"
+    },
+    {
+      "label": "修补位置比责任标签更实用",
+      "text": "一次失败可能由多个环节共同形成。先测试一项局部修补能否改变该行为，避免把诊断标签写成真实因果。",
+      "boundary": "论文自己限制了 localization 的含义；工程干预仍须对照。"
+    },
+    {
+      "label": "调用绑定还需要生命周期",
+      "text": "调用到相关经验后，还要问其来源是否仍有效、当前版本是否属于其适用范围。共读专题把这个尚未由本篇验证的问题展开。",
+      "boundary": "专题是跨源 editorial synthesis 与原创规则演示，不是 Recuris 复现或新增 benchmark evidence。"
+    }
+  ],
+  "keywords": [
+    "working memory",
+    "skill invocation",
+    "recursive evolution",
+    "validation gate"
+  ],
+  "categories": [
+    "记忆架构",
+    "可靠性",
+    "持续学习"
+  ],
+  "failureSurfaces": [
+    "state-representation",
+    "retrieval-active-context",
+    "abstraction-experience",
+    "metacognitive-control"
+  ],
+  "sourceUrl": "https://arxiv.org/abs/2608.24876v1",
+  "pdf": {
+    "delivery": "official",
+    "url": "https://arxiv.org/pdf/2608.24876v1",
+    "accessNote": "arXiv v1 official PDF；本站不重新分发。"
+  },
+  "editorialQuestion": "一条经验通过了上次验证，并在这次正确时机被调用：我们还需要什么证据，才能相信它仍适用于这次的工具版本和任务？",
+  "sourceNote": "Source authority：arXiv v1，2026-08-25；阅读依据为 official HTML 正文、附录与表格。official code：github.com/Gen-Verse/Recuris；本札记不将当前代码或原创演示当成 paper-time experiment。",
+  "designTransfer": {
+    "byline": "Agent Memory Study editors",
+    "date": "2026-09-08",
+    "when": "经验已经写入库，但长任务中未必在需要时进入行动，完成状态也可能只来自语言声明。",
+    "move": "先让未完成目标与执行事件组织经验调用，并把工具回执与“已经完成”的状态更新分开。",
+    "check": "保留一件需要写操作的任务，分别检查经验入库、被选中、进入调用前 context、动作成功回执；再加入失败回执，检查是否仍错误标成完成。",
+    "boundary": "这是基于精读的迁移建议，尚未在新项目执行。原文不同 benchmark 启用的组件不同；专题没有模拟 automatic evolution 或验证 gate。",
+    "basis": "既有札记 §§2.2–2.3、Table 2、Appendix E；“编者判断”。",
+    "status": "proposed-not-run"
+  }
+}

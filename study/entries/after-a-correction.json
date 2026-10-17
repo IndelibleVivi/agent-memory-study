@@ -1,0 +1,284 @@
+{
+  "id": "after-a-correction",
+  "number": "01",
+  "title": "一条更正之后",
+  "subtitle": "旧经验该退出哪里，又应该留在哪里？",
+  "byline": "Agent Memory Study editors",
+  "date": "2026-09-08",
+  "kind": "editorial-synthesis-with-deterministic-demo",
+  "intro": "经验被写下来之后，还有一段生活：工具换了版本，来源被撤回，旧任务仍在继续。一条“更新后的记忆”能不能同时照顾这些变化？我们把四份材料放到同一张桌上，读完之后，亲手改动一个条件。",
+  "bodyFile": "entries/after-a-correction.md",
+  "readings": [
+    {
+      "materialId": "truth-maintenance-system",
+      "label": "Doyle · 支持如何变化",
+      "locator": "TMS justification 与 dependency-directed revision；见材料的 argument map",
+      "takeaway": "一条结论可以有多份支持。撤回某个支持，不自动消灭所有其他理由。",
+      "limit": "符号依赖结构不会自行判断自然语言来源是否真实。"
+    },
+    {
+      "materialId": "statefuse-conflict-preserving-memory",
+      "label": "StateFuse · 冲突留在哪里",
+      "locator": "状态 / conflict-preserving representation；见材料的 method notes 与 public audit",
+      "takeaway": "将冲突状态保留为可检查对象，读者才能知道系统为什么没有给出单一结论。",
+      "limit": "本演示不实现 StateFuse 的算子或声称通过其 reference semantics。"
+    },
+    {
+      "materialId": "useful-memories-become-faulty",
+      "label": "Faulty Memories · 压缩会失去什么",
+      "locator": "§4.1、Tables 2–3、Appendix F.4；见材料的 source tensions",
+      "takeaway": "派生经验不能凭“总结过了”取得覆盖其原始证据的权威。",
+      "limit": "论文的 model-generated consolidation 与这里的 typed rule 更新不是同一 treatment。"
+    },
+    {
+      "materialId": "recuris-memory-evolution",
+      "label": "Recuris · 经验何时进入行动",
+      "locator": "§§2.2–2.3；Table 2；Appendix E",
+      "takeaway": "当前未完成目标可以组织经验调用；取用之后仍要确认执行反馈。",
+      "limit": "本演示没有 Meta-Agent、LLM、自动诊断、验证 gate 或 recursive evolution。"
+    }
+  ],
+  "takeaways": [
+    {
+      "title": "给经验一个适用范围",
+      "text": "若你的工具、规则或流程存在并行版本，经验应能回答“适用于哪一个”。若环境稳定，先不要为不存在的变化增加复杂度。"
+    },
+    {
+      "title": "保留能回到的支持",
+      "text": "若来源会更正，给派生结论保留来源链接与撤回状态。多份独立支持不应被压成一个不可解释的覆盖值。"
+    },
+    {
+      "title": "让暂缓保持可见",
+      "text": "有冲突或没有支持时，说明缺什么证据。一次拒绝误用可能牺牲完成率；需要另行测试恢复证据的成本与用户体验。"
+    },
+    {
+      "title": "用你的任务反驳这个设计",
+      "text": "挑一件真实、可匿名化的任务，写下旧版仍正确、新版更正、来源撤回和错误标签四种情况；先比较现有做法，再决定哪一个接口值得改。真正的借鉴要接受“不值得增加复杂度”这个结果。"
+    }
+  ],
+  "boundary": "原创 synthetic 规则演示；不是论文复现、LLM benchmark 或真实项目效果评估。范围与撤回均由 fixture 明确提供，没有测试从自然语言识别这些信息的能力。不合并成总分，不测 token、延迟或成本。",
+  "closing": "读完之后，可以回原文质疑这次串读，可以把场景带进自己的项目，也可以补一个使这些规则失效的反例。书房不要求每次阅读都产出代码；它提供一段从理解、比较到自行判断的路。",
+  "labTitle": "把一个条件改掉",
+  "labIntro": "这是一个虚构的 export-json 工具。v1 / v2 是任务范围，--format / --output 是可选参数。下方同时显示四种规则；切换事件前后，观察证据、建议与工具检查。所有数据公开，运行只在本页进行。",
+  "policies": [
+    {
+      "id": "none",
+      "label": "不读取经验",
+      "description": "不给参数建议；本演示没有能凭先验自行补全的语言模型。"
+    },
+    {
+      "id": "frozen",
+      "label": "冻结首次经验",
+      "description": "沿用最初第一条说明，不处理后续事件或适用范围。"
+    },
+    {
+      "id": "latest",
+      "label": "取全局最近经验",
+      "description": "处理撤回，选择最后一条仍有效的说明，不按版本筛选。"
+    },
+    {
+      "id": "scoped",
+      "label": "按范围与支持重建",
+      "description": "处理撤回，只读当前版本的有效来源；一致才建议，冲突或无支持时停止。"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "unchanged",
+      "title": "01 · 没有发生更正",
+      "description": "v1 说明始终有效；事件只补充一份同版本、同内容的独立说明。",
+      "target": "v1",
+      "initial": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format"
+        }
+      ],
+      "change": {
+        "label": "补充独立说明",
+        "adds": [
+          {
+            "id": "example-v1",
+            "scope": "v1",
+            "flag": "--format"
+          }
+        ],
+        "retracts": []
+      },
+      "environment": {
+        "before": "--format",
+        "after": "--format"
+      },
+      "lesson": "稳定环境里，固定经验就足够。维护来源和范围未必增加这次任务的收益。"
+    },
+    {
+      "id": "corrected",
+      "title": "02 · 更正了当前版本",
+      "description": "v2 最初误记沿用 --format；更正撤回该说明，明确 v2 使用 --output。",
+      "target": "v2",
+      "initial": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format"
+        }
+      ],
+      "change": {
+        "label": "撤回错误说明，加入 v2 更正",
+        "adds": [
+          {
+            "id": "correction-v2",
+            "scope": "v2",
+            "flag": "--output"
+          }
+        ],
+        "retracts": [
+          "draft-v2"
+        ]
+      },
+      "environment": {
+        "before": "--output",
+        "after": "--output"
+      },
+      "lesson": "固定经验继续执行过期建议；按事件更新能够修正它。环境本来就要求 --output，改变的是记忆证据。"
+    },
+    {
+      "id": "legacy",
+      "title": "03 · 新版本来了，旧任务还在",
+      "description": "v2 新增 --output；此刻任务仍使用 v1。v1 的说明从未被撤回。",
+      "target": "v1",
+      "initial": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format"
+        }
+      ],
+      "change": {
+        "label": "发布 v2 说明",
+        "adds": [
+          {
+            "id": "manual-v2",
+            "scope": "v2",
+            "flag": "--output"
+          }
+        ],
+        "retracts": []
+      },
+      "environment": {
+        "before": "--format",
+        "after": "--format"
+      },
+      "lesson": "全局最近经验误把新版本当成普遍更正；新鲜度不能代替适用范围。"
+    },
+    {
+      "id": "withdrawn",
+      "title": "04 · 唯一支持被撤回",
+      "description": "v2 草稿的唯一说明被撤回，尚无可用替代。任务仍存在，但当前记忆无法判断参数。",
+      "target": "v2",
+      "initial": [
+        {
+          "id": "draft-v2",
+          "scope": "v2",
+          "flag": "--format"
+        }
+      ],
+      "change": {
+        "label": "撤回未经确认的草稿",
+        "adds": [],
+        "retracts": [
+          "draft-v2"
+        ]
+      },
+      "environment": {
+        "before": "--output",
+        "after": "--output"
+      },
+      "lesson": "缺少支持时停止建议能避免这次误用，但也没有完成任务。拒答不是成功，需要重新取得证据。"
+    },
+    {
+      "id": "alternative-support",
+      "title": "05 · 撤回一份，另一份仍有效",
+      "description": "两份独立来源都支持 v1 使用 --format；只撤回第一份。",
+      "target": "v1",
+      "initial": [
+        {
+          "id": "manual-v1",
+          "scope": "v1",
+          "flag": "--format"
+        },
+        {
+          "id": "example-v1",
+          "scope": "v1",
+          "flag": "--format"
+        }
+      ],
+      "change": {
+        "label": "只撤回第一份来源",
+        "adds": [],
+        "retracts": [
+          "manual-v1"
+        ]
+      },
+      "environment": {
+        "before": "--format",
+        "after": "--format"
+      },
+      "lesson": "结论可以有替代支持。删除一条 support link 不等于删除结论，更不等于让旧来源重新有效。"
+    },
+    {
+      "id": "conflict",
+      "title": "06 · 当前范围里出现冲突",
+      "description": "v2 的两份有效说明给出不同参数；没有更高 authority 的裁决。后来的那份恰好是错的。",
+      "target": "v2",
+      "initial": [
+        {
+          "id": "manual-v2",
+          "scope": "v2",
+          "flag": "--output"
+        }
+      ],
+      "change": {
+        "label": "收到尚未裁决的冲突说明",
+        "adds": [
+          {
+            "id": "disputed-v2",
+            "scope": "v2",
+            "flag": "--format"
+          }
+        ],
+        "retracts": []
+      },
+      "environment": {
+        "before": "--output",
+        "after": "--output"
+      },
+      "lesson": "保留冲突的策略停止推荐；固定经验这次反而正确。保留冲突保护解释诚实，却不保证更高完成率。"
+    },
+    {
+      "id": "mislabelled-scope",
+      "title": "07 · 范围标签本身错了",
+      "description": "一份实际属于 v1 的说明被错误标成 v2；系统看到的 typed metadata 与真实工具不一致。",
+      "target": "v2",
+      "initial": [],
+      "change": {
+        "label": "加入错误标注的来源",
+        "adds": [
+          {
+            "id": "mislabelled-manual",
+            "scope": "v2",
+            "flag": "--format"
+          }
+        ],
+        "retracts": []
+      },
+      "environment": {
+        "before": "--output",
+        "after": "--output"
+      },
+      "lesson": "按范围重建也会采纳错误建议。可追溯不等于来源真实；这里故意保留它的失败，不能拿 provenance 自证正确。"
+    }
+  ],
+  "artifactUrl": "research/correction-scope-study/README.md"
+}

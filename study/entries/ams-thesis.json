@@ -1,0 +1,21 @@
+{
+  "id": "ams-thesis",
+  "title": "经验如何成为可继承、也可改变的能力？",
+  "kind": "research-essay",
+  "date": "2026-10-18",
+  "byline": "Agent Memory Study editors",
+  "intro": "AMS 的研究纲领：从经验的承载、当下的作用与持续的改变，研究跨时间的智能。",
+  "subtitle": "研究纲领 · 一项可以被新知识改变的工作论点",
+  "number": "05",
+  "bodyFile": "programme/thesis.md",
+  "domains": [],
+  "directionIds": [
+    "forms",
+    "relevance",
+    "change"
+  ],
+  "readings": [],
+  "externalReadings": [],
+  "takeaways": [],
+  "boundary": "这是 AMS 的编者论述。来源、原创推演与既有研究的边界在正文分别说明；不包含私人共学记录或新的模型实验。"
+}

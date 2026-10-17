@@ -1,0 +1,48 @@
+{
+  "id": "retraction-needs-recomputation",
+  "title": "来源对象消失，不保证派生影响消失",
+  "byline": "Agent Memory Study editors",
+  "updated": "2026-09-21",
+  "status": "proposed-transfer",
+  "questionIds": [
+    "experience-to-capability"
+  ],
+  "materialIds": [
+    "cache-to-cache"
+  ],
+  "triggers": [
+    "来源",
+    "撤回",
+    "删除",
+    "派生",
+    "重算",
+    "缓存",
+    "残留",
+    "cache",
+    "retraction",
+    "recompute",
+    "derived",
+    "delete"
+  ],
+  "claim": "当保留状态的计算曾依赖来源，删除来源对象未必消除这种计算依赖。在本次 cache 实验里，来源 slots 已删除，保留 cache 仍随来源内容改变。",
+  "when": "设计来源撤回、缓存复用或派生记忆失效时，需要说明“删除完成”究竟保证哪一层。",
+  "action": "列出来源到派生物的计算关系，明确失效或重算范围；把“删除后复用”与“来源从未参与计算”的参照比较。先在目标系统确认依赖，再决定是否需要重算。",
+  "avoid": "不要把文本摘要、向量索引和 KV cache 视为同一种机制；不要把可检测的数值差异直接叫作恢复了旧事实或删除失效。",
+  "validation": "保持查询与其他输入相同，仅替换来源内容，比较删除后复用、无来源重算和阻断依赖的控制；同时检查行为与数值指标，并排除位置、shape 和精度变化。",
+  "limit": "目标侧尚未执行迁移对照。现有依据限于固定模型与合成输入中的 cache 依赖；它提出一个检查问题，不能为其他系统直接下结论。",
+  "evidence": [
+    {
+      "label": "来源撤回：200 个单模型 cache 干预输出",
+      "url": "research/c2c-cache-retraction-study/README.md",
+      "observation": "固定 SmolLM2-135M-Instruct 的 20/20 来源配对在裁去来源 slots 后仍有分布差异，3/20 首个 greedy token 改变；重算与屏蔽控制通过。",
+      "limit": "原创单模型机制实验，不是 C2C benchmark 复现。残余依赖不等于正确恢复事实，亦未验证文本摘要、向量索引或权重遗忘。"
+    },
+    {
+      "label": "完整 compact receipt 与配对控制",
+      "url": "research/c2c-cache-retraction-study/results.json",
+      "observation": "包含各处理的输入、位置、输出、候选分数与逐层差异。",
+      "limit": "读取已保存 receipt 不等于重新 inference；实验经历了公开的探索与数值修订。"
+    }
+  ],
+  "applications": []
+}

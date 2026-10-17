@@ -2,7 +2,7 @@
 
 Agent Memory Study editors · 2026-09-08 · 原创跨源共读与 deterministic 规则演示。
 
-[进入共读专题](https://indeliblevivi.github.io/agent-memory-study/?study=after-a-correction)；材料、串读与场景的 canonical source 是 [`data/materials.json`](../../data/materials.json) 的 `studies`。此目录没有第二份场景真值。
+[进入共读专题](https://indeliblevivi.github.io/agent-memory-study/?study=after-a-correction)；材料、串读与场景的 canonical source 是 [`study/entries/after-a-correction.json`](../../study/entries/after-a-correction.json) 与其 Markdown 正文；`data/materials.json` 是编译投影。此目录没有第二份场景真值。
 
 这项演示把阅读中的问题缩到一个可检查的条件：来源被更正、撤回或限定在不同版本时，一条派生建议会怎样变化。它帮助读者比较设计选择，不产生论文、系统或模型排名。
 

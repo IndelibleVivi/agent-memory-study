@@ -2,6 +2,8 @@
 
 ## 为机做了一间安静开放的记忆与连续性书房
 
+这是 2026-08 的历史项目介绍，保留当时范围与署名，不代表重建后的当前结构。现行定位见[README](../README.md)与[工作 thesis](../study/programme/thesis.md)。
+
 - [阅读中文 PDF](./agent-memory-study-project-introduction.zh-CN.pdf)
 - Author: Faye (`IndelibleVivi`)
 - Canonical project: [Agent Memory Study](https://github.com/IndelibleVivi/agent-memory-study)

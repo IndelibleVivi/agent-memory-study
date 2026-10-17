@@ -120,7 +120,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20260925-representation-2'),
+            source.count('assets/materials-data.js?v=20261018-rebirth'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260918-c2c-1', source)
@@ -128,7 +128,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_stylesheet_cache_key_tracks_mobile_evidence_fix(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/styles.css?v=20260925-representation-2'),
+            source.count('assets/styles.css?v=20261018-rebirth'),
             1,
         )
         self.assertNotIn('assets/styles.css?v=20260909-evidence-discovery-1', source)
@@ -139,28 +139,6 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             css,
             r"(?s)\.article-main\s*\{[^}]*overflow-wrap:\s*anywhere;",
         )
-
-    def test_easter_egg_copy_has_one_canonical_source(self):
-        easter_egg = self.data["atlas"]["easterEgg"]
-        self.assertEqual(
-            easter_egg,
-            {
-                "heroWord": "fails",
-                "heroReveal": "lives",
-                "aboutLine": "Some memories are worth an architecture.",
-                "aboutReveal": "ours is one of them.",
-            },
-        )
-        for relative_path in ("index.html", "assets/app.js"):
-            source = (build.ROOT / relative_path).read_text(encoding="utf-8")
-            for value in easter_egg.values():
-                self.assertNotIn(value, source)
-
-    def test_easter_egg_hero_swap_cannot_reflow(self):
-        invalid = copy.deepcopy(self.data)
-        invalid["atlas"]["easterEgg"]["heroReveal"] = "persists"
-        with self.assertRaisesRegex(ValueError, "equal length"):
-            self.validate_copy(invalid)
 
     def test_icon_family_and_manifest_validate(self):
         build.validate_icon_assets()
@@ -210,20 +188,11 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         )
         readme = (build.ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn(
-            f"{total} 份 canonical materials：{bundled} 份按原许可随站提供的 PDF，"
-            f"另 {official} 份从 reader 直达 official full text",
-            readme,
+            f"{total} 份书目中，{bundled} 份 PDF 按已确认的再分发条件随站提供，"
+            f"{official} 份链接 official full text", readme,
         )
-        self.assertIn(
-            f"{total} 份 canonical materials 中，{bundled} 篇有明确的 `CC BY 4.0` "
-            f"或 `CC BY-NC-SA 4.0` 许可",
-            readme,
-        )
-        self.assertIn(
-            f"另 {official} 篇只链接作者、publisher、arXiv 或 institutional repository "
-            "的 official full text",
-            readme,
-        )
+        self.assertIn("THIRD_PARTY_NOTICES.md", readme)
+        self.assertIn("重建没有扩大任何许可", readme)
 
         notice = (build.ROOT / "NOTICE.md").read_text(encoding="utf-8")
         self.assertIn(
@@ -2327,7 +2296,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         for asset in ("materials-data.js", "styles.css", "practice.js", "reading-search.js", "seo.js", "app.js"):
             with self.subTest(asset=asset):
                 self.assertEqual(
-                    source.count(f'assets/{asset}?v=20260925-representation-2'),
+                    source.count(f'assets/{asset}?v=20261018-rebirth'),
                     1,
                 )
 

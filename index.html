@@ -4,63 +4,48 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#f6f7f4" />
+    <meta name="theme-color" content="#f7f7f2" />
     <meta name="google-site-verification" content="7VmMLWHwFBaFG7l2fMQyj7y3wFvLIC9Lmudl_CuoVHE" />
-    <meta name="description" content="围绕 agent memory 与 learning 的公开研究空间：原文、实现、可复跑实验、问题专题与实践判断。" />
+    <meta name="description" content="从 agent memory 出发，研究信息、经验与智能的跨时间关系。学习、研究与理解继续生长的书房。" />
     <title>Agent Memory Study</title>
     <link rel="icon" type="image/png" sizes="48x48" href="assets/icons/favicon-48.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
-    <link rel="stylesheet" href="assets/styles.css?v=20260925-representation-2" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261018-rebirth" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
-
     <header class="site-header">
-      <a class="site-mark" href="./" data-route="home">Agent Memory Study</a>
-      <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
-        <span>菜单</span>
-      </button>
+      <a class="site-mark" href="./" data-route="home"><span class="mark-monogram" aria-hidden="true">a<span>m</span>s</span><span>Agent Memory<br>Study</span></a>
+      <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="site-nav"><span>目录</span><span aria-hidden="true">＋</span></button>
       <nav class="site-nav" id="site-nav" aria-label="主要导航">
-        <a href="./#inquiries" data-route="home" data-scroll-target="inquiries">研究与实践</a>
-        <a href="./#research-map" data-route="home" data-scroll-target="research-map">研究地图</a>
-        <a href="./#constellation" data-route="home" data-scroll-target="constellation">研究星图</a>
-        <a href="./#reading-paths" data-route="home" data-scroll-target="reading-paths">阅读路径</a>
-        <a href="./#studies" data-route="home" data-scroll-target="studies">共读专题</a>
-        <a href="./#library" data-route="home" data-scroll-target="library">全部内容</a>
-        <a href="./#about" data-route="home" data-scroll-target="about">About</a>
+        <a href="./#starts" data-route="home" data-scroll-target="starts">开始与继续</a>
+        <a href="./#directions" data-route="home" data-scroll-target="directions">研究方向</a>
+        <a href="./#domains" data-route="home" data-scroll-target="domains">领域</a>
+        <a href="./#library" data-route="home" data-scroll-target="library">书架</a>
+        <a href="?study=how-we-study" data-route="study" data-route-id="how-we-study">怎样生长 ↗</a>
       </nav>
     </header>
-
     <main id="main-content" tabindex="-1">
       <div id="atlas-view">
-        <section class="atlas-hero" aria-labelledby="atlas-title">
-          <div class="atlas-intro">
-            <h1 id="atlas-title"></h1>
-            <p class="atlas-dek" id="atlas-dek"></p>
-            <p id="reading-entry" class="reading-entry" hidden></p>
-            <p class="atlas-instruction">选择一个 failure surface，先看故障在哪里，再决定从哪篇读起。</p>
-          </div>
-
-          <div class="failure-map" id="research-map">
-            <div class="section-heading compact-heading">
-              <h2>Agent memory 的七个 failure surfaces</h2>
-              <p id="atlas-label"></p>
+        <section class="room-hero" aria-labelledby="atlas-title">
+          <div class="hero-copy"><p class="eyebrow">AN OPEN-ENDED STUDY / EST. 2026</p><h1 id="atlas-title" lang="en"></h1><p class="hero-question" id="hero-question"></p><p class="atlas-dek" id="atlas-dek"></p><a class="text-arrow" href="?study=ams-thesis" data-route="study" data-route-id="ams-thesis">进入 AMS 的研究纲领 <span>↗</span></a></div>
+          <figure class="hero-figure" aria-label="缓慢转动的连续曲面，表达延续与改变">
+            <div class="sculpture-stage" id="continuity-sculpture">
+              <svg class="sculpture-fallback" viewBox="0 0 600 600" aria-hidden="true"><defs><linearGradient id="silver-band" x1="0" y1="0" x2="1" y2=".8"><stop stop-color="#edece4"/><stop offset=".25" stop-color="#8a9794"/><stop offset=".48" stop-color="#e8ebe5"/><stop offset=".64" stop-color="#4e5b59"/><stop offset=".85" stop-color="#bec5bc"/><stop offset="1" stop-color="#f7f7f2"/></linearGradient></defs><path d="M148 370C45 203 230 71 360 126S568 323 439 418 223 524 148 370Z M201 336C275 436 393 428 421 309S332 195 254 209 160 278 201 336Z" fill="url(#silver-band)" fill-rule="evenodd"/><path d="M148 370C179 456 336 355 421 309" fill="none" stroke="#75837e" stroke-width="1"/></svg>
+              <canvas aria-hidden="true"></canvas>
             </div>
-            <ol class="surface-list" id="surface-list"></ol>
-          </div>
+            <figcaption><span>FIG. 01 <i>Continuity, in motion.</i></span><button class="sculpture-toggle" type="button" hidden aria-pressed="false">暂停动态 <span aria-hidden="true">Ⅱ</span></button></figcaption>
+          </figure>
+          <div class="hero-baseline"><span id="room-edition"></span><span id="room-invitation"></span></div>
         </section>
-
-        <section class="inquiries-home" id="inquiries" aria-labelledby="inquiries-title">
-          <div class="section-heading">
-            <div><p class="content-kind">Questions in progress / 让理解继续生长</p><h2 id="inquiries-title">沿问题研究，带判断回去。</h2></div>
-            <p>研究有下一问，实践有适用范围。已执行的证据和待验证的建议，各自说清楚。</p>
-          </div>
-          <div id="question-index"></div>
-          <div class="practice-desk" id="practice" aria-labelledby="practice-title">
+        <section class="room-starts section-wrap" id="starts"><div class="section-heading"><div><p class="eyebrow">BEGIN ANYWHERE</p><h2>好奇，可以成为<br><em>一个开始。</em></h2></div><div class="resume-open"><label class="file-button" for="resume-file">打开接续文件 ↗</label><input class="sr-only" id="resume-file" type="file" accept=".json,application/json"><p id="resume-status" role="status">接续文件只在当前浏览器读取。</p></div></div><div id="room-start-list"></div></section>
+        <section class="room-directions" id="directions"><div class="section-heading"><div><p class="eyebrow">DIRECTIONS / 长期追问</p><h2>一些问题，<br>值得长久停留。</h2></div><p>方向是持续的关切。新的知识可以使它分叉、汇合，或暂时停驻。</p></div><div id="direction-list"></div><div id="direction-focus" tabindex="-1" hidden></div></section>
+        <section class="room-domains section-wrap" id="domains"><div class="section-heading"><div><p class="eyebrow">FIELDS / 知识定位</p><h2>知识的边界，<br><em>仍在向外。</em></h2></div><p>从 agent memory 出发，基础领域也可以独立深入。地图指路，允许交叉与暂未归类。</p></div><div class="domain-layout"><div id="domain-list"></div><div id="domain-focus" tabindex="-1"></div></div></section>
+        <section class="studies-home section-wrap" id="studies"><div class="section-heading"><div><p class="eyebrow">STUDY NOTES / 理解的形状</p><h2>学习留下的东西。</h2></div><p>一段解释、一项推导、一场对读，或一项有边界的实验。长短与形式，由内容决定。</p></div><div id="study-index"></div></section>
+        <section class="inquiries-home section-wrap" id="inquiries"><div class="section-heading"><div><p class="eyebrow">INQUIRIES / 持续探究</p><h2>还想往下问。</h2></div><p>已有的解释、竞争的解释，以及足以改变认识的下一步。</p></div><div id="question-index"></div><details class="practice-disclosure"><summary>带回工程与实践 <span>有范围的判断、依据与目标侧检查 ↗</span></summary>          <div class="practice-desk" id="practice" aria-labelledby="practice-title">
             <div class="practice-intro"><p class="content-kind">Take it into practice</p><h3 id="practice-title">你遇到了什么问题？</h3><p>不用先想起论文名字。取回几条相关判断，带着做法、依据和边界继续工作。</p></div>
             <div class="practice-workspace">
               <form id="practice-form" role="search">
@@ -74,8 +59,54 @@
               <div id="practice-export" class="brief-actions"></div>
             </div>
           </div>
+</details></section>
+        <section class="room-changes section-wrap" id="changes"><div><p class="eyebrow">UNDERSTANDING IN MOTION</p><h2>最近，理解怎样变了。</h2></div><div id="room-change-list"></div></section>
+        <section class="library" id="library" aria-labelledby="library-title">
+          <div class="library-heading">
+            <div>
+              <h2 id="library-title">查找与书架</h2>
+              <p id="library-summary"></p>
+            </div>
+            <p class="result-count" id="result-count" aria-live="polite"></p>
+          </div>
+
+          <form class="library-controls" id="library-controls" role="search">
+            <label class="search-field">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
+              <span class="sr-only">搜索概念、学习、专题、来源</span>
+              <input id="search" type="search" autocomplete="off" placeholder="搜索概念、学习、专题、来源" />
+            </label>
+            <label>
+              <span>主题</span>
+              <select id="topic-filter"></select>
+            </label>
+            <label>
+              <span>分析视角</span>
+              <select id="surface-filter"></select>
+            </label>
+            <label>
+              <span>来源阅读范围</span>
+              <select id="depth-filter"></select>
+            </label>
+            <button class="text-button" id="clear-filters" type="button">清空筛选</button>
+          </form>
+
+          <p class="search-scope">支持空格分隔的多词搜索。专题与实践判断按其引用的同一篇材料匹配主题、surface 与 depth；它们本身不标阅读深度。</p>
+          <details id="library-catalog"><summary>展开研究书架 <span id="library-count-label"></span></summary><div class="material-index" id="material-index" role="list"></div>
+          </details><div class="empty-state" id="empty-state" hidden>
+            <h3>没有匹配的内容</h3>
+            <p>清空一个筛选，或者换一种关键词。</p>
+          </div>
         </section>
 
+
+        <details class="legacy-lenses section-wrap" id="legacy-lenses"><summary>从既有研究地图进入 <span>Failure surfaces · 星图 · 阅读路径 ↗</span></summary>          <div class="failure-map" id="research-map">
+            <div class="section-heading compact-heading">
+              <h2>用 failure surfaces 观察既有材料</h2>
+              <p id="atlas-label"></p>
+            </div>
+            <ol class="surface-list" id="surface-list"></ol>
+          </div>
         <section class="surface-focus" id="surface-focus" tabindex="-1" aria-labelledby="surface-focus-title">
           <div class="surface-focus-index" id="surface-focus-index"></div>
           <div class="surface-focus-copy">
@@ -104,7 +135,7 @@
               <div class="constellation-plot" id="constellation-plot"></div>
               <p class="constellation-mobile-note">横向滑动查看全部 failure surfaces；标题进入 material，列号进入 surface。</p>
               <div class="constellation-matrix" id="constellation-matrix"></div>
-              <p class="constellation-key"><span aria-hidden="true">○</span> read / worked scope <span aria-hidden="true">·</span> <span aria-hidden="true">●</span> material <span aria-hidden="true">·</span> amber = current route or filter match</p>
+              <p class="constellation-key"><span aria-hidden="true">○</span> read / worked scope <span aria-hidden="true">·</span> <span aria-hidden="true">●</span> material <span aria-hidden="true">·</span> blue = current route or filter match</p>
             </div>
 
             <aside class="constellation-reading" id="constellation-reading" aria-labelledby="constellation-reading-title">
@@ -120,79 +151,22 @@
 
         <section class="reading-paths" id="reading-paths" aria-labelledby="paths-title">
           <div class="section-heading">
-            <h2 id="paths-title">三条阅读路径</h2>
+            <h2 id="paths-title">已有材料的阅读路径</h2>
             <p>路径是编者建议，不是进度要求；可以从任意一篇离开。</p>
           </div>
           <div class="path-grid" id="path-grid"></div>
           <div class="path-focus" id="path-focus" hidden tabindex="-1"></div>
         </section>
 
-        <section class="studies-home" id="studies" aria-labelledby="studies-title">
-          <div class="section-heading">
-            <h2 id="studies-title">共读专题</h2>
-            <p>把论文、实现与实验放到同一张桌上。沿着问题读，比较选择怎样改变。</p>
-          </div>
-          <div id="study-index"></div>
-        </section>
-
-        <section class="library" id="library" aria-labelledby="library-title">
-          <div class="library-heading">
-            <div>
-              <h2 id="library-title">全部内容</h2>
-              <p id="library-summary"></p>
-            </div>
-            <p class="result-count" id="result-count" aria-live="polite"></p>
-          </div>
-
-          <form class="library-controls" id="library-controls" role="search">
-            <label class="search-field">
-              <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
-              <span class="sr-only">搜索材料、专题、判断或作者</span>
-              <input id="search" type="search" autocomplete="off" placeholder="搜索材料、专题、判断或作者" />
-            </label>
-            <label>
-              <span>主题</span>
-              <select id="topic-filter"></select>
-            </label>
-            <label>
-              <span>Failure surface</span>
-              <select id="surface-filter"></select>
-            </label>
-            <label>
-              <span>Depth</span>
-              <select id="depth-filter"></select>
-            </label>
-            <button class="text-button" id="clear-filters" type="button">清空筛选</button>
-          </form>
-
-          <p class="search-scope">支持空格分隔的多词搜索。专题与实践判断按其引用的同一篇材料匹配主题、surface 与 depth；它们本身不标阅读深度。</p>
-          <div class="material-index" id="material-index" role="list"></div>
-          <div class="empty-state" id="empty-state" hidden>
-            <h3>没有匹配的内容</h3>
-            <p>清空一个筛选，或者换一种关键词。</p>
-          </div>
-        </section>
-
-        <section class="about" id="about" aria-labelledby="about-title">
-          <p class="content-kind">About this room</p>
-          <h2 id="about-title">读源，<span class="mobile-keep">不把导航冒充结论。</span></h2>
-          <div class="about-grid">
-            <p id="editorial-note"></p>
-            <p>这个页面是 static、no-backend，并只使用 Cloudflare Web Analytics 的轻量 aggregate beacon：不使用 cookie 或 localStorage 识别、画像访客，也不记录 query string 或自定义阅读事件；公开内容路径可以出现在 aggregate page-view 统计中。PDF 采用 hybrid delivery：只有逐文件确认 public redistribution license 的文件随站提供，其余材料回到 official source。</p>
-          </div>
-          <button class="architecture-note" id="architecture-note" type="button" aria-pressed="false">
-            <span class="architecture-line" id="architecture-line"></span>
-            <span class="architecture-reveal" id="architecture-reveal" aria-hidden="true"></span>
-          </button>
-        </section>
+</details>
+        <section class="about section-wrap" id="about"><p class="eyebrow">AN OPEN-ENDED STUDY</p><h2>给尚未想通的东西，<br>一个继续生长的地方。</h2><div class="about-grid"><p id="editorial-note"></p><div><a href="?study=how-we-study" data-route="study" data-route-id="how-we-study">AMS 怎样学习与生长 ↗</a><p>公开研究与私人共学分开。这里没有账号或访客档案；接续由你保存为本地文件。来源保有阅读范围，演示、研究结果与编者判断分别说明。</p></div></div></section>
       </div>
-
       <article class="inquiry-view" id="inquiry-view" hidden></article>
 
       <article class="study-view" id="study-view" hidden></article>
 
       <article class="material-view" id="material-view" hidden>
-        <a class="back-link" href="./" data-route="home">← 回到研究地图</a>
+        <a class="back-link" href="./" data-route="home">← 回到书房</a>
         <div class="material-layout">
           <aside class="article-index" aria-label="本文目录">
             <p>本文目录</p>
@@ -301,38 +275,25 @@
               <div id="material-studies"></div>
             </section>
 
-            <section class="article-section source-delivery-mobile" id="paper-source-mobile" data-toc-label="来源与交付"></section>
+
           </div>
 
           <aside class="source-rail" id="source-rail" aria-label="来源、阅读范围与 PDF 交付"></aside>
         </div>
       </article>
     </main>
-
-    <footer class="site-footer">
-      <p>札记按逐篇标注的 reading scope，不替代原文。</p>
-      <nav aria-label="项目链接">
-        <a href="https://github.com/IndelibleVivi/agent-memory-study">GitHub · 数据与贡献</a>
-        <a href="NOTICE.md">Notice</a>
-        <a href="THIRD_PARTY_NOTICES.md">PDF notices</a>
-      </nav>
-      <p class="related-projects">相关工具：
-        <a href="https://indeliblevivi.github.io/mcp-boundary/">MCP Boundary · 协议与工程边界</a> ·
-        <a href="https://indeliblevivi.github.io/codex-worker-routing/">Worker Routing · agent 委派</a> ·
-        <a href="https://servotab.com/">Servotab · 工程工作方法</a>
-      </p>
-    </footer>
-
+    <footer class="site-footer"><div><strong>Agent Memory Study</strong><p>信息、经验，与跨时间的智能。</p></div><nav aria-label="项目链接"><a href="https://github.com/IndelibleVivi/agent-memory-study">GitHub · 研究真源 ↗</a><a href="NOTICE.md">Notice</a><a href="THIRD_PARTY_NOTICES.md">PDF notices</a></nav></footer>
     <p class="sr-only" id="route-status" aria-live="polite"></p>
-    <noscript>这个 reading room 需要 JavaScript 来读取同 repo 的 public canonical data。材料与许可说明仍可在 GitHub repository 中查看。</noscript>
-    <script src="assets/materials-data.js?v=20260925-representation-2"></script>
+    <noscript>公开部署提供完整静态正文。源码模式需要 JavaScript；也可在 GitHub 的 study 目录阅读研究正文。</noscript>
+    <script src="assets/materials-data.js?v=20261018-rebirth"></script>
     <script src="assets/revision-study.js?v=20260908-studies-1"></script>
-    <script src="assets/reading-search.js?v=20260925-representation-2"></script>
-    <script src="assets/practice.js?v=20260925-representation-2"></script>
-    <script src="assets/seo.js?v=20260925-representation-2"></script>
-    <script src="assets/app.js?v=20260925-representation-2"></script>
-    <!-- Cloudflare Web Analytics -->
+    <script src="assets/reading-search.js?v=20261018-rebirth"></script>
+    <script src="assets/practice.js?v=20261018-rebirth"></script>
+    <script src="assets/study-packets.js?v=20261018-rebirth"></script>
+    <script src="assets/study-desk.js?v=20261018-rebirth"></script>
+    <script src="assets/seo.js?v=20261018-rebirth"></script>
+    <script src="assets/app.js?v=20261018-rebirth"></script>
+    <script src="assets/continuity-sculpture.js?v=20261018-rebirth"></script>
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"4e0929eca0504d43aca1cc1a1f30ffaf"}'></script>
-    <!-- End Cloudflare Web Analytics -->
   </body>
 </html>

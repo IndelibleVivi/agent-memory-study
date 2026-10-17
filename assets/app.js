@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  if (window.AMS_READER_SHELL) document.querySelector("#main-content").innerHTML = window.AMS_READER_SHELL;
   const data = window.READING_ROOM;
   if (
     !data
@@ -93,9 +94,6 @@
     librarySummary: document.querySelector("#library-summary"),
     emptyState: document.querySelector("#empty-state"),
     editorialNote: document.querySelector("#editorial-note"),
-    architectureNote: document.querySelector("#architecture-note"),
-    architectureLine: document.querySelector("#architecture-line"),
-    architectureReveal: document.querySelector("#architecture-reveal"),
     materialNumber: document.querySelector("#material-number"),
     materialTitle: document.querySelector("#material-title"),
     materialMeta: document.querySelector("#material-meta"),
@@ -122,7 +120,6 @@
     materialContributions: document.querySelector("#material-contributions"),
     articleToc: document.querySelector("#article-toc"),
     sourceRail: document.querySelector("#source-rail"),
-    sourceMobile: document.querySelector("#paper-source-mobile"),
     routeStatus: document.querySelector("#route-status"),
     menuButton: document.querySelector("#menu-button"),
     siteNav: document.querySelector("#site-nav"),
@@ -148,6 +145,9 @@
     const explicitSurface = surfacesById.has(params.get("surface")) ? params.get("surface") : "";
     const depth = depthOrder.includes(params.get("depth")) ? params.get("depth") : "";
     return {
+      domain: data.room.domains.some(x=>x.id===params.get("domain")) ? params.get("domain") : null,
+      direction: data.room.directions.some(x=>x.id===params.get("direction")) ? params.get("direction") : null,
+      ...window.StudyDesk.exercise({k:params.get("k") || 3, need:params.get("need"), ranking:params.get("ranking")}),
       question, finding, practice: params.get("practice") || "",
       material,
       study,
@@ -183,6 +183,8 @@
 
   function routeHref(type, id) {
     const next = { ...route, question: null, finding: null, material: null, study: null, scenario: null, phase: "before", thread: null, path: null };
+    if (type === "domain") next.domain = id;
+    if (type === "direction") next.direction = id;
     if (type === "material") next.material = id;
     if (type === "study") next.study = id;
     if (type === "question") next.question = id;
@@ -192,7 +194,7 @@
       next.surface = id;
     }
     if (type === "path") next.path = id;
-    return routeUrl(next);
+    return routeUrl(next, type === "domain" ? "#domains" : type === "direction" ? "#directions" : "");
   }
 
   function createRouteLink(type, id, text, className = "") {
@@ -222,41 +224,8 @@
     return node;
   }
 
-  function renderEasterEggs() {
-    const easterEgg = data.atlas.easterEgg;
-    const [before, after] = data.atlas.thesis.split(easterEgg.heroWord);
-    const word = document.createElement("button");
-    word.type = "button";
-    word.className = "easter-word";
-    word.dataset.easter = "hero";
-    word.dataset.original = easterEgg.heroWord;
-    word.dataset.reveal = easterEgg.heroReveal;
-    word.setAttribute("aria-pressed", "false");
-    word.setAttribute(
-      "aria-label",
-      `${easterEgg.heroWord}. Activate to reveal ${easterEgg.heroReveal}.`,
-    );
-    const original = createTextElement("span", easterEgg.heroWord, "easter-word-original");
-    const reveal = createTextElement("span", easterEgg.heroReveal, "easter-word-reveal");
-    original.setAttribute("aria-hidden", "true");
-    reveal.setAttribute("aria-hidden", "true");
-    word.append(original, reveal);
-    refs.atlasTitle.replaceChildren(document.createTextNode(before), word, document.createTextNode(after));
-
-    refs.architectureLine.textContent = easterEgg.aboutLine;
-    refs.architectureReveal.textContent = easterEgg.aboutReveal;
-    refs.architectureNote.dataset.original = easterEgg.aboutLine;
-    refs.architectureNote.dataset.reveal = easterEgg.aboutReveal;
-    refs.architectureNote.setAttribute("aria-pressed", "false");
-    refs.architectureNote.setAttribute(
-      "aria-label",
-      `${easterEgg.aboutLine} Activate to reveal a second line.`,
-    );
-  }
-
   function renderAtlasFrame() {
-    renderEasterEggs();
-    refs.atlasDek.textContent = data.atlas.dek;
+    renderRoom();
     refs.atlasLabel.textContent = data.atlas.editorialLabel;
     refs.editorialNote.textContent = data.editorialNote;
     renderSurfaces();
@@ -266,6 +235,8 @@
     renderInquiryIndex();
     syncControls();
     renderLibrary();
+    document.querySelector("#library-count-label").textContent = `${searchIndex.length} 条公开内容`;
+    if(route.q || route.topic || route.surface || route.depth || window.location.hash === "#library") document.querySelector("#library-catalog").open=true;
   }
 
   function selectedSurface() {
@@ -1112,9 +1083,7 @@
     }));
 
     const sourceContent = buildSourceContent(material);
-    const mobileSourceContent = sourceContent.cloneNode(true);
     refs.sourceRail.replaceChildren(sourceContent);
-    refs.sourceMobile.replaceChildren(mobileSourceContent);
     renderArticleToc();
     observeArticleSections();
   }
@@ -1190,95 +1159,177 @@
       });
   }
 
+  function studyLabel(study) {
+    return ({"learning-note":"学习记录", "research-essay":"研究论述", "editorial-synthesis-with-proposed-experiment":"共读 · 未执行方案", "editorial-synthesis-with-recorded-experiment":"共读 · 已保存研究结果", "editorial-synthesis-with-deterministic-demo":"共读 · 原创规则演示"})[study.kind] || "研究记录";
+  }
+
+  function renderRoom() {
+    const el = createTextElement;
+    refs.atlasTitle.replaceChildren(...(data.room.heroTitle || data.room.thesis).split("\n").map(text => el("span", text)));
+    document.querySelector("#hero-question").textContent = data.room.thesis;
+    refs.atlasDek.textContent = data.room.intro;
+    document.querySelector("#room-edition").textContent = data.room.edition;
+    document.querySelector("#room-invitation").textContent = data.room.invitation;
+    document.querySelector("#room-start-list").replaceChildren(...data.room.starts.map((start, i) => {
+      const item = studiesById.get(start.studyId); const node = el("article", "", "start-entry");
+      const title = el("h3", "");
+      const titleLink = createRouteLink("study", item.id, "");
+      start.prompt.split(/([A-Za-z][A-Za-z0-9]*(?:-[A-Za-z0-9]+)+)/).forEach((part, index) => {
+        titleLink.append(index % 2 ? el("span", part, "unbroken-term") : document.createTextNode(part));
+      });
+      title.append(titleLink);
+      node.append(el("p", `0${i+1} / ${start.kicker}`, "eyebrow"), title, el("p", item.intro), createRouteLink("study", item.id, "进入这次研究 ↗", "text-arrow")); return node;
+    }));
+    document.querySelector("#direction-list").replaceChildren(...data.room.directions.map((direction, i) => {
+      const link = createRouteLink("direction", direction.id, "", "direction-row");
+      if (route.direction === direction.id) link.setAttribute("aria-current", "true");
+      const copy = el("span", "", "direction-copy"); copy.append(el("span", direction.title, "direction-title"), el("span", direction.intro));
+      link.append(el("span", `0${i+1}`, "direction-number"), copy, el("span", "↗", "direction-arrow")); return link;
+    }));
+    const groupLinks = (group, target) => {
+      target.replaceChildren(el("p", group.english || "", "eyebrow"), el("h3", group.title), el("p", group.question || group.intro, "group-question"));
+      const links = el("div", "", "group-readings");
+      for (const [field, kind, map] of [["studyIds","study",studiesById],["questionIds","question",questionsById],["materialIds","material",materialsById]]) {
+        (group[field] || []).forEach(id => { const item = map.get(id); links.append(createRouteLink(kind, id, item.title + " ↗")); });
+      }
+      target.append(links);
+    };
+    const focus = document.querySelector("#direction-focus");
+    const direction = data.room.directions.find(item => item.id === route.direction);
+    focus.hidden = !direction; if (direction) groupLinks(direction, focus);
+    document.querySelector("#domain-list").replaceChildren(...data.room.domains.map((domain, i) => {
+      const link = createRouteLink("domain", domain.id, "", "domain-link");
+      link.append(el("span", String(i+1).padStart(2,"0")), el("strong", domain.title), el("small", domain.english));
+      if (domain.id === (route.domain || data.room.domains[0].id)) link.setAttribute("aria-current", "true"); return link;
+    }));
+    groupLinks(data.room.domains.find(item => item.id === route.domain) || data.room.domains[0], document.querySelector("#domain-focus"));
+    document.querySelector("#room-change-list").replaceChildren(...data.room.changes.map(change => {
+      const node = el("article", "", "change-entry"); const h = el("h3", ""); h.append(createRouteLink("study", change.studyId, change.title));
+      node.append(el("time", change.date), h, el("p", change.text)); return node;
+    }));
+    const legacy = document.querySelector("#legacy-lenses");
+    if (route.thread || route.path || ["#research-map","#constellation","#reading-paths","#surface-focus"].includes(window.location.hash)) legacy.open = true;
+    if (route.practice || window.location.hash === "#practice") document.querySelector(".practice-disclosure").open = true;
+  }
+
   function renderStudyIndex() {
-    const entry = document.querySelector("#reading-entry");
-    entry.hidden = data.studies.length === 0;
-    entry.replaceChildren();
-    if (data.studies.length) {
-      entry.append("第一次来？", createRouteLink("study", data.studies[0].id, `从「${data.studies[0].title}」开始 →`));
-    }
-    refs.studyIndex.replaceChildren(...data.studies.map(study => {
-      const entry = createTextElement("div", "", "study-entry");
-      entry.append(createTextElement("span", study.number, "study-entry-number"));
-      const text = createTextElement("div", "");
-      const title = createTextElement("h3", "");
-      title.append(createRouteLink("study", study.id, `${study.title} ↗`));
-      text.append(createTextElement("p", "Shared reading · 共同的问题", "content-kind"), title,
-        createTextElement("p", study.subtitle, "study-subtitle"), createTextElement("p", study.intro));
-      const note = createTextElement("div", "", "study-entry-note");
-      const recordedLabel = study.recordedResults?.schema === "ams-jev-contract-results/1" ? "已执行源码实验" : "已执行学习实验";
-      const proposed = study.kind === "editorial-synthesis-with-proposed-experiment";
-      const sourceCount = study.readings.length + (study.externalReadings || []).length;
-      const studySummary = proposed ? `${sourceCount} 份来源 / 研究方案尚未执行`
-        : study.kind === "editorial-synthesis-with-recorded-experiment" ? `${sourceCount} 份来源 / ${recordedLabel}`
-        : `${study.readings.length} 份材料 / ${study.scenarios.length} 个可切换场景`;
-      note.append(createTextElement("p", studySummary),
-        createTextElement("p", proposed ? "原文 · 串读 · 下一项研究" : "原文 · 串读 · 亲手比较 · 带走判断"),
-        createRouteLink("study", study.id, "进入共读专题 →", "study-enter"));
-      entry.append(text, note);
-      return entry;
+    const programme = new Set(["ams-thesis","how-we-study", ...data.room.directions.flatMap(item => item.studyIds.slice(0,1))]);
+    const entries = data.studies.filter(item => !programme.has(item.id)).sort((a,b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title));
+    refs.studyIndex.replaceChildren(...entries.map(study => {
+      const entry = createTextElement("article", "", "study-entry");
+      const heading = createTextElement("h3", ""); heading.append(createRouteLink("study", study.id, study.title));
+      const copy = createTextElement("div", ""); copy.append(heading, createTextElement("p", study.intro));
+      entry.append(createTextElement("p", studyLabel(study), "content-kind"), copy, createTextElement("time", study.date)); return entry;
     }));
   }
 
   function renderStudy(study) {
     const el = createTextElement;
-    const proposed = study.kind === "editorial-synthesis-with-proposed-experiment";
     const fragment = document.createDocumentFragment();
-    const back = createRouteLink("home", "", "← 回到公开书房", "back-link");
     const header = el("header", "", "study-heading");
     const title = el("h1", study.title); title.id = "study-title"; title.tabIndex = -1;
-    header.append(el("p", `共读专题 ${study.number} / Shared reading`, "content-kind"), title,
-      el("p", study.subtitle, "study-subtitle"), el("p", study.intro, "study-dek"),
-      el("p", `${study.byline} · ${study.date} · 跨源编者论述`, "study-byline"));
-    const jump = el("nav", "", "study-jump"); jump.setAttribute("aria-label", "共读专题目录");
-    for (const [id, text] of [["study-reading","一起读"],["study-lab",proposed ? "下一项研究" : "亲手比较"],["study-takeaways","带走判断"]]) {
-      const link = el("a", text); link.href = `#${id}`; jump.append(link);
-    }
-    fragment.append(back, header, jump);
+    header.append(el("p", studyLabel(study), "content-kind"), title, el("p", study.intro, "study-dek"), el("p", `${study.byline} · ${study.date}`, "study-byline"));
+    fragment.append(createRouteLink("home", "", "← 回到书房", "back-link"), header);
     const reading = el("section", "", "study-reading"); reading.id = "study-reading";
     const essay = el("div", "", "study-essay");
-    study.sections.forEach(section => essay.append(el("h2", section.title), el("p", section.text)));
-    const sources = el("div", "", "study-sources");
-    sources.append(el("p", "桌上的材料", "content-kind"));
-    study.readings.forEach((reading, index) => {
-      const material = materialsById.get(reading.materialId);
-      const row = el("section", "", "study-source");
-      const heading = el("h3", `${index + 1}. `);
-      heading.append(createRouteLink("material", material.id, reading.label));
-      const sourceLink = createExternalLink(material.sourceUrl, "回原文 ↗");
-      row.append(heading, el("p", reading.takeaway), el("p", reading.limit, "study-source-limit"),
-        el("p", reading.locator, "study-locator"), sourceLink);
-      sources.append(row);
+    // HTML is produced by the local Markdown compiler with raw HTML disabled.
+    essay.innerHTML = study.bodyHtml;
+    if (essay.firstElementChild?.tagName === "H1") essay.firstElementChild.remove();
+    const toc = el("nav", "", "study-toc"); toc.setAttribute("aria-label", "本文目录"); toc.append(el("p", "在这篇里", "eyebrow"));
+    essay.querySelectorAll("h2").forEach((h, i) => { h.id = `section-${i+1}`; const a=el("a", h.textContent); a.href=`#${h.id}`; toc.append(a); });
+    essay.querySelectorAll("table").forEach(table => { const wrap=el("div","","table-scroll"); wrap.tabIndex=0; wrap.setAttribute("role","region"); wrap.setAttribute("aria-label","内容对照表，可横向滚动"); table.replaceWith(wrap); wrap.append(table); });
+    essay.querySelectorAll("a").forEach(a => {
+      const url = new URL(a.getAttribute("href"), siteRoot);
+      const id = url.searchParams.get("study");
+      if (id && studiesById.has(id)) { a.dataset.route="study"; a.dataset.routeId=id; a.href=routeHref("study", id) + url.hash; }
+      else if (url.origin === siteRoot.origin && !a.getAttribute("href").startsWith("#")) a.href=url.href;
     });
-    (study.externalReadings || []).forEach(source => {
-      const row = el("section", "", "study-source");
-      row.append(el("p", source.kind, "content-kind"), el("h3", source.label), el("p", source.takeaway),
-        el("p", source.limit, "study-source-limit"), el("p", source.locator, "study-locator"),
-        createExternalLink(source.url, "查看一手来源 ↗"));
-      sources.append(row);
-    });
-    reading.append(essay, sources); fragment.append(reading);
-
-    const renderedLab = proposed ? renderProposedLab(study)
-      : study.kind === "editorial-synthesis-with-recorded-experiment"
-        ? renderRecordedLab(study) : renderRevisionLab(study);
-    fragment.append(renderedLab.element);
-
-    const takeaways = el("section", "", "study-takeaways"); takeaways.id = "study-takeaways";
-    takeaways.append(el("p", "Take it with you / 编者设计判断", "content-kind"), el("h2", "读完之后，带走什么"));
-    const items = el("div", "", "study-takeaway-grid");
-    study.takeaways.forEach(item => { const section = el("section", ""); section.append(el("h3", item.title), el("p", item.text)); items.append(section); });
-    takeaways.append(items, el("p", study.closing, "study-closing"));
-    const contribute = createExternalLink("https://github.com/IndelibleVivi/agent-memory-study/blob/main/CONTRIBUTING.md", "带着来源或反例参与共读 ↗");
-    takeaways.append(contribute); fragment.append(takeaways);
-    const questions = (data.questions || []).filter(item => item.studyIds.includes(study.id));
-    if (questions.length) {
-      const onward = el("section", "", "study-takeaways");
-      onward.append(el("h2", "这个问题，还在继续"), ...questions.map(item => createInquiryRow(item, "question")));
-      fragment.append(onward);
+    reading.append(toc, essay); fragment.append(reading);
+    let lab = null;
+    if (study.kind === "editorial-synthesis-with-proposed-experiment") lab=renderProposedLab(study);
+    if (study.kind === "editorial-synthesis-with-recorded-experiment") lab=renderRecordedLab(study);
+    if (study.kind === "editorial-synthesis-with-deterministic-demo") lab=renderRevisionLab(study);
+    if (lab) fragment.append(lab.element);
+    if (lab || study.exercise) { const a=el("a", study.kind === "editorial-synthesis-with-proposed-experiment" ? "下一项研究" : study.exercise ? "亲手演算" : "亲手比较"); a.href="#study-lab"; toc.append(a); }
+    if (study.exercise === "retrieval-sets") fragment.append(renderRetrievalExercise());
+    const sourceCount = study.readings.length + study.externalReadings.length;
+    if (sourceCount) {
+      const sources = el("details", "", "study-sources"); sources.id="study-sources"; const sourceJump=el("a","来源与阅读范围"); sourceJump.href="#study-sources"; toc.append(sourceJump); sources.append(el("summary", `来源与实际阅读范围 · ${sourceCount}`));
+      study.readings.forEach(reading => {
+        const material=materialsById.get(reading.materialId); const row=el("section","","study-source"); const h=el("h3",""); h.append(createRouteLink("material",material.id,reading.label));
+        row.append(h,el("p",reading.takeaway),el("p",reading.locator,"study-locator"),el("p",reading.limit,"study-source-limit"),createExternalLink(material.sourceUrl,"回原文 ↗")); sources.append(row);
+      });
+      study.externalReadings.forEach(source => {
+        const row=el("section","","study-source"); const h=el("h3",""); h.append(createExternalLink(source.url,source.label));
+        row.append(el("p",source.kind,"content-kind"),h,el("p",source.takeaway),el("p",source.locator,"study-locator"),el("p",source.limit,"study-source-limit")); sources.append(row);
+      }); fragment.append(sources);
     }
+    if (study.takeaways.length || study.closing) {
+      const takeaway=el("section","","study-takeaways"); takeaway.id="study-takeaways"; const takeawayJump=el("a","留下的理解");takeawayJump.href="#study-takeaways";toc.append(takeawayJump);takeaway.append(el("h2","留下的理解"));
+      study.takeaways.forEach(item => takeaway.append(el("h3",item.title),el("p",item.text)));
+      if (study.closing) takeaway.append(el("p",study.closing)); fragment.append(takeaway);
+    }
+    if (study.boundary && !lab) fragment.append(el("p",study.boundary,"study-boundary"));
+    if (study.changes?.length) {
+      const changes=el("section","","understanding-changes"); changes.append(el("p","理解怎样变化","eyebrow"));
+      study.changes.forEach(change=>changes.append(el("time",change.date),el("p",`此前：${change.before}`),el("p",`现在：${change.after}`),el("p",change.basis,"study-locator"))); fragment.append(changes);
+    }
+    if (study.continuation) {
+      const c=study.continuation; const onward=el("section","","continuation"); onward.append(el("p","下次，从这里继续","eyebrow"),el("h2",c.question),el("p",c.why));
+      c.studyIds.forEach(id=>onward.append(createRouteLink("study",id,studiesById.get(id).title+" ↗")));
+      c.materialIds.forEach(id=>onward.append(createRouteLink("material",id,materialsById.get(id).title+" ↗"))); fragment.append(onward);
+    }
+    const questions=data.questions.filter(item=>item.studyIds.includes(study.id));
+    if (questions.length) {const onward=el("section","","study-onward");onward.append(el("h2","继续追问"));questions.forEach(item=>onward.append(createInquiryRow(item,"question")));fragment.append(onward);}
     refs.studyView.replaceChildren(fragment);
-    refs.routeStatus.textContent = study.title + "。" + renderedLab.status;
+    refs.routeStatus.textContent=`已打开${studyLabel(study)}：${study.title}${lab ? `。${lab.status}` : ""}`;
+  }
+
+  function renderRetrievalExercise() {
+    const el=createTextElement, x=window.StudyDesk.exercise(route);
+    const lab=el("section","","study-lab retrieval-exercise");lab.id="study-lab";
+    lab.append(el("p","ORIGINAL TEACHING SET / 原创集合演算","eyebrow"),el("h2","换一个集合，看看比例怎样变化。"),el("p","a–h、顺序与相关集合均为设定；这里没有执行 embedding、ANN 或模型检索。"));
+    const controls=el("div","","study-controls");
+    for(const [field,label,options] of [["ranking","返回的排序",[["reference","A · 与参考近邻相同"],["contrast","B · 手工对照"]]],["need","当前相关集合",[["understand","R₁ = {a, d, e, f}"],["implement","R₂ = {b, c, g}"]]]]) {
+      const wrap=el("label",label);const select=el("select","");select.id=`retrieval-${field}`;options.forEach(([value,text])=>{const o=el("option",text);o.value=value;select.append(o);});select.value=x[field];
+      select.addEventListener("change",()=>{navigate({[field]:select.value},{focus:false,hash:"study-lab"});document.querySelector(`#retrieval-${field}`).focus({preventScroll:true});});wrap.append(select);controls.append(wrap);
+    }
+    const wrap=el("label",`取前 k 项：${x.k}`);const input=document.createElement("input");input.type="range";input.min=1;input.max=8;input.value=x.k;input.id="retrieval-k";
+    input.addEventListener("input",()=>{navigate({k:Number(input.value)},{replace:true,focus:false,hash:"study-lab"});document.querySelector("#retrieval-k").focus({preventScroll:true});});wrap.append(input);controls.append(wrap);lab.append(controls);
+    const row=el("div","","retrieval-documents"); window.StudyDesk.documents.forEach(id=>{const chip=el("span",id,`retrieval-doc ${x.selected.includes(id)?"is-selected":""} ${x.relevant.includes(id)?"is-relevant":""}`);chip.title=`${id}：${x.selected.includes(id)?"已返回":"未返回"}，${x.relevant.includes(id)?"与需求相关":"不相关"}`;row.append(chip);});lab.append(row,el("p","深色底 = 已返回 · 下划线 = 需求相关","study-locator"));
+    const results=el("div","","retrieval-metrics");results.setAttribute("aria-live","polite");
+    for(const [label,value,formula] of [["近邻集合召回",x.neighborRecall,`${x.overlap.length} / ${x.k}`],[`Precision@${x.k}`,x.precision,`${x.hits.length} / ${x.k}`],[`Recall@${x.k}`,x.recall,`${x.hits.length} / ${x.relevant.length}`]]) {
+      const cell=el("div","");cell.append(el("span",label),el("strong",`${(value*100).toFixed(1)}%`),el("span",formula));results.append(cell);
+    }lab.append(results,el("p",`返回 {${x.selected.join(", ")}} · 参考近邻 {${x.reference.join(", ")}} · 相关 {${x.relevant.join(", ")}}`,"study-locator"));return lab;
+  }
+
+  const deskNotes = new Map();
+  function downloadFile(name, text, type) {
+    const url=URL.createObjectURL(new Blob([text],{type}));const link=document.createElement("a");link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+  function mountDesk(kind,item,view) {
+    view.querySelector(".study-desk")?.remove();
+    const el=createTextElement, area=el("section","","study-desk");
+    const actions=el("div","","packet-actions");actions.append(el("p","带走这份公开研究","eyebrow"));
+    ["markdown","json"].forEach(format=>{
+      const name=`${kind}-${item.id}.${format==="markdown"?"md":"json"}`;
+      if(physicalRoutes){const a=el("a",format==="markdown"?"Markdown ↓":"JSON ↓");a.href=new URL(`${kind}/${item.id}/index.${format==="markdown"?"md":"json"}`,siteRoot);a.download=name;actions.append(a);}
+      else {const b=el("button",format==="markdown"?"Markdown ↓":"JSON ↓");b.type="button";b.addEventListener("click",()=>{const p=window.StudyPackets.packet(data,kind,item.id);downloadFile(name,format==="markdown"?window.StudyPackets.markdown(p):JSON.stringify(p,null,2),format==="markdown"?"text/markdown":"application/json");});actions.append(b);}
+    });
+    area.append(actions,el("p","含当前正文、出处、阅读范围与接续线索；链接的全文不随包附带。","desk-hint"));
+    const details=el("details","","private-continuation");details.append(el("summary","记下自己的继续位置"));
+    const key=`${kind}:${item.id}`, previous=deskNotes.get(key);
+    const label=el("label","下次想从哪里接着？");label.htmlFor="continuation-note";
+    const input=el("textarea","");input.id="continuation-note";input.maxLength=20000;input.rows=4;input.placeholder="一个没想通的地方、一个例子，或下一步想试的事。";input.value=previous?.note||"";
+    input.addEventListener("input",()=>deskNotes.set(key,{...deskNotes.get(key),note:input.value}));
+    const button=el("button","保存接续文件 ↓");button.type="button";button.addEventListener("click",()=>{
+      const state={schema:window.StudyDesk.schema,kind,id:item.id,note:input.value,anchor:/^#[a-zA-Z0-9_-]{1,120}$/.test(window.location.hash)?window.location.hash:"",contentVersion:item.date||item.updated||data.room.edition};
+      if(item.exercise) {const x=window.StudyDesk.exercise(route);state.exercise={k:x.k,ranking:x.ranking,need:x.need};}
+      downloadFile(`ams-${item.id}.json`,JSON.stringify(window.StudyDesk.validate(state,data),null,2),"application/json");
+    });
+    details.append(label,input,button,el("p","只保留在本页内存中；刷新前请保存文件。文件由你保管，可从首页重新打开，不上传，也不写入浏览器存储。","desk-hint"));
+    if(previous?.contentVersion && previous.contentVersion !== (item.date||item.updated||data.room.edition)) details.append(el("p","内容日期已变化；你的笔记仍按原样保留。","study-boundary"));
+    if(previous)details.open=true;area.append(details);view.append(area);
   }
 
   function renderProposedLab(study) {
@@ -1601,9 +1652,11 @@
     evidence.append(materials); fragment.append(evidence);
     if (kind === "question") {
       const next = section("inquiry-next", "下一次，怎样让认识改变？");
-      next.append(el("p", item.nextTest.question, "inquiry-lead"));
+      if(item.nextTest) { next.append(el("p", item.nextTest.question, "inquiry-lead"));
       for (const [key,label] of [["comparison","怎样比较"],["success","看什么结果"],["reviseWhen","何时改主意"]]) next.append(el("h3", label),el("p",item.nextTest[key]));
-      next.append(el("p",item.nextTest.boundary,"inquiry-limit")); fragment.append(next);
+      next.append(el("p",item.nextTest.boundary,"inquiry-limit")); }
+      if(item.continuation) next.append(el("p",item.continuation.question,"inquiry-lead"),el("p",item.continuation.why));
+      fragment.append(next);
       const practice = section("inquiry-practice", "已有的理解，可以怎样带回去？");
       practice.append(el("p", item.findingIds.length ? "下面是可以独立引用的编者判断。已有实验支持限定范围内的认识；具体迁移方法仍需在目标系统验证。" : "本专题尚未形成独立的实践判断。可以先查看共读与已执行实验，沿着条件、失败和下一问继续研究。"),
         ...item.findingIds.map(id => createInquiryRow(findingsById.get(id), "finding")));
@@ -1629,6 +1682,12 @@
 
   function render(options = {}) {
     renderView(options);
+    const activeKind=seo.kinds.find(key=>route[key]);
+    if(activeKind) {
+      const collection={material:materialsById,study:studiesById,question:questionsById,finding:findingsById}[activeKind];
+      const view=activeKind==="material"?refs.materialView:activeKind==="study"?refs.studyView:refs.inquiryView;
+      mountDesk(activeKind,collection.get(route[activeKind]),view);
+    }
     if (physicalRoutes) {
       document.querySelectorAll('a[href^="#"], a[data-fragment]').forEach(link => {
         const hash = link.dataset.fragment || link.getAttribute("href");
@@ -1687,6 +1746,7 @@
         window.scrollTo({top: 0, behavior: "auto"});
         document.querySelector("#study-title").focus({preventScroll: true});
       }
+      if(hash) window.requestAnimationFrame(()=>fragmentTarget(hash)?.scrollIntoView());
       return;
     }
     if (showingMaterial) {
@@ -1697,6 +1757,7 @@
         refs.materialTitle.tabIndex = -1;
         refs.materialTitle.focus({ preventScroll: true });
       }
+      if(hash) window.requestAnimationFrame(()=>fragmentTarget(hash)?.scrollIntoView());
       return;
     }
 
@@ -1706,7 +1767,7 @@
       ? `已打开阅读路径：${pathsById.get(route.path).title}`
       : activeSurface
         ? `研究地图：${activeSurface.label}`
-        : "研究地图：尚未选择 failure surface";
+        : "已打开 AMS 研究书房";
     if (!focus && !hash) return;
     window.requestAnimationFrame(() => {
       const target = route.thread
@@ -1763,13 +1824,15 @@
   function activateRouteLink(link) {
     const type = link.dataset.route;
     const id = link.dataset.routeId;
+    const hash = new URL(link.href,window.location.href).hash;
+    if(type==="domain" || type==="direction") {navigate({material:null,study:null,question:null,finding:null,thread:null,path:null,[type]:id},{focus:true,hash:type==="domain"?"#domains":"#directions"});return;}
     if (type === "question" || type === "finding") {
       navigate({material: null, study: null, question: type === "question" ? id : null,
-        finding: type === "finding" ? id : null, scenario: null, phase: "before", thread: null, path: null}, {focus: true});
+        finding: type === "finding" ? id : null, scenario: null, phase: "before", thread: null, path: null}, {focus: true,hash});
       return;
     }
     if (type === "study") {
-      navigate({question: null, finding: null, material: null, study: id, scenario: null, phase: "before", thread: null, path: null}, {focus: true});
+      navigate({question: null, finding: null, material: null, study: id, scenario: null, phase: "before", thread: null, path: null}, {focus: true,hash});
       return;
     }
     if (type === "material") {
@@ -1807,18 +1870,6 @@
 
   document.addEventListener("click", (event) => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const easterButton = event.target.closest("button[data-easter], #architecture-note");
-    if (easterButton) {
-      const revealed = easterButton.getAttribute("aria-pressed") !== "true";
-      easterButton.setAttribute("aria-pressed", String(revealed));
-      easterButton.setAttribute(
-        "aria-label",
-        revealed
-          ? `${easterButton.dataset.reveal} Activate to restore ${easterButton.dataset.original}.`
-          : `${easterButton.dataset.original} Activate to reveal ${easterButton.dataset.reveal}.`,
-      );
-      return;
-    }
     const link = event.target.closest("a[data-route]");
     if (!link) return;
     event.preventDefault();
@@ -1828,6 +1879,20 @@
   window.addEventListener("popstate", () => {
     route = readRoute();
     render({ focus: true, hash: window.location.hash });
+  });
+
+  document.querySelector("#resume-file").addEventListener("change", async event => {
+    const file=event.target.files[0];if(!file)return;
+    const status=document.querySelector("#resume-status");
+    try {
+      if(file.size>128000)throw new Error("接续文件过大，限 128 KB。");
+      const state=window.StudyDesk.parse(await file.text(),data);
+      deskNotes.set(`${state.kind}:${state.id}`,state);
+      navigate({material:null,study:null,question:null,finding:null,scenario:null,phase:"before",[state.kind]:state.id,...(state.exercise||{})},{focus:true,hash:state.anchor});
+      refs.routeStatus.textContent="已从本地文件恢复接续位置。";
+      status.textContent="接续文件已在本地打开。";
+    } catch(error) {status.textContent=error.message;}
+    event.target.value="";
   });
 
   if (physicalRoutes) {

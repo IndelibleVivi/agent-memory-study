@@ -23,7 +23,7 @@ Options:
   --format <fmt>    Required. "markdown" or "json".
   --limit <n>       Max findings for a query brief (default 3).
   --out <path>      Write to a file instead of stdout.
-  --data <path>     Override the canonical data file (default data/materials.json).
+  --data <path>     Override the compiled data projection (default data/materials.json).
   --help            Show this help.`;
 
 function parseArgs(argv) {

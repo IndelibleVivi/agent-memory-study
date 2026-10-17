@@ -8,7 +8,7 @@ Agent Memory Study editors · 2026-09-25 · **研究方案：proposed-not-run**�
 
 这项研究追问：概括是否帮助新推论，同时保住历史来源和当前适用范围？目前交付的是
 论文串读与可检验的协议，没有生成模型输出、参与者数据或效果数字。文献的实际阅读范围
-与定位统一由 `data/materials.json` 中该专题的 `externalReadings` 维护，页面展示同一来源。
+与定位统一由 `study/entries/representation-and-use.json` 的 `externalReadings` 维护，页面展示同一来源。
 
 现有 [Jev 源码实验](../jev-memory-contract-study/README.md)看到了指定判断下原节点与派生
 节点并存；[学习与纠正实验](../decision-learning-study/README.md)看到了给定特征空间内的

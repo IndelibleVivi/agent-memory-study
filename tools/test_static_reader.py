@@ -57,6 +57,12 @@ def main():
                             assert page.title() == page.locator('meta[property="og:title"]').get_attribute('content')
                             initial_title = page.locator('h1:visible').inner_text()
                             if not enabled:
+                                if canonical.rstrip('/').endswith('agent-memory-study'):
+                                    expect(page.locator('.sculpture-fallback')).to_be_visible()
+                                else:
+                                    expect(page.locator('#atlas-view')).to_have_count(0)
+                                    expect(page.locator('.packet-actions a')).to_have_count(2)
+                                    expect(page.locator('.private-continuation')).to_have_count(0)
                                 refs = page.locator('a[href], link[href], script[src]').evaluate_all("nodes => nodes.map(n => n.href?.baseVal ? new URL(n.href.baseVal,document.baseURI).href : n.href || n.src).filter(Boolean)")
                                 for ref in refs:
                                     u = urlparse(ref)
@@ -152,6 +158,7 @@ def main():
                                         ('输出约束 参数 遗忘', 'output-guard-is-not-unlearning',
                                          next(f['title'] for f in data['findings'] if f['id'] == 'output-guard-is-not-unlearning'))]:
                                     page.goto(base,wait_until='load')
+                                    page.locator('.practice-disclosure > summary').click()
                                     page.locator('#practice-query').fill(query)
                                     page.locator('#practice-query').press('Enter')
                                     expect(page.locator('#practice-results a[data-route=finding]').first).to_contain_text(expected_title)

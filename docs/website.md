@@ -1,55 +1,67 @@
 # 阅读站点：构建、验收与发布
 
-公开地址为 <https://indeliblevivi.github.io/agent-memory-study/>。`index.html` 是源码 shell；`data/materials.json` 是内容真源，`assets/materials-data.js` 是已有 browser projection。`assets/app.js` 负责全部正文和交互，`assets/seo.js` 负责共享 route/metadata。Python Playwright 只在构建、验收时使用，发布产物没有服务端 runtime。
+公开地址为 <https://indeliblevivi.github.io/agent-memory-study/>，继续使用 GitHub Pages 和已有 Actions workflow。`study/` 是内容真源，`index.html` 是唯一源码 shell；`assets/app.js` 负责全部正文与交互，`assets/seo.js` 统一 route / metadata。Python Playwright 与 Markdown parser 只用于构建和检查，发布产物没有 backend runtime。
 
-## 从源码到页面
+## 从研究体到页面
 
-```text
-data/materials.json → assets/materials-data.js
-                              ↓
-index.html + app.js + seo.js → build-time Chromium → dist/site/
-                              同一个 renderer       HTML + sitemap + public assets
+```mermaid
+flowchart TD
+  S[study/ 正文与 metadata] --> C[content.py + build.py]
+  R[research/ 原始研究 receipts] --> C
+  C --> J[data/materials.json 兼容 projection]
+  C --> B[assets/materials-data.js browser projection]
+  B --> V[index.html + app.js + seo.js]
+  V --> P[本机 Chromium 执行同一 renderer]
+  P --> H[dist/site/ 静态 HTML + sitemap]
+  V --> D[研究包 shared projection]
+  D --> M[每页 index.md / index.json]
 ```
 
-先使用自己的 Python 虚拟环境，安装既有测试依赖：
+在自己的 Python virtual environment 安装依赖：
 
 ```bash
-python3 -m pip install -r tools/browser-requirements.txt
+python3 -m pip install -r tools/content-requirements.txt -r tools/browser-requirements.txt
 python3 -m playwright install chromium
+python3 -B tools/build.py --write-json
 python3 -B tools/verify_reader.py
-python3 -B tools/test_reader_browser.py
+python3 -B tools/test_reader_browser.py --output-dir dist/browser-check
+python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebook
 python3 -B tools/seo_build.py
 python3 -B tools/test_static_reader.py
 ```
 
-构建逐页加载本机 HTTP 上的真实 reader，禁止向外部 host 发请求，完成正文和 metadata 后捕获 HTML。站点仍保留既有 Cloudflare Web Analytics beacon；构建和验收不会发送访问数据。标题、描述、canonical、Open Graph、Twitter summary card 和 WebSite/WebPage JSON-LD 在静态 HTML 与浏览器切页时使用同一实现。论文作者不被标成札记作者，reading depth、原文结果、本站观察和未验证建议不因 SEO 改变。
+构建只请求本机 HTTP，捕获 renderer 生成的正文与 metadata，然后删除非活动／hidden 内容，避免文章初始 HTML 混入首页和另一份来源栏。`reader-shell.js` 从原始 `index.html` 派生，用于开启 JS 时恢复完整交互 shell；它不是第二份手工维护的文章模板。静态捕获里的 3D canvas 恢复为 SVG fallback，启用 JS 后才初始化 WebGL，保证无 JS 时也有完整封面。
 
-首页和每份 material / study / question / finding 对应一个物理目录中的 `index.html`。当前内容生成 32 个阅读页面，另有真实的 `404.html`。构建按 canonical 数据枚举页面，新增内容无需维护第二份 URL 清单。sitemap 只列这些规范绝对地址，不写不可靠的 lastmod，也不收集搜索、practice、筛选和场景组合。
+首页和每份 material / study / question / finding 对应真实的 `index.html`。当前 27 份来源、12 篇文章、2 个问题、5 条判断共生成 47 个阅读页面，另有 `404.html`；总数按 canonical 枚举。详情目录还生成 `index.md` / `index.json`，通过页面研究包入口读取。构建期、CLI、browser 的包使用同一实现；不嵌入引用的论文全文或重复保存实验 receipt。
 
-构建拒绝覆盖已存在的输出目录。重复构建时选择新的 `--output dist/site-next`，验收使用 `--site-root dist/site-next`；保留前一份 artifact 供比较。`--browser-executable` 可指定已安装的专用 Chromium，仅是本地环境选项。不要使用日常浏览器 profile。
+构建拒绝覆盖已存在的输出。重复构建用 `--output dist/site-next`，验收传 `--site-root dist/site-next`。`--browser-executable` 可指定专用 Chromium，不使用日常浏览器 profile。`dist/` 忽略，不提交。
 
-复制范围仅含 tracked `assets/`、公开 `research/` 和 `docs/`、canonical 允许随站分发的 PDF、RDF、项目介绍 PDF、manifest 与两份 notices。原有 `.md` 证据/notice 地址仍作为 Markdown 文件提供，已有 GitHub evidence 链接保持不变。不会复制 `.git`、`tools/`、忽略文件或私人材料。
+复制范围包含 tracked `assets/`、公开 `research/` 和 `docs/`，明确的 reader 依赖、canonical 引用的正文、允许分发的 PDF、RDF、历史项目介绍 PDF、manifest 与 notices。不会复制整个 checkout、`.git`、`tools/`、private drafts、个人接续或机器状态。
 
-## 本地查看
+## 预览与路由
 
-源码预览继续支持 `python3 -m http.server 8080` 与 直接从文件打开 `index.html`，使用旧 query routes。
+源码可通过 `python3 -m http.server 8080` 或直接打开 `index.html` 阅读，使用 query routes。构建站点须挂载在 `/agent-memory-study/`：将产物放入预览根目录下的 `agent-memory-study/` 后从预览根目录启动 HTTP server。静态测试自动创建这一临时挂载。
 
-构建站点须挂载在 `/agent-memory-study/` 子路径，以与生产相同的 base path 检查 PDF、目录锚点与深链接。可把生成的 `dist/site/` 复制到一个本地预览目录下的 `agent-memory-study/`，从该预览目录启动 HTTP server，打开 `/agent-memory-study/`。`test_static_reader.py` 自动创建临时挂载并检查：全部页面的初始 HTML / 无 JS 内容 / 开启 JS 后的视图、资源链接、desktop / mobile、旧链接、场景、history、reload、目录、practice 导出、源码 file mode 与 404。
+公开路径有 `study/<id>/`、`material/<id>/`、`question/<id>/`、`finding/<id>/`。旧 `?study=` 等链接通过 browser location replace 转到相应物理页面，不是 HTTP 301。没有 JS 时直接使用物理路径；正文、普通阅读链接与静态研究包可读。源码 file mode 保留 query links。
 
-旧 query 详情链接仍被接收，并由浏览器通过 location replace 跳到相应的真实 HTML 页面（不多留一条 history entry）；这不是 HTTP 301。无 JavaScript 时，请使用新的物理详情链接。正文和普通阅读链接不依赖 JavaScript；搜索、星图交互、场景切换和导出需要它。非法物理地址由 GitHub Pages 返回 HTTP 404；query filter 状态沿用原 reader 语义。
+首页 `?domain=` / `?direction=` 选择阅读分组，`?q=` 与 filters 用于搜索；旧 `?thread=` / `?path=` 自动展开 atlas 入口。已有场景 `scenario` / `phase` 保留。检索集合演算用 `k` / `ranking` / `need`，只作用于相应学习文章。Browser history 可恢复这些公开状态，sitemap 和 canonical 不收录查询／场景变体。
 
-## Pages 激活与交付
+标题、description、canonical、Open Graph 与 JSON-LD 由同一 SEO module 生成。论文作者不被标成札记作者；展示、导出或索引不改变阅读深度与证据状态。
 
-在这次静态构建启用前，Pages 使用 `main` 根目录的 branch build。启用准备好的 workflow 是独立账号操作，需获得发布授权。不要把 PR、构建成功或 HTML 文件存在称作已上线。
+## 动态与私人接续
 
-经授权后：
+首屏 `continuity-sculpture.js` 是无外部依赖的 WebGL 曲面，表达延续与改变，不编码数据。Reduced-motion 默认静止，也可主动播放／暂停；离开视口或标签页停止 animation frame。WebGL 缺失或 context lost 时呈现 SVG。它不妨碍正文、搜索或路由。
 
-1. 在 repository Settings → Pages 将 Build and deployment Source 从 Deploy from a branch 改为 GitHub Actions。
-2. 合并经过检查的源码 PR。`Reading Room validation` 在 main 验证源 reader、构建 artifact 并验证静态 reader，只有全部通过才上传和部署同一 `dist/site/`。
-3. 在 Actions 核对该 main commit 的 `reader` 与 `deploy`；检查公开首页、四种详情类型、PDF、sitemap 和一个不存在的路径，分别确认正文/metadata、HTTP 200 与 404。
+接续笔记只存在页面内存及主动下载的文件，不上传或写入 URL / localStorage。导入最多 128 KB，恢复已知对象、受支持的 anchor 与演算，文本不执行。刷新前未下载的修改会丢失。公开研究包与个人接续是两个独立出口，不把个人文字带入共享包。
 
-PR 运行只上传构建产物用于检查，不部署。手动触发也只有 `main` 可进入 deploy job。workflow 不自动修改 Pages 设置、Google Search Console、DNS 或 analytics 配置。
+站点保留既有 Cloudflare aggregate beacon，不加 custom events 或其他 tracking。构建与测试拦截非本机请求；在线打开外部来源链接按用户操作发生。公开查询写入 URL 与 browser history，直接加载／刷新时 URL 会发给静态托管服务。完整使用边界见 [README](../README.md)。
 
-回退时优先以普通 revert commit 回退到已验证的静态实现，再经同一 workflow 部署。首次迁移若需完整恢复旧方式，应一并恢复迁移前源码（使用普通 revert，保留历史）和 Pages 的 `main` 根目录 branch source，并等待原 branch build 完成；只改设置或只回退源码不能证明恢复完成。回读线上页面和旧深链接后才确认。
+## 发布与回退
 
-项目位于 `github.io` 的子路径，爬虫规则由 origin 根部 `/robots.txt` 决定；本项目不发布容易误解的子目录 robots.txt。可将本项目的 `sitemap.xml` 提交到它自己的 Google URL-prefix property。`index.html` 中的公开 `google-site-verification` 标记由构建保留，用于该 property 的所有权验证；成功后也应保留。验证所有权、Google 接收 sitemap、抓取、收录和实际排名是不同状态，不由构建成功推断。
+现有 `.github/workflows/reader-validation.yml` 在 PR 和 main 运行同一组检查。PR 不部署；main 只有全部通过后，才上传并由独立 `deploy` job 发布同一 artifact。2026-10-18 的 Pages read-only 检查确认 `build_type: workflow`；本次无需切换账号设置。
+
+源码完成、commit、push、CI 通过和 Pages 上线是不同状态。交付时核对目标 commit 的 `reader` / `deploy`，再读取公开首页、详情、sitemap 和一个不存在的路径。不要从本机构建成功推断线上已更新。
+
+回退使用普通 revert commit，经过同一 workflow 重新发布，再核对线上页面和旧链接。不改写共享历史；Pages account settings、DNS、Search Console 与 analytics 配置不属于普通源码发布。
+
+项目在 `github.io` 子路径，robots 规则由 origin 根部负责。保留公开 `google-site-verification` 标签；sitemap 列出物理阅读页，不虚构 lastmod。验证所有权、接受 sitemap、抓取、收录和排名分别核实。

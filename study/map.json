@@ -1,0 +1,254 @@
+{
+  "edition": "2026.10 · 一个继续生长的研究体",
+  "thesis": "经验如何成为可继承、也可改变的能力？",
+  "intro": "从 agent memory 出发，研究信息、经验与智能的跨时间关系。基础学习、机制解释、理论追究与实验共同构成 AMS；新的知识也可以改变我们的问题。",
+  "invitation": "从一个陌生的词开始，也从一个还没想通的地方继续。",
+  "domains": [
+    {
+      "id": "data",
+      "title": "数据与持久状态",
+      "english": "Data systems",
+      "intro": "对象、关系、版本与持久状态，怎样使信息能够可靠地被组织和改变。",
+      "question": "保存了什么，身份和时间怎样成立？",
+      "studyIds": [
+        "records-representations-systems",
+        "what-an-index-learns"
+      ],
+      "materialIds": [
+        "fluctlightdb-observation-binding",
+        "statefuse-conflict-preserving-memory"
+      ],
+      "questionIds": []
+    },
+    {
+      "id": "representation",
+      "title": "表示与知识",
+      "english": "Representation & knowledge",
+      "intro": "从分词与结构到概括和向量，研究表示保留了什么区别、打开了什么可能。",
+      "question": "哪些区别仍可恢复，哪些关系成为可表达的？",
+      "studyIds": [
+        "forms-of-experience",
+        "retrieval-and-relevance",
+        "representation-and-use"
+      ],
+      "materialIds": [
+        "a-tma-state-aware-memory",
+        "storage-to-experience",
+        "insightemb-action-intent-retrieval",
+        "memory-beyond-recall"
+      ],
+      "questionIds": []
+    },
+    {
+      "id": "indexing",
+      "title": "索引与寻址",
+      "english": "Indexing & addressability",
+      "intro": "定位内容的访问结构、学习式映射与代价；让“能找到”有清楚的对象。",
+      "question": "地址、近邻和文档标识分别意味着什么？",
+      "studyIds": [
+        "what-an-index-learns",
+        "records-representations-systems",
+        "retrieval-and-relevance"
+      ],
+      "materialIds": [],
+      "questionIds": []
+    },
+    {
+      "id": "retrieval",
+      "title": "检索与相关性",
+      "english": "Retrieval & relevance",
+      "intro": "查询、匹配、排序与信息需求；研究当前为什么需要这一条信息。",
+      "question": "相似性怎样与相关性接上？",
+      "studyIds": [
+        "retrieval-and-relevance",
+        "relevance-in-context"
+      ],
+      "materialIds": [
+        "continual-learning-experience-reuse",
+        "insightemb-action-intent-retrieval",
+        "mosaic-long-term-memory"
+      ],
+      "questionIds": [
+        "experience-to-capability"
+      ]
+    },
+    {
+      "id": "memory",
+      "title": "记忆与认知架构",
+      "english": "Memory & cognition",
+      "intro": "记录、工作状态、参数与认知组织，怎样共同承担跨时间处理。",
+      "question": "过去通过什么状态参与后来？",
+      "studyIds": [
+        "records-representations-systems",
+        "representation-and-use",
+        "who-controls-memory"
+      ],
+      "materialIds": [
+        "coala-cognitive-architecture",
+        "agentic-memory",
+        "memory-beyond-recall",
+        "jev-mem-system-one-control",
+        "memprobe-hidden-user-state-recovery",
+        "pain-axis"
+      ],
+      "questionIds": []
+    },
+    {
+      "id": "learning",
+      "title": "学习与适应",
+      "english": "Learning & adaptation",
+      "intro": "经验如何改变规则、参数或表示；观察泛化、纠正与保留。",
+      "question": "改变选择的，是读到一条记录还是处理方式本身？",
+      "studyIds": [
+        "experience-becomes-policy",
+        "what-an-index-learns",
+        "change-and-continuity"
+      ],
+      "materialIds": [
+        "mistake-notebook-learning",
+        "trustmem-consolidation",
+        "recuris-memory-evolution",
+        "cross-model-kv-prefill-reuse",
+        "cache-to-cache"
+      ],
+      "questionIds": [
+        "experience-becomes-policy"
+      ]
+    },
+    {
+      "id": "control",
+      "title": "控制、推理与行动",
+      "english": "Control & agency",
+      "intro": "何时取用、更新、查证与行动，怎样分配注意力和有限资源。",
+      "question": "谁决定现在要记起什么、怎样使用？",
+      "studyIds": [
+        "who-controls-memory",
+        "after-a-correction",
+        "relevance-in-context"
+      ],
+      "materialIds": [
+        "midca-dual-cycle",
+        "proactive-wake-anchor",
+        "pm-bench",
+        "verifiable-memory",
+        "jev-mem-system-one-control"
+      ],
+      "questionIds": []
+    },
+    {
+      "id": "evaluation",
+      "title": "评价与研究方法",
+      "english": "Evaluation & evidence",
+      "intro": "定义观察对象、比较条件与解释范围，让结果回答它真正测量的问题。",
+      "question": "究竟证明了找到、记住、理解还是改变？",
+      "studyIds": [
+        "how-we-study",
+        "retrieval-and-relevance",
+        "change-and-continuity"
+      ],
+      "materialIds": [
+        "longmemeval-v2-experienced-colleague",
+        "memora-from-recall-to-forgetting",
+        "memprobe-hidden-user-state-recovery",
+        "useful-memories-become-faulty",
+        "truth-maintenance-system",
+        "agm-theory-change"
+      ],
+      "questionIds": []
+    }
+  ],
+  "directions": [
+    {
+      "id": "forms",
+      "title": "经验的形式",
+      "english": "Forms of experience",
+      "intro": "信息怎样获得可保留、可恢复、可泛化的形式。",
+      "question": "哪些区别值得留下，哪些抽象让新能力成为可能？",
+      "studyIds": [
+        "forms-of-experience",
+        "records-representations-systems",
+        "representation-and-use",
+        "what-an-index-learns"
+      ],
+      "materialIds": [
+        "a-tma-state-aware-memory",
+        "coala-cognitive-architecture",
+        "storage-to-experience"
+      ],
+      "questionIds": []
+    },
+    {
+      "id": "relevance",
+      "title": "当下的相关性",
+      "english": "Relevance in context",
+      "intro": "从能被定位，到与需要相关，再到参与判断。",
+      "question": "过去怎样在此刻产生作用？",
+      "studyIds": [
+        "relevance-in-context",
+        "retrieval-and-relevance",
+        "who-controls-memory"
+      ],
+      "materialIds": [
+        "continual-learning-experience-reuse",
+        "insightemb-action-intent-retrieval"
+      ],
+      "questionIds": [
+        "experience-to-capability"
+      ]
+    },
+    {
+      "id": "change",
+      "title": "改变与继承",
+      "english": "Change & continuity",
+      "intro": "新经验改变什么，又让什么继续成立。",
+      "question": "怎样更新、修订与学习，并理解保留和遗忘？",
+      "studyIds": [
+        "change-and-continuity",
+        "after-a-correction",
+        "experience-becomes-policy",
+        "what-an-index-learns"
+      ],
+      "materialIds": [
+        "truth-maintenance-system",
+        "agm-theory-change",
+        "cache-to-cache",
+        "useful-memories-become-faulty"
+      ],
+      "questionIds": [
+        "experience-becomes-policy"
+      ]
+    }
+  ],
+  "starts": [
+    {
+      "studyId": "retrieval-and-relevance",
+      "kicker": "从一个名字开始",
+      "prompt": "jieba、BM25、BGE-M3，究竟在做什么？"
+    },
+    {
+      "studyId": "what-an-index-learns",
+      "kicker": "让新材料改变理解",
+      "prompt": "索引也能学习——它学习的还是同一件事吗？"
+    },
+    {
+      "studyId": "experience-becomes-policy",
+      "kicker": "继续一项已有研究",
+      "prompt": "经历被保存以后，选择方式如何真的改变？"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-10-18",
+      "title": "从系统名字，走向映射目标",
+      "text": "两篇作者摘要把“学习索引”拆成不同的输入—输出关系，打开更新条件的新问题。",
+      "studyId": "what-an-index-learns"
+    },
+    {
+      "date": "2026-10-18",
+      "title": "把两个 recall 分开",
+      "text": "明确近邻集合与需求相关集合，让基础学习留下可以继续推导的区别。",
+      "studyId": "retrieval-and-relevance"
+    }
+  ],
+  "heroTitle": "What remains.\nWhat becomes."
+}

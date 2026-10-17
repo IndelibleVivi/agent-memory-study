@@ -1,0 +1,59 @@
+{
+  "number": 9,
+  "id": "storage-to-experience",
+  "kind": "paper",
+  "title": "From storage to experience: a survey on the evolution of LLM agent memory mechanisms",
+  "authors": [
+    "Jinghao Luo",
+    "Yuchen Tian",
+    "Chuxue Cao",
+    "Ziyang Luo",
+    "Hongzhan Lin",
+    "Kaixin Li",
+    "Chuyi Kong",
+    "Ruichao Yang",
+    "Jing Ma"
+  ],
+  "shortAuthor": "Luo 等",
+  "year": 2026,
+  "doi": "10.18653/v1/2026.findings-acl.2069",
+  "noteDepth": "skim",
+  "readingScope": "Abstract、§2–§7、Limitations；未通读附录中的 taxonomy、datasets 与 benchmark tables。",
+  "intro": "按信息抽象与 cognitive processing 程度，把 agent memory 组织为 Storage、Reflection 与 Experience 三类机制。",
+  "keyPoints": [
+    "Storage 尽量保留 trajectory；Reflection 对单条 trajectory 评价或纠正；Experience 从相似 trajectory group 归纳可跨场景使用的 schema 或 policy prior。（§2.2）",
+    "Experience 又分 explicit、implicit、hybrid：可以表现为自然语言 policy、executable skill、模型参数，或显式积累与参数内化的组合。（§4）",
+    "survey 把 active retrieval controller、working-memory organization 与 Experience-stage benchmark 列为开放方向，并承认没有跨方法 quantitative comparison。（§6；Limitations）"
+  ],
+  "keywords": [
+    "memory taxonomy",
+    "reflection",
+    "experience abstraction"
+  ],
+  "categories": [
+    "记忆架构"
+  ],
+  "failureSurfaces": [
+    "abstraction-experience"
+  ],
+  "sourceUrl": "https://aclanthology.org/2026.findings-acl.2069/",
+  "pdf": {
+    "delivery": "bundled",
+    "url": "papers/09-luo-2026-storage-to-experience.pdf",
+    "originalUrl": "https://aclanthology.org/2026.findings-acl.2069.pdf",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "editorialQuestion": "跨 trajectory 的 universal rule 如果失去到具体来源的可追溯路径，来源被纠正后要怎样让高层抽象同步失效？",
+  "sourceNote": "",
+  "designTransfer": {
+    "byline": "Agent Memory Study editors",
+    "date": "2026-09-08",
+    "when": "准备把大量经历压成反思或跨场景经验，却还不清楚希望保留哪种信息。",
+    "move": "先按单次记录、单次反思、跨经历归纳区分产物，再为派生经验保留回到具体来源的路径。",
+    "check": "用同一组经历各做一种表示，分别问一个具体细节和一个跨场景问题；再更正一条来源，检查哪些派生产物需要重算。",
+    "boundary": "这是 skim 范围下的阅读线索与未执行对照。survey 没有跨方法 quantitative comparison，三个阶段也不是质量或成熟度排名。",
+    "basis": "既有札记 “关键抓手”：§§2.2、4、6 与 Limitations。",
+    "status": "proposed-not-run"
+  }
+}

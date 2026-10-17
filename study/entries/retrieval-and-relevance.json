@@ -1,0 +1,84 @@
+{
+  "id": "retrieval-and-relevance",
+  "title": "找到一样的，还是找到相关的？",
+  "kind": "learning-note",
+  "date": "2026-10-18",
+  "byline": "Agent Memory Study editors",
+  "intro": "从 jieba、BM25、BGE-M3 出发，用两个 recall 的集合演算理解匹配与相关性的差距。",
+  "subtitle": "基础学习 · 八个文档标识与两种评价对象",
+  "number": "11",
+  "bodyFile": "entries/retrieval-and-relevance.md",
+  "domains": [
+    "representation",
+    "indexing",
+    "retrieval",
+    "evaluation"
+  ],
+  "directionIds": [
+    "relevance"
+  ],
+  "readings": [],
+  "externalReadings": [
+    {
+      "label": "jieba 官方 README",
+      "url": "https://github.com/fxsjy/jieba",
+      "kind": "官方资料",
+      "locator": "Features 与 Algorithm 的分词说明",
+      "takeaway": "分词确定后续处理所用的文本单位。",
+      "limit": "阅读范围见定位；未运行相关软件或模型。"
+    },
+    {
+      "label": "Okapi BM25: a non-binary model",
+      "url": "https://nlp.stanford.edu/IR-book/html/htmledition/okapi-bm25-a-non-binary-model-1.html",
+      "kind": "基础教材",
+      "locator": "教材 §11.4.3，词频、文档长度与参数的说明",
+      "takeaway": "BM25 将词项匹配与词频、长度因素结合。",
+      "limit": "阅读范围见定位；未运行相关软件或模型。"
+    },
+    {
+      "label": "BGE-M3 documentation",
+      "url": "https://bge-model.com/bge/bge_m3.html",
+      "kind": "官方资料",
+      "locator": "Dense / Sparse / Multi-Vector 与 hybrid 说明",
+      "takeaway": "同一模型提供多种检索表示，机制不宜按词项/神经简单二分。",
+      "limit": "阅读范围见定位；未运行相关软件或模型。"
+    },
+    {
+      "label": "Faiss documentation",
+      "url": "https://faiss.ai/",
+      "kind": "官方资料",
+      "locator": "首页 What is similarity search? 与 index 说明",
+      "takeaway": "给定向量与度量界定搜索对象。",
+      "limit": "阅读范围见定位；未运行相关软件或模型。"
+    },
+    {
+      "label": "Introduction to Information Retrieval · Evaluation",
+      "url": "https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-unranked-retrieval-sets-1.html",
+      "kind": "基础教材",
+      "locator": "教材 §8.3，precision / recall 定义及其讨论",
+      "takeaway": "评价必须明确相关集合与返回集合。",
+      "limit": "仅使用集合评价定义；未覆盖完整 IR 评价体系。"
+    }
+  ],
+  "takeaways": [
+    {
+      "title": "先说明分母",
+      "text": "近邻集合与需求相关集合不同，100% 的近邻召回不保证需求得到满足。"
+    },
+    {
+      "title": "同时改善是可能的",
+      "text": "固定 k 和相关集合，找回更多相关对象可以同时改善 precision 与 recall。"
+    }
+  ],
+  "boundary": "a–h、排序与相关集合均为原创教学设定；只计算集合比例，没有运行 embedding、ANN、BM25 或 BGE-M3。",
+  "exercise": "retrieval-sets",
+  "continuation": {
+    "question": "训练正负例中的相关性，与当前的信息需求有什么差异？",
+    "why": "区分评价对象以后，才能进一步解释表示为何匹配或失配。",
+    "studyIds": [
+      "relevance-in-context",
+      "what-an-index-learns"
+    ],
+    "materialIds": []
+  }
+}

@@ -1,6 +1,6 @@
 # 研究与实践入口的维护
 
-本入口把持续的问题、已有证据与有范围的实践判断连接起来。内容仍由 `data/materials.json` 维护；页面与可下载 brief 是 projections，研究结果继续留在原有 `research/` artifacts。
+本入口把持续的问题、已有证据与有范围的实践判断连接起来。问题与判断分别由 `study/inquiries/`、`study/transfers/` 维护；`data/materials.json` 是兼容 projection；页面与可下载 brief 是 projections，研究结果继续留在原有 `research/` artifacts。
 
 ```mermaid
 flowchart LR
@@ -21,7 +21,7 @@ flowchart LR
 | 层 | 内容与状态 | 不承载什么 |
 | --- | --- | --- |
 | material | 原文、阅读范围、paper findings、独立 AMS evidence；可选单篇 `designTransfer` 保持 `proposed-not-run` | 不因被专题引用就提升阅读深度 |
-| study | 跨源共读、规则演示或已执行实验的逐例展示 | 不自动变成真实 agent 实验 |
+| study | 独立学习／研究论述、跨源共读、规则演示或已执行实验的逐例展示 | 不自动变成真实 agent 实验 |
 | question | `open`；当前判断、竞争解释、证据、下一次怎样比较与改主意 | 不把下一问写成已执行结果 |
 | finding | `proposed-transfer`；有依据的建议及目标侧检查 | 不因已有机制实验就声称目标项目收益 |
 | application | `cited`、`adopted`、`rejected` 或 `inconclusive`；具体公开决定、观察和限制 | 不把引用、采用、有效与因果收益混同 |
@@ -33,7 +33,9 @@ flowchart LR
 - `explanations[]`: `title` / `text`，保留竞争解释和负面可能；
 - `evidence[]`: `label` / `url` / `observation` / `limit`，指向公开且可检查的材料；
 - `materialIds`、`studyIds`、`findingIds`，连接已有内容；
-- `nextTest`: `question` / `comparison` / `success` / `reviseWhen` / `boundary`，分别说明下一问、比较、观察指标、如何改主意与尚未执行的范围。
+- `nextTest`（或下面的非实验 `continuation`）: `question` / `comparison` / `success` / `reviseWhen` / `boundary`，分别说明下一问、比较、观察指标、如何改主意与尚未执行的范围。
+
+`continuation` 可用 `question` / `why` / `studyIds` / `materialIds` 表达概念或来源研究的下一步，不要求实验指标。一个 question 至少保留 `nextTest` 或 `continuation`。普通学习文章不必先创建 question。
 
 `findings[]` 使用稳定 `id`、`title`、`byline`、`updated`、`status`，以及 `questionIds`、`materialIds`、`triggers`、`claim`、`when`、`action`、`avoid`、`validation`、`limit`、`evidence` 和 `applications`。`questionIds` 可为空；相连时与 question 的 `findingIds` 双向一致。无取用记录时 `applications` 是空数组，页面明确显示尚无公开记录。
 
@@ -55,7 +57,7 @@ node tools/export_practice.cjs --finding revision-needs-scope --format json
 新增观察时先检查它属于原研究结果、目标侧观察还是编辑判断。更新对应 canonical 段落、日期和依据；不要改写历史 receipt，不为新措辞重跑无关模型，不将失败反馈删成成功叙事。
 
 ```bash
-python3 -B tools/build.py
+python3 -B tools/build.py --write-json
 python3 -B tools/verify_reader.py
 python3 -B tools/test_reader_browser.py --output-dir /tmp/ams-browser-check
 ```
@@ -68,7 +70,7 @@ python3 -B tools/test_reader_browser.py --output-dir /tmp/ams-browser-check
 
 「经验怎样长成判断习惯？」继续使用 question → study → research artifact 的引用结构。论文材料保持既有阅读深度；共读的 `externalReadings` 单独记录产品文档、独立实现和论文线索的实际阅读范围。外部引用不增加 Zotero 书目数。
 
-共读支持三种明确的研究载体：`editorial-synthesis-with-deterministic-demo` 在页面调用 revision engine；`editorial-synthesis-with-recorded-experiment` 通过 `resultsUrl` 指向已执行结果。Builder 读取该 JSON 并生成 `recordedResults`，保证 file mode、browser 与静态 HTML 使用同一结果。不要在 canonical 或 renderer 手抄实验数字。实验变化先改 runner / protocol / results，再重建页面投影。
+带实验或协议的共读支持三种明确载体；普通 learning-note / research-essay 无需套用：`editorial-synthesis-with-deterministic-demo` 在页面调用 revision engine；`editorial-synthesis-with-recorded-experiment` 通过 `resultsUrl` 指向已执行结果。Builder 读取该 JSON 并生成 `recordedResults`，保证 file mode、browser 与静态 HTML 使用同一结果。不要在 canonical 或 renderer 手抄实验数字。实验变化先改 runner / protocol / results，再重建页面投影。
 
 `editorial-synthesis-with-proposed-experiment` 将跨源论述接到尚未执行的公开协议，只提供 `artifactUrl`，禁止结果及演示控件字段。页面用“下一项研究”入口与未执行状态，不展示空结果表。当前[表示与取用专题](../research/representation-use-study/README.md)连接十三篇外部来源与两项协议；各项的阅读范围由 canonical `externalReadings` 维护。只有实际执行并具备可检查的公开 artifacts 后，才按相应结果合同改成 recorded 类型；私人 inventory 和训练数据不进入这一转换。
 

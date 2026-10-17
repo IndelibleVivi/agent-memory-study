@@ -1,8 +1,12 @@
 # Contributing
 
-Agent Memory Study 是一间公开 study room，不是未读材料仓库，也不是论文排行榜。贡献应当让一条研究判断更可定位、更可反驳或更可复核。本站不提供 browser-side annotation editor；没有账号、持久化与 provenance 的输入框刷新即失效，也无法支持可靠审阅。请通过 pull request 提交 durable contribution。
+Agent Memory Study 是一个开放的研究体。贡献可以让一个概念更可理解、一段推导更清楚、一项判断更可定位，也可以带来尚未收束的新问题。公开修改通过 pull request 提交；网页的个人接续笔记只供本地保存，不自动成为公开贡献。
 
 ## 可以贡献什么
+
+### 学习记录与研究论述
+
+先写真实内容。`learning-note` 和 `research-essay` 的 Markdown 可以从名字、例子、定义或推导开始，无需先有实验或论文清单。最小 metadata、草稿与编译步骤见[作者指南](docs/authoring.md)。新材料可以补基础、修订解释、提出反例或开启旁支；不要仅为了填满领域或统一外观而创建文章。
 
 ### 1. Source correction / version watch
 
@@ -16,7 +20,7 @@ Agent Memory Study 是一间公开 study room，不是未读材料仓库，也�
 - `read` / `worked` entry 必须有 reading scope、`whyRead`、source-backed `argumentMap`、`evidenceLimits` 与明确标注的 `editorialInferences`。只有论文与实际阅读支持时才增加 `methodNotes`、`reportedFindings` 或 `sourceTensions`；不要为了 schema 发明不存在的方法、结果或矛盾；
 - 如果提出未来测试，放入 `openProtocols` 并标成 `proposed-not-run`；没有真正值得运行的 protocol 就不加，不把阅读室变成实验待办；
 - `worked` 只用于已经存在公开、可复核 artifact 的工作，不用于 private experiment、实现印象或尚未发布的测试；
-- 映射到一个或多个现有 `failureSurfaces`，并同步更新对应 surface 的 `materialIds`。builder 会要求双向 membership 完全一致；constellation 由这组关系自动生成，不需要另交逐篇坐标。只有跨材料问题结构本身改变时，才修改 atlas taxonomy；
+- `failureSurfaces` 可以为空。有证据支持时，在 source 填入已有 surface ID；compiler 生成反向 `materialIds`，不双向手工维护。旧 constellation 由该关系生成，不需要逐篇坐标。领域／方向导航由 `study/map.json` 维护；
 - leave holes visible。拿不准的 locator、数字或结论不要靠推测补齐。
 
 ## 星图与 atlas membership
@@ -28,7 +32,7 @@ Agent Memory Study 是一间公开 study room，不是未读材料仓库，也�
 - material 属于多个 surfaces 时会成为 cross-surface bridge。bridge 只描述当前研究关系，不表示论文更重要、更完整或更值得推荐；不要为了制造连接而增加 surface；
 - 不提交 `x` / `y`、importance、rank、cluster、star size 或手工 edge。位置、连线、bridge count 与 material count 都从 canonical membership 生成；
 - 星环只由真实 `noteDepth` 派生。不要单独设置视觉状态，也不要把 `read` / `worked` 当成 achievement badge；
-- 新增 failure surface 是 atlas taxonomy change，不是普通材料录入。它需要独立说明现有 surfaces 为什么无法容纳该 failure boundary，并完整提供稳定 ID、label、question、tension 与双向 material membership；
+- 新增 failure surface 是 atlas taxonomy change，不是普通材料录入。它需要独立说明现有 surfaces 为什么无法容纳该 failure boundary，并完整提供稳定 ID、label、question、tension，并在 source 中维护 membership；
 - 不在 copy、测试或截图说明里把当前材料总数、7 个 surfaces 或其他渲染数字写成固定上限。新增材料后 builder 与页面计数应自然增长。
 
 贡献者不需要让星图“看起来均匀”。孤星、空隙、局部密集与暂时没有 bridge 的 surface 都是当前 corpus 的诚实形状。
@@ -67,7 +71,7 @@ Project-specific 评价可以进入，但被评价的 project、版本与证据�
 
 Jev 源码实验使用 `ams-jev-contract-results/1`：公开固定源码身份、执行函数、替身边界、指定判断、逐 case 的 before/after 与实际断言。调用前后快照里的节点和向量成员不等于真实持久化或语义检索结果。页面允许选择 case、阶段、检查原始 receipt 并下载同一结果；不把它归类为模型学习实验。
 
-`studies` 是有署名的公开跨源论述，不代替单篇札记。每个阅读连接要给 material ID、locator、借鉴点与边界；读者应能直接回原文，也能从材料页回专题。专题不要求服务特定项目，不因新增演示而提升关联材料的 depth。
+`study/entries/` 中这三类共读是有署名的跨源论述，不代替单篇札记。普通学习记录与研究 essay 使用自己的轻量合同。每个阅读连接要给 material ID、locator、借鉴点与边界；读者应能直接回原文，也能从材料页回专题。专题不要求服务特定项目，不因新增演示而提升关联材料的 depth。
 
 首题“一条更正之后”的场景定义见 [`research/correction-scope-study/README.md`](research/correction-scope-study/README.md)。可提交使某条规则失败的公开 synthetic 反例；区分规则可见来源与独立工具 contract，不为制造胜者改写答案。新增演示机制需要相应的公开方法与可复跑实现，不能只填一份看起来已运行的结果。
 
@@ -103,16 +107,17 @@ Jev 源码实验使用 `ams-jev-contract-results/1`：公开固定源码身份�
 
 ## Canonical source 与验证
 
-`data/materials.json` 是唯一 canonical public content source；`assets/materials-data.js` 由 builder 生成，不能手工维护。网页贡献也必须保持 static、no-backend；Cloudflare Web Analytics 的 aggregate beacon 是唯一获准的 analytics，不得加入 custom events、visitor profiles、其他 tracking vendor，或需要登录却没有 durable authority 的 annotation state。
+`study/` 是唯一作者真源；`data/materials.json` 和 `assets/materials-data.js` 都由 compiler / builder 生成，不能手工维护。网页贡献也必须保持 static、no-backend；Cloudflare Web Analytics 的 aggregate beacon 是唯一获准的 analytics，不得加入 custom events、visitor profiles、其他 tracking vendor，或需要登录却没有 durable authority 的 annotation state。
 
 运行：
 
 ```bash
-python3 tools/build.py
-python3 -m unittest tools.test_build
+python3 -m pip install -r tools/content-requirements.txt
+python3 tools/build.py --write-json
+python3 -m unittest tools.test_content tools.test_author tools.test_build
 ```
 
-builder 会检查 schema、publication boundary、approved-analytics boundary、GitHub Pages subpath asset URLs、RDF attachment modes 与 bundled PDF exact allowlist，再从 canonical JSON 重建 browser payload。
+builder 会检查 schema、publication boundary、approved-analytics boundary、GitHub Pages subpath asset URLs、RDF attachment modes 与 bundled PDF exact allowlist，再从研究体生成兼容 JSON 与 browser payload。
 
 ## Evidence ownership and reader checks
 
@@ -143,7 +148,7 @@ python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebo
 
 The first command uses only local public/synthetic data, including actual fitting of a
 small stdlib classifier; it downloads no pretrained models or external data. It
-checks the generated browser payload without rewriting it, validates question/finding
+checks both generated projections without rewriting them, validates authoring, study packets, local continuation and question/finding
 references, lexical query and portable brief contracts, and the existing
 RDF, freshly reruns the five small deterministic studies and the decision-learning
 experiment (including classifier fitting and correction), and checks the saved
@@ -171,9 +176,9 @@ sizes. It does not read private material or certify human acceptance of labels.
 
 On hosts that prohibit browser navigation, `--offline-render` is an explicitly
 labelled DOM/interaction fallback. Its receipt lists HTTP, reload and history as
-unverified; CI never uses that flag. CI has read-only contents permission and no
-deployment step. Repository settings still determine whether its status is a
-required merge check; this workflow does not change the existing Pages publisher.
+unverified; CI never uses that flag. CI validates on PRs without deployment. The existing main workflow deploys the exact
+verified artifact through GitHub Pages; it does not change account settings. Repository
+settings still determine whether its status is a required merge check.
 
 Search indexes selected reader-visible fields from materials, studies, questions and findings, never
 arbitrary JSON keys or URLs. Space-separated terms use AND matching across fields;

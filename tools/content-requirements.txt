@@ -1,0 +1,2 @@
+# Build-time only. The deployed static reader does not load this package.
+markdown-it-py==4.0.0

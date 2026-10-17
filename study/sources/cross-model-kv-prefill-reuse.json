@@ -1,0 +1,173 @@
+{
+  "number": 25,
+  "id": "cross-model-kv-prefill-reuse",
+  "title": "Cross-Model KV Cache Transfer in LLM Families: A Closed-Form Linear Mapping for Prefill Reuse",
+  "authors": [
+    "Taekyung Heo",
+    "Rasoul Shafipour",
+    "Ritchie Zhao",
+    "Maximilian Golub",
+    "Mohammad Mahdi Kamani",
+    "Ritika Borkar",
+    "Makesh Tarun Chandran",
+    "Pantea Zardoshti",
+    "Bita Darvish Rouhani"
+  ],
+  "year": 2026,
+  "doi": "10.48550/arXiv.2608.03893",
+  "noteDepth": "read",
+  "readingScope": "阅读 arXiv:2608.03893v1（2026-08-04）官方 HTML 正文 §§1–6，核对附录 C–H 的校准、模型配置、原始正确率、计时与 k 选择；图形只读 caption，references 未逐项核验。本次不做源码审计或论文 benchmark 复现；已有 AMS runner 与单模型数值检查另有公开记录，不代表跨模型迁移已完成。",
+  "intro": "换模型时，能否复用已经付出的上下文计算？本文从源模型 KV-cache 拟合目标模型所需的前缀状态，再由目标模型继续计算。它把 active context 的接口推进到跨模型 prefill reuse；没有提供外部记忆库或来源修订规则。",
+  "whyRead": "它让“状态搬过去了”与“接收方还能正确使用”成为两个独立问题。接着 C2C 阅读，可以比较融合双方表示与替代接收方前缀计算的不同合同，并追问残余来源影响是否随映射保留。",
+  "keyPoints": [
+    "§§3.1–3.2：每个目标 head 的输入包含所选源层的全部 KV heads；K、V 分别拟合。per-head 输出不等于只读取同编号源 head。",
+    "§3.3：K 先去源 RoPE，映射后加目标 RoPE；V 直接映射。坐标处理不撤销较早层的上下文条件化。",
+    "§4.1：retention 是迁移正确率与目标原生正确率的比值，不是正确率或知识保存率。",
+    "§4.5：缓存拟合、注意力输出与最终任务表现需分别评价；校准域上的好分数不能代替 held-out 使用效果。"
+  ],
+  "argumentMap": [
+    {
+      "step": "01 · 明确替代什么",
+      "claim": "共享 tokenizer 的同家族模型用相同前缀；迁移目标是替代接收方的前缀计算。实验只覆盖 matched-KV 配对。",
+      "locator": "§2.1；§4.1；Appendix D"
+    },
+    {
+      "step": "02 · 从可预测性到 mapper",
+      "claim": "按目标层选择源层，将其全部 heads 拼接，用中心化 ridge 和独立偏置预测目标 K/V。",
+      "locator": "§§3.1–3.3，Eqs. 3–5"
+    },
+    {
+      "step": "03 · 用接收方行为验收",
+      "claim": "与目标原生 cache 比较下游表现，并检查失败配对、非线性替换和误差所处方向。",
+      "locator": "§§4.2–4.5，Tables 1–4"
+    },
+    {
+      "step": "04 · 将质量与成本分账",
+      "claim": "多轮交接、mapper 存储和 prefill 计时各有不同范围，不能合成一个无条件的部署收益。",
+      "locator": "§§4.6–5；Appendices D、G、H"
+    }
+  ],
+  "methodNotes": [
+    {
+      "label": "无梯度仍需拟合",
+      "text": "使用 500 段 FineWeb-Edu × 1,024 tokens，stride 4，ridge λ=0.01；mapper 为 1.01–3.36B 参数、约 4–12GB。closed-form 不表示零校准或轻量存储。",
+      "locator": "§3.1；Appendices D–E，Table 12"
+    },
+    {
+      "label": "选择与评价的重叠",
+      "text": "k 的实际选择使用 ARC-C、HellaSwag、MMLU；WinoGrande 在多数候选 k 缺测。GSM8K、CoQA 与计时未参与选择；附录另给 leave-one-out 与新任务结果。",
+      "locator": "§4.1；Appendix H，Tables 17–18"
+    },
+    {
+      "label": "速度的对象",
+      "text": "合成输入上的 mapper 与 target transformer body 计时包含所需跨 GPU cache 移动，排除 LM head；另未测映射后 cache 发往目标进程的完整传输。源 prefill 与冷启动成本也不能凭这些表视为零。",
+      "locator": "§4.7；Appendix G；Appendix D serving cost"
+    }
+  ],
+  "reportedFindings": [
+    "Table 1：Qwen3 14B→32B 平均 retention 97.6%；Ministral 3 8B→14B 为 41.6%，扣除 chance floor 后为 11.1%。这些是作者报告。",
+    "Table 13：Llama 3.1 的 GSM8K 正确率为源 8B 56.10%、目标 70B 81.12%、8B→70B 迁移 14.78%；平均 retention 会掩盖任务内退化。",
+    "Table 2：完整方案与拟合、推理都保留 RoPE 的方案在短上下文接近；只漏掉推理时重旋转的分支明显退化。两种消融回答不同问题。",
+    "§4.5：12 个方向配对中 attention-output cosine 与 HellaSwag retention 的相关为 +0.57，校准域 K R² 为 −0.20；这是该样本上的诊断关联。"
+  ],
+  "evidenceLimits": [
+    "没有执行本文大模型 benchmark、mapper 拟合或服务计时。本次收录为 read；现有小配对 runner 的随机控制及单 target native 检查不构成跨模型迁移质量证据。",
+    "实测限于同家族、共享 tokenizer、matched-KV、dense full-attention 模型；公式能写出其他维度，不表示这些组合已经验证。",
+    "部分报告任务参与了 k 选择；leave-one-out 与 held-out 任务补充证据，但不能把全部主表改称独立测试。",
+    "RoPE 坐标兼容不单独保证长上下文语义质量；数值接近、正确回答、历史角色保留与来源撤回是不同验收对象。"
+  ],
+  "sourceTensions": [
+    {
+      "label": "无训练表述与拟合成本",
+      "observation": "论文称 training-free，同时明确校准、ridge 求解以及另需梯度训练的 MLP 扩展。",
+      "implication": "应把主 ridge 方法理解为无梯度求解，不能省略拟合数据、参数、硬件和扩展方法的训练差别。",
+      "locators": [
+        "§§3.1、4.4、6",
+        "Appendices D–E"
+      ]
+    },
+    {
+      "label": "标称选择集与实际覆盖",
+      "observation": "§4.1 将 WinoGrande 列入选择准则；Appendix H 说明它在多数 k 缺失，实际 argmax 使用另外三项。",
+      "implication": "解释选择偏差时采用附录给出的实际覆盖，不假定四任务在每个 k 都已评估。",
+      "locators": [
+        "§4.1",
+        "Appendices D、H"
+      ]
+    }
+  ],
+  "editorialInferences": [
+    {
+      "label": "移交的也可能是过期影响",
+      "text": "对固定仿射映射，两份源状态之差在目标侧为 ΔXW；偏置抵消。残余差异可能减弱、保留或放大，仍需观察接收方是否使用它。",
+      "boundary": "这是代数推论与 C2C 撤回研究的连接，不是本文测得的来源撤回、遗忘或更正结果。"
+    },
+    {
+      "label": "相同大小的误差可以有不同后果",
+      "text": "固定 query 时，K 误差沿 query 读取方向与正交方向的作用不同。因此值得在同一批 held-out 输入上对照重建、注意力与任务指标。",
+      "boundary": "这是局部分析和评价建议；一个 query 下无效的方向，不能视为对未来所有问题都无害。"
+    },
+    {
+      "label": "接上 C2C，但不替它结题",
+      "text": "C2C 的主路径融合双方 prefill 后的状态；本篇试图用源 cache 代替目标前缀计算。二者共同追问内部状态怎样可用，成功标准却不同。",
+      "boundary": "编者跨源比较；不以新旧日期判断哪篇已失去研究价值，也不把计算状态直接等同外部记忆条目。"
+    }
+  ],
+  "keywords": [
+    "cross-model KV cache",
+    "prefill reuse",
+    "ridge regression",
+    "RoPE",
+    "retention",
+    "cache transfer"
+  ],
+  "categories": [
+    "记忆架构",
+    "可靠性"
+  ],
+  "failureSurfaces": [
+    "retrieval-active-context"
+  ],
+  "sourceUrl": "https://arxiv.org/abs/2608.03893v1",
+  "pdf": {
+    "delivery": "official",
+    "url": "https://arxiv.org/pdf/2608.03893v1"
+  },
+  "editorialQuestion": "一次交接保留了什么：可读的数值状态、可用的能力，还是已经失效却继续影响回答的前提？",
+  "designTransfer": {
+    "byline": "Agent Memory Study editors",
+    "date": "2026-09-20",
+    "status": "proposed-not-run",
+    "when": "在模型切换时复用前缀，并关心旧来源或更正的影响是否随状态迁移。",
+    "move": "冻结同一 mapper，将受旧来源影响的 retained cache 与从有效上下文重算的 cache 分别迁移；由目标真实 forward 新查询，避免借用目标参考分支 logits。",
+    "check": "先验证原生目标能回答当前/历史角色问题，再在相同 held-out 文档上比较重建、输出分布和任务选择；源模型、原生目标与完整成本分别作参照。",
+    "basis": "本文 §§2.1、3、4.5；C2C material 与 research/c2c-cache-retraction-study；已有 research/kv-prefill-transfer 的阶段隔离合同。",
+    "boundary": "这是尚未执行的跨模型来源撤回对照。已有 runner 与 native 数值检查只支持执行路径；不证明 mapper 已拟合、残余影响已迁移或论文速度已复现。"
+  },
+  "contributions": [
+    {
+      "type": "perspective",
+      "byline": "Agent Memory Study editors",
+      "date": "2026-09-20",
+      "text": "AMS 已有 Qwen3-0.6B→1.7B 的分阶段 runner，以及独立记录的随机控制和单 target native 检查。真实跨模型 mapper 尚未拟合；这里提供阅读与研究入口，保留各自状态。",
+      "basis": "公开研究 README、protocol、validation.json 与 native-target-check.json；本次只核对既有记录，未重跑模型。",
+      "boundary": "不是新增实验结果，不改变已有 receipt，也不据此把材料标为 worked。",
+      "links": [
+        {
+          "label": "分阶段 runner 与当前结果边界",
+          "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/kv-prefill-transfer/README.md"
+        },
+        {
+          "label": "Cache-to-Cache 阅读",
+          "url": "https://indeliblevivi.github.io/agent-memory-study/?material=cache-to-cache"
+        },
+        {
+          "label": "来源 slots 撤回机制实验",
+          "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/main/research/c2c-cache-retraction-study/README.md"
+        }
+      ],
+      "title": "从阅读到分阶段 runner"
+    }
+  ],
+  "sourceNote": "所读版本为 arXiv:2608.03893v1（2026-08-04）。官方全文链接；AMS 的分阶段 runner 与单模型检查另列公开研究记录，不代表真实跨模型迁移或论文 benchmark 已复现。"
+}

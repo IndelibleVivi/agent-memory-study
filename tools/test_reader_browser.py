@@ -72,7 +72,7 @@ def main():
                                     };
                                   }
                                 }''', base + query)
-                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js', 'practice.js', 'seo.js']:
+                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js', 'practice.js', 'study-packets.js', 'study-desk.js', 'seo.js']:
                                     page.add_script_tag(content=(ROOT / 'assets' / name).read_text())
                                 page.add_script_tag(content=offline_app)
                             else:
@@ -117,11 +117,83 @@ def main():
                         assert len(new_findings) == 2
 
                         go()
-                        expect(page.locator('#reading-entry a')).to_contain_text('一条更正之后')
+                        expect(page.locator('#room-start-list a[data-route=study]')).to_have_count(6)
+                        expect(page.locator('#study-index')).to_contain_text('一条更正之后')
                         if width <= 390:
                             expect(page.locator('#menu-button')).to_be_visible()
                             expect(page.locator('#search')).to_be_visible()
                         layout('home'); record('home entry and layout')
+                        # Rebuilt research pathways are usable without an experiment-shaped entry.
+                        page.locator('#domain-list a[data-route-id=retrieval]').click()
+                        expect(page.locator('#domain-focus')).to_contain_text('检索')
+                        assert parse_qs(urlparse(current_url()).query)['domain'] == ['retrieval']
+                        page.locator('#direction-list a[data-route-id=forms]').click()
+                        expect(page.locator('#direction-focus')).to_be_visible()
+                        page.locator('#direction-focus a[data-route=study]').first.click()
+                        expect(page.locator('#study-title')).to_have_text('经验怎样获得形式')
+                        expect(page.locator('#study-lab')).to_have_count(0)
+                        layout('non-experimental research essay')
+                        go('?study=retrieval-and-relevance#study-lab')
+                        expect(page.locator('#retrieval-ranking')).to_have_value('reference')
+                        expect(page.locator('.retrieval-metrics strong')).to_have_text(['100.0%', '33.3%', '25.0%'])
+                        page.locator('#retrieval-ranking').select_option('contrast')
+                        expect(page.locator('.retrieval-metrics strong')).to_have_text(['33.3%', '100.0%', '75.0%'])
+                        page.locator('#retrieval-k').focus(); page.locator('#retrieval-k').press('End')
+                        expect(page.locator('#retrieval-k')).to_have_value('8')
+                        assert page.evaluate('document.activeElement.id') == 'retrieval-k'
+                        layout('retrieval exercise')
+                        record('domain/direction navigation, independent essay, retrieval-set comparison and keyboard')
+                        if not args.offline_render:
+                            note = 'Synthetic continuation: 下次推导。<script>window.BAD=true</script>'
+                            page.locator('.private-continuation summary').click()
+                            page.locator('#continuation-note').fill(note)
+                            with page.expect_download() as event:
+                                page.get_by_role('button',name='保存接续文件 ↓',exact=True).click()
+                            state = json.loads(Path(event.value.path()).read_text())
+                            assert state['note'] == note and state['exercise']['k'] == 8
+                            assert state['anchor'] == '#study-lab'
+                            with page.expect_download() as event:
+                                page.locator('.packet-actions').get_by_role('button',name='JSON ↓',exact=True).click()
+                            packet = json.loads(Path(event.value.path()).read_text())
+                            assert packet['id'] == 'retrieval-and-relevance'
+                            assert note not in json.dumps(packet,ensure_ascii=False)
+                            assert page.evaluate('localStorage.length') == 0
+                            page.locator('a.site-mark').click()
+                            page.locator('#resume-file').set_input_files({'name':'continuation.json','mimeType':'application/json',
+                                                                       'buffer':json.dumps(state,ensure_ascii=False).encode()})
+                            expect(page.locator('#continuation-note')).to_have_value(note)
+                            expect(page.locator('#retrieval-k')).to_have_value('8')
+                            expect(page.locator('#retrieval-ranking')).to_have_value('contrast')
+                            assert page.evaluate('window.BAD') is None
+                            assert 'Synthetic' not in page.url
+                            page.locator('a.site-mark').click()
+                            for payload, message in [(b'{', '不是有效 JSON'), (b'x'*128001, '过大')]:
+                                page.locator('#resume-file').set_input_files({'name':'invalid.json','mimeType':'application/json','buffer':payload})
+                                expect(page.locator('#resume-status')).to_contain_text(message)
+                                expect(page.locator('#atlas-view')).to_be_visible()
+                            record('private continuation roundtrip, public packet separation, malformed files and no persistent storage')
+                            go()
+                            stage = page.locator('#continuity-sculpture')
+                            if stage.get_attribute('data-renderer') == 'webgl':
+                                expect(stage).to_have_attribute('data-motion','still')
+                                if width == 1440:
+                                    page.locator('.sculpture-toggle').click()
+                                    expect(stage).to_have_attribute('data-motion','running')
+                                    first = stage.screenshot(); page.wait_for_timeout(250); second = stage.screenshot()
+                                    assert first != second, 'Playing sculpture did not change its rendered frame'
+                                    page.locator('#starts').scroll_into_view_if_needed()
+                                    expect(stage).to_have_attribute('data-motion','still')
+                                    stage.scroll_into_view_if_needed()
+                                    expect(stage).to_have_attribute('data-motion','running')
+                                    page.locator('.sculpture-toggle').click()
+                                    expect(stage).to_have_attribute('data-motion','still')
+                            else:
+                                expect(page.locator('.sculpture-fallback')).to_be_visible()
+                            stage_box = stage.bounding_box()
+                            assert abs(stage_box['x'] + stage_box['width']/2 - width/2) < 10
+                            layout('editorial cover')
+                            page.screenshot(path=str(output / f'editorial-cover-{width}.png'))
+                            record('central editorial composition, reduced-motion and available WebGL controls')
                         for material in data['materials']:
                             go('?material=' + material['id'])
                             expect(page.locator('#material-title')).to_have_text(material['title'])
@@ -142,9 +214,9 @@ def main():
                                 page.locator('#paper-ams-evidence').screenshot(path=str(output / f'ams-evidence-{width}.png'))
 
                         go('?q=%E4%B8%80%E6%9D%A1%E6%9B%B4%E6%AD%A3%E4%B9%8B%E5%90%8E#library')
-                        expect(page.locator('#material-index [data-result-kind=study]')).to_have_count(1)
+                        expect(page.locator('#material-index a[data-route=study]').first).to_contain_text('一条更正之后')
                         expect(page.locator('#material-index [data-result-kind=material]')).to_have_count(0)
-                        page.locator('#material-index a[data-route=study]').click()
+                        page.locator('#material-index a[data-route=study]').first.click()
                         expect(page.locator('#study-title')).to_have_text('一条更正之后')
                         page.locator('#study-scenario').select_option('legacy')
                         assert page.evaluate('document.activeElement.id') == 'study-scenario'
@@ -163,7 +235,7 @@ def main():
                             expect(page.locator('#study-scenario')).to_have_value('corrected')
                             page.go_back()
                             expect(page.locator('#search')).to_have_value('一条更正之后')
-                            expect(page.locator('#material-index [data-result-kind=study]')).to_have_count(1)
+                            expect(page.locator('#material-index a[data-route=study]').first).to_contain_text('一条更正之后')
                             page.go_forward()
                             expect(page.locator('#study-title')).to_be_visible()
                             record('real browser back/forward restores search and scenario')
@@ -271,7 +343,7 @@ def main():
                             record('question to new finding, exact export and real history')
                         go('#library')
                         page.locator('#search').fill('jevlike')
-                        page.locator('#material-index a[data-route=study]').click()
+                        page.locator('#material-index a[data-route=study]').first.click()
                         expect(page.locator('#study-title')).to_have_text('没有再读那段往事，它为什么还是改变了选择？')
                         expect(page.locator('#decision-summary tbody tr')).to_have_count(4)
                         expect(page.locator('#decision-cases tbody tr')).to_have_count(12)
@@ -345,7 +417,7 @@ def main():
                         expect(page.locator('#study-lab')).to_contain_text('研究方案尚未执行')
                         expect(page.locator('#study-lab select, #study-lab button, #study-lab table')).to_have_count(0)
                         expect(page.locator('#study-lab a')).to_have_attribute('href', 'research/representation-use-study/README.md')
-                        expect(page.locator('.study-jump')).to_contain_text('下一项研究')
+                        expect(page.locator('.study-toc a[href="#study-lab"]')).to_contain_text('下一项研究')
                         layout('proposed representation study')
                         if not args.offline_render:
                             response = context.request.get(page.locator('#study-lab a').evaluate('(a) => a.href'))

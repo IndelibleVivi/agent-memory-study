@@ -33,11 +33,16 @@ def build(output: Path, executable: str | None = None):
     # Preserve tracked public research/docs referenced by reading notes, plus canonical PDFs.
     assets = subprocess.check_output(['git', 'ls-files', '-z', 'assets', 'research', 'docs'], cwd=ROOT).decode().split('\0')
     # seo.js may be untracked during authoring; it is an explicit source dependency.
-    files = set(filter(None, assets)) | {'assets/seo.js', 'site.webmanifest', 'NOTICE.md',
+    files = set(filter(None, assets)) | {'assets/continuity-sculpture.js', 'assets/study-packets.js', 'assets/study-desk.js', 'assets/seo.js', 'site.webmanifest', 'NOTICE.md',
         'THIRD_PARTY_NOTICES.md', 'agent-memory-study.rdf',
         'publications/agent-memory-study-project-introduction.zh-CN.pdf'}
     files.update(item['pdf']['url'] for item in data['materials'] if item['pdf']['delivery'] == 'bundled')
+    files.update(item['sourcePath'] for item in data['studies'])
+    files.add('docs/authoring.md')
     source = (ROOT / 'index.html').read_text()
+    shell = source.split('<main id="main-content" tabindex="-1">', 1)[1].split('</main>', 1)[0]
+    shell_script = 'window.AMS_READER_SHELL = ' + json.dumps(shell, ensure_ascii=False).replace('</', '<\\/') + ';\n'
+    source = source.replace('<script src="assets/app.js', '<script src="assets/reader-shell.js"></script>\n    <script src="assets/app.js')
     source = source.replace('<html lang="zh-CN">', '<html lang="zh-CN" data-static-reader="true">')
     source = source.replace('<head>', f'<head>\n    <base href="{BASE_PATH}">', 1)
     with tempfile.TemporaryDirectory(prefix='ams-static-') as temporary:
@@ -47,6 +52,7 @@ def build(output: Path, executable: str | None = None):
             destination = stage / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / relative, destination)
+        (stage / 'assets/reader-shell.js').write_text(shell_script)
         for path, _ in routes:
             destination = stage / path / 'index.html'
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -75,7 +81,14 @@ def build(output: Path, executable: str | None = None):
                         urls.append(page.locator('link[rel="canonical"]').get_attribute('href'))
                         # Browser captures the real renderer, including hidden/view state and head metadata.
                         page.locator('noscript').evaluate("node => { node.textContent = '正文与阅读链接无需 JavaScript；搜索、星图交互、场景切换和 brief 导出需要启用 JavaScript。'; }")
-                        pages[path] = page.content()
+                        pages[path] = page.evaluate("""() => {
+                            const snapshot = document.documentElement.cloneNode(true);
+                            snapshot.querySelectorAll('[hidden]').forEach(node => node.remove());
+                            const sculpture = snapshot.querySelector('#continuity-sculpture');
+                            if (sculpture) { sculpture.dataset.renderer = 'fallback'; sculpture.dataset.motion = 'still'; }
+                            snapshot.querySelectorAll('.sculpture-toggle, .private-continuation').forEach(node => node.remove());
+                            return '<!doctype html>\\n' + snapshot.outerHTML;
+                        }""")
                     if errors:
                         raise RuntimeError(f'Renderer errors: {errors}')
                 finally:
@@ -91,6 +104,16 @@ def build(output: Path, executable: str | None = None):
             destination = output / relative
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(stage / relative, destination)
+        (output / 'assets/reader-shell.js').write_text(shell_script)
+        packet_script = """const fs=require('node:fs');const p=require('./assets/study-packets.js');
+const data=JSON.parse(fs.readFileSync('data/materials.json','utf8'));
+const result={};for(const [kind,key] of [['material','materials'],['study','studies'],['question','questions'],['finding','findings']])
+for(const item of data[key]) {const packet=p.packet(data,kind,item.id);result[kind+'/'+item.id+'/']={json:JSON.stringify(packet,null,2)+'\\n',md:p.markdown(packet)};}
+process.stdout.write(JSON.stringify(result));"""
+        packets=json.loads(subprocess.check_output(['node','-e',packet_script],cwd=ROOT))
+        for route, formats in packets.items():
+            folder=output/route;folder.mkdir(parents=True,exist_ok=True)
+            for ext, body in formats.items(): (folder/f'index.{ext}').write_text(body)
         for path, html in pages.items():
             destination = output / path / 'index.html'
             destination.parent.mkdir(parents=True, exist_ok=True)

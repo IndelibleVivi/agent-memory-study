@@ -16,17 +16,14 @@ def run(args, **kwargs):
 
 def main():
     python = sys.executable
-    with tempfile.TemporaryDirectory() as temp:
-        payload = Path(temp) / 'materials-data.js'
-        run([python, '-B', 'tools/build.py', '--js-output', str(payload)])
-        if payload.read_bytes() != (ROOT / 'assets/materials-data.js').read_bytes():
-            raise SystemExit('Generated browser data drift: run python3 tools/build.py and commit the projection.')
+    run([python, '-B', 'tools/content.py', '--check'])
+    run([python, '-B', '-m', 'unittest', 'tools.test_content', 'tools.test_author'])
     run([python, '-B', '-m', 'unittest', 'tools.test_build', 'tools.test_evidence',
          'tools.test_practice_data'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s',
          'research/multilingual-use-policy', '-p', 'test_casebook.py'])
-    run(['node', '--test', 'tools/test_revision_study.cjs', 'tools/test_reading_search.cjs',
-         'tools/test_practice.cjs', 'tools/test_seo.cjs'])
+    run(['node', '--test', 'tools/test_study_packets.cjs', 'tools/test_study_desk.cjs', 'tools/test_revision_study.cjs',
+         'tools/test_reading_search.cjs', 'tools/test_practice.cjs', 'tools/test_seo.cjs'])
     for study, runner in [('trustmem-transition-study', 'audit.py'),
                           ('experience-reuse-retrieval-study', 'study.py'),
                           ('proactive-prefix-study', 'study.py'),

@@ -1,0 +1,33 @@
+{
+  "id": "relevance-in-context",
+  "title": "过去怎样进入当下",
+  "kind": "research-essay",
+  "date": "2026-10-18",
+  "byline": "Agent Memory Study editors",
+  "intro": "从地址、近邻与相关性，到信息真正参与判断，研究它们怎样接上。",
+  "subtitle": "长期方向 02 · 检索、需求与使用",
+  "number": "08",
+  "bodyFile": "programme/directions/relevance-in-context.md",
+  "domains": [
+    "indexing",
+    "retrieval",
+    "control",
+    "evaluation"
+  ],
+  "directionIds": [
+    "relevance"
+  ],
+  "readings": [],
+  "externalReadings": [
+    {
+      "label": "Information retrieval system evaluation",
+      "url": "https://nlp.stanford.edu/IR-book/html/htmledition/information-retrieval-system-evaluation-1.html",
+      "kind": "基础教材",
+      "locator": "教材 §8.1，文档、信息需求与相关性判断",
+      "takeaway": "评价需要先明确需求和相关性参照。",
+      "limit": "仅使用所读章节，不代表系统性完成教材。"
+    }
+  ],
+  "takeaways": [],
+  "boundary": "这是 AMS 的编者论述。来源、原创推演与既有研究的边界在正文分别说明；不包含私人共学记录或新的模型实验。"
+}

@@ -14,6 +14,10 @@ import zipfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+try:
+    from tools import content
+except ModuleNotFoundError:  # Support `python3 tools/build.py` from the repo root.
+    import content
 
 ROOT = Path(__file__).resolve().parents[1]
 PRIVATE_PATTERNS = (
@@ -46,6 +50,9 @@ PUBLIC_COPY_PATHS = (
     "assets/revision-study.js",
     "assets/reading-search.js",
     "assets/practice.js",
+    "assets/study-packets.js",
+    "assets/study-desk.js",
+    "assets/continuity-sculpture.js",
     "assets/styles.css",
     "assets/materials-data.js",
     "data/materials.json",
@@ -86,8 +93,20 @@ NS = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data", type=Path, default=ROOT / "data" / "materials.json")
+    parser.add_argument(
+        "--data", type=Path,
+        help="validate an explicit projection instead of compiling study/",
+    )
+    parser.add_argument("--content", type=Path, default=content.CONTENT_ROOT)
     parser.add_argument("--js-output", type=Path, default=ROOT / "assets" / "materials-data.js")
+    parser.add_argument(
+        "--write-json", action="store_true",
+        help="also rewrite data/materials.json from the canonical content tree",
+    )
+    parser.add_argument(
+        "--check-drift", action="store_true",
+        help="fail if generated projections differ; never repair them",
+    )
     parser.add_argument("--rdf-source", type=Path)
     parser.add_argument("--rdf-output", type=Path, default=ROOT / "agent-memory-study.rdf")
     parser.add_argument("--package-output", type=Path)
@@ -257,25 +276,41 @@ def validate_studies(data: dict[str, Any], material_ids: set[str]) -> None:
     if not isinstance(studies, list):
         raise ValueError("data.studies must be a list")
     seen = set()
-    text_fields = {"id", "number", "title", "subtitle", "byline", "date", "kind", "intro", "labTitle", "labIntro", "boundary", "closing", "artifactUrl"}
+    base_text_fields = {
+        "id", "number", "title", "subtitle", "byline", "date", "kind", "intro",
+        "boundary", "closing",
+    }
+    standalone_kinds = {"learning-note", "research-essay"}
     for study in studies:
-        if not isinstance(study, dict) or not text_fields.issubset(study):
+        if not isinstance(study, dict):
+            raise ValueError("study must be an object")
+        standalone = study.get("kind") in standalone_kinds
+        required_text_fields = (
+            {"id", "title", "byline", "date", "kind", "intro"}
+            if standalone else base_text_fields
+        )
+        if not required_text_fields.issubset(study):
             raise ValueError("study missing text fields")
-        assert_exact_text_object({k: study[k] for k in text_fields}, text_fields, "study")
+        assert_exact_text_object(
+            {k: study[k] for k in required_text_fields}, required_text_fields, "study"
+        )
         if not re.fullmatch(r"[a-z0-9-]+", study["id"]) or study["id"] in seen:
             raise ValueError("invalid or duplicate study id")
         seen.add(study["id"])
-        if study["kind"] not in {"editorial-synthesis-with-deterministic-demo", "editorial-synthesis-with-recorded-experiment", "editorial-synthesis-with-proposed-experiment"}:
+        if study["kind"] not in content.STUDY_KINDS:
             raise ValueError("unsupported study kind")
-        artifact = PurePosixPath(study["artifactUrl"])
-        if artifact.is_absolute() or ".." in artifact.parts or artifact.parts[0] != "research" or not (ROOT / artifact).is_file():
-            raise ValueError("study artifact must be an existing public research file")
         for field, keys in [("sections", {"title", "text"}), ("takeaways", {"title", "text"}),
                             ("readings", {"materialId", "label", "locator", "takeaway", "limit"})]:
-            if not isinstance(study.get(field), list) or not study[field]:
+            required_nonempty = study["kind"] not in standalone_kinds
+            if not isinstance(study.get(field), list) or (required_nonempty and not study[field]):
                 raise ValueError(f"study {field} must be non-empty")
             for item in study[field]:
                 assert_exact_text_object(item, keys, f"study {field}")
+        for field in ("bodyMarkdown", "bodyHtml"):
+            if not isinstance(study.get(field), str) or not study[field].strip():
+                raise ValueError(f"study {field} must be compiled non-empty text")
+        if "bodyFile" in study:
+            raise ValueError("bodyFile belongs to authored content, not the projection")
         if any(item["materialId"] not in material_ids for item in study["readings"]):
             raise ValueError("study references unknown material")
         for source in study.get("externalReadings", []):
@@ -284,6 +319,19 @@ def validate_studies(data: dict[str, Any], material_ids: set[str]) -> None:
                 raise ValueError("external reading requires a public HTTPS source")
         if "recordedResults" in study:
             raise ValueError("recordedResults belongs to the generated browser projection")
+        if study["kind"] in standalone_kinds:
+            forbidden = {"artifactUrl", "resultsUrl", "scenarios", "policies",
+                         "labTitle", "labIntro"}
+            if forbidden.intersection(study):
+                raise ValueError("standalone study cannot claim a lab, artifact, or result")
+            continue
+        text_fields = base_text_fields | {"labTitle", "labIntro", "artifactUrl"}
+        if not text_fields.issubset(study):
+            raise ValueError("experiment study missing lab or artifact fields")
+        assert_exact_text_object({k: study[k] for k in text_fields}, text_fields, "study")
+        artifact = PurePosixPath(study["artifactUrl"])
+        if artifact.is_absolute() or ".." in artifact.parts or artifact.parts[0] != "research" or not (ROOT / artifact).is_file():
+            raise ValueError("study artifact must be an existing public research file")
         if study["kind"] == "editorial-synthesis-with-proposed-experiment":
             if any(key in study for key in ("resultsUrl", "scenarios", "policies")):
                 raise ValueError("proposed study cannot contain executed results or demo controls")
@@ -570,8 +618,15 @@ def validate_findings(data: dict[str, Any], material_ids: set[str],
                     "but the question does not list the finding"
                 )
 
-def load_and_validate(path: Path) -> dict[str, Any]:
-    data = json.loads(path.read_text(encoding="utf-8"))
+def load_and_validate(path: Path | None = None) -> dict[str, Any]:
+    if path is None:
+        data = content.compile_content()
+    else:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    return validate_data(data)
+
+
+def validate_data(data: dict[str, Any]) -> dict[str, Any]:
     materials = data.get("materials")
     if not isinstance(materials, list) or not materials:
         raise ValueError("data.materials must be a non-empty list")
@@ -587,7 +642,7 @@ def load_and_validate(path: Path) -> dict[str, Any]:
     if not isinstance(atlas, dict):
         raise ValueError("data.atlas must be an object")
     atlas_required = {
-        "thesis", "dek", "editorialLabel", "easterEgg", "failureSurfaces", "readingPaths"
+        "thesis", "dek", "editorialLabel", "failureSurfaces", "readingPaths"
     }
     atlas_missing = atlas_required.difference(atlas)
     if atlas_missing:
@@ -595,17 +650,6 @@ def load_and_validate(path: Path) -> dict[str, Any]:
     for field in ("thesis", "dek", "editorialLabel"):
         if not isinstance(atlas[field], str) or not atlas[field].strip():
             raise ValueError(f"data.atlas.{field} must be non-empty text")
-
-    easter_egg = atlas["easterEgg"]
-    assert_exact_text_object(
-        easter_egg,
-        {"heroWord", "heroReveal", "aboutLine", "aboutReveal"},
-        "data.atlas.easterEgg",
-    )
-    if atlas["thesis"].count(easter_egg["heroWord"]) != 1:
-        raise ValueError("data.atlas.thesis must contain easterEgg.heroWord exactly once")
-    if len(easter_egg["heroWord"]) != len(easter_egg["heroReveal"]):
-        raise ValueError("easterEgg hero words must have equal length to prevent title reflow")
 
     failure_surfaces = atlas["failureSurfaces"]
     if not isinstance(failure_surfaces, list) or not failure_surfaces:
@@ -962,13 +1006,17 @@ def load_recorded_results(study: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def write_browser_data(data: dict[str, Any], output: Path) -> None:
+def browser_projection(data: dict[str, Any]) -> dict[str, Any]:
+    """Enrich compiled research content with its existing recorded receipts."""
     projection = copy.deepcopy(data)
     for study in projection["studies"]:
         if study["kind"] == "editorial-synthesis-with-recorded-experiment":
             study["recordedResults"] = load_recorded_results(study)
-    encoded = json.dumps(projection, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    output.write_text(f"window.READING_ROOM = {encoded};\n", encoding="utf-8")
+    return projection
+
+
+def write_browser_data(data: dict[str, Any], output: Path) -> None:
+    content.write_browser_projection(browser_projection(data), output)
 
 
 def normalize_title(value: str) -> str:
@@ -1157,8 +1205,19 @@ def write_zotero_package(output: Path, rdf_output: Path, data: dict[str, Any]) -
 
 def main() -> int:
     args = parse_args()
-    data = load_and_validate(args.data)
-    write_browser_data(data, args.js_output)
+    if args.check_drift and (args.rdf_source or args.package_output or args.write_json):
+        raise SystemExit("--check-drift cannot be combined with write options")
+    data = load_and_validate(args.data) if args.data else validate_data(content.compile_content(args.content))
+    if args.check_drift:
+        drift = content.check_projection(data, content.DATA_OUTPUT, args.js_output)
+        if drift:
+            raise SystemExit(
+                "; ".join(drift) + "\nRun python3 tools/build.py --write-json."
+            )
+    if not args.check_drift:
+        write_browser_data(data, args.js_output)
+    if args.write_json and not args.check_drift:
+        content.write_projection(data, content.DATA_OUTPUT)
     if args.rdf_source:
         write_hybrid_rdf(args.rdf_source, args.rdf_output, data)
     validate_hybrid_rdf(args.rdf_output, data)
@@ -1171,7 +1230,7 @@ def main() -> int:
     print(
         f"validated {len(data['materials'])} materials "
         f"({bundled_count} bundled PDFs, {official_count} official PDF links); "
-        f"wrote {args.js_output}"
+        f"{'checked' if args.check_drift else 'wrote'} {args.js_output}"
     )
     if args.rdf_source:
         print(f"wrote hybrid RDF: {args.rdf_output}")

@@ -4,17 +4,27 @@
 
 ## Canonical 与 generated surfaces
 
-- `data/materials.json` 是公开材料、阅读深度、failure-surface membership、evidence metadata、`studies` 共读专题、`questions` 问题专题与 `findings` 实践判断的 canonical source。
-- `assets/materials-data.js` 和 `agent-memory-study.rdf` 是 generated projections；不要手工编辑。
-- 需要重建 browser / Zotero artifacts 时，运行：
+- `study/` 是公开研究体的唯一作者真源：`programme/` 保存 thesis / 方法 / 方向正文，`entries/*.json` 指向 `bodyFile` Markdown，`sources/`、`inquiries/`、`transfers/` 分别保存来源、问题与实践判断；`map.json` / `catalog.json` 维护导航与次序。
+- `data/materials.json` 是旧 reader / CLI shape 的 generated projection；`assets/materials-data.js` 是含保存结果的 browser projection；`agent-memory-study.rdf` 是书目 projection。不要手工编辑这些文件。`research/` 继续独立拥有方法、runner 和历史 receipts。
+- `tools/content.py` 是唯一内容 compiler，禁 raw HTML、可执行链接、越界正文路径与 draft 标记。表格用 `markdown-it-py` 构建，无 browser Markdown parser。正文中的已知 study Markdown 链接转换为原 study route。
+- `learning-note` / `research-essay` 只要求身份、署名、日期、简介与正文；不要求实验、来源数量、takeaways 或固定章节。领域 / 方向是可改导航，不是进度或成果等级。`failureSurfaces` 可为空，反向 membership 由 source 生成。
+- 一般更新运行：
 
   ```bash
-  python3 tools/build.py --rdf-source /path/to/zotero-source.rdf
-  python3 -B -m unittest tools.test_build
+  python3 -m pip install -r tools/content-requirements.txt
+  python3 -B tools/build.py --write-json
+  python3 -B tools/verify_reader.py
   ```
 
-- `--rdf-source` 可以接收经过验证的 native Zotero RDF，也可以接收明确标注 provenance 的 derived RDF。Derived
-  projection 不能被称为 native Zotero export。
+- `tools/content.py --check` / `tools/build.py --check-drift` 只检查 drift，不修复。书目变化需要同次 `--rdf-source /path/to/zotero-source.rdf` 重建；单纯编辑文章无需重导 RDF。`--rdf-source` 接受经过验证的 native Zotero RDF 或明确 provenance 的 derived RDF；derived 不能称为 native export。
+- `tools/author.py` 是 offline identity / explicit impact helper，不 fetch 来源、不验证论点。草稿只生成在 repo 外，发布前移除 draft、替换提示、核对公开署名与依据。具体作者路径见 `docs/authoring.md`。
+
+## 研究包与个人接续
+
+- `assets/study-packets.js` 是 browser、`tools/export_study.cjs` 和静态 `index.md` / `index.json` 的唯一研究包实现。包包含当前对象和直接引用 manifest，不递归抓取全文；编辑日期不是 immutable revision。论文作者与札记署名不可混同。
+- `assets/study-desk.js` 负责原创集合演算和 `ams-continuation/1` 合同。近邻集合、相关性标签与排序是教学设定，不运行 embedding 或 ANN，不是论文或用户学习结果。
+- 私人接续只保存在页面内存和用户主动下载的文件。不得进入 canonical、analytics、URL、localStorage、repo 或构建。导入限制大小与字段，仅恢复已知公开对象；文字按文本使用，不执行指令、不请求文件中的 URL。刷新未保存内容会丢失，界面必须说明。
+- 改动上述行为运行 `tools/test_study_packets.cjs`、`tools/test_study_desk.cjs`（已接入统一验证）与 reader browser tests，覆盖导出／导入、恶意及过大文件、历史与页面内接续。
 
 ## Zotero：CLI / local API first
 
@@ -68,7 +78,7 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 
 ## 共读专题
 
-- `studies` 提供公共跨源文章、材料引用、scenario 与明确的演示边界；不要用专题自动提升 material `noteDepth`。
+- `studies` 是编译后的文章集合，来自 `study/entries/`；以下三类共读保留各自 scenario / artifact 边界，不把它们的字段要求施加给普通学习文章。任何专题都不自动提升 material `noteDepth`。
 - `editorial-synthesis-with-proposed-experiment` 只承载跨源论述与未执行方案，`artifactUrl` 指向公开协议；不得包含 `resultsUrl`、`recordedResults`、`scenarios` 或 `policies`。页面标明未执行并提供方案入口，不制造可运行控件。私人语料、资源 inventory、标签与派生模型留在公开 repo 外。
 - `research/multilingual-use-policy/casebook.py` 负责离线材料与 review sidecar 的合同校验和 HTML 生成；生成页面及私人输入/标注不入 Git。源码消息窗口可追溯不等于完整事件、情境充分或效用已确认；该工具不训练模型，不改变专题的未执行状态。其合成合同测试接入 `tools/verify_reader.py`；修改校准 UI 时运行 `tools/test_casebook_browser.py`，仅使用原创合成材料。
 - `externalReadings` 允许共读引用官方文档、开源实现与论文线索，必须保留类型、阅读范围与限制；不自动变成 Zotero 书目。`editorial-synthesis-with-recorded-experiment` 的 `resultsUrl` 指向已执行 `research/` JSON；`recordedResults` 仅由 builder 投影，不进入 canonical。录制结果展示与 `revision-study.js` 的实时规则演示分开。
@@ -98,7 +108,8 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 ## 静态阅读站点
 
 - `assets/app.js` 是唯一正文 renderer；`assets/seo.js` 统一生成 source / browser / build-time 的 route URLs 和 metadata。`tools/seo_build.py` 使用已有 Python Playwright 执行该 renderer，生成独立的 `dist/site/`，不维护第二份文章 HTML。
-- `dist/` 是忽略的生成物，不入 Git。构建仅复制 tracked `assets/`、`research/`、`docs/`、canonical bundled PDF 和命名公开下载；不复制整个 checkout、工具或机器状态。构建/测试拦截非本机请求，不发送 analytics。
+- `dist/` 是忽略的生成物，不入 Git。构建仅复制 tracked `assets/`、`research/`、`docs/`、canonical 引用的研究正文、明确的 reader assets、canonical bundled PDF 和命名公开下载；不复制整个 checkout、工具或机器状态。构建/测试拦截非本机请求，不发送 analytics。
 - 改动 renderer / routes / metadata / build 时，运行 `node --test tools/test_seo.cjs`、既有 reader 检查、`python3 -B tools/seo_build.py` 和 `python3 -B tools/test_static_reader.py`。后两项需要 `tools/browser-requirements.txt` 与 Chromium；不能把离线语法检查称作浏览器验收。
+- 静态捕获删除非活动／hidden 内容，`reader-shell.js` 从 `index.html` 派生，供 hydration 恢复同一 shell；不得维护第二份正文模板。首屏 `continuity-sculpture.js` 原生 WebGL 为装饰，保留静态 fallback、暂停、reduced-motion、视口与页面可见性停帧。
 - 公共物理路径只对应 material / study / question / finding 与首页。query 兼容、source file mode、场景参数、history、目录锚点和导出必须保留。不要把访客查询写进 canonical、metadata 或 sitemap；不要把论文作者标成本站札记作者。
-- `.github/workflows/reader-validation.yml` 的 PR 构建不部署，main 仅发布同一验证通过的 artifact。Pages 首次从 branch 切为 Actions 是账号/发布操作，需要对应授权；源码/CI通过不代表线上已切换。流程见 `docs/website.md`。
+- `.github/workflows/reader-validation.yml` 的 PR 构建不部署，main 仅发布同一验证通过的 artifact。Pages 使用既有 Actions 发布面；修改 Pages account 设置仍是独立授权操作，源码/CI通过不代表本次 artifact 已上线。流程见 `docs/website.md`。

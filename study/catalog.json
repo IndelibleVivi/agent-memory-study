@@ -1,0 +1,160 @@
+{
+  "title": "Agent Memory Study",
+  "intro": "从 agent memory 出发，研究信息、经验与智能的跨时间关系。",
+  "editorialNote": "AMS 为理解留下位置：一个陌生的概念、一次对读、一项推导，都可以成为研究的开始。我们追踪解释怎样改变，也给暂时无法解释的东西保留余地。",
+  "filters": [
+    "记忆架构",
+    "可靠性",
+    "前瞻记忆",
+    "持续学习",
+    "信念修正"
+  ],
+  "atlas": {
+    "thesis": "Agent memory fails in layers.",
+    "dek": "把记住、取回、修订与行动拆开看。沿着一个问题继续研究，也把有依据的判断带回实践；未读不是债。",
+    "editorialLabel": "编者研究地图 · 跨源 synthesis，不是任何单篇论文的主张",
+    "failureSurfaces": [
+      {
+        "number": "01",
+        "id": "state-representation",
+        "label": "State / representation",
+        "question": "记录里的状态怎样被表示，并在变化后保留角色？",
+        "tension": "旧记录仍在，不等于它应被当作当前事实；时间顺序也不能独自说明 change、correction 或 coexistence。"
+      },
+      {
+        "number": "02",
+        "id": "write-consolidation",
+        "label": "Write / consolidation",
+        "question": "什么被写入、合并、修订或拒绝，谁来校验？",
+        "tension": "一个 mutation 可以通过 schema 与 policy 检查，却仍可能在语义上遗漏、破坏或无依据新增。"
+      },
+      {
+        "number": "03",
+        "id": "retrieval-active-context",
+        "label": "Active context / retrieval",
+        "question": "所需证据是否进入候选、排序和 active context？",
+        "tension": "东西留在 store 里仍可能因为 candidate miss、ordering、dilution 或不合时宜的注入而不可用。"
+      },
+      {
+        "number": "04",
+        "id": "wake-prospective-action",
+        "label": "Wake / prospective action",
+        "question": "记住的意图能否在合适时机触发，又避免重复或误触？",
+        "tension": "recall 正确不等于 action timing 正确；cue、取消、完成与 monitoring cost 是另一组责任。"
+      },
+      {
+        "number": "05",
+        "id": "abstraction-experience",
+        "label": "Abstraction / experience reuse",
+        "question": "经验怎样压缩成可复用抽象，又怎样随来源失效？",
+        "tension": "更可复用的 insight 或 schema 也更容易脱离 source；抽象层级不会自动增加 authority。"
+      },
+      {
+        "number": "06",
+        "id": "metacognitive-control",
+        "label": "Metacognitive control",
+        "question": "系统何时监控自己的过程，并把 discrepancy 升级为行动？",
+        "tension": "发现异常不等于获准继续；监控、解释、生成 goal 与执行需要保持可区分。"
+      },
+      {
+        "number": "07",
+        "id": "justification-revision",
+        "label": "Justification / revision",
+        "question": "一句 belief 受什么支持，支持变化时怎样修订？",
+        "tension": "当前有 justification 不等于来源为真；形式 revision 也不能授权覆盖 raw source。"
+      }
+    ],
+    "readingPaths": [
+      {
+        "number": "01",
+        "id": "from-answer-failure",
+        "title": "从一次答错开始",
+        "description": "从 terminal error 倒推 bank、retrieval 与 QA 各自可能失效的位置。",
+        "materialIds": [
+          "a-tma-state-aware-memory",
+          "verifiable-memory",
+          "insightemb-action-intent-retrieval",
+          "longmemeval-v2-experienced-colleague",
+          "continual-learning-experience-reuse",
+          "fluctlightdb-observation-binding",
+          "memprobe-hidden-user-state-recovery",
+          "useful-memories-become-faulty"
+        ]
+      },
+      {
+        "number": "02",
+        "id": "from-revision",
+        "title": "从 revision 开始",
+        "description": "先区分支持、修订与状态变化，再回到 learned write policy 的 authority 问题。",
+        "materialIds": [
+          "truth-maintenance-system",
+          "agm-theory-change",
+          "a-tma-state-aware-memory",
+          "trustmem-consolidation",
+          "memory-beyond-recall",
+          "statefuse-conflict-preserving-memory",
+          "useful-memories-become-faulty"
+        ]
+      },
+      {
+        "number": "03",
+        "id": "from-action-timing",
+        "title": "从行动时机开始",
+        "description": "从 cue、wake 与执行切入，理解记得一件事为什么仍可能在错误时间发生。",
+        "materialIds": [
+          "pm-bench",
+          "proactive-wake-anchor",
+          "midca-dual-cycle",
+          "insightemb-action-intent-retrieval",
+          "recuris-memory-evolution"
+        ]
+      }
+    ]
+  },
+  "sourceOrder": [
+    "a-tma-state-aware-memory",
+    "trustmem-consolidation",
+    "verifiable-memory",
+    "mosaic-long-term-memory",
+    "proactive-wake-anchor",
+    "pm-bench",
+    "mistake-notebook-learning",
+    "coala-cognitive-architecture",
+    "storage-to-experience",
+    "continual-learning-experience-reuse",
+    "agentic-memory",
+    "midca-dual-cycle",
+    "truth-maintenance-system",
+    "agm-theory-change",
+    "memory-beyond-recall",
+    "insightemb-action-intent-retrieval",
+    "longmemeval-v2-experienced-colleague",
+    "statefuse-conflict-preserving-memory",
+    "fluctlightdb-observation-binding",
+    "memora-from-recall-to-forgetting",
+    "memprobe-hidden-user-state-recovery",
+    "useful-memories-become-faulty",
+    "recuris-memory-evolution",
+    "cache-to-cache",
+    "cross-model-kv-prefill-reuse",
+    "pain-axis",
+    "jev-mem-system-one-control"
+  ],
+  "entryOrder": [
+    "after-a-correction",
+    "experience-becomes-policy",
+    "who-controls-memory",
+    "representation-and-use"
+  ],
+  "inquiryOrder": [
+    "experience-to-capability",
+    "experience-becomes-policy"
+  ],
+  "transferOrder": [
+    "retrieval-candidate-competition",
+    "revision-needs-scope",
+    "retraction-needs-recomputation",
+    "correction-needs-retention-checks",
+    "output-guard-is-not-unlearning"
+  ]
+}

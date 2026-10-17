@@ -8,7 +8,7 @@
   const site = "https://indeliblevivi.github.io/agent-memory-study/";
   const kinds = ["material", "study", "question", "finding"];
   const collections = { material: "materials", study: "studies", question: "questions", finding: "findings" };
-  const routeKeys = [...kinds, "practice", "scenario", "phase", "thread", "path", "q", "topic", "surface", "depth"];
+  const routeKeys = [...kinds, "practice", "scenario", "phase", "thread", "path", "q", "topic", "surface", "depth", "domain", "direction", "k", "ranking", "need"];
 
   function pathFor(route) {
     const kind = kinds.find(key => route[key]);
@@ -26,12 +26,15 @@
     routeKeys.forEach(key => url.searchParams.delete(key));
     if (physical) url.pathname = new URL(pathFor(route), base).pathname;
     for (const kind of kinds) if (!physical && route[kind]) url.searchParams.set(kind, route[kind]);
-    for (const key of ["practice", "thread", "path", "q", "topic", "depth"]) {
+    for (const key of ["practice", "thread", "path", "q", "topic", "depth", "domain", "direction"]) {
       if (route[key]) url.searchParams.set(key, route[key]);
     }
     if (route.surface && route.surface !== route.thread) url.searchParams.set("surface", route.surface);
     if (route.study && route.scenario) url.searchParams.set("scenario", route.scenario);
     if (route.study && route.phase === "after") url.searchParams.set("phase", "after");
+    if(route.study === "retrieval-and-relevance") {
+      for(const key of ["k","ranking","need"]) if(route[key]) url.searchParams.set(key,route[key]);
+    }
     url.hash = hash;
     return `${url.pathname}${url.search}${url.hash}`;
   }
@@ -40,10 +43,10 @@
     const kind = kinds.find(key => route[key]);
     const item = kind && data[collections[kind]].find(entry => entry.id === route[kind]);
     const name = "Agent Memory Study";
-    const title = item ? `${item.title} · ${kind === "material" ? "阅读笔记 · " : ""}${name}` : `${name} · Agent memory 阅读与研究`;
+    const title = item ? `${item.title} · ${kind === "material" ? "阅读笔记 · " : ""}${name}` : `${name} · 信息、经验与智能的书房`;
     const text = item
       ? (kind === "material" ? `阅读范围：${item.noteDepth}。${item.intro}` : item.question || item.claim || item.intro)
-      : "关于 agent memory、learning 与 cognitive architecture 的公开研究空间：原文与实现、可复跑实验、问题专题和有范围的实践判断。";
+      : data.room?.intro || data.intro;
     const normalized = text.replace(/\s+/g, " ").trim();
     const description = normalized.length > 200 ? normalized.slice(0, 197) + "…" : normalized;
     const canonical = new URL(item ? pathFor(route) : "", site).href;

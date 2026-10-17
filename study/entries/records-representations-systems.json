@@ -1,0 +1,50 @@
+{
+  "id": "records-representations-systems",
+  "title": "一条记录、一种表示、一个记忆系统",
+  "kind": "learning-note",
+  "date": "2026-10-18",
+  "byline": "Agent Memory Study editors",
+  "intro": "用一条原创工具版本记录，区分 database、index、retriever 与 memory 的观察角色。",
+  "subtitle": "概念学习 · 从系统名字回到实际操作",
+  "number": "10",
+  "bodyFile": "entries/records-representations-systems.md",
+  "domains": [
+    "data",
+    "representation",
+    "indexing",
+    "memory"
+  ],
+  "directionIds": [
+    "forms",
+    "relevance"
+  ],
+  "readings": [],
+  "externalReadings": [
+    {
+      "label": "PostgreSQL 18 · Introduction to indexes",
+      "url": "https://www.postgresql.org/docs/18/indexes-intro.html",
+      "kind": "官方资料",
+      "locator": "§11.1，索引定位、规划与维护的说明",
+      "takeaway": "数据库管理与访问结构可以由同一系统实现。",
+      "limit": "阅读范围见定位；未运行相关软件或模型。"
+    },
+    {
+      "label": "Faiss documentation",
+      "url": "https://faiss.ai/",
+      "kind": "官方资料",
+      "locator": "首页 What is similarity search? 与 index 说明",
+      "takeaway": "给定向量与度量界定搜索对象。",
+      "limit": "阅读范围见定位；未运行相关软件或模型。"
+    }
+  ],
+  "takeaways": [],
+  "boundary": "这是 AMS 的编者论述。来源、原创推演与既有研究的边界在正文分别说明；不包含私人共学记录或新的模型实验。",
+  "continuation": {
+    "question": "当索引由模型实现，改变的是实现方式，还是映射目标？",
+    "why": "先明确输入和输出，才知道比较的正确性对象。",
+    "studyIds": [
+      "what-an-index-learns"
+    ],
+    "materialIds": []
+  }
+}

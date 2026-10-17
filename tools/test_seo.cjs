@@ -48,3 +48,13 @@ test('all published pages have unique metadata, with state excluded and paper au
   }
   assert.equal(urls.size,routes.length); assert.equal(titles.size,routes.length);
 });
+
+test('research groups and the original exercise preserve state without entering metadata', () => {
+  const state={study:'retrieval-and-relevance',k:5,ranking:'contrast',need:'implement',domain:'retrieval',direction:'relevance'};
+  const url=new URL(seo.routeUrl(state,base,base,true,'#study-lab'),base);
+  for(const [key,value] of Object.entries(state)) if(key!=='study') assert.equal(url.searchParams.get(key),String(value));
+  const meta=seo.metadata(data,state);
+  assert.equal(meta.canonical,seo.site+'study/retrieval-and-relevance/');
+  const other=new URL(seo.routeUrl({...state,study:'ams-thesis'},url,base,true),base);
+  assert.equal(other.searchParams.get('k'),null);
+});

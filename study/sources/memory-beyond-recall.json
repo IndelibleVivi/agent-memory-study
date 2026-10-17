@@ -1,0 +1,55 @@
+{
+  "number": 15,
+  "id": "memory-beyond-recall",
+  "kind": "paper",
+  "title": "Memory beyond recall: a dual-process cognitive memory system for self-evolving LLM agents",
+  "authors": [
+    "Tianxiang Fei",
+    "Mingyang Song",
+    "Mao Zheng",
+    "Xiang Yu"
+  ],
+  "shortAuthor": "Fei 等",
+  "year": 2026,
+  "doi": "10.48550/arXiv.2606.09483",
+  "noteDepth": "skim",
+  "readingScope": "Abstract、§2–§3.5、Conclusion、Limitations、Ethics Statement；未通读 references，也未复核实现。",
+  "intro": "用同步的 raw/fact 更新与异步的 schema induction 组成 dual-process memory，并让高层抽象保留到低层 evidence 的路径。",
+  "keyPoints": [
+    "memory 分为 raw inputs、atomic facts/identity、within-domain schemas/intentions 与 cross-domain core schemas；高层 graph node 通过 evidence reference 回指支持事实。（§2.1）",
+    "System 1 在显式 add_memory 时先于 LLM call 持久化 raw input，再决定 ADD、SUPERSEDE 或 UPDATE；SUPERSEDE 保留 predecessor 与双向 revision pointers。（§2.2）",
+    "System 2 在 idle/nightly window 先聚类，再归纳 schema、intention 与跨领域 core schema；主要增益集中在 PersonaMem-v2，论文同时承认 transient state 可能被误判为 stable revision。（§2.3–§3.4）"
+  ],
+  "keywords": [
+    "dual-process memory",
+    "schema induction",
+    "supersession"
+  ],
+  "categories": [
+    "记忆架构",
+    "持续学习",
+    "信念修正"
+  ],
+  "failureSurfaces": [
+    "state-representation",
+    "write-consolidation",
+    "abstraction-experience"
+  ],
+  "sourceUrl": "https://arxiv.org/abs/2606.09483",
+  "pdf": {
+    "delivery": "official",
+    "url": "https://arxiv.org/pdf/2606.09483v1"
+  },
+  "editorialQuestion": "cross-domain core schema 的阈值在特定 held-out split 上调整、主要收益也集中于同一 benchmark；它是在稳定追踪变化，还是在生成适配 benchmark 的高层推断？",
+  "sourceNote": "",
+  "designTransfer": {
+    "byline": "Agent Memory Study editors",
+    "date": "2026-09-08",
+    "when": "系统同时保存原始输入、事实与高层偏好推断，后两者会随时间修订。",
+    "move": "把 raw input 与派生事实、schema 分开保留；显式更正与后台归纳走可区分的路径，并为高层结论留下来源引用。",
+    "check": "对照长期偏好改变、临时状态和带条件例外三类输入，检查是否都被错误写成稳定 revision；再更正来源，观察高层结论如何变化。",
+    "boundary": "这是 skim 范围下的未执行建议。保留 evidence reference 不保证自动失效传播正确，也不证明高层推断值得永久保留。",
+    "basis": "既有札记 “关键抓手”：§§2.1–2.3、3.4 与 Limitations。",
+    "status": "proposed-not-run"
+  }
+}

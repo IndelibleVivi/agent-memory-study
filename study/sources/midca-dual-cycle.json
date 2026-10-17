@@ -1,0 +1,53 @@
+{
+  "number": 12,
+  "id": "midca-dual-cycle",
+  "kind": "paper",
+  "title": "MIDCA: a metacognitive, integrated dual-cycle architecture for self-regulated autonomy",
+  "authors": [
+    "Michael Cox",
+    "Zohreh Alavi",
+    "Dustin Dannenhauer",
+    "Vahid Eyorokon",
+    "Hector Munoz-Avila",
+    "Don Perlis"
+  ],
+  "shortAuthor": "Cox 等",
+  "year": 2016,
+  "doi": "10.1609/aaai.v30i1.9886",
+  "noteDepth": "skim",
+  "readingScope": "Abstract、goal reasoning、formal representation、object/meta-level performance 与 Conclusion；related work 仅略读。",
+  "intro": "把相同的 action–perception cycle 放在 object 与 meta 两层，用 phase trace 让系统观察并调整自己的认知过程。",
+  "keyPoints": [
+    "每层都包含 Intend、Plan、Act 与 Perceive、Interpret、Evaluate；object-level goal 改变环境，meta-level goal 改变 object-level cognition。（Introduction；Figures 1–2）",
+    "metacognitive interface 接收各 phase 累积的 trace；Monitor 选择 subtrace，Interpret 在上面检测 expectation 与结果的 discrepancy。（p. 3714）",
+    "object-level 实验中 explanation-driven goal generation 在随机 fire event 下保持较高 tower score；meta-level 评价则只是 planner impasse 后替换 planner 的一个 scenario。（pp. 3715–3716）"
+  ],
+  "keywords": [
+    "metacognition",
+    "goal reasoning",
+    "execution trace"
+  ],
+  "categories": [
+    "记忆架构"
+  ],
+  "failureSurfaces": [
+    "metacognitive-control"
+  ],
+  "sourceUrl": "https://ojs.aaai.org/index.php/AAAI/article/view/9886",
+  "pdf": {
+    "delivery": "official",
+    "url": "https://ojs.aaai.org/index.php/AAAI/article/view/9886/9745"
+  },
+  "editorialQuestion": "论文仍未解决何时运行 metacognitive layer、监控哪些 expectation、如何裁剪长 trace；怎样避免每个 discrepancy 都自动扩张成新 goal？",
+  "sourceNote": "",
+  "designTransfer": {
+    "byline": "Agent Memory Study editors",
+    "date": "2026-09-08",
+    "when": "agent 卡在规划或重复失败中，需要检查自己的过程，但不想每个异常都扩张成新任务。",
+    "move": "先记录一个预期与实际结果的差异，让监控指出具体 phase，再单独决定是否替换规划策略。",
+    "check": "保留一次 planner impasse 与一次可自行恢复的偏差，比较持续启用 meta-loop 和只在该类卡点介入时的行为与成本。",
+    "boundary": "这是 skim 范围内的候选设计，尚未执行。原文 meta-level 评价范围很窄，不能推出所有任务都值得增加 metacognitive layer。",
+    "basis": "既有札记：Figures 1–2；pp. 3714–3716。",
+    "status": "proposed-not-run"
+  }
+}

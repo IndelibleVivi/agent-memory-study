@@ -1,0 +1,65 @@
+{
+  "id": "experience-becomes-policy",
+  "title": "经验怎样长成判断习惯？",
+  "question": "同一批经验保留为案例、规则或参数时，怎样改变未见情境中的选择；反馈被纠正之后，这种改变又怎样更新？",
+  "intro": "我们沿着现有经验复用问题，继续追踪经历如何进入决策部件。论文、实现与本站实验在这里互相提问：看见一次更好的输出还不够，还要确认它从哪里学来、适用于哪里，又怎样改回来。",
+  "judgment": "在本站给定且训练支持内的结构化特征上，案例近邻与小分类器都预测对了原标签。仅对更正样本继续拟合改对了目标范围，却损伤了保留范围；完整重训也出现边界退化。这里的学习与纠正路径可复核，但没有证明新语义泛化、真实任务收益或来源影响的彻底遗忘。",
+  "byline": "Agent Memory Study editors",
+  "updated": "2026-09-22",
+  "status": "open",
+  "explanations": [
+    {
+      "title": "也许案例已经足够",
+      "text": "相似情境下，取回完整案例可能比压缩参数更容易保留例外；效果仍受检索方式、预算和距离表示影响。"
+    },
+    {
+      "title": "也许收益来自表示，而非学习方法",
+      "text": "把范围、相关性和已知状态直接作为结构化特征，会提前解决自然语言中最难的识别工作。高分类分数可能只说明给定表示足够。"
+    },
+    {
+      "title": "也许参数捕捉了稳定区别",
+      "text": "若固定训练反馈后，小头在新组合中仍改善选择，可以进一步检查哪些观测支持迁移；新组名或新措辞本身不是结构迁移证据。"
+    },
+    {
+      "title": "也许只是输出被暂时挡住",
+      "text": "运行时约束可以使当前选择合规，同时保留旧参数。要讨论学习或撤回，必须区分输出行为、参数更新和来源依赖。"
+    }
+  ],
+  "evidence": [
+    {
+      "label": "本站受控学习与纠正实验",
+      "url": "research/decision-learning-study/README.md",
+      "observation": "同一公开数据比较恒定参照、案例、归纳规则与实际梯度拟合的小分类器；纠正处理分别报告应改变、应保留与有效边界的逐例结果。原参数保持、真实 warm start 与结果回放均有检查。",
+      "limit": "原创结构化任务；不评价语言表征、真实用户体验或 agent 完成率。"
+    },
+    {
+      "label": "经验取用的既有问题专题",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/question/experience-to-capability/",
+      "observation": "候选竞争、适用范围与来源撤回构成新研究线的相邻问题。",
+      "limit": "已有 BM25、规则与 cache 证据不能替代 learned policy 的实测。"
+    }
+  ],
+  "materialIds": [
+    "coala-cognitive-architecture",
+    "mistake-notebook-learning",
+    "agentic-memory",
+    "insightemb-action-intent-retrieval",
+    "proactive-wake-anchor"
+  ],
+  "studyIds": [
+    "experience-becomes-policy",
+    "who-controls-memory",
+    "representation-and-use"
+  ],
+  "findingIds": [
+    "correction-needs-retention-checks",
+    "output-guard-is-not-unlearning"
+  ],
+  "nextTest": {
+    "question": "从给定结构化特征换成原始文本后，观察到的选择与纠正行为还能保留多少？",
+    "comparison": "保留本实验作为表示已给定的参照，比较固定文本 encoder 加简单分类器与可读案例；任务族和纠正范围保持明确，单列特征识别错误。",
+    "success": "在独立情境上同时报告有用候选遗漏、不必要注入、有害注入与旧范围退化；再接入下游任务验证净收益，并报告训练、编码、推理和更新成本。",
+    "reviseWhen": "若效果依赖人工给出的决定性标签，或在文本输入/纠正后的旧范围上消失，就缩小迁移建议；简单案例同样有效时不主张增加训练复杂度。",
+    "boundary": "下一步尚未执行；当前结果不包括 pretrained encoder 或真实对话。"
+  }
+}

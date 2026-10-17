@@ -1,0 +1,52 @@
+{
+  "id": "revision-needs-scope",
+  "title": "新说明出现，不代表旧范围已经失效",
+  "byline": "Agent Memory Study editors",
+  "updated": "2026-09-21",
+  "status": "proposed-transfer",
+  "questionIds": [
+    "experience-to-capability"
+  ],
+  "materialIds": [
+    "truth-maintenance-system",
+    "statefuse-conflict-preserving-memory",
+    "useful-memories-become-faulty",
+    "recuris-memory-evolution"
+  ],
+  "triggers": [
+    "新版",
+    "旧版",
+    "版本",
+    "更正",
+    "修订",
+    "覆盖",
+    "适用范围",
+    "条件",
+    "最新",
+    "revision",
+    "scope",
+    "version",
+    "latest"
+  ],
+  "claim": "修订应当改变有证据支持的适用范围。时间较新不自动撤回旧版本的有效说明；来源与条件标签也可能有误。",
+  "when": "工具参数、配置 schema 或工作经验随版本改变，但旧环境仍然在使用；或多个来源对同一范围给出不同建议时。",
+  "action": "保留适用条件、修订关系与支持来源。区分更正、状态变化和不同范围并存；当前范围有冲突时展示冲突，并用可独立检查的环境证据确认条件。",
+  "avoid": "不要用“最后写入”替代适用判断，不把所有历史顺手覆盖；也不要因为有 scope 字段就假定 scope 正确。只有暂缓，没有完成任务，仍不算能力收益。",
+  "validation": "在目标工具上同时保留旧版、新版、错误标签、独立替代支持和范围内冲突的任务；比较现有方法与候选方案的完成、误用和暂缓，工具答案在建议形成后才用于评分。",
+  "limit": "已有输出只支持给定条件下的规则差异。自然语言条件识别、真实模型先验与工具检查成本尚未测量；没有通用“带 scope 就更好”的结论。",
+  "evidence": [
+    {
+      "label": "一条更正之后：7 个场景、56 个确定性规则输出",
+      "url": "research/correction-scope-study/README.md",
+      "observation": "新版说明与旧版任务可以共存；全局最新会误导旧版任务。按范围规则保留旧建议，却也会受错误版本标签误导。",
+      "limit": "scope、来源有效性和工具 contract 由 fixture 给定；规则不理解自然语言，也没有模型先验。暂缓不等于完成任务。"
+    },
+    {
+      "label": "可亲手切换的共读",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/?study=after-a-correction",
+      "observation": "浏览器与 Node runner 使用同一套规则，可比较事件前后、不同 scope 与撤回。",
+      "limit": "交互演示沿用原始 fixture，不能额外视为模型实验。"
+    }
+  ],
+  "applications": []
+}

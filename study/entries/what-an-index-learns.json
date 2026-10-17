@@ -1,0 +1,59 @@
+{
+  "id": "what-an-index-learns",
+  "title": "索引也能学习——究竟学了什么？",
+  "kind": "learning-note",
+  "date": "2026-10-18",
+  "byline": "Agent Memory Study editors",
+  "intro": "对读两篇作者摘要：键到记录位置，与查询到文档标识，怎样改变对索引的理解？",
+  "subtitle": "专题起步 · 映射目标、正确性与更新",
+  "number": "12",
+  "bodyFile": "entries/what-an-index-learns.md",
+  "domains": [
+    "data",
+    "indexing",
+    "retrieval",
+    "learning"
+  ],
+  "directionIds": [
+    "forms",
+    "change"
+  ],
+  "readings": [],
+  "externalReadings": [
+    {
+      "label": "The Case for Learned Index Structures",
+      "url": "https://research.google/pubs/the-case-for-learned-index-structures/",
+      "kind": "论文 · 摘要核验",
+      "locator": "Kraska et al., SIGMOD 2018；作者公开摘要与 metadata",
+      "takeaway": "摘要强调学习键到记录位置等映射。",
+      "limit": "仅摘要核验；未读完整训练、错误恢复或更新实现。"
+    },
+    {
+      "label": "Transformer Memory as a Differentiable Search Index",
+      "url": "https://research.google/pubs/transformer-memory-as-a-differentiable-search-index/",
+      "kind": "论文 · 摘要核验",
+      "locator": "Tay et al., NeurIPS 2022；作者公开摘要与 metadata",
+      "takeaway": "摘要描述查询到文档标识的 text-to-text 映射。",
+      "limit": "仅摘要核验；未复跑，未据此比较效果或更新成本。"
+    }
+  ],
+  "takeaways": [],
+  "boundary": "这是由两篇作者摘要形成的概念对读，非全文精读、源码检查或实验比较。",
+  "changes": [
+    {
+      "date": "2026-10-18",
+      "before": "按实现结构的名称辨认索引。",
+      "after": "同时检查映射目标与正确性条件；学习可以作用于不同关系。",
+      "basis": "两篇作者摘要的输入—输出对读；具体机制仍待正文核查。"
+    }
+  ],
+  "continuation": {
+    "question": "新增一项记录后，各自哪些状态必须改变，怎样确认它能够被访问？",
+    "why": "更新条件会进一步区分两种映射；先核查监督、错误处理与实现。",
+    "studyIds": [
+      "records-representations-systems",
+      "change-and-continuity"
+    ],
+    "materialIds": []
+  }
+}

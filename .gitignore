@@ -21,3 +21,5 @@ papers/*
 !papers/17-wu-2026-longmemeval-v2.pdf
 *.zip
 dist/
+
+.venv/
