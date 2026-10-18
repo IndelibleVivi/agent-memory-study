@@ -61,6 +61,11 @@ def main():
                                     expect(page.locator('.sculpture-fallback')).to_be_visible()
                                     expect(page.locator('[data-js-control]')).to_have_count(0)
                                     expect(page.locator('.sculpture-labels')).to_have_count(0)
+                                    expect(page.locator('#constellation-plot svg a[href]')).to_have_count(sum(len(data[k]) for k in ('materials','studies','questions','findings')))
+                                    expect(page.locator('.map-related button')).to_have_count(0)
+                                    page.evaluate('document.fonts.ready')
+                                    assert all(page.evaluate('Array.from(document.fonts).map(face=>face.status==="loaded")'))
+                                    assert all(page.locator('#constellation-plot svg a').evaluate_all("nodes=>nodes.map(n=>n.getAttribute('href').includes('/agent-memory-study/'))"))
                                     app_version=urlparse(page.locator('script[src*="/app.js"]').get_attribute('src')).query
                                     shell_version=urlparse(page.locator('script[src*="/reader-shell.js"]').get_attribute('src')).query
                                     assert app_version and app_version == shell_version

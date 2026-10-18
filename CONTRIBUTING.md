@@ -23,19 +23,18 @@ Agent Memory Study 是一个开放的研究体。贡献可以让一个概念更�
 - `failureSurfaces` 可以为空。有证据支持时，在 source 填入已有 surface ID；compiler 生成反向 `materialIds`，不双向手工维护。旧 constellation 由该关系生成，不需要逐篇坐标。领域／方向导航由 `study/map.json` 维护；
 - leave holes visible。拿不准的 locator、数字或结论不要靠推测补齐。
 
-## 星图与 atlas membership
+## 星图、领域与 atlas membership
 
-星图是 canonical research relationships 的 projection，不是另一套由视觉位置决定的分类系统。提交新材料或修改 failure-surface mapping 时：
+星图和三维研究体共用 `assets/research-map.js` 的纯数据模型。所有 study / material / question / finding 都是一个独立节点；边只来自明确的 typed ID 引用、readings 和 compiler 生成的内部链接，互相引用合并为一条边。不要添加仅为视觉服务的 edge、importance 或 rank，也不要把靠近理解为相似、支持或推荐。
 
-- 保持 material `id` 稳定。它同时是 material deep link 与 deterministic layout 的输入；除非修复尚未发布的明显错误，不要在已有 entry 发布后换 ID；
-- 在 pull request 中逐项解释为什么论文触及所选 failure surface。共同出现某个关键词、作者自称属于某类系统，或“连到这里画面更完整”都不是 membership 依据；
-- material 属于多个 surfaces 时会成为 cross-surface bridge。bridge 只描述当前研究关系，不表示论文更重要、更完整或更值得推荐；不要为了制造连接而增加 surface；
-- 不提交 `x` / `y`、importance、rank、cluster、star size 或手工 edge。位置、连线、bridge count 与 material count 都从 canonical membership 生成；
-- 星环只由真实 `noteDepth` 派生。不要单独设置视觉状态，也不要把 `read` / `worked` 当成 achievement badge；
-- 新增 failure surface 是 atlas taxonomy change，不是普通材料录入。它需要独立说明现有 surfaces 为什么无法容纳该 failure boundary，并完整提供稳定 ID、label、question、tension，并在 source 中维护 membership；
-- 不在 copy、测试或截图说明里把当前材料总数、7 个 surfaces 或其他渲染数字写成固定上限。新增材料后 builder 与页面计数应自然增长。
+- 保持已发布对象的 ID 稳定，正文深链接沿用它；
+- 领域取对象的 `domains` 与 `study/map.json` 的显式成员，允许多重归属和未分类；主领域只决定布局位置，侧栏保留所有领域；
+- 位置由 deterministic layout 生成，新增对象后自然重排，不手写 x/y；颜色和形状标示对象类型，光环用于选取和关联，不表示阅读深度或掌握度；
+- 来源的 `noteDepth` 仍只在来源与书架中按原合同展示；
+- 旧 failure-surface 地图仍由 source membership 生成。新增 surface 需要解释实际 failure boundary，并提供稳定 ID、label、question、tension；不能为了制造 bridge 增加分类；
+- 不把当前材料数量或领域数量写成上限。空领域、未分类与没有显式关系的对象都是允许的状态。
 
-贡献者不需要让星图“看起来均匀”。孤星、空隙、局部密集与暂时没有 bridge 的 surface 都是当前 corpus 的诚实形状。
+修改模型运行 `node --test tools/test_research_map.cjs tools/test_research_sculpture.cjs`；修改交互运行 reader browser tests，包含桌面和手机的真实星图、搜索／筛选、选择、聚焦、缩放／平移、目录和正文路由。图形只使用代码，不能用一张背景图冒充可操作星图。
 
 ### 3. 对已有 entry 的 perspective / critique
 
@@ -148,7 +147,7 @@ python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebo
 
 The first command uses only local public/synthetic data, including actual fitting of a
 small stdlib classifier; it downloads no pretrained models or external data. It
-checks both generated projections without rewriting them, validates authoring, study packets, local continuation, public-object sculpture relations and question/finding
+checks both generated projections without rewriting them, validates authoring, study packets, local continuation, shared constellation/sculpture relations and domain layout and question/finding
 references, lexical query and portable brief contracts, and the existing
 RDF, freshly reruns the five small deterministic studies and the decision-learning
 experiment (including classifier fitting and correction), and checks the saved

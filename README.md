@@ -38,7 +38,7 @@ AMS 从 agent memory 出发，研究信息、经验与智能的跨时间关系�
 | `study/map.json`、`catalog.json` | 研究导航、展示次序与旧 atlas 定义 |
 | `research/` | 各项研究自己的协议、runner、输入、结果与限制 |
 
-`tools/content.py` 把研究体编译为 `data/materials.json`；`tools/build.py` 生成 `assets/materials-data.js`。这两份文件是兼容原 reader／CLI 的 generated projections，不能手工编辑。原有 ID、材料深链接、27 份札记、4 篇共读与研究 receipts 均继续可查。旧 failure-surface 地图、星图和阅读路径保留为可选入口；反向 membership 从 source 生成。
+`tools/content.py` 把研究体编译为 `data/materials.json`；`tools/build.py` 生成 `assets/materials-data.js`。这两份文件是兼容原 reader／CLI 的 generated projections，不能手工编辑。原有 ID、材料深链接、27 份札记、4 篇共读与研究 receipts 均继续可查。旧 failure-surface 地图和阅读路径保留为可选入口；新版研究星图是主导航中的独立阅读视图；反向 membership 从 source 生成。
 
 ## 人与机怎样继续读
 
@@ -86,13 +86,17 @@ python3 -B tools/seo_build.py
 python3 -B tools/test_static_reader.py
 ```
 
-构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、三维研究体的身份／引用关系，以及既有五组确定性研究和一组 stdlib 分类器学习／纠正实验；另检查 AgeMem、C2C、Jev 已保存 receipts。它不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
+构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、星图与三维研究体共用的身份／引用关系、领域布局，以及既有五组确定性研究和一组 stdlib 分类器学习／纠正实验；另检查 AgeMem、C2C、Jev 已保存 receipts。它不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
 
 ## 发布、隐私与来源
 
 发布面继续是 **GitHub Pages**。唯一正文 renderer 是 `assets/app.js`；构建运行该 renderer，生成首页及四种详情页的初始 HTML、metadata 和 sitemap。旧 query URLs、场景、目录锚点、history 与源码 file mode 继续兼容。首屏把公开文章、来源、问题和实践判断呈现为可操作的三维研究体：拖动或方向键旋转，点击层片选择内容，切换叠置／展开／关联后打开对应正文。关联只来自研究体的显式引用与内部链接，空间位置不表示语义相似度；展开的结构信息可直接检查。原生 WebGL 无额外 runtime dependency，reduced-motion 默认静止、离屏停帧，缺少 WebGL 时保留静态图形和文字选取入口。[网站运维说明](docs/website.md)记录构建与发布边界。
 
-站点没有账号或访客档案。个人接续文字不上传、不写 URL 或 localStorage。搜索、筛选和公开演算状态会进入可分享 URL 与浏览器历史，直接加载／刷新时 URL 会发送给托管服务；不要把私人内容输入公开搜索。既有 Cloudflare Web Analytics aggregate beacon 是唯一 analytics，不使用 cookie 或 localStorage 识别访客，无 custom events；它不记录 query string。外部来源链接在你打开时访问相应网站。构建与浏览器验收拦截非本机请求。
+[研究星图](https://indeliblevivi.github.io/agent-memory-study/#constellation) 同时显示札记、来源、问题与实践判断，按真实领域编排。可搜索、按类型／领域筛选、聚焦某对象的引用、拖动平移、缩放或切换目录，再打开正文。手机保留同一套 SVG 星图；动态可暂停，reduced-motion 默认静止。星图搜索与视图状态只在当前页面内存，不进入 URL 或存储；旧书架搜索的 URL 行为不变。
+
+Newsreader、Noto Serif SC 与 Instrument Sans 的 OFL 字体子集由本站提供；图形用 SVG / WebGL 与数学代码绘制。字体来源、修改范围和重建方法见 [字体说明](assets/fonts/README.md)。
+
+站点没有账号或访客档案。个人接续文字不上传、不写 URL 或 localStorage。书架搜索、阅读分组筛选和公开演算状态会进入可分享 URL 与浏览器历史，直接加载／刷新时 URL 会发送给托管服务；不要把私人内容输入公开搜索。既有 Cloudflare Web Analytics aggregate beacon 是唯一 analytics，不使用 cookie 或 localStorage 识别访客，无 custom events；它不记录 query string。外部来源链接在你打开时访问相应网站。构建与浏览器验收拦截非本机请求。
 
 来源札记明确区分原文主张、作者报告、AMS 观察与编辑推论，`noteDepth` 只表示来源阅读范围。未执行协议、教学例子、确定性实验、固定源码 receipts 与实际模型研究各自标明边界；不因文章变成熟或页面重做而提升结论。
 

@@ -34,7 +34,7 @@ def build(output: Path, executable: str | None = None):
     # Preserve tracked public research/docs referenced by reading notes, plus canonical PDFs.
     assets = subprocess.check_output(['git', 'ls-files', '-z', 'assets', 'research', 'docs'], cwd=ROOT).decode().split('\0')
     # seo.js may be untracked during authoring; it is an explicit source dependency.
-    files = set(filter(None, assets)) | {'assets/continuity-sculpture.js', 'assets/study-packets.js', 'assets/study-desk.js', 'assets/seo.js', 'site.webmanifest', 'NOTICE.md',
+    files = set(filter(None, assets)) | {'assets/research-map.js', 'assets/constellation.js', 'assets/continuity-sculpture.js', 'assets/study-packets.js', 'assets/study-desk.js', 'assets/seo.js', 'site.webmanifest', 'NOTICE.md',
         'THIRD_PARTY_NOTICES.md', 'agent-memory-study.rdf',
         'publications/agent-memory-study-project-introduction.zh-CN.pdf'}
     files.update(item['pdf']['url'] for item in data['materials'] if item['pdf']['delivery'] == 'bundled')
@@ -91,6 +91,11 @@ def build(output: Path, executable: str | None = None):
                                 sculpture.dataset.renderer = 'fallback'; sculpture.dataset.motion = 'still';
                                 sculpture.removeAttribute('tabindex'); sculpture.removeAttribute('aria-describedby');
                                 sculpture.setAttribute('role', 'img'); sculpture.setAttribute('aria-label', '公开研究的层叠视图');
+                            }
+                            const constellation = snapshot.querySelector('#constellation-plot > svg');
+                            if (constellation) {
+                                constellation.removeAttribute('tabindex');
+                                constellation.setAttribute('aria-label', '公开研究对象及显式引用；星点链接到正文。');
                             }
                             snapshot.querySelectorAll('[data-js-control], .sculpture-labels, .private-continuation').forEach(node => node.remove());
                             return '<!doctype html>\\n' + snapshot.outerHTML;

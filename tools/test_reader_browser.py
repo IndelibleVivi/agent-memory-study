@@ -55,7 +55,7 @@ def main():
                 browser = playwright.chromium.launch(executable_path=args.browser_executable, args=['--no-sandbox'])
                 try:
                     for width, height in [(1440, 1000), (390, 844), (320, 740)]:
-                        context = browser.new_context(viewport={'width': width, 'height': height}, reduced_motion='reduce')
+                        context = browser.new_context(viewport={'width': width, 'height': height}, reduced_motion='reduce', has_touch=width <= 390)
                         # No third-party requests or analytics during tests.
                         context.route('**/*', lambda r: r.continue_() if urlparse(r.request.url).hostname == '127.0.0.1' else r.abort())
                         page = context.new_page()
@@ -72,7 +72,7 @@ def main():
                                     };
                                   }
                                 }''', base + query)
-                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js', 'practice.js', 'study-packets.js', 'study-desk.js', 'seo.js']:
+                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js', 'practice.js', 'study-packets.js', 'study-desk.js', 'seo.js', 'research-map.js', 'constellation.js']:
                                     page.add_script_tag(content=(ROOT / 'assets' / name).read_text())
                                 page.add_script_tag(content=offline_app)
                             else:
@@ -237,6 +237,82 @@ def main():
                             layout('editorial cover')
                             page.screenshot(path=str(output / f'editorial-cover-{width}.png'))
                             record('central editorial composition, reduced-motion and available WebGL controls')
+                        go('#constellation')
+                        star_map = page.locator('#constellation')
+                        map_svg = page.locator('#constellation-plot > svg')
+                        map_svg.scroll_into_view_if_needed()
+                        expect(map_svg).to_be_visible()
+                        assert not page.locator('#legacy-lenses').evaluate('(el)=>el.open')
+                        total = sum(len(data[key]) for key in ('materials','studies','questions','findings'))
+                        expect(page.locator('.map-node')).to_have_count(total)
+                        expect(star_map).to_have_attribute('data-motion','still')
+                        page.locator('[data-map-kind="question"]').click()
+                        expect(page.locator('#constellation-stats')).to_contain_text('02 /')
+                        page.locator('[data-map-view="list"]').click()
+                        expect(page.locator('#constellation-list .map-list-row:visible')).to_have_count(2)
+                        page.locator('[data-map-view="map"]').click()
+                        page.locator('#map-reset').click()
+                        page.locator('#map-query').fill('retrieval-and-relevance')
+                        expect(page.locator('#constellation-stats')).to_contain_text('01 /')
+                        expect(page.locator('#constellation-reading')).to_have_attribute('data-selection','study/retrieval-and-relevance')
+                        before_url = current_url()
+                        page.locator('#map-query').fill('no-such-object-xyz')
+                        expect(page.locator('#map-empty')).to_be_visible()
+                        assert current_url() == before_url, 'Map search must stay out of the URL'
+                        page.locator('#map-reset').click()
+                        page.locator('#map-domain').select_option('retrieval')
+                        assert all(page.locator('.map-node:not(.is-dimmed)').evaluate_all("nodes=>nodes.map(n=>ResearchMap.graph(READING_ROOM).nodes[Number(n.dataset.mapNode)].domainIds.includes('retrieval'))"))
+                        page.locator('#map-reset').click()
+                        map_svg.scroll_into_view_if_needed()
+                        node = page.locator('.map-node[data-map-node="0"]')
+                        node.focus(); node.press('Enter')
+                        expect(page.locator('#constellation-reading')).to_have_attribute('data-selection', 'study/' + data['studies'][0]['id'])
+                        point = page.locator('.map-node[data-map-node="1"]').evaluate("node=>{const p=new DOMPoint(0,0).matrixTransform(node.getScreenCTM());return {x:p.x,y:p.y};}")
+                        page.mouse.click(point['x'],point['y'])
+                        expect(page.locator('#constellation-reading')).to_have_attribute('data-selection','study/'+data['studies'][1]['id'])
+                        if width <= 390 and not args.offline_render:
+                            touch_point=page.locator('.map-node[data-map-node="2"]').evaluate("node=>{const p=new DOMPoint(0,0).matrixTransform(node.getScreenCTM());return {x:p.x,y:p.y};}")
+                            page.touchscreen.tap(touch_point['x'],touch_point['y'])
+                            expect(page.locator('#constellation-reading')).to_have_attribute('data-selection','study/'+data['studies'][2]['id'])
+                        before_box = map_svg.get_attribute('viewBox')
+                        page.locator('#map-focus').click()
+                        expect(page.locator('#map-focus')).to_have_attribute('aria-pressed','true')
+                        assert before_box != map_svg.get_attribute('viewBox')
+                        expect(page.locator('.map-edges .is-active')).not_to_have_count(0)
+                        page.locator('#map-zoom-in').click()
+                        zoom_box=map_svg.get_attribute('viewBox')
+                        page.locator('#map-zoom-out').click()
+                        assert zoom_box != map_svg.get_attribute('viewBox')
+                        page.locator('#map-reset').click();map_svg.scroll_into_view_if_needed()
+                        before_box=map_svg.get_attribute('viewBox');box=map_svg.bounding_box()
+                        page.mouse.move(box['x']+box['width']*.5,box['y']+box['height']*.5)
+                        page.mouse.down();page.mouse.move(box['x']+box['width']*.5+45,box['y']+box['height']*.5+25,steps=5);page.mouse.up()
+                        assert before_box != map_svg.get_attribute('viewBox'), 'Pan did not move the camera'
+                        if width == 1440:
+                            page.locator('#map-motion').click()
+                            expect(star_map).to_have_attribute('data-motion','running')
+                            before_flow=page.locator('.map-edges').get_attribute('style');page.wait_for_timeout(100)
+                            assert before_flow != page.locator('.map-edges').get_attribute('style')
+                            page.locator('#starts').scroll_into_view_if_needed()
+                            expect(star_map).to_have_attribute('data-motion','still')
+                            map_svg.scroll_into_view_if_needed()
+                            page.locator('#map-motion').click()
+                            expect(star_map).to_have_attribute('data-motion','still')
+                        page.locator('#map-reset').click()
+                        if width == 1440 and not args.offline_render:
+                            page.locator('#map-fullscreen').click()
+                            expect(page.locator('#map-fullscreen')).to_have_attribute('aria-pressed','true')
+                            assert page.evaluate('document.fullscreenElement.id') == 'constellation'
+                            page.locator('#map-fullscreen').click()
+                            expect(page.locator('#map-fullscreen')).to_have_attribute('aria-pressed','false')
+                        expected_title=page.locator('#map-reading-title').inner_text()
+                        page.locator('#map-open').click()
+                        expect(page.locator('h1:visible')).to_have_text(expected_title)
+                        if not args.offline_render:
+                            page.go_back();expect(star_map).to_be_visible()
+                            assert page.evaluate('localStorage.length') == 0
+                        layout('constellation and reading route')
+                        record('constellation direct link, mobile map, filters, list, empty/reset, keyboard/pointer selection, focus/zoom/pan, reduced motion, offscreen pause, history and reading route')
                         for material in data['materials']:
                             go('?material=' + material['id'])
                             expect(page.locator('#material-title')).to_have_text(material['title'])

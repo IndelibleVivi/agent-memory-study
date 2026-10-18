@@ -1,4 +1,10 @@
-# Third-party PDF notices
+# Third-party notices
+
+## Font software
+
+The reader includes modified, renamed WOFF2 subsets of Newsreader, Noto Serif SC and Instrument Sans, each distributed under SIL Open Font License 1.1. Complete copyright and license notices, upstream links, modifications and the offline rebuild method are in [assets/fonts/README.md](assets/fonts/README.md). These font terms apply only to the font software.
+
+## Bundled PDFs
 
 The ten files below are unmodified copies distributed under their respective file-level licenses. “Unmodified” means this repository did not edit, OCR, annotate, recompress, or otherwise adapt the PDF bytes.
 

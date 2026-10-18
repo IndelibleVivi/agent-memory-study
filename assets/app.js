@@ -27,35 +27,10 @@
     ? new URL("../", document.currentScript.src) : new URL("./", window.location.href);
   const physicalRoutes = document.documentElement.dataset.staticReader === "true" && window.location.protocol !== "file:";
   const depthOrder = ["abstract", "skim", "read", "worked"];
-  const svgNamespace = "http://www.w3.org/2000/svg";
-  const constellationViewBox = { width: 1200, height: 680 };
-  const constellationAnchorOverrides = new Map([
-    ["state-representation", { x: 165, y: 190, labelX: 116, labelY: 133, textAnchor: "start" }],
-    ["write-consolidation", { x: 430, y: 350, labelX: 380, labelY: 418, textAnchor: "middle" }],
-    ["retrieval-active-context", { x: 650, y: 170, labelX: 650, labelY: 104, textAnchor: "middle" }],
-    ["wake-prospective-action", { x: 1015, y: 255, labelX: 1080, labelY: 205, textAnchor: "end" }],
-    ["abstraction-experience", { x: 720, y: 530, labelX: 720, labelY: 610, textAnchor: "middle" }],
-    ["metacognitive-control", { x: 915, y: 78, labelX: 965, labelY: 42, textAnchor: "middle" }],
-    ["justification-revision", { x: 180, y: 540, labelX: 116, labelY: 611, textAnchor: "start" }],
-  ]);
-  const constellationAnchors = new Map(data.atlas.failureSurfaces.map((surface, index, surfaces) => {
-    const fixed = constellationAnchorOverrides.get(surface.id);
-    if (fixed) return [surface.id, fixed];
-    const angle = -Math.PI / 2 + (index * Math.PI * 2) / surfaces.length;
-    const x = constellationViewBox.width / 2 + Math.cos(angle) * 450;
-    const y = constellationViewBox.height / 2 + Math.sin(angle) * 250;
-    return [surface.id, {
-      x,
-      y,
-      labelX: x + Math.cos(angle) * 58,
-      labelY: y + Math.sin(angle) * 58,
-      textAnchor: Math.cos(angle) < -0.2 ? "end" : Math.cos(angle) > 0.2 ? "start" : "middle",
-    }];
-  }));
   const searchIndex = window.ReadingSearch.buildIndex(data);
   let route = readRoute();
   let articleObserver = null;
-  let constellationMeasurer = null;
+  let constellationController = null;
 
   const refs = {
     atlasView: document.querySelector("#atlas-view"),
@@ -73,14 +48,6 @@
     surfaceFocusQuestion: document.querySelector("#surface-focus-question"),
     surfaceFocusTension: document.querySelector("#surface-focus-tension"),
     surfaceMaterials: document.querySelector("#surface-materials"),
-    constellationStats: document.querySelector("#constellation-stats"),
-    constellationPlot: document.querySelector("#constellation-plot"),
-    constellationMatrix: document.querySelector("#constellation-matrix"),
-    constellationReadingIndex: document.querySelector("#constellation-reading-index"),
-    constellationReadingTitle: document.querySelector("#constellation-reading-title"),
-    constellationReadingMeta: document.querySelector("#constellation-reading-meta"),
-    constellationReadingCopy: document.querySelector("#constellation-reading-copy"),
-    constellationReadingLinks: document.querySelector("#constellation-reading-links"),
     pathGrid: document.querySelector("#path-grid"),
     pathFocus: document.querySelector("#path-focus"),
     libraryControls: document.querySelector("#library-controls"),
@@ -282,454 +249,11 @@
     }));
   }
 
-  function createSvgElement(tag, attributes = {}, text = "") {
-    const node = document.createElementNS(svgNamespace, tag);
-    Object.entries(attributes).forEach(([name, value]) => node.setAttribute(name, String(value)));
-    if (text) node.textContent = text;
-    return node;
-  }
-
-  function stableHash(value) {
-    let hash = 2166136261;
-    for (const character of value) {
-      hash ^= character.codePointAt(0);
-      hash = Math.imul(hash, 16777619);
-    }
-    return hash >>> 0;
-  }
-
-  function constellationPositions() {
-    const positions = new Map();
-    const placed = [];
-    [...data.materials]
-      .sort((left, right) => left.number - right.number)
-      .forEach((material) => {
-        const anchors = material.failureSurfaces.map((surfaceId) => constellationAnchors.get(surfaceId));
-        const base = anchors.reduce(
-          (point, anchor) => ({ x: point.x + anchor.x / anchors.length, y: point.y + anchor.y / anchors.length }),
-          { x: 0, y: 0 },
-        );
-        const hash = stableHash(material.id);
-        let angle = ((hash % 360) * Math.PI) / 180;
-        let radius = anchors.length === 1 ? 72 + ((hash >>> 9) % 3) * 22 : 22 + ((hash >>> 11) % 3) * 13;
-        let point = null;
-
-        for (let attempt = 0; attempt < 14; attempt += 1) {
-          point = {
-            x: Math.max(54, Math.min(constellationViewBox.width - 54, base.x + Math.cos(angle) * radius)),
-            y: Math.max(48, Math.min(constellationViewBox.height - 48, base.y + Math.sin(angle) * radius)),
-          };
-          const collides = placed.some((other) => Math.hypot(point.x - other.x, point.y - other.y) < 44);
-          if (!collides) break;
-          angle += 2.399963;
-          radius += attempt % 2 === 0 ? 10 : 2;
-        }
-
-        point.angle = angle;
-        positions.set(material.id, point);
-        placed.push(point);
-      });
-    return positions;
-  }
-
-  function constellationMaterialLabel(material) {
-    return `${String(material.number).padStart(2, "0")} ${material.shortAuthor || material.authors[0]}`;
-  }
-
-  function measureConstellationText(text, fontSize) {
-    if (!constellationMeasurer) {
-      const uiFont = getComputedStyle(document.documentElement).getPropertyValue("--ui").trim();
-      constellationMeasurer = {
-        context: document.createElement("canvas").getContext("2d"),
-        fontFamily: uiFont || "sans-serif",
-      };
-    }
-    constellationMeasurer.context.font = `${fontSize}px ${constellationMeasurer.fontFamily}`;
-    return constellationMeasurer.context.measureText(text).width;
-  }
-
-  function constellationLabelRect(x, y, textAnchor, width) {
-    const left = textAnchor === "end" ? x - width : textAnchor === "middle" ? x - width / 2 : x;
-    return { x: left - 3, y: y - 14, width: width + 6, height: 19 };
-  }
-
-  function rectsOverlap(left, right) {
-    return left.x < right.x + right.width
-      && left.x + left.width > right.x
-      && left.y < right.y + right.height
-      && left.y + left.height > right.y;
-  }
-
-  function circleOverlapsRect(cx, cy, radius, rect) {
-    const nearX = Math.max(rect.x, Math.min(cx, rect.x + rect.width));
-    const nearY = Math.max(rect.y, Math.min(cy, rect.y + rect.height));
-    return Math.hypot(cx - nearX, cy - nearY) < radius;
-  }
-
-  function resolveMaterialLabelPlacements(positions) {
-    const placements = new Map();
-    const obstacles = [];
-    data.atlas.failureSurfaces.forEach((surface) => {
-      const anchor = constellationAnchors.get(surface.id);
-      const [primary, secondary] = surface.label.split(" / ");
-      const width = Math.max(
-        measureConstellationText(`${surface.number} ${primary}`, 13),
-        secondary ? measureConstellationText(secondary, 11) : 0,
-      );
-      const left = anchor.textAnchor === "end"
-        ? anchor.labelX - width
-        : anchor.textAnchor === "middle"
-          ? anchor.labelX - width / 2
-          : anchor.labelX;
-      obstacles.push({ x: left - 3, y: anchor.labelY - 16, width: width + 6, height: 37 });
-    });
-
-    const collides = (rect) => {
-      if (
-        rect.x < 6
-        || rect.y < 6
-        || rect.x + rect.width > constellationViewBox.width - 6
-        || rect.y + rect.height > constellationViewBox.height - 6
-      ) return true;
-      if (obstacles.some((obstacle) => rectsOverlap(rect, obstacle))) return true;
-      return data.atlas.failureSurfaces.some((surface) => {
-        const anchor = constellationAnchors.get(surface.id);
-        return circleOverlapsRect(anchor.x, anchor.y, 17, rect);
-      });
-    };
-
-    positions.forEach((point, materialId) => {
-      const width = measureConstellationText(constellationMaterialLabel(materialsById.get(materialId)), 11);
-      const pointsRight = Math.cos(point.angle) >= 0;
-      const sideCandidate = (right, dy) => ({
-        x: point.x + (right ? 13 : -13),
-        y: point.y + dy,
-        textAnchor: right ? "start" : "end",
-      });
-      const candidates = [
-        sideCandidate(pointsRight, 4),
-        sideCandidate(!pointsRight, 4),
-        sideCandidate(pointsRight, -10),
-        sideCandidate(!pointsRight, -10),
-        sideCandidate(pointsRight, 16),
-        sideCandidate(!pointsRight, 16),
-        sideCandidate(pointsRight, 30),
-        sideCandidate(!pointsRight, 30),
-        { x: point.x, y: point.y - 14, textAnchor: "middle" },
-        { x: point.x, y: point.y + 22, textAnchor: "middle" },
-      ];
-      const chosen = candidates.find(
-        (candidate) => !collides(constellationLabelRect(candidate.x, candidate.y, candidate.textAnchor, width)),
-      ) || candidates[0];
-      placements.set(materialId, chosen);
-      obstacles.push(constellationLabelRect(chosen.x, chosen.y, chosen.textAnchor, width));
-    });
-    return placements;
-  }
-
-  function constellationContext() {
-    const matches = matchingMaterials();
-    const activePath = pathsById.get(route.path);
-    const explicitSurfaceId = route.thread || route.surface;
-    const hasFilter = Boolean(route.q || route.topic || route.surface || route.depth);
-    return {
-      matches,
-      matchingIds: new Set(matches.map((material) => material.id)),
-      activePath,
-      pathIds: new Set(activePath ? activePath.materialIds : []),
-      explicitSurfaceId,
-      hasFilter,
-      hasEmphasis: hasFilter || Boolean(activePath) || Boolean(explicitSurfaceId),
-    };
-  }
-
-  function materialIsEmphasized(material, context) {
-    if (context.activePath && !context.pathIds.has(material.id)) return false;
-    if (context.explicitSurfaceId && !material.failureSurfaces.includes(context.explicitSurfaceId)) return false;
-    if (context.hasFilter && !context.matchingIds.has(material.id)) return false;
-    return true;
-  }
-
-  function setConstellationReading(kind = "default", item = null) {
-    refs.constellationReadingLinks.replaceChildren();
-
-    if (kind === "material" && item) {
-      refs.constellationReadingIndex.textContent = String(item.number).padStart(2, "0");
-      refs.constellationReadingTitle.textContent = item.title;
-      refs.constellationReadingMeta.textContent = `${item.authors.join(", ")} · ${item.year} · ${item.noteDepth}`;
-      refs.constellationReadingCopy.textContent = item.whyRead || item.intro;
-      refs.constellationReadingLinks.append(createRouteLink("material", item.id, "打开这份材料 →"));
-      return;
-    }
-
-    if (kind === "surface" && item) {
-      refs.constellationReadingIndex.textContent = item.number;
-      refs.constellationReadingTitle.textContent = item.label;
-      refs.constellationReadingMeta.textContent = `${item.materialIds.length} 条材料进入这个 failure surface`;
-      refs.constellationReadingCopy.textContent = `${item.question} ${item.tension}`;
-      refs.constellationReadingLinks.append(createRouteLink("thread", item.id, "打开这个 failure surface →"));
-      return;
-    }
-
-    if (kind === "path" && item) {
-      refs.constellationReadingIndex.textContent = item.number;
-      refs.constellationReadingTitle.textContent = item.title;
-      refs.constellationReadingMeta.textContent = `${item.materialIds.length} 站 · 编者建议顺序`;
-      refs.constellationReadingCopy.textContent = item.description;
-      refs.constellationReadingLinks.append(createRouteLink("path", item.id, "查看路径顺序 →"));
-      return;
-    }
-
-    const context = constellationContext();
-    if (context.activePath) {
-      setConstellationReading("path", context.activePath);
-      return;
-    }
-    if (context.explicitSurfaceId) {
-      setConstellationReading("surface", surfacesById.get(context.explicitSurfaceId));
-      return;
-    }
-    if (context.hasFilter) {
-      refs.constellationReadingIndex.textContent = String(context.matches.length).padStart(2, "0");
-      refs.constellationReadingTitle.textContent = "当前筛选穿过的星域";
-      refs.constellationReadingMeta.textContent = `${context.matches.length} / ${data.materials.length} 条材料保持清晰`;
-      refs.constellationReadingCopy.textContent = "未匹配的星仍留在背景，方便看见筛选结果位于整张研究地图的哪里。清空筛选即可恢复全图。";
-      return;
-    }
-
-    const bridges = data.materials.filter((material) => material.failureSurfaces.length > 1).length;
-    refs.constellationReadingIndex.textContent = "∞";
-    refs.constellationReadingTitle.textContent = "A field that grows with the reading";
-    refs.constellationReadingMeta.textContent = `${data.materials.length} materials · ${bridges} cross-surface bridges`;
-    refs.constellationReadingCopy.textContent = "固定的是 failure-surface 语义，不是星星数量。新增 public material 会从 canonical membership 自动进入这片星域；空白、孤立与密集都只描述当前 corpus。";
-  }
-
-  function setConstellationHover(kind, id, active) {
-    const svg = refs.constellationPlot.querySelector("svg");
-    if (!svg) return;
-    svg.classList.toggle("has-hover", active);
-    if (!active) {
-      svg.querySelectorAll(".is-hover-match").forEach((node) => node.classList.remove("is-hover-match"));
-      setConstellationReading();
-      return;
-    }
-
-    const materialIds = kind === "material"
-      ? new Set([id])
-      : new Set(surfacesById.get(id).materialIds);
-    const surfaceIds = kind === "surface"
-      ? new Set([id])
-      : new Set(materialsById.get(id).failureSurfaces);
-
-    svg.querySelectorAll("[data-material-id]").forEach((node) => {
-      node.classList.toggle("is-hover-match", materialIds.has(node.dataset.materialId));
-    });
-    svg.querySelectorAll("[data-surface-id]").forEach((node) => {
-      node.classList.toggle("is-hover-match", surfaceIds.has(node.dataset.surfaceId));
-    });
-    svg.querySelectorAll(".constellation-edge").forEach((node) => {
-      node.classList.toggle(
-        "is-hover-match",
-        materialIds.has(node.dataset.materialId) && surfaceIds.has(node.dataset.surfaceId),
-      );
-    });
-    setConstellationReading(kind, kind === "material" ? materialsById.get(id) : surfacesById.get(id));
-  }
-
-  function renderConstellationPlot(positions, context, labelPlacements) {
-    const svg = createSvgElement("svg", {
-      viewBox: `0 0 ${constellationViewBox.width} ${constellationViewBox.height}`,
-      role: "img",
-      "aria-labelledby": "constellation-svg-title constellation-svg-description",
-      preserveAspectRatio: "xMidYMid meet",
-    });
-    svg.append(
-      createSvgElement("title", { id: "constellation-svg-title" }, "Agent Memory Study research constellation"),
-      createSvgElement(
-        "desc",
-        { id: "constellation-svg-description" },
-        "Materials are connected to the failure surfaces used by the public atlas. Links open stable material and surface routes.",
-      ),
-    );
-
-    const edges = createSvgElement("g", { class: "constellation-edges", "aria-hidden": "true" });
-    data.materials.forEach((material) => {
-      const point = positions.get(material.id);
-      material.failureSurfaces.forEach((surfaceId) => {
-        const anchor = constellationAnchors.get(surfaceId);
-        const edge = createSvgElement("line", {
-          x1: point.x,
-          y1: point.y,
-          x2: anchor.x,
-          y2: anchor.y,
-          class: "constellation-edge",
-          "data-material-id": material.id,
-          "data-surface-id": surfaceId,
-        });
-        if (context.hasEmphasis && !materialIsEmphasized(material, context)) edge.classList.add("is-dimmed");
-        if (context.hasEmphasis && materialIsEmphasized(material, context)) edge.classList.add("is-emphasized");
-        edges.append(edge);
-      });
-    });
-    svg.append(edges);
-
-    if (context.activePath) {
-      const overlay = createSvgElement("g", { class: "constellation-path-overlay", "aria-hidden": "true" });
-      context.activePath.materialIds.forEach((materialId, index, materialIds) => {
-        const point = positions.get(materialId);
-        if (index < materialIds.length - 1) {
-          const next = positions.get(materialIds[index + 1]);
-          overlay.append(createSvgElement("line", {
-            x1: point.x,
-            y1: point.y,
-            x2: next.x,
-            y2: next.y,
-            class: "constellation-path-line",
-          }));
-        }
-        overlay.append(createSvgElement("text", {
-          x: point.x + 12,
-          y: point.y - 12,
-          class: "constellation-path-step",
-        }, String(index + 1).padStart(2, "0")));
-      });
-      svg.append(overlay);
-    }
-
-    const materialNodes = createSvgElement("g", { class: "constellation-materials" });
-    data.materials.forEach((material) => {
-      const point = positions.get(material.id);
-      const link = createSvgElement("a", {
-        href: routeHref("material", material.id),
-        class: "constellation-material-link",
-        tabindex: "0",
-        role: "link",
-        "aria-label": `${String(material.number).padStart(2, "0")} ${material.title}. ${material.authors.join(", ")}, ${material.year}. Reading depth ${material.noteDepth}.`,
-        "data-route": "material",
-        "data-route-id": material.id,
-        "data-material-id": material.id,
-      });
-      if (context.hasEmphasis && !materialIsEmphasized(material, context)) link.classList.add("is-dimmed");
-      if (context.hasEmphasis && materialIsEmphasized(material, context)) link.classList.add("is-emphasized");
-
-      const labelPlacement = labelPlacements.get(material.id);
-      link.append(
-        createSvgElement("circle", { cx: point.x, cy: point.y, r: 22, class: "constellation-hit" }),
-        createSvgElement("circle", { cx: point.x, cy: point.y, r: 4.7, class: "constellation-star" }),
-      );
-      if (["read", "worked"].includes(material.noteDepth)) {
-        link.append(createSvgElement("circle", { cx: point.x, cy: point.y, r: 10.5, class: "constellation-depth-ring" }));
-      }
-      link.append(createSvgElement("text", {
-        x: labelPlacement.x,
-        y: labelPlacement.y,
-        "text-anchor": labelPlacement.textAnchor,
-        class: "constellation-material-label",
-      }, constellationMaterialLabel(material)));
-      link.addEventListener("mouseenter", () => setConstellationHover("material", material.id, true));
-      link.addEventListener("focus", () => setConstellationHover("material", material.id, true));
-      link.addEventListener("mouseleave", () => setConstellationHover("material", material.id, false));
-      link.addEventListener("blur", () => setConstellationHover("material", material.id, false));
-      materialNodes.append(link);
-    });
-    svg.append(materialNodes);
-
-    const surfaceNodes = createSvgElement("g", { class: "constellation-surfaces" });
-    data.atlas.failureSurfaces.forEach((surface) => {
-      const anchor = constellationAnchors.get(surface.id);
-      const link = createSvgElement("a", {
-        href: routeHref("thread", surface.id),
-        class: "constellation-surface-link",
-        tabindex: "0",
-        role: "link",
-        "aria-label": `${surface.number} ${surface.label}. ${surface.question}`,
-        "data-route": "thread",
-        "data-route-id": surface.id,
-        "data-surface-id": surface.id,
-      });
-      if (context.explicitSurfaceId === surface.id) link.classList.add("is-emphasized");
-      link.append(
-        createSvgElement("circle", { cx: anchor.x, cy: anchor.y, r: 15, class: "constellation-surface-ring" }),
-        createSvgElement("circle", { cx: anchor.x, cy: anchor.y, r: 2.5, class: "constellation-surface-core" }),
-      );
-      const label = createSvgElement("text", {
-        x: anchor.labelX,
-        y: anchor.labelY,
-        "text-anchor": anchor.textAnchor,
-        class: "constellation-surface-label",
-      });
-      const [primary, secondary] = surface.label.split(" / ");
-      label.append(
-        createSvgElement("tspan", { x: anchor.labelX, dy: "0" }, `${surface.number} ${primary}`),
-        createSvgElement("tspan", { x: anchor.labelX, dy: "18" }, secondary || ""),
-      );
-      link.append(label);
-      link.addEventListener("mouseenter", () => setConstellationHover("surface", surface.id, true));
-      link.addEventListener("focus", () => setConstellationHover("surface", surface.id, true));
-      link.addEventListener("mouseleave", () => setConstellationHover("surface", surface.id, false));
-      link.addEventListener("blur", () => setConstellationHover("surface", surface.id, false));
-      surfaceNodes.append(link);
-    });
-    svg.append(surfaceNodes);
-
-    refs.constellationPlot.replaceChildren(svg);
-  }
-
-  function renderConstellationMatrix(context) {
-    const table = document.createElement("table");
-    const caption = createTextElement("caption", "Materials by failure surface. Filled dots mark membership.", "sr-only");
-    const head = document.createElement("thead");
-    const headRow = document.createElement("tr");
-    const materialHeader = createTextElement("th", "Material");
-    materialHeader.scope = "col";
-    headRow.append(materialHeader);
-    data.atlas.failureSurfaces.forEach((surface) => {
-      const cell = document.createElement("th");
-      cell.scope = "col";
-      const link = createRouteLink("thread", surface.id, surface.number);
-      link.title = surface.label;
-      link.setAttribute("aria-label", `${surface.number} ${surface.label}`);
-      cell.append(link);
-      headRow.append(cell);
-    });
-    head.append(headRow);
-
-    const body = document.createElement("tbody");
-    data.materials.forEach((material) => {
-      const row = document.createElement("tr");
-      if (context.hasEmphasis && !materialIsEmphasized(material, context)) row.classList.add("is-dimmed");
-      if (context.hasEmphasis && materialIsEmphasized(material, context)) row.classList.add("is-emphasized");
-      const labelCell = document.createElement("th");
-      labelCell.scope = "row";
-      labelCell.append(createRouteLink(
-        "material",
-        material.id,
-        `${String(material.number).padStart(2, "0")} ${material.title}`,
-      ));
-      row.append(labelCell);
-      data.atlas.failureSurfaces.forEach((surface) => {
-        const cell = document.createElement("td");
-        const included = material.failureSurfaces.includes(surface.id);
-        const mark = createTextElement("span", included ? "●" : "·", included ? "matrix-star" : "matrix-empty");
-        mark.setAttribute("aria-hidden", "true");
-        cell.append(mark, createTextElement("span", included ? `属于 ${surface.label}` : `不属于 ${surface.label}`, "sr-only"));
-        row.append(cell);
-      });
-      body.append(row);
-    });
-    table.append(caption, head, body);
-    refs.constellationMatrix.replaceChildren(table);
-  }
-
   function renderConstellation() {
-    const bridgeCount = data.materials.filter((material) => material.failureSurfaces.length > 1).length;
-    refs.constellationStats.textContent = `${data.materials.length} materials · ${data.atlas.failureSurfaces.length} surfaces · ${bridgeCount} bridges`;
-    const positions = constellationPositions();
-    const labelPlacements = resolveMaterialLabelPlacements(positions);
-    const context = constellationContext();
-    renderConstellationPlot(positions, context, labelPlacements);
-    renderConstellationMatrix(context);
-    setConstellationReading();
+    if (!constellationController) constellationController = window.AMSConstellation.mount({
+      root: document.querySelector("#constellation"), data, routeHref
+    });
+    else constellationController.refresh();
   }
 
   function renderPaths() {
@@ -1163,6 +687,42 @@
     return ({"learning-note":"学习记录", "research-essay":"研究论述", "editorial-synthesis-with-proposed-experiment":"共读 · 未执行方案", "editorial-synthesis-with-recorded-experiment":"共读 · 已保存研究结果", "editorial-synthesis-with-deterministic-demo":"共读 · 原创规则演示"})[study.kind] || "研究记录";
   }
 
+  function researchPlate(id) {
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", "0 0 400 230"); svg.setAttribute("class", "research-plate");
+    svg.setAttribute("aria-hidden", "true");
+    const add = (tag, attributes, text = "") => {
+      const node = document.createElementNS(ns, tag);
+      Object.entries(attributes).forEach(([key, value]) => node.setAttribute(key, value));
+      node.textContent = text; svg.append(node); return node;
+    };
+    if (id === "experience-becomes-policy") {
+      for (let r=0; r<5; r++) {
+        add("ellipse", {cx:195,cy:105,rx:35+r*27,ry:16+r*13,transform:"rotate(-17 195 105)",class:"plate-main plate-dim"});
+      }
+      add("path", {d:"M115 142Q150 80 200 105T286 65M278 65l8 0 -3 8",class:"plate-main"});
+      add("circle", {cx:115,cy:142,r:5,class:"plate-fill"});
+      add("circle", {cx:286,cy:65,r:5,class:"plate-dot"});
+      add("text",{x:94,y:170},"θ");add("text",{x:300,y:62},"θ′");
+      add("text",{x:35,y:207},"03 / ΔD → revise → θ′");
+    } else if (id === "retrieval-and-relevance") {
+      add("circle", {cx:166,cy:107,r:65,class:"plate-fill"});
+      add("circle", {cx:235,cy:107,r:65,class:"plate-main"});
+      for (let i=0;i<28;i++) { const angle=i*2.39996, r=52*Math.sqrt((i+.5)/28);add("circle",{cx:166+Math.cos(angle)*r,cy:107+Math.sin(angle)*r,r:1.7,class:"plate-dot"}); }
+      add("text",{x:102,y:26},"retrieved");add("text",{x:240,y:26},"relevant");
+      add("path",{d:"M166 175v12h69v-12",class:"plate-main"});
+      add("text",{x:35,y:212},"01 / A ∩ B ≠ A");
+    } else {
+      add("path",{d:"M65 175H340M65 175V35M65 175 320 50",class:"plate-main plate-dim"});
+      add("path",{d:"M75 165C120 165 115 120 159 120S225 106 242 77 295 68 326 44",class:"plate-main"});
+      for(let i=0;i<12;i++){const x=78+i*22,y=164-i*10+(i%3-1)*8;add("circle",{cx:x,cy:y,r:2.8,class:"plate-dot"});}
+      add("text",{x:65,y:24},"position");add("text",{x:322,y:195},"key");
+      add("text",{x:35,y:212},"02 / f(key) ≈ position");
+    }
+    return svg;
+  }
+
   function renderRoom() {
     const el = createTextElement;
     refs.atlasTitle.replaceChildren(...(data.room.heroTitle || data.room.thesis).split("\n").map(text => el("span", text)));
@@ -1179,6 +739,7 @@
       });
       title.append(titleLink);
       node.append(el("p", `0${i+1} / ${start.kicker}`, "eyebrow"));
+      node.append(researchPlate(item.id));
       if(start.notation) node.append(el("pre", start.notation, "start-notation"));
       node.append(title, el("p", item.intro), createRouteLink("study", item.id, "进入这次研究 ↗", "text-arrow")); return node;
     }));
@@ -1211,7 +772,7 @@
       node.append(el("time", change.date), h, el("p", change.text)); return node;
     }));
     const legacy = document.querySelector("#legacy-lenses");
-    if (route.thread || route.path || ["#research-map","#constellation","#reading-paths","#surface-focus"].includes(window.location.hash)) legacy.open = true;
+    if (route.thread || route.path || ["#research-map","#reading-paths","#surface-focus"].includes(window.location.hash)) legacy.open = true;
     if (route.practice || window.location.hash === "#practice") document.querySelector(".practice-disclosure").open = true;
   }
 
@@ -1866,11 +1427,7 @@
       closeMenu();
       refs.menuButton.focus();
     }
-    if (!["Enter", " "].includes(event.key)) return;
-    const link = event.target.closest("svg a[data-route]");
-    if (!link) return;
-    event.preventDefault();
-    activateRouteLink(link);
+
   });
 
   document.addEventListener("click", (event) => {

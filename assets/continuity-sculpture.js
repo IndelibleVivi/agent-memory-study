@@ -1,41 +1,13 @@
 /* Public research objects, rendered as an interactive stack. Spatial layouts are
    editorial arrangements; connections are explicit links, never inferred similarity. */
 (function (root, factory) {
-  const api = factory();
+  const api = factory(typeof module === "object" && module.exports ? require("./research-map.js") : root.ResearchMap);
   if (typeof module === "object" && module.exports) module.exports = api;
   else { root.ResearchSculpture = api; api.mount(root.READING_ROOM); }
-})(typeof globalThis === "object" ? globalThis : this, function () {
+})(typeof globalThis === "object" ? globalThis : this, function (map) {
   "use strict";
-  const families = {study:"studies", material:"materials", question:"questions", finding:"findings"};
   const labels = {study:"STUDY", material:"SOURCE", question:"QUESTION", finding:"FINDING"};
-  function graph(data) {
-    const nodes = Object.entries(families).flatMap(([kind, family]) =>
-      (data[family] || []).map(item => ({key:`${kind}/${item.id}`, kind, id:item.id, title:item.title, item})));
-    const byKey = new Map(nodes.map((node, i) => [node.key, i])), edges = [], seen = new Set();
-    function connect(from, kind, id) {
-      const to = byKey.get(`${kind}/${id}`);
-      if (to === undefined || from === to) return;
-      const key = [from,to].sort((a,b)=>a-b).join(":");
-      if (!seen.has(key)) { seen.add(key); edges.push([from,to]); }
-    }
-    nodes.forEach((node, i) => {
-      const x=node.item;
-      for (const [field,kind] of [["materialIds","material"],["studyIds","study"],["questionIds","question"],["findingIds","finding"]]) {
-        (x[field] || []).forEach(id=>connect(i,kind,id));
-        (x.continuation?.[field] || []).forEach(id=>connect(i,kind,id));
-      }
-      (x.readings || []).forEach(reading=>connect(i,"material",reading.materialId));
-      // Only the compiler's explicit internal links count. No text similarity or network lookup.
-      for (const match of (x.bodyHtml || "").matchAll(/href="\?([^"#]+)(?:#[^"]*)?"/g)) {
-        const query=new URLSearchParams(match[1].replaceAll("&amp;","&"));
-        for(const kind of Object.keys(families)) if(query.has(kind)) connect(i,kind,query.get(kind));
-      }
-    });
-    return {nodes,edges};
-  }
-  function neighbors(model,index) {
-    return new Set(model.edges.filter(edge=>edge.includes(index)).map(edge=>edge[0]===index?edge[1]:edge[0]));
-  }
+  const {graph, neighbors} = map;
   function layout(model,mode,selected) {
     const count=model.nodes.length, linked=neighbors(model,selected), related=[...linked];
     const cols=Math.ceil(Math.sqrt(count)*1.35), rows=Math.ceil(count/cols);
@@ -177,9 +149,9 @@
       }
       function push(dest,point,color){dest.push(...point[0],...point[1],...color);}
       current.forEach((pose,i)=>{
-        const selectedNow=i===selected, alpha=pose[6], shade=.77+(i%4)*.035;
-        const color=selectedNow?[.24,.31,.78,1]:[shade,shade+.025,shade+.06,alpha];
-        const line=selectedNow?[.14,.21,.68,1]:[.27,.32,.41,alpha*.72];
+        const selectedNow=i===selected, alpha=pose[6], shade=.42+(i%4)*.025;
+        const color=selectedNow?[.80,.57,.30,1]:[shade,shade+.11,shade+.12,alpha*.86];
+        const line=selectedNow?[.93,.73,.43,1]:[.61,.73,.73,alpha*.68];
         for(let segment=0;segment<14;segment++){
           const a=segment/7-1,b=(segment+1)/7-1;
           const p0=vertexAt(pose,a,-1),p1=vertexAt(pose,b,-1),p2=vertexAt(pose,a,1),p3=vertexAt(pose,b,1);
@@ -191,7 +163,7 @@
         projected.push({i,p:project(pose,yaw,pitch,box.width,box.height)});
       });
       if(mode==="links")for(const edge of model.edges.filter(edge=>edge.includes(selected))){
-        edge.forEach(i=>push(lines,[[current[i][0],current[i][1],current[i][2]],[0,1,0]],[.22,.29,.75,.55]));
+        edge.forEach(i=>push(lines,[[current[i][0],current[i][1],current[i][2]],[0,1,0]],[.78,.65,.43,.70]));
       }
       gl.uniform1f(uniforms.yaw,yaw);gl.uniform1f(uniforms.pitch,pitch);gl.uniform1f(uniforms.aspect,width/height);
       gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform1f(uniforms.wire,0);

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#f7f7f2" />
+    <meta name="theme-color" content="#f5f3ec" />
     <meta name="google-site-verification" content="7VmMLWHwFBaFG7l2fMQyj7y3wFvLIC9Lmudl_CuoVHE" />
     <meta name="description" content="从 agent memory 出发，研究信息、经验与智能的跨时间关系。学习、研究与理解继续生长的书房。" />
     <title>Agent Memory Study</title>
@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
-    <link rel="stylesheet" href="assets/styles.css?v=20261018-field" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261018-atlas" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -23,7 +23,7 @@
       <nav class="site-nav" id="site-nav" aria-label="主要导航">
         <a href="./#starts" data-route="home" data-scroll-target="starts">开始与继续</a>
         <a href="./#directions" data-route="home" data-scroll-target="directions">研究方向</a>
-        <a href="./#domains" data-route="home" data-scroll-target="domains">领域</a>
+        <a href="./#constellation" data-route="home" data-scroll-target="constellation">研究星图</a>
         <a href="./#library" data-route="home" data-scroll-target="library">书架</a>
         <a href="?study=how-we-study" data-route="study" data-route-id="how-we-study">怎样生长 ↗</a>
       </nav>
@@ -33,12 +33,12 @@
         <section class="room-hero" aria-labelledby="atlas-title">
           <div class="hero-register"><span>AMS / AN OPEN RESEARCH PRACTICE</span><span>INFORMATION · EXPERIENCE · INTELLIGENCE</span><span>EST. 2026 ↗</span></div>
           <h1 id="atlas-title" lang="en"></h1>
-          <div class="hero-side-note"><span>01—</span><p>A study of what<br>we carry forward.</p><span class="hero-cross" aria-hidden="true">+</span></div>
+          <div class="hero-side-note"><span>FIG. 01 /</span><p>What remains.<br>What changes.<br>What comes next.</p><span class="hero-cross" aria-hidden="true">+</span></div>
           <figure class="hero-figure" aria-label="由公开研究对象组成的三维层片">
             <div class="sculpture-stage" id="continuity-sculpture" tabindex="0" role="group" aria-label="三维研究体：拖动旋转，点击层片选择；键盘方向键旋转，Enter 选择下一片" aria-describedby="sculpture-instructions">
-              <svg class="sculpture-fallback" viewBox="0 0 900 600" aria-hidden="true"><g fill="#d9dee8" fill-opacity=".58" stroke="#626d87" stroke-width=".8">
+              <svg class="sculpture-fallback" viewBox="0 0 900 600" aria-hidden="true"><g fill="#8aa2a1" fill-opacity=".5" stroke="#a0b4b1" stroke-width=".8">
                 <path d="M270 205 510 125 690 230 450 320Z"/><path d="M266 222 510 142 686 247 450 337Z"/><path d="M262 239 510 159 682 264 450 354Z"/><path d="M258 256 510 176 678 281 450 371Z"/><path d="M254 273 510 193 674 298 450 388Z"/><path d="M250 290 510 210 670 315 450 405Z"/><path d="M246 307 510 227 666 332 450 422Z"/><path d="M242 324 510 244 662 349 450 439Z"/><path d="M238 341 510 261 658 366 450 456Z"/><path d="M234 358 510 278 654 383 450 473Z"/>
-              </g><path d="M250 290 510 210 670 315 450 405Z" fill="#4553ac" fill-opacity=".8" stroke="#2e3c89"/></svg>
+              </g><path d="M250 290 510 210 670 315 450 405Z" fill="#c59455" fill-opacity=".8" stroke="#e3ba80"/></svg>
               <canvas aria-hidden="true"></canvas>
             </div>
             <figcaption class="sculpture-caption"><span><span data-research-count>46</span> OBJECTS / ONE CHANGING FIELD</span><span>每一片，都有一份真实的研究。</span></figcaption>
@@ -58,6 +58,13 @@
           <div class="hero-baseline"><span id="room-edition"></span><span id="room-invitation"></span></div>
         </section>
         <section class="room-starts section-wrap" id="starts"><div class="section-heading"><div><p class="eyebrow">BEGIN ANYWHERE</p><h2>从一个词，<br><em>打开一个问题。</em></h2></div><div class="resume-open"><label class="file-button" for="resume-file">打开接续文件 ↗</label><input class="sr-only" id="resume-file" type="file" accept=".json,application/json"><p id="resume-status" role="status">接续文件只在当前浏览器读取。</p></div></div><div id="room-start-list"></div></section>
+        <section class="constellation section-wrap" id="constellation" aria-labelledby="constellation-title">
+          <div class="section-heading constellation-heading"><div><p class="eyebrow">THE RESEARCH ATLAS / 研究星图</p><h2 id="constellation-title">Ideas in<br><em>constellation.</em></h2></div><div class="map-introduction"><p>理解不只沿着目录发生。<br>沿一条引用，去另一颗星。</p><p id="constellation-caption">星点是公开研究，星域来自知识领域；连线仅表示显式引用。位置是编排，不表示相似度、重要性或研究结论。</p></div></div>
+          <div class="map-topline"><p id="constellation-stats" aria-live="polite"></p><div class="map-view-switch" data-js-control hidden><button type="button" id="map-fullscreen" aria-pressed="false" hidden>展开星图 ⤢</button><button type="button" data-map-view="map" aria-pressed="true">星图</button><button type="button" data-map-view="list" aria-pressed="false">目录</button></div></div>
+          <div class="map-filters" data-js-control hidden><div class="map-kind-filters" aria-label="研究类型"><button type="button" data-map-kind="" aria-pressed="true">全部</button><button type="button" data-map-kind="study" aria-pressed="false"><i class="legend-study"></i>札记</button><button type="button" data-map-kind="material" aria-pressed="false"><i class="legend-material"></i>来源</button><button type="button" data-map-kind="question" aria-pressed="false"><i class="legend-question"></i>问题</button><button type="button" data-map-kind="finding" aria-pressed="false"><i class="legend-finding"></i>判断</button></div><div class="map-search"><label class="sr-only" for="map-domain">按领域筛选星图</label><select id="map-domain"><option value="">所有领域</option></select><label class="sr-only" for="map-query">搜索星图</label><input type="search" id="map-query" placeholder="寻找一颗星…" autocomplete="off"></div></div>
+          <div class="constellation-frame"><div class="constellation-canvas"><div id="constellation-plot"></div><div id="constellation-list" hidden></div><p id="map-empty" role="status" hidden>这片视野里暂时没有研究。换一个词，或复位回到完整星图。</p><div class="map-controls" data-js-control hidden><div id="map-camera-controls"><button type="button" id="map-zoom-out" aria-label="缩小星图">−</button><span id="map-zoom-value">100%</span><button type="button" id="map-zoom-in" aria-label="放大星图">＋</button></div><button type="button" id="map-focus" aria-pressed="false">聚焦引用</button><button type="button" id="map-motion" aria-pressed="false">静止 Ⅱ</button><button type="button" id="map-reset">复位 ↺</button></div></div><aside id="constellation-reading" class="constellation-reading" aria-labelledby="map-reading-title"></aside></div>
+          <div class="map-bottomline"><span>拖动平移 · ＋ / − 缩放 · 选取星点后打开研究</span><span>G = (V, E) &nbsp; / &nbsp; EXPLICIT REFERENCES ONLY</span></div><p class="sr-only" id="map-announcement" aria-live="polite"></p>
+        </section>
         <section class="room-directions" id="directions"><div class="section-heading"><div><p class="eyebrow">DIRECTIONS / 长期追问</p><h2>长期追问<span class="heading-aside">Questions<br>worth keeping.</span></h2></div><p>方向是持续的关切。新的知识可以使它分叉、汇合，或暂时停驻。</p></div><div id="direction-list"></div><div id="direction-focus" tabindex="-1" hidden></div></section>
         <section class="room-domains section-wrap" id="domains"><div class="section-heading"><div><p class="eyebrow">FIELDS / 知识定位</p><h2>研究没有<br><em>固定形状。</em></h2></div><p>从 agent memory 出发，基础领域也可以独立深入。地图指路，允许交叉与暂未归类。</p></div><div class="domain-layout"><div id="domain-list"></div><div id="domain-focus" tabindex="-1"></div></div></section>
         <section class="studies-home section-wrap" id="studies"><div class="section-heading"><div><p class="eyebrow">STUDY NOTES / 理解的形状</p><h2><span class="display-word" lang="en">NOTES</span><span class="heading-translation">学习留下的东西。</span></h2></div><p>一段解释、一项推导、一场对读，或一项有边界的实验。长短与形式，由内容决定。</p></div><div id="study-index"></div></section>
@@ -116,7 +123,7 @@
         </section>
 
 
-        <details class="legacy-lenses section-wrap" id="legacy-lenses"><summary>从既有研究地图进入 <span>Failure surfaces · 星图 · 阅读路径 ↗</span></summary>          <div class="failure-map" id="research-map">
+        <details class="legacy-lenses section-wrap" id="legacy-lenses"><summary>从既有研究地图进入 <span>Failure surfaces · 阅读路径 ↗</span></summary>          <div class="failure-map" id="research-map">
             <div class="section-heading compact-heading">
               <h2>用 failure surfaces 观察既有材料</h2>
               <p id="atlas-label"></p>
@@ -134,34 +141,6 @@
           <div class="surface-reading" aria-labelledby="surface-reading-title">
             <h3 id="surface-reading-title">从这里进入</h3>
             <ol id="surface-materials"></ol>
-          </div>
-        </section>
-
-        <section class="constellation" id="constellation" aria-labelledby="constellation-title">
-          <div class="section-heading constellation-heading">
-            <div>
-              <h2 id="constellation-title">研究星图 <span>Constellation</span></h2>
-              <p id="constellation-caption">每颗星是一份材料，连线只表示它被编入哪些 failure surfaces；位置不是排名，星环只标示 reading depth。</p>
-            </div>
-            <p class="constellation-stats" id="constellation-stats"></p>
-          </div>
-
-          <div class="constellation-frame">
-            <div class="constellation-figure">
-              <div class="constellation-plot" id="constellation-plot"></div>
-              <p class="constellation-mobile-note">横向滑动查看全部 failure surfaces；标题进入 material，列号进入 surface。</p>
-              <div class="constellation-matrix" id="constellation-matrix"></div>
-              <p class="constellation-key"><span aria-hidden="true">○</span> read / worked scope <span aria-hidden="true">·</span> <span aria-hidden="true">●</span> material <span aria-hidden="true">·</span> blue = current route or filter match</p>
-            </div>
-
-            <aside class="constellation-reading" id="constellation-reading" aria-labelledby="constellation-reading-title">
-              <p class="content-kind">How to read this field</p>
-              <p class="constellation-reading-index" id="constellation-reading-index"></p>
-              <h3 id="constellation-reading-title"></h3>
-              <p class="constellation-reading-meta" id="constellation-reading-meta"></p>
-              <p class="constellation-reading-copy" id="constellation-reading-copy"></p>
-              <div class="constellation-reading-links" id="constellation-reading-links"></div>
-            </aside>
           </div>
         </section>
 
@@ -298,18 +277,20 @@
         </div>
       </article>
     </main>
-    <footer class="site-footer"><div><strong>Agent Memory Study</strong><p>信息、经验，与跨时间的智能。</p></div><nav aria-label="项目链接"><a href="https://github.com/IndelibleVivi/agent-memory-study">GitHub · 研究真源 ↗</a><a href="NOTICE.md">Notice</a><a href="THIRD_PARTY_NOTICES.md">PDF notices</a></nav></footer>
+    <footer class="site-footer"><div><strong>Agent Memory Study</strong><p>信息、经验，与跨时间的智能。</p></div><nav aria-label="项目链接"><a href="https://github.com/IndelibleVivi/agent-memory-study">GitHub · 研究真源 ↗</a><a href="NOTICE.md">Notice</a><a href="THIRD_PARTY_NOTICES.md">Third-party notices</a></nav></footer>
     <p class="sr-only" id="route-status" aria-live="polite"></p>
     <noscript>公开部署提供完整静态正文。源码模式需要 JavaScript；也可在 GitHub 的 study 目录阅读研究正文。</noscript>
-    <script src="assets/materials-data.js?v=20261018-field"></script>
+    <script src="assets/materials-data.js?v=20261018-atlas"></script>
     <script src="assets/revision-study.js?v=20260908-studies-1"></script>
-    <script src="assets/reading-search.js?v=20261018-field"></script>
-    <script src="assets/practice.js?v=20261018-field"></script>
-    <script src="assets/study-packets.js?v=20261018-field"></script>
-    <script src="assets/study-desk.js?v=20261018-field"></script>
-    <script src="assets/seo.js?v=20261018-field"></script>
-    <script src="assets/app.js?v=20261018-field"></script>
-    <script src="assets/continuity-sculpture.js?v=20261018-field"></script>
+    <script src="assets/reading-search.js?v=20261018-atlas"></script>
+    <script src="assets/practice.js?v=20261018-atlas"></script>
+    <script src="assets/study-packets.js?v=20261018-atlas"></script>
+    <script src="assets/study-desk.js?v=20261018-atlas"></script>
+    <script src="assets/seo.js?v=20261018-atlas"></script>
+    <script src="assets/research-map.js?v=20261018-atlas"></script>
+    <script src="assets/constellation.js?v=20261018-atlas"></script>
+    <script src="assets/app.js?v=20261018-atlas"></script>
+    <script src="assets/continuity-sculpture.js?v=20261018-atlas"></script>
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"4e0929eca0504d43aca1cc1a1f30ffaf"}'></script>
   </body>
 </html>
