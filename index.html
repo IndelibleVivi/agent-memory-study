@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#f5f3ec" />
+    <meta name="theme-color" content="#f6f7f4" />
     <meta name="google-site-verification" content="7VmMLWHwFBaFG7l2fMQyj7y3wFvLIC9Lmudl_CuoVHE" />
     <meta name="description" content="从 agent memory 出发，研究信息、经验与智能的跨时间关系。学习、研究与理解继续生长的书房。" />
     <title>Agent Memory Study</title>
@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
-    <link rel="stylesheet" href="assets/styles.css?v=20261018-atlas" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261018-field" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -33,33 +33,30 @@
         <section class="room-hero" aria-labelledby="atlas-title">
           <div class="hero-register"><span>AMS / AN OPEN RESEARCH PRACTICE</span><span>INFORMATION · EXPERIENCE · INTELLIGENCE</span><span>EST. 2026 ↗</span></div>
           <h1 id="atlas-title" lang="en"></h1>
-          <div class="hero-side-note"><span>FIG. 01 /</span><p>What remains.<br>What changes.<br>What comes next.</p><span class="hero-cross" aria-hidden="true">+</span></div>
-          <figure class="hero-figure" aria-label="由公开研究对象组成的三维层片">
-            <div class="sculpture-stage" id="continuity-sculpture" tabindex="0" role="group" aria-label="三维研究体：拖动旋转，点击层片选择；键盘方向键旋转，Enter 选择下一片" aria-describedby="sculpture-instructions">
-              <svg class="sculpture-fallback" viewBox="0 0 900 600" aria-hidden="true"><g fill="#8aa2a1" fill-opacity=".5" stroke="#a0b4b1" stroke-width=".8">
-                <path d="M270 205 510 125 690 230 450 320Z"/><path d="M266 222 510 142 686 247 450 337Z"/><path d="M262 239 510 159 682 264 450 354Z"/><path d="M258 256 510 176 678 281 450 371Z"/><path d="M254 273 510 193 674 298 450 388Z"/><path d="M250 290 510 210 670 315 450 405Z"/><path d="M246 307 510 227 666 332 450 422Z"/><path d="M242 324 510 244 662 349 450 439Z"/><path d="M238 341 510 261 658 366 450 456Z"/><path d="M234 358 510 278 654 383 450 473Z"/>
-              </g><path d="M250 290 510 210 670 315 450 405Z" fill="#c59455" fill-opacity=".8" stroke="#e3ba80"/></svg>
+          <div class="hero-premise"><p class="hero-question" id="hero-question"></p><p class="atlas-dek" id="atlas-dek"></p></div>
+          <figure class="hero-figure" aria-label="由公开研究对象组成的三维环">
+            <div class="sculpture-stage" id="continuity-sculpture" tabindex="0" role="group" aria-label="三维研究体：拖动旋转，点击环带选择；键盘方向键旋转，Enter 选择下一份研究" aria-describedby="sculpture-instructions">
+              <svg class="sculpture-fallback" viewBox="0 0 1000 500" aria-hidden="true"><g fill="none" stroke="#718a91" stroke-width="1"><ellipse cx="500" cy="250" rx="310" ry="150"/><ellipse cx="500" cy="250" rx="310" ry="70"/><ellipse cx="500" cy="250" rx="170" ry="110"/></g></svg>
               <canvas aria-hidden="true"></canvas>
             </div>
-            <figcaption class="sculpture-caption"><span><span data-research-count>46</span> OBJECTS / ONE CHANGING FIELD</span><span>每一片，都有一份真实的研究。</span></figcaption>
+            <figcaption class="sculpture-caption"><span><b>01</b> / THE INHERITANCE FIELD</span><span><span data-research-count>46</span> 份研究 · 一个不断改变的整体</span></figcaption><div class="hero-marginalia" aria-hidden="true"><span>MEMORY IS<br>A RELATION<br>THROUGH TIME.</span><code>experience<br>↳ representation<br>↳ use<br>↳ revision</code></div>
           </figure>
+          <div class="sculpture-toolbar" data-js-control hidden>
+            <div class="sculpture-views" aria-label="研究体视图"><button type="button" data-sculpture-view="field" aria-pressed="true"><span>01</span> 环形</button><button type="button" data-sculpture-view="spread" aria-pressed="false"><span>02</span> 展开</button><button type="button" data-sculpture-view="links" aria-pressed="false"><span>03</span> 关联</button></div>
+            <p id="sculpture-instructions">拖动旋转 · 点击环带选取<span>领域决定编排；连线来自显式引用。</span></p>
+            <div class="sculpture-motion"><button class="sculpture-toggle" type="button" aria-pressed="false">静止 Ⅱ</button><button id="sculpture-reset" type="button">复位 ↺</button></div>
+          </div>
           <div class="sculpture-inspector" data-js-control hidden>
             <div class="inspector-head"><span id="sculpture-kind"></span><span id="sculpture-ordinal"></span></div>
-            <p id="sculpture-title" aria-live="polite"></p>
+            <div class="inspector-copy"><p id="sculpture-title" aria-live="polite"></p><p id="sculpture-summary"></p></div>
             <div class="inspector-actions"><button type="button" data-sculpture-step="-1" aria-label="上一份研究">←</button><button type="button" data-sculpture-step="1" aria-label="下一份研究">→</button><a id="sculpture-open" href="?study=ams-thesis">打开研究 ↗</a></div>
             <details class="sculpture-source"><summary>{ 查看结构 }</summary><pre><code id="sculpture-code"></code></pre><label for="sculpture-record">选择公开对象</label><select id="sculpture-record"></select></details>
           </div>
-          <div class="sculpture-toolbar" data-js-control hidden>
-            <div class="sculpture-views" aria-label="研究体视图"><button type="button" data-sculpture-view="stack" aria-pressed="true"><span>01</span> 叠置</button><button type="button" data-sculpture-view="spread" aria-pressed="false"><span>02</span> 展开</button><button type="button" data-sculpture-view="links" aria-pressed="false"><span>03</span> 关联</button></div>
-            <p id="sculpture-instructions">拖动旋转 · 点击选取<br><span>连接来自显式引用，空间位置不是相似度。</span></p>
-            <div class="sculpture-motion"><button class="sculpture-toggle" type="button" aria-pressed="false">静止 Ⅱ</button><button id="sculpture-reset" type="button">复位 ↺</button></div>
-          </div>
-          <div class="hero-premise"><p class="hero-question" id="hero-question"></p><div><p class="atlas-dek" id="atlas-dek"></p><a class="text-arrow" href="?study=ams-thesis" data-route="study" data-route-id="ams-thesis">阅读研究纲领 <span>↗</span></a></div></div>
           <div class="hero-baseline"><span id="room-edition"></span><span id="room-invitation"></span></div>
         </section>
         <section class="room-starts section-wrap" id="starts"><div class="section-heading"><div><p class="eyebrow">BEGIN ANYWHERE</p><h2>从一个词，<br><em>打开一个问题。</em></h2></div><div class="resume-open"><label class="file-button" for="resume-file">打开接续文件 ↗</label><input class="sr-only" id="resume-file" type="file" accept=".json,application/json"><p id="resume-status" role="status">接续文件只在当前浏览器读取。</p></div></div><div id="room-start-list"></div></section>
         <section class="constellation section-wrap" id="constellation" aria-labelledby="constellation-title">
-          <div class="section-heading constellation-heading"><div><p class="eyebrow">THE RESEARCH ATLAS / 研究星图</p><h2 id="constellation-title">Ideas in<br><em>constellation.</em></h2></div><div class="map-introduction"><p>理解不只沿着目录发生。<br>沿一条引用，去另一颗星。</p><p id="constellation-caption">星点是公开研究，星域来自知识领域；连线仅表示显式引用。位置是编排，不表示相似度、重要性或研究结论。</p></div></div>
+          <div class="section-heading constellation-heading"><div><p class="eyebrow">02 / THE RESEARCH ATLAS</p><h2 id="constellation-title">研究星图<span class="map-title-english" lang="en">A constellation of ideas.</span></h2></div><div class="map-introduction"><p>沿着一条引用，去另一颗星。</p><p id="constellation-caption">星点是公开研究，连线是显式引用；位置按领域编排，不表示语义距离。</p></div></div>
           <div class="map-topline"><p id="constellation-stats" aria-live="polite"></p><div class="map-view-switch" data-js-control hidden><button type="button" id="map-fullscreen" aria-pressed="false" hidden>展开星图 ⤢</button><button type="button" data-map-view="map" aria-pressed="true">星图</button><button type="button" data-map-view="list" aria-pressed="false">目录</button></div></div>
           <div class="map-filters" data-js-control hidden><div class="map-kind-filters" aria-label="研究类型"><button type="button" data-map-kind="" aria-pressed="true">全部</button><button type="button" data-map-kind="study" aria-pressed="false"><i class="legend-study"></i>札记</button><button type="button" data-map-kind="material" aria-pressed="false"><i class="legend-material"></i>来源</button><button type="button" data-map-kind="question" aria-pressed="false"><i class="legend-question"></i>问题</button><button type="button" data-map-kind="finding" aria-pressed="false"><i class="legend-finding"></i>判断</button></div><div class="map-search"><label class="sr-only" for="map-domain">按领域筛选星图</label><select id="map-domain"><option value="">所有领域</option></select><label class="sr-only" for="map-query">搜索星图</label><input type="search" id="map-query" placeholder="寻找一颗星…" autocomplete="off"></div></div>
           <div class="constellation-frame"><div class="constellation-canvas"><div id="constellation-plot"></div><div id="constellation-list" hidden></div><p id="map-empty" role="status" hidden>这片视野里暂时没有研究。换一个词，或复位回到完整星图。</p><div class="map-controls" data-js-control hidden><div id="map-camera-controls"><button type="button" id="map-zoom-out" aria-label="缩小星图">−</button><span id="map-zoom-value">100%</span><button type="button" id="map-zoom-in" aria-label="放大星图">＋</button></div><button type="button" id="map-focus" aria-pressed="false">聚焦引用</button><button type="button" id="map-motion" aria-pressed="false">静止 Ⅱ</button><button type="button" id="map-reset">复位 ↺</button></div></div><aside id="constellation-reading" class="constellation-reading" aria-labelledby="map-reading-title"></aside></div>
@@ -242,7 +239,7 @@
               </div>
             </section>
 
-            <section class="article-section" id="paper-inquiries" hidden><h2>继续追问与实践</h2><div id="material-inquiries"></div></section>
+            <section class="article-section" id="paper-inquiries" data-toc-label="继续追问与实践" hidden><h2>继续追问与实践</h2><div id="material-inquiries"></div></section>
             <section class="article-section design-transfer" id="paper-transfer" data-toc-label="怎样借用" hidden>
               <p class="content-kind editorial-kind">Editorial transfer · 编者设计建议</p>
               <h2>读完，可以怎样借用</h2>
@@ -280,17 +277,17 @@
     <footer class="site-footer"><div><strong>Agent Memory Study</strong><p>信息、经验，与跨时间的智能。</p></div><nav aria-label="项目链接"><a href="https://github.com/IndelibleVivi/agent-memory-study">GitHub · 研究真源 ↗</a><a href="NOTICE.md">Notice</a><a href="THIRD_PARTY_NOTICES.md">Third-party notices</a></nav></footer>
     <p class="sr-only" id="route-status" aria-live="polite"></p>
     <noscript>公开部署提供完整静态正文。源码模式需要 JavaScript；也可在 GitHub 的 study 目录阅读研究正文。</noscript>
-    <script src="assets/materials-data.js?v=20261018-atlas"></script>
+    <script src="assets/materials-data.js?v=20261018-field"></script>
     <script src="assets/revision-study.js?v=20260908-studies-1"></script>
-    <script src="assets/reading-search.js?v=20261018-atlas"></script>
-    <script src="assets/practice.js?v=20261018-atlas"></script>
-    <script src="assets/study-packets.js?v=20261018-atlas"></script>
-    <script src="assets/study-desk.js?v=20261018-atlas"></script>
-    <script src="assets/seo.js?v=20261018-atlas"></script>
-    <script src="assets/research-map.js?v=20261018-atlas"></script>
-    <script src="assets/constellation.js?v=20261018-atlas"></script>
-    <script src="assets/app.js?v=20261018-atlas"></script>
-    <script src="assets/continuity-sculpture.js?v=20261018-atlas"></script>
+    <script src="assets/reading-search.js?v=20261018-field"></script>
+    <script src="assets/practice.js?v=20261018-field"></script>
+    <script src="assets/study-packets.js?v=20261018-field"></script>
+    <script src="assets/study-desk.js?v=20261018-field"></script>
+    <script src="assets/seo.js?v=20261018-field"></script>
+    <script src="assets/research-map.js?v=20261018-field"></script>
+    <script src="assets/constellation.js?v=20261018-field"></script>
+    <script src="assets/app.js?v=20261018-field"></script>
+    <script src="assets/continuity-sculpture.js?v=20261018-field"></script>
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"4e0929eca0504d43aca1cc1a1f30ffaf"}'></script>
   </body>
 </html>

@@ -90,7 +90,7 @@ def build(output: Path, executable: str | None = None):
                             if (sculpture) {
                                 sculpture.dataset.renderer = 'fallback'; sculpture.dataset.motion = 'still';
                                 sculpture.removeAttribute('tabindex'); sculpture.removeAttribute('aria-describedby');
-                                sculpture.setAttribute('role', 'img'); sculpture.setAttribute('aria-label', '公开研究的层叠视图');
+                                sculpture.setAttribute('role', 'img'); sculpture.setAttribute('aria-label', '公开研究的环形视图');
                             }
                             const constellation = snapshot.querySelector('#constellation-plot > svg');
                             if (constellation) {

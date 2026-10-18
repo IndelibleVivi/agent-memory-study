@@ -7,7 +7,7 @@
   const svgEl=(tag,attrs={},text)=>{const el=document.createElementNS(NS,tag);for(const [key,value] of Object.entries(attrs))el.setAttribute(key,value);if(text)el.textContent=text;return el;};
   function mount({root,data,routeHref}) {
     const model=ResearchMap.graph(data), narrow=matchMedia('(max-width: 760px)');
-    let width=narrow.matches?720:1200, height=narrow.matches?900:800;
+    let width=narrow.matches?720:1200, height=narrow.matches?900:560;
     let layout=ResearchMap.clusterLayout(model,data.room.domains,width,height);
     const $=id=>root.querySelector(id), plot=$('#constellation-plot'), panel=$('#constellation-reading');
     const motion=matchMedia('(prefers-reduced-motion: reduce)');
@@ -18,14 +18,16 @@
     let matching=new Set(model.nodes.map((_,i)=>i));
     const svg=svgEl('svg',{viewBox:`0 0 ${width} ${height}`,role:'group','aria-label':'研究星图，可拖动平移；选择节点查看详情。缩放与复位按钮位于图下。',tabindex:'0'});
     const backdrop=svgEl('g',{'aria-hidden':'true',class:'map-coordinate'});
-    // Coordinate marks are a diagram grid, never additional research objects.
-    for(let x=60;x<1200;x+=120)for(let y=40;y<1000;y+=120)backdrop.append(svgEl('path',{d:`M${x-3},${y}h6 M${x},${y-3}v6`}));
-    for(const r of [160,310,465,620])backdrop.append(svgEl('ellipse',{cx:600,cy:400,rx:r,ry:r*.72}));
     const groupLayer=svgEl('g',{'aria-hidden':'true',class:'map-domains'});
-    function drawGroups(){groupLayer.replaceChildren();layout.groups.forEach((group,i)=>{
+    function drawGroups(){groupLayer.replaceChildren();backdrop.replaceChildren();layout.groups.forEach((group,i)=>{
+      const points=model.nodes.map((n,j)=>({n,p:layout.positions[j]})).filter(({n})=>(n.primaryDomain||'unclassified')===group.id).map(({p})=>p);
+      if(points.length){
+        const xs=points.map(p=>p.x),ys=points.map(p=>p.y),cx=(Math.min(...xs)+Math.max(...xs))/2,cy=(Math.min(...ys)+Math.max(...ys))/2;
+        backdrop.append(svgEl('ellipse',{cx,cy,rx:Math.max(75,(Math.max(...xs)-Math.min(...xs))/2+38),ry:Math.max(55,(Math.max(...ys)-Math.min(...ys))/2+35),transform:`rotate(${i%2?-12:12} ${cx} ${cy})`}));
+      }
       const g=svgEl('g',{transform:`translate(${group.x} ${group.y})`,'data-domain':group.id});
-      g.append(svgEl('text',{class:'map-domain-number',y:-8},String(i+1).padStart(2,'0')),
-        svgEl('text',{y:14},group.title),svgEl('text',{y:33,class:'map-domain-english'},group.english));groupLayer.append(g);
+      g.append(svgEl('text',{class:'map-domain-number',y:4},String(i+1).padStart(2,'0')),
+        svgEl('text',{x:narrow.matches?40:30,y:0},group.title),svgEl('text',{x:30,y:16,class:'map-domain-english'},group.english));groupLayer.append(g);
     });}
     drawGroups();
     const edgeLayer=svgEl('g',{'aria-hidden':'true',class:'map-edges'});
@@ -38,8 +40,10 @@
       const p=layout.positions[i],g=svgEl('a',{href:routeHref(node.kind,node.id),class:`map-node map-${node.kind}`,transform:`translate(${p.x} ${p.y})`,'data-map-node':i,'aria-label':`${kinds[node.kind]}：${node.title}`,tabindex:'0'});
       g.append(svgEl('title',{},`${node.title} · ${kinds[node.kind]}`),svgEl('circle',{r:narrow.matches?32:22,class:'map-hit'}),svgEl('circle',{r:13,class:'map-halo'}));
       g.append(node.kind==='question'?svgEl('path',{d:'M0 -6 6 0 0 6 -6 0Z',class:'map-star'}):node.kind==='finding'?svgEl('rect',{x:-4,y:-4,width:8,height:8,class:'map-star'}):svgEl('circle',{r:node.kind==='study'?5:3.4,class:'map-star'}));
-      const label=node.title.length>24?node.title.slice(0,23)+'…':node.title;
+      const short=node.kind==='material'?(node.item.shortTitle||node.title.split(/[：:—]/)[0]):node.title;
+      const label=short.length>19?short.slice(0,18)+'…':short;
       g.append(svgEl('text',{x:p.x>width*.68?-18:18,y:4,'text-anchor':p.x>width*.68?'end':'start',class:'map-node-label'},label));
+      g.append(svgEl('text',{x:-5,y:-19,class:'map-node-number'},String(i+1).padStart(2,'0')));
       g.addEventListener('click',event=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();event.stopPropagation();if(!drag?.moved)choose(i);});
       g.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();choose(i);}});
       g.addEventListener('pointerenter',()=>{hovered=i;placeLabels();});g.addEventListener('pointerleave',()=>{hovered=-1;placeLabels();});
@@ -67,7 +71,9 @@
       const relatedList=make('div','map-related');
       related.forEach(i=>{const link=nodeLink(model.nodes[i],model.nodes[i].title);link.addEventListener('click',event=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();event.stopPropagation();choose(i);});relatedList.append(link);});
       if(!related.length)relatedList.append(make('p','','当前没有显式引用关系。'));
-      panel.replaceChildren(meta,title,make('p','map-taxonomy',taxonomy),copy,open,relatedHeading,relatedList);
+      const reading=make('div','map-reading-main'),relations=make('div','map-reading-relations');
+      reading.append(title,make('p','map-taxonomy',taxonomy),copy,open);relations.append(relatedHeading,relatedList);
+      panel.replaceChildren(meta,reading,relations);
       panel.dataset.selection=node.key;
       $('#map-announcement').textContent=`已选择${node.title}，${related.length}条显式引用。`;
     }
@@ -76,7 +82,7 @@
       const overlaps=(a,b)=>a.x<b.x+b.w+4&&a.x+a.w+4>b.x&&a.y<b.y+b.h+3&&a.y+a.h+3>b.y;
       const obstacles=layout.groups.map((group,i)=>{const b=groupLayer.children[i].getBBox();return {x:group.x+b.x,y:group.y+b.y,w:b.width,h:b.height};});
       const points=layout.positions.map(p=>({x:p.x-11,y:p.y-11,w:22,h:22}));
-      const priority=[...new Set([selected,hovered,...model.nodes.map((node,i)=>node.kind==='study'&&!narrow.matches?i:-1)])].filter(i=>i>=0);
+      const priority=[...new Set([selected,hovered,...model.nodes.map((node,i)=>node.kind==='study'?i:-1),...model.nodes.map((_,i)=>!narrow.matches?i:-1)])].filter(i=>i>=0);
       nodes.forEach(node=>node.querySelector('.map-node-label').style.opacity='0');
       for(const i of priority){
         if(nodes[i].classList.contains('is-dimmed'))continue;
@@ -137,7 +143,8 @@
       if(frame)cancelAnimationFrame(frame);frame=0;previous=0;
       const running=visible&&!document.hidden&&view==='map';root.dataset.motion=running&&!paused?'running':'still';
       $('#map-motion').setAttribute('aria-pressed',String(paused));$('#map-motion').textContent=paused?'动态 ○':'静止 Ⅱ';
-      if(motion.matches)camera={...target};placeLabels();paint();
+      if(motion.matches)camera={...target};
+      placeLabels();paint();
       if(running)frame=requestAnimationFrame(animate);
     }
     function zoom(factor) {const w=Math.max(240,Math.min(width*1.6,target.w*factor)),h=w*height/width;target={x:target.x+(target.w-w)/2,y:target.y+(target.h-h)/2,w,h};refresh();}
@@ -171,7 +178,7 @@
     // The canvas has explicit buttons; wheel scrolling remains ordinary page scrolling.
     svg.addEventListener('keydown',event=>{if(event.target!==svg)return;const step=camera.w*.08;if(event.key==='+'||event.key==='='){zoom(.78);}else if(event.key==='-'){zoom(1/.78);}else if(event.key==='Home'){target={x:0,y:0,w:width,h:height};refresh();}else if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)){target={...target,x:target.x+({'ArrowLeft':-step,'ArrowRight':step}[event.key]||0),y:target.y+({'ArrowUp':-step,'ArrowDown':step}[event.key]||0)};refresh();}else return;event.preventDefault();});
     narrow.addEventListener('change',()=>{
-      width=narrow.matches?720:1200;height=narrow.matches?900:800;
+      width=narrow.matches?720:1200;height=narrow.matches?900:560;
       layout=ResearchMap.clusterLayout(model,data.room.domains,width,height);drawGroups();
       nodes.forEach((node,i)=>{const p=layout.positions[i];node.setAttribute('transform',`translate(${p.x} ${p.y})`);node.querySelector('.map-hit').setAttribute('r',narrow.matches?32:22);const label=node.querySelector('.map-node-label');label.setAttribute('x',p.x>width*.68?-18:18);label.setAttribute('text-anchor',p.x>width*.68?'end':'start');});
       edges.forEach((edge,i)=>{const [a,b]=model.edges[i],p=layout.positions[a],q=layout.positions[b];edge.setAttribute('d',`M${p.x},${p.y} Q${(p.x+q.x)/2+(q.y-p.y)*.10},${(p.y+q.y)/2-(q.x-p.x)*.10} ${q.x},${q.y}`);});

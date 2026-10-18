@@ -207,6 +207,19 @@ def main():
                                     page.mouse.move(box['x']+box['width']/2,box['y']+box['height']/2)
                                     page.mouse.down(); page.mouse.move(box['x']+box['width']/2+80,box['y']+box['height']/2-30,steps=8); page.mouse.up()
                                     assert before_pose != stage.get_attribute('data-pose'), 'Pointer drag did not rotate the model'
+                                    # A drag that returns to its start is still a drag, not a new selection.
+                                    selection_before = stage.get_attribute('data-selection')
+                                    point = page.evaluate('''() => {
+                                        const api=ResearchSculpture, model=api.graph(READING_ROOM);
+                                        const stage=document.querySelector('#continuity-sculpture'), box=stage.getBoundingClientRect();
+                                        const [yaw,pitch]=stage.dataset.pose.split(',').map(Number);
+                                        const xy=api.project(api.layout(model,'spread',0)[0],yaw,pitch,box.width,box.height);
+                                        return {x:box.x+xy[0],y:box.y+xy[1]};
+                                    }''')
+                                    page.mouse.move(point['x'],point['y']); page.mouse.down()
+                                    page.mouse.move(point['x']+70,point['y']-20,steps=6)
+                                    page.mouse.move(point['x'],point['y'],steps=6); page.mouse.up()
+                                    expect(stage).to_have_attribute('data-selection',selection_before)
                                 page.locator('[data-sculpture-view="links"]').click()
                                 expect(stage).to_have_attribute('data-view','links')
                                 if width == 1440:
@@ -250,7 +263,13 @@ def main():
                         expect(page.locator('#constellation-stats')).to_contain_text('02 /')
                         page.locator('[data-map-view="list"]').click()
                         expect(page.locator('#constellation-list .map-list-row:visible')).to_have_count(2)
+                        if width == 1440:
+                            page.emulate_media(reduced_motion='no-preference')
+                            page.locator('#constellation-list .map-list-row:visible button').last.click()
                         page.locator('[data-map-view="map"]').click()
+                        if width == 1440:
+                            expect(page.locator('.map-node.is-selected .map-node-label')).to_have_css('opacity','1')
+                            page.emulate_media(reduced_motion='reduce')
                         page.locator('#map-reset').click()
                         page.locator('#map-query').fill('retrieval-and-relevance')
                         expect(page.locator('#constellation-stats')).to_contain_text('01 /')
@@ -316,6 +335,8 @@ def main():
                         for material in data['materials']:
                             go('?material=' + material['id'])
                             expect(page.locator('#material-title')).to_have_text(material['title'])
+                            toc_labels = page.locator('#article-toc a').all_text_contents()
+                            assert toc_labels and all('undefined' not in label and re.search(r'\D', label.strip()) for label in toc_labels), material['id']
                             expect(page.locator('#material-findings li')).to_have_text(material.get('reportedFindings', []))
                             section = page.locator('#paper-ams-evidence')
                             if material.get('amsEvidence'):

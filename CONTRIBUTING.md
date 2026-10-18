@@ -28,7 +28,7 @@ Agent Memory Study 是一个开放的研究体。贡献可以让一个概念更�
 星图和三维研究体共用 `assets/research-map.js` 的纯数据模型。所有 study / material / question / finding 都是一个独立节点；边只来自明确的 typed ID 引用、readings 和 compiler 生成的内部链接，互相引用合并为一条边。不要添加仅为视觉服务的 edge、importance 或 rank，也不要把靠近理解为相似、支持或推荐。
 
 - 保持已发布对象的 ID 稳定，正文深链接沿用它；
-- 领域取对象的 `domains` 与 `study/map.json` 的显式成员，允许多重归属和未分类；主领域只决定布局位置，侧栏保留所有领域；
+- 领域取对象的 `domains` 与 `study/map.json` 的显式成员，允许多重归属和未分类；主领域只决定布局位置，图下详情保留所有领域；
 - 位置由 deterministic layout 生成，新增对象后自然重排，不手写 x/y；颜色和形状标示对象类型，光环用于选取和关联，不表示阅读深度或掌握度；
 - 来源的 `noteDepth` 仍只在来源与书架中按原合同展示；
 - 旧 failure-surface 地图仍由 source membership 生成。新增 surface 需要解释实际 failure boundary，并提供稳定 ID、label、question、tension；不能为了制造 bridge 增加分类；

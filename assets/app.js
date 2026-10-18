@@ -723,10 +723,45 @@
     return svg;
   }
 
+  function directionMark(id) {
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", "0 0 260 80");
+    svg.setAttribute("class", "direction-graphic");
+    svg.setAttribute("aria-hidden", "true");
+    const mark = (tag, attrs) => {
+      const node = document.createElementNS(ns, tag);
+      for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
+      svg.append(node);
+    };
+    // Concept sketches describe the three questions, not measured research data.
+    if (id === "forms") {
+      for (let i = 0; i < 9; i++) {
+        const y = 12 + i * 7;
+        mark("path", {d: `M10 ${y} C70 ${40 + Math.sin(i * 2) * 30} 110 ${y} 155 ${y}`, class: "direction-flow"});
+        mark("rect", {x: 164 + (i % 3) * 23, y: 13 + Math.floor(i / 3) * 21, width: 14, height: 12, class: i === 4 ? "direction-solid" : ""});
+      }
+    } else if (id === "relevance") {
+      for (let i = 0; i < 5; i++) {
+        const y = 12 + i * 14;
+        mark("path", {d: `M25 40 C95 40 125 ${y} 208 ${y}`, class: i === 2 ? "direction-flow direction-strong" : "direction-dim"});
+        mark("circle", {cx: 214, cy: y, r: i === 2 ? 6 : 3.5, class: i === 2 ? "direction-solid" : ""});
+      }
+      mark("circle", {cx: 25, cy: 40, r: 9});
+    } else {
+      for (let i = 0; i < 5; i++) {
+        const y = 16 + i * 12;
+        mark("path", {d: `M12 ${y} C80 ${y} 100 ${i < 2 ? y : 72 - i * 12} 152 ${i < 2 ? y : 72 - i * 12} S202 ${y} 245 ${y}`, class: i === 2 ? "direction-flow direction-strong" : ""});
+      }
+      mark("path", {d: "M112 3V77 M174 3V77", class: "direction-dim"});
+    }
+    return svg;
+  }
+
   function renderRoom() {
     const el = createTextElement;
     refs.atlasTitle.replaceChildren(...(data.room.heroTitle || data.room.thesis).split("\n").map(text => el("span", text)));
-    document.querySelector("#hero-question").textContent = data.room.thesis;
+    document.querySelector("#hero-question").replaceChildren(...data.room.thesis.split("、").map((part,i,all)=>el("span",part+(i<all.length-1?"、":""))));
     refs.atlasDek.textContent = data.room.intro;
     document.querySelector("#room-edition").textContent = data.room.edition;
     document.querySelector("#room-invitation").textContent = data.room.invitation;
@@ -747,7 +782,8 @@
       const link = createRouteLink("direction", direction.id, "", "direction-row");
       if (route.direction === direction.id) link.setAttribute("aria-current", "true");
       const copy = el("span", "", "direction-copy"); copy.append(el("span", direction.title, "direction-title"), el("span", direction.intro));
-      const notation=el("span", direction.notation || "", "direction-notation");
+      const notation=el("span", "", "direction-notation");
+      notation.append(directionMark(direction.id), el("code", direction.notation || ""));
       link.append(el("span", `0${i+1}`, "direction-number"), copy, notation, el("span", "↗", "direction-arrow")); return link;
     }));
     const groupLinks = (group, target) => {
@@ -792,7 +828,6 @@
     const el = createTextElement;
     const fragment = document.createDocumentFragment();
     const header = el("header", "", "study-heading");
-    header.dataset.word = study.kind === "learning-note" ? "NOTE" : "STUDY";
     const title = el("h1", study.title); title.id = "study-title"; title.tabIndex = -1;
     header.append(el("p", studyLabel(study), "content-kind"), title, el("p", study.intro, "study-dek"), el("p", `${study.byline} · ${study.date}`, "study-byline"));
     fragment.append(createRouteLink("home", "", "← 回到书房", "back-link"), header);
