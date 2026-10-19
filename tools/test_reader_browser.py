@@ -25,6 +25,159 @@ class QuietHandler(SimpleHTTPRequestHandler):
         pass
 
 
+def visible_map_labels(page):
+    """Read the rendered result, including clipping, without using label candidates."""
+    return page.locator('.map-node-label').evaluate_all('''labels => {
+      const plot = document.querySelector('#constellation-plot > svg').getBoundingClientRect();
+      return labels.flatMap(label => {
+        const node = label.closest('[data-map-node]'), style = getComputedStyle(label);
+        const box = label.getBoundingClientRect();
+        if (!node || node.classList.contains('is-dimmed') || Number(style.opacity) < .99 ||
+            style.display === 'none' || style.visibility !== 'visible' || !box.width || !box.height ||
+            box.right <= plot.left || box.left >= plot.right || box.bottom <= plot.top || box.top >= plot.bottom) return [];
+        return [{index: Number(node.dataset.mapNode), href: node.getAttribute('href'), text: label.textContent,
+          x: box.x, y: box.y, width: box.width, height: box.height}];
+      });
+    }''')
+
+
+def map_relationships(page):
+    return page.evaluate('''() => ({
+      selection: document.querySelector('#constellation-reading').dataset.selection,
+      current: document.querySelector('.map-node.is-selected').getAttribute('href'),
+      related: [...document.querySelectorAll('.map-related a')].map(a => a.getAttribute('href')).sort(),
+      activeEdges: [...document.querySelectorAll('.map-edges path.is-active')].map(path => path.getAttribute('d')).sort()
+    })''')
+
+
+def map_signal_positions(page):
+    return page.locator('.map-signals circle.is-active').evaluate_all(
+        "dots => dots.map(dot => [dot.getAttribute('cx'), dot.getAttribute('cy')])")
+
+
+def assert_map_labels_do_not_overlap(labels, interaction):
+    for index, first in enumerate(labels):
+        for second in labels[index + 1:]:
+            overlap_x = min(first['x'] + first['width'], second['x'] + second['width']) - max(first['x'], second['x'])
+            overlap_y = min(first['y'] + first['height'], second['y'] + second['height']) - max(first['y'], second['y'])
+            assert overlap_x <= 1 or overlap_y <= 1, (interaction, 'overlapping rendered titles', first, second)
+
+
+def check_constellation_hierarchy(page, width, output):
+    """Exercise title hierarchy through public pointer, focus, selection and camera controls."""
+    svg = page.locator('#constellation-plot > svg')
+    svg.scroll_into_view_if_needed()
+    page.mouse.move(1, 1)
+    svg.focus()
+    page.evaluate('document.fonts.ready')
+    expect(page.locator('.map-node-number')).to_have_count(0)
+    expect(svg.locator('.map-coordinate ellipse, .map-domains ellipse')).to_have_count(0)
+    palette = page.evaluate('''() => {
+      function backgrounds(element) {
+        for (let el = element; el; el = el.parentElement) {
+          const style = getComputedStyle(el);
+          const colors = [style.backgroundColor, ...(style.backgroundImage.match(/rgba?\\([^)]*\\)/g) || [])]
+            .map(color => color.match(/[\\d.]+/g).map(Number)).filter(channels => channels.length === 3 || channels[3] === 1);
+          if (colors.length) return colors.map(rgb => rgb.slice(0, 3).reduce((sum, channel, i) => {
+            const c = channel / 255, linear = c <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4;
+            return sum + linear * [.2126, .7152, .0722][i];
+          }, 0));
+        }
+        return [];
+      }
+      return {map: backgrounds(document.querySelector('.map-observatory')), body: backgrounds(document.body),
+        reading: backgrounds(document.querySelector('#constellation-reading'))};
+    }''')
+    assert palette['map'] and max(palette['map']) < .15 and min(palette['body']) > .6 and min(palette['reading']) > .6, (
+        'night palette must stay local to the map, with a light reading panel and body', palette)
+    reduced_positions = map_signal_positions(page)
+    assert reduced_positions, 'the current object must retain its explicit reference signals'
+    page.wait_for_timeout(100)
+    assert map_signal_positions(page) == reduced_positions, 'reduced motion must stop actual reference signals'
+    initial = map_relationships(page)
+    initial_labels = visible_map_labels(page)
+    assert initial_labels and {label['href'] for label in initial_labels} == {initial['current']}, (
+        'overview must start with the current title, not an all-node title field', initial_labels)
+    assert_map_labels_do_not_overlap(initial_labels, 'overview')
+    svg.screenshot(path=str(output / f'constellation-overview-{width}.png'))
+
+    # Choose an actual close pair in the rendered viewport; layout order and the
+    # specific neighboring identities are deliberately not part of this test.
+    pair = page.locator('.map-node:not(.is-dimmed)').evaluate_all('''nodes => {
+      const plot = document.querySelector('#constellation-plot > svg').getBoundingClientRect();
+      const points = nodes.map(node => {
+        const point = new DOMPoint(0, 0).matrixTransform(node.getScreenCTM());
+        return {index: Number(node.dataset.mapNode), x: point.x, y: point.y};
+      }).filter(point => point.x > plot.left + 10 && point.x < plot.right - 10 &&
+        point.y > Math.max(plot.top + 10, 10) && point.y < Math.min(plot.bottom - 10, innerHeight - 10));
+      let pair = [], distance = Infinity;
+      for (let i = 0; i < points.length; i++) for (let j = i + 1; j < points.length; j++) {
+        const d = Math.hypot(points[i].x - points[j].x, points[i].y - points[j].y);
+        if (d < distance) { distance = d; pair = [points[i], points[j]]; }
+      }
+      return pair;
+    }''')
+    assert len(pair) == 2, 'the overview must expose two selectable neighboring nodes'
+    first, second = pair
+    first_node = page.locator(f'.map-node[data-map-node="{first["index"]}"]')
+    second_node = page.locator(f'.map-node[data-map-node="{second["index"]}"]')
+    first_node.focus()
+    expect(first_node.locator('.map-node-label')).to_have_css('opacity', '1')
+    assert map_relationships(page) == initial, 'keyboard focus must not select a node or replace its references'
+    first_node.press('Enter')
+    selected = map_relationships(page)
+    page.mouse.move(second['x'], second['y'])
+    expect(second_node.locator('.map-node-label')).to_have_css('opacity', '1')
+    assert map_relationships(page) == selected, 'hover must not select a node or replace its references'
+    hovered_labels = visible_map_labels(page)
+    assert {first['index'], second['index']} <= {label['index'] for label in hovered_labels}, hovered_labels
+    assert_map_labels_do_not_overlap(hovered_labels, 'nearest-neighbor hover')
+    svg.screenshot(path=str(output / f'constellation-neighbor-hover-{width}.png'))
+    page.mouse.move(1, 1)
+    second_node.focus()
+    expect(second_node.locator('.map-node-label')).to_have_css('opacity', '1')
+    assert map_relationships(page) == selected, 'moving keyboard focus must preserve the selected research'
+    focus_point = second_node.evaluate('''node => {
+      const point = new DOMPoint(0, 0).matrixTransform(node.getScreenCTM());
+      return {x: point.x, y: point.y};
+    }''')
+    page.mouse.move(focus_point['x'], focus_point['y'])
+    assert second_node.evaluate("node => node.matches(':hover')"), 'the pointer must actually enter the focused node'
+    expect(second_node).to_be_focused()
+    page.mouse.move(1, 1)
+    assert not second_node.evaluate("node => node.matches(':hover')"), 'the pointer must actually leave the focused node'
+    expect(second_node).to_be_focused()
+    expect(second_node.locator('.map-node-label')).to_have_css('opacity', '1')
+    assert map_relationships(page) == selected, 'pointer leave must preserve keyboard preview and the selected references'
+    focused_labels = visible_map_labels(page)
+    assert {first['index'], second['index']} <= {label['index'] for label in focused_labels}, focused_labels
+    assert_map_labels_do_not_overlap(focused_labels, 'nearest-neighbor keyboard focus')
+
+    svg.focus()
+    overview = visible_map_labels(page)
+    allowed = {selected['current'], *selected['related']}
+    assert overview and all(label['href'] in allowed for label in overview), ('unrelated overview titles', overview)
+    assert_map_labels_do_not_overlap(overview, 'selected overview')
+    overview_ids = {label['index'] for label in overview}
+    revealed = set()
+    for _ in range(3):
+        page.locator('#map-zoom-in').click()
+        zoomed = visible_map_labels(page)
+        revealed.update(label['index'] for label in zoomed)
+        assert_map_labels_do_not_overlap(zoomed, 'zoomed viewport')
+    assert revealed - overview_ids, ('zoom must reveal additional titles within the viewport', overview_ids, revealed)
+    assert map_relationships(page) == selected, 'zoom must not change the selected object or references'
+    svg.screenshot(path=str(output / f'constellation-zoomed-{width}.png'))
+    for _ in range(3):
+        page.locator('#map-zoom-out').click()
+    restored = visible_map_labels(page)
+    assert restored and all(label['href'] in allowed for label in restored), ('zoom-only titles must recede', restored)
+    assert not ({label['index'] for label in restored} & (revealed - overview_ids)), (
+        'zoomed title detail must disappear again at overview scale', restored)
+    assert_map_labels_do_not_overlap(restored, 'zoomed back to overview')
+    page.locator('#map-reset').click()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--offline-render', action='store_true')
@@ -259,6 +412,8 @@ def main():
                         total = sum(len(data[key]) for key in ('materials','studies','questions','findings'))
                         expect(page.locator('.map-node')).to_have_count(total)
                         expect(star_map).to_have_attribute('data-motion','still')
+                        check_constellation_hierarchy(page, width, output)
+                        record('local night map, sparse overview titles, hover/focus identity, neighboring title collision and zoom detail/retraction')
                         page.locator('[data-map-kind="question"]').click()
                         expect(page.locator('#constellation-stats')).to_contain_text('02 /')
                         page.locator('[data-map-view="list"]').click()
@@ -310,13 +465,23 @@ def main():
                         if width == 1440:
                             page.locator('#map-motion').click()
                             expect(star_map).to_have_attribute('data-motion','running')
-                            before_flow=page.locator('.map-edges').get_attribute('style');page.wait_for_timeout(100)
-                            assert before_flow != page.locator('.map-edges').get_attribute('style')
+                            before_signals = map_signal_positions(page)
+                            assert before_signals, 'a selected linked object must expose reference signals'
+                            page.wait_for_function('''before => JSON.stringify([...document.querySelectorAll('.map-signals circle.is-active')]
+                              .map(dot => [dot.getAttribute('cx'), dot.getAttribute('cy')])) !== JSON.stringify(before)''',
+                              arg=before_signals)
                             page.locator('#starts').scroll_into_view_if_needed()
                             expect(star_map).to_have_attribute('data-motion','still')
+                            offscreen_signals = map_signal_positions(page)
+                            page.wait_for_timeout(100)
+                            assert map_signal_positions(page) == offscreen_signals, 'offscreen reference signals must stop'
                             map_svg.scroll_into_view_if_needed()
+                            expect(star_map).to_have_attribute('data-motion','running')
                             page.locator('#map-motion').click()
                             expect(star_map).to_have_attribute('data-motion','still')
+                            paused_signals = map_signal_positions(page)
+                            page.wait_for_timeout(100)
+                            assert map_signal_positions(page) == paused_signals, 'the pause control must stop actual reference signals'
                         page.locator('#map-reset').click()
                         if width == 1440 and not args.offline_render:
                             page.locator('#map-fullscreen').click()

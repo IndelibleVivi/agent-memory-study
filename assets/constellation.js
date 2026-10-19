@@ -11,23 +11,16 @@
     let layout=ResearchMap.clusterLayout(model,data.room.domains,width,height);
     const $=id=>root.querySelector(id), plot=$('#constellation-plot'), panel=$('#constellation-reading');
     const motion=matchMedia('(prefers-reduced-motion: reduce)');
-    let hovered=-1;
+    let hovered=-1, focused=-1;
     let selected=Math.max(0,model.nodes.findIndex(n=>n.id==='ams-thesis')), focus=false, kind='', domain='', query='', view='map';
     let camera={x:0,y:0,w:width,h:height}, target={...camera}, frame=0, previous=0, visible=false, paused=motion.matches, drag=null;
-    let flowPhase=0;
+    let flowPhase=0, labelCamera=null;
     let matching=new Set(model.nodes.map((_,i)=>i));
     const svg=svgEl('svg',{viewBox:`0 0 ${width} ${height}`,role:'group','aria-label':'研究星图，可拖动平移；选择节点查看详情。缩放与复位按钮位于图下。',tabindex:'0'});
-    const backdrop=svgEl('g',{'aria-hidden':'true',class:'map-coordinate'});
     const groupLayer=svgEl('g',{'aria-hidden':'true',class:'map-domains'});
-    function drawGroups(){groupLayer.replaceChildren();backdrop.replaceChildren();layout.groups.forEach((group,i)=>{
-      const points=model.nodes.map((n,j)=>({n,p:layout.positions[j]})).filter(({n})=>(n.primaryDomain||'unclassified')===group.id).map(({p})=>p);
-      if(points.length){
-        const xs=points.map(p=>p.x),ys=points.map(p=>p.y),cx=(Math.min(...xs)+Math.max(...xs))/2,cy=(Math.min(...ys)+Math.max(...ys))/2;
-        backdrop.append(svgEl('ellipse',{cx,cy,rx:Math.max(75,(Math.max(...xs)-Math.min(...xs))/2+38),ry:Math.max(55,(Math.max(...ys)-Math.min(...ys))/2+35),transform:`rotate(${i%2?-12:12} ${cx} ${cy})`}));
-      }
+    function drawGroups(){groupLayer.replaceChildren();layout.groups.forEach(group=>{
       const g=svgEl('g',{transform:`translate(${group.x} ${group.y})`,'data-domain':group.id});
-      g.append(svgEl('text',{class:'map-domain-number',y:4},String(i+1).padStart(2,'0')),
-        svgEl('text',{x:narrow.matches?40:30,y:0},group.title),svgEl('text',{x:30,y:16,class:'map-domain-english'},group.english));groupLayer.append(g);
+      g.append(svgEl('text',{},group.title));groupLayer.append(g);
     });}
     drawGroups();
     const edgeLayer=svgEl('g',{'aria-hidden':'true',class:'map-edges'});
@@ -35,22 +28,24 @@
       const p=layout.positions[a],q=layout.positions[b];
       const path=svgEl('path',{d:`M${p.x},${p.y} Q${(p.x+q.x)/2+ (q.y-p.y)*.10},${(p.y+q.y)/2-(q.x-p.x)*.10} ${q.x},${q.y}`});edgeLayer.append(path);return path;
     });
+    const signalLayer=svgEl('g',{'aria-hidden':'true',class:'map-signals'});
+    const signals=model.edges.map(()=>{const dot=svgEl('circle',{r:1.6});signalLayer.append(dot);return dot;});
     const nodeLayer=svgEl('g',{class:'map-nodes'});
     const nodes=model.nodes.map((node,i)=>{
       const p=layout.positions[i],g=svgEl('a',{href:routeHref(node.kind,node.id),class:`map-node map-${node.kind}`,transform:`translate(${p.x} ${p.y})`,'data-map-node':i,'aria-label':`${kinds[node.kind]}：${node.title}`,tabindex:'0'});
-      g.append(svgEl('title',{},`${node.title} · ${kinds[node.kind]}`),svgEl('circle',{r:narrow.matches?32:22,class:'map-hit'}),svgEl('circle',{r:13,class:'map-halo'}));
-      g.append(node.kind==='question'?svgEl('path',{d:'M0 -6 6 0 0 6 -6 0Z',class:'map-star'}):node.kind==='finding'?svgEl('rect',{x:-4,y:-4,width:8,height:8,class:'map-star'}):svgEl('circle',{r:node.kind==='study'?5:3.4,class:'map-star'}));
+      g.append(svgEl('title',{},`${node.title} · ${kinds[node.kind]}`),svgEl('circle',{r:narrow.matches?32:22,class:'map-hit'}),svgEl('circle',{r:11,class:'map-halo'}));
+      g.append(node.kind==='question'?svgEl('path',{d:'M0 -5 5 0 0 5 -5 0Z',class:'map-star'}):node.kind==='finding'?svgEl('rect',{x:-3.5,y:-3.5,width:7,height:7,class:'map-star'}):svgEl('circle',{r:node.kind==='study'?4.5:3.4,class:'map-star'}));
       const short=node.kind==='material'?(node.item.shortTitle||node.title.split(/[：:—]/)[0]):node.title;
       const label=short.length>19?short.slice(0,18)+'…':short;
       g.append(svgEl('text',{x:p.x>width*.68?-18:18,y:4,'text-anchor':p.x>width*.68?'end':'start',class:'map-node-label'},label));
-      g.append(svgEl('text',{x:-5,y:-19,class:'map-node-number'},String(i+1).padStart(2,'0')));
       g.addEventListener('click',event=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();event.stopPropagation();if(!drag?.moved)choose(i);});
       g.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();choose(i);}});
-      g.addEventListener('pointerenter',()=>{hovered=i;placeLabels();});g.addEventListener('pointerleave',()=>{hovered=-1;placeLabels();});
-      g.addEventListener('focus',()=>{hovered=i;placeLabels();});g.addEventListener('blur',()=>{hovered=-1;placeLabels();});
+      const preview=()=>{nodes.forEach((n,j)=>n.classList.toggle('is-previewed',j===hovered||j===focused));placeLabels();};
+      g.addEventListener('pointerenter',()=>{hovered=i;preview();});g.addEventListener('pointerleave',()=>{if(hovered===i)hovered=-1;preview();});
+      g.addEventListener('focus',()=>{focused=i;preview();});g.addEventListener('blur',()=>{if(focused===i)focused=-1;preview();});
       nodeLayer.append(g);return g;
     });
-    svg.append(backdrop,edgeLayer,groupLayer,nodeLayer);plot.replaceChildren(svg);
+    svg.append(edgeLayer,signalLayer,groupLayer,nodeLayer);plot.replaceChildren(svg);
     const list=$('#constellation-list');
     const listRows=model.nodes.map((node,i)=>{
       const row=make('div','map-list-row'), button=make('button','',node.title), link=make('a','','阅读 ↗');
@@ -79,24 +74,31 @@
     }
     function placeLabels() {
       if(!svg.isConnected||!svg.getClientRects().length)return;
-      const overlaps=(a,b)=>a.x<b.x+b.w+4&&a.x+a.w+4>b.x&&a.y<b.y+b.h+3&&a.y+a.h+3>b.y;
+      const scale=camera.w/width, gap=(narrow.matches?27:17)*scale;
+      groupLayer.style.fontSize=`${(narrow.matches?20:10)*scale}px`;
+      const overlaps=(a,b)=>a.x<b.x+b.w+4*scale&&a.x+a.w+4*scale>b.x&&a.y<b.y+b.h+3*scale&&a.y+a.h+3*scale>b.y;
       const obstacles=layout.groups.map((group,i)=>{const b=groupLayer.children[i].getBBox();return {x:group.x+b.x,y:group.y+b.y,w:b.width,h:b.height};});
-      const points=layout.positions.map(p=>({x:p.x-11,y:p.y-11,w:22,h:22}));
-      const priority=[...new Set([selected,hovered,...model.nodes.map((node,i)=>node.kind==='study'?i:-1),...model.nodes.map((_,i)=>!narrow.matches?i:-1)])].filter(i=>i>=0);
-      nodes.forEach(node=>node.querySelector('.map-node-label').style.opacity='0');
+      const points=layout.positions.filter((_,i)=>matching.has(i)).map(p=>({x:p.x-7,y:p.y-7,w:14,h:14}));
+      const detailed=focus||width/camera.w>=1.5||kind||domain||query;
+      const priority=[...new Set([selected,focused,hovered,...(detailed?[...ResearchMap.neighbors(model,selected),...matching]:[])])].filter(i=>i>=0);
+      const occupied=[];
+      nodes.forEach(node=>{const label=node.querySelector('.map-node-label');label.style.opacity='0';label.style.fontSize=`${(narrow.matches?26:12)*scale}px`;label.style.strokeWidth=`${4*scale}px`;});
       for(const i of priority){
         if(nodes[i].classList.contains('is-dimmed'))continue;
         const label=nodes[i].querySelector('.map-node-label'),p=layout.positions[i];
-        const w=label.getComputedTextLength(),h=Math.max(12,label.getBBox().height);
-        const choices=[[18,4,'start'],[-18,4,'end'],[0,-22,'middle'],[0,30,'middle'],[18,-18,'start'],[-18,28,'end']].map(([x,y,anchor])=>{
+        if(p.x<camera.x||p.x>camera.x+camera.w||p.y<camera.y||p.y>camera.y+camera.h)continue;
+        if(occupied.length>=(narrow.matches?6:12))break;
+        const w=label.getComputedTextLength(),h=label.getBBox().height;
+        const choices=[[gap,h*.3,'start'],[-gap,h*.3,'end'],[0,-gap,'middle'],[0,gap+h*.7,'middle'],[gap,-gap,'start'],[-gap,-gap,'end'],[gap,gap+h*.5,'start'],[-gap,gap+h*.5,'end']].map(([x,y,anchor])=>{
           const rect={x:p.x+x-(anchor==='end'?w:anchor==='middle'?w/2:0),y:p.y+y-h*.82,w,h};
           const score=obstacles.filter(o=>overlaps(rect,o)).length*4+points.filter(o=>overlaps(rect,o)).length;
           return {x,y,anchor,rect,score};
-        }).filter(c=>c.rect.x>=8&&c.rect.x+c.rect.w<=width-8&&c.rect.y>=4&&c.rect.y+c.rect.h<=height-4).sort((a,b)=>a.score-b.score);
+        }).filter(c=>c.rect.x>=camera.x+8*scale&&c.rect.x+c.rect.w<=camera.x+camera.w-8*scale&&c.rect.y>=camera.y+4*scale&&c.rect.y+c.rect.h<=camera.y+camera.h-4*scale&&!occupied.some(o=>overlaps(c.rect,o))).sort((a,b)=>a.score-b.score);
         const best=choices[0];
-        if(!best||(best.score>0&&i!==selected&&i!==hovered))continue;
-        label.setAttribute('x',best.x);label.setAttribute('y',best.y);label.setAttribute('text-anchor',best.anchor);label.style.opacity='1';obstacles.push(best.rect);
+        if(!best||(best.score>0&&i!==selected&&i!==hovered&&i!==focused))continue;
+        label.setAttribute('x',best.x);label.setAttribute('y',best.y);label.setAttribute('text-anchor',best.anchor);label.style.opacity='1';occupied.push(best.rect);
       }
+      labelCamera={...camera};
     }
     function updateAppearance() {
       const related=ResearchMap.neighbors(model,selected);related.add(selected);
@@ -108,7 +110,7 @@
         node.setAttribute('aria-hidden',String(!shown));
         listRows[i].hidden=!shown;listRows[i].classList.toggle('is-selected',i===selected);
       });
-      edges.forEach((edge,i)=>{const [a,b]=model.edges[i],active=(a===selected||b===selected)&&matching.has(a)&&matching.has(b);edge.classList.toggle('is-active',active);edge.classList.toggle('is-dimmed',(!matching.has(a)||!matching.has(b))||(focus&&!active));});
+      edges.forEach((edge,i)=>{const [a,b]=model.edges[i],active=(a===selected||b===selected)&&matching.has(a)&&matching.has(b);edge.classList.toggle('is-active',active);edge.classList.toggle('is-dimmed',(!matching.has(a)||!matching.has(b))||(focus&&!active));signals[i].classList.toggle('is-active',active);});
       const count=[...matching].filter(i=>!focus||related.has(i)).length;
       $('#constellation-stats').textContent=`${String(count).padStart(2,'0')} / ${model.nodes.length} OBJECTS · ${model.edges.length} LINKS`;
       $('#map-empty').hidden=count>0;
@@ -129,12 +131,20 @@
       if(!matching.has(selected)&&matching.size){selected=[...matching][0];describe();}
       updateAppearance();fit();
     }
-    function paint() {svg.setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.w} ${camera.h}`);edgeLayer.style.setProperty('--map-flow',String(flowPhase));$('#map-zoom-value').textContent=Math.round(width/camera.w*100)+'%';}
+    function paint() {
+      svg.setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.w} ${camera.h}`);
+      signals.forEach((dot,i)=>{if(!dot.classList.contains('is-active'))return;const [a,b]=model.edges[i],p=layout.positions[a],q=layout.positions[b],t=(flowPhase+i*.173)%1,u=1-t;
+        dot.setAttribute('cx',u*u*p.x+2*u*t*((p.x+q.x)/2+(q.y-p.y)*.10)+t*t*q.x);
+        dot.setAttribute('cy',u*u*p.y+2*u*t*((p.y+q.y)/2-(q.x-p.x)*.10)+t*t*q.y);
+      });
+      if(!labelCamera||Object.keys(camera).some(k=>Math.abs(camera[k]-labelCamera[k])>.5))placeLabels();
+      $('#map-zoom-value').textContent=Math.round(width/camera.w*100)+'%';
+    }
     function animate(now) {
       frame=0;const dt=previous?Math.min(40,now-previous):16;previous=now;
       const step=motion.matches?1:1-Math.exp(-dt/100);
       for(const k of ['x','y','w','h'])camera[k]+=(target[k]-camera[k])*step;
-      if(!paused)flowPhase-=dt*.012;
+      if(!paused)flowPhase=(flowPhase+dt*.000045)%1;
       paint();
       const moving=Object.keys(camera).some(k=>Math.abs(camera[k]-target[k])>.05);
       if(visible&&!document.hidden&&view==='map'&&(!paused||moving))frame=requestAnimationFrame(animate);else previous=0;

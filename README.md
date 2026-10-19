@@ -94,7 +94,7 @@ python3 -B tools/test_static_reader.py
 
 首屏与阅读页使用雾白、蓝灰墨和暖铜色；研究体按主领域分组，每道环带对应一个公开对象。
 
-[研究星图](https://indeliblevivi.github.io/agent-memory-study/#constellation) 以全宽地图和图下阅读详情同时显示札记、来源、问题与实践判断，按真实领域编排。可搜索、按类型／领域筛选、聚焦某对象的引用、拖动平移、缩放或切换目录，再打开正文。手机保留同一套 SVG 星图；动态可暂停，reduced-motion 默认静止。星图搜索与视图状态只在当前页面内存，不进入 URL 或存储；旧书架搜索的 URL 行为不变。
+[研究星图](https://indeliblevivi.github.io/agent-memory-study/#constellation) 以深色全宽图面和浅色阅读区呈现札记、来源、问题与实践判断，按真实领域编排。全景保留领域标记和当前研究标题；悬停或键盘定位可预览其他标题，放大、筛选或聚焦时展开更多可见标题。可搜索、按类型／领域筛选、聚焦某对象的引用、拖动平移、缩放或切换目录，再打开正文。手机保留同一套 SVG 星图；动态可暂停，reduced-motion 默认静止。星图搜索与视图状态只在当前页面内存，不进入 URL 或存储；旧书架搜索的 URL 行为不变。
 
 Newsreader、Noto Serif SC 与 Instrument Sans 的 OFL 字体子集由本站提供；图形用 SVG / WebGL 与数学代码绘制。字体来源、修改范围和重建方法见 [字体说明](assets/fonts/README.md)。
 
