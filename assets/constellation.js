@@ -31,12 +31,14 @@
     const signalLayer=svgEl('g',{'aria-hidden':'true',class:'map-signals'});
     const signals=model.edges.map(()=>{const dot=svgEl('circle',{r:1.6});signalLayer.append(dot);return dot;});
     const nodeLayer=svgEl('g',{class:'map-nodes'});
+    const captions=[];
     const nodes=model.nodes.map((node,i)=>{
       const p=layout.positions[i],g=svgEl('a',{href:routeHref(node.kind,node.id),class:`map-node map-${node.kind}`,transform:`translate(${p.x} ${p.y})`,'data-map-node':i,'aria-label':`${kinds[node.kind]}：${node.title}`,tabindex:'0'});
       g.append(svgEl('title',{},`${node.title} · ${kinds[node.kind]}`),svgEl('circle',{r:narrow.matches?32:22,class:'map-hit'}),svgEl('circle',{r:11,class:'map-halo'}));
       g.append(node.kind==='question'?svgEl('path',{d:'M0 -5 5 0 0 5 -5 0Z',class:'map-star'}):node.kind==='finding'?svgEl('rect',{x:-3.5,y:-3.5,width:7,height:7,class:'map-star'}):svgEl('circle',{r:node.kind==='study'?4.5:3.4,class:'map-star'}));
       const short=node.kind==='material'?(node.item.shortTitle||node.title.split(/[：:—]/)[0]):node.title;
       const label=short.length>19?short.slice(0,18)+'…':short;
+      captions[i]=label;
       g.append(svgEl('text',{x:p.x>width*.68?-18:18,y:4,'text-anchor':p.x>width*.68?'end':'start',class:'map-node-label'},label));
       g.addEventListener('click',event=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();event.stopPropagation();if(!drag?.moved)choose(i);});
       g.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();choose(i);}});
@@ -88,15 +90,26 @@
         const label=nodes[i].querySelector('.map-node-label'),p=layout.positions[i];
         if(p.x<camera.x||p.x>camera.x+camera.w||p.y<camera.y||p.y>camera.y+camera.h)continue;
         if(occupied.length>=(narrow.matches?6:12))break;
-        const w=label.getComputedTextLength(),h=label.getBBox().height;
-        const choices=[[gap,h*.3,'start'],[-gap,h*.3,'end'],[0,-gap,'middle'],[0,gap+h*.7,'middle'],[gap,-gap,'start'],[-gap,-gap,'end'],[gap,gap+h*.5,'start'],[-gap,gap+h*.5,'end']].map(([x,y,anchor])=>{
-          const rect={x:p.x+x-(anchor==='end'?w:anchor==='middle'?w/2:0),y:p.y+y-h*.82,w,h};
+        label.textContent=captions[i];label.setAttribute('x',0);label.setAttribute('y',0);label.setAttribute('text-anchor','start');
+        const lineHeight=(narrow.matches?26:12)*scale*1.4, textWidth=label.getComputedTextLength();
+        let lines=[captions[i]];
+        if(textWidth>Math.min(camera.w*.46,310*scale)){
+          let split=1;
+          while(split<captions[i].length-1&&label.getSubStringLength(0,split)<textWidth/2)split++;
+          while(split<captions[i].length-1&&/[，。！？、：；）】》”’…]/.test(captions[i][split]))split++;
+          lines=[captions[i].slice(0,split),captions[i].slice(split)];
+        }
+        label.replaceChildren(...lines.map((line,j)=>svgEl('tspan',{x:0,y:j*lineHeight},line)));
+        const box=label.getBBox(),w=box.width,h=box.height, middle=-h/2-box.y, above=-gap-h-box.y, below=gap-box.y;
+        const centered=Math.max(camera.x+8*scale+w/2,Math.min(camera.x+camera.w-8*scale-w/2,p.x))-p.x;
+        const choices=[[gap,middle,'start'],[-gap,middle,'end'],[centered,above,'middle'],[centered,below,'middle'],[gap,above,'start'],[-gap,above,'end'],[gap,below,'start'],[-gap,below,'end']].map(([x,y,anchor])=>{
+          const rect={x:p.x+x-(anchor==='end'?w:anchor==='middle'?w/2:0),y:p.y+y+box.y,w,h};
           const score=obstacles.filter(o=>overlaps(rect,o)).length*4+points.filter(o=>overlaps(rect,o)).length;
           return {x,y,anchor,rect,score};
         }).filter(c=>c.rect.x>=camera.x+8*scale&&c.rect.x+c.rect.w<=camera.x+camera.w-8*scale&&c.rect.y>=camera.y+4*scale&&c.rect.y+c.rect.h<=camera.y+camera.h-4*scale&&!occupied.some(o=>overlaps(c.rect,o))).sort((a,b)=>a.score-b.score);
         const best=choices[0];
         if(!best||(best.score>0&&i!==selected&&i!==hovered&&i!==focused))continue;
-        label.setAttribute('x',best.x);label.setAttribute('y',best.y);label.setAttribute('text-anchor',best.anchor);label.style.opacity='1';occupied.push(best.rect);
+        label.setAttribute('text-anchor',best.anchor);[...label.children].forEach((line,j)=>{line.setAttribute('x',best.x);line.setAttribute('y',best.y+j*lineHeight);});label.style.opacity='1';occupied.push(best.rect);
       }
       labelCamera={...camera};
     }

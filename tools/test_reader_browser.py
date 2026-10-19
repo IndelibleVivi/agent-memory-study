@@ -35,7 +35,9 @@ def visible_map_labels(page):
         if (!node || node.classList.contains('is-dimmed') || Number(style.opacity) < .99 ||
             style.display === 'none' || style.visibility !== 'visible' || !box.width || !box.height ||
             box.right <= plot.left || box.left >= plot.right || box.bottom <= plot.top || box.top >= plot.bottom) return [];
+        const lines = label.querySelectorAll('tspan');
         return [{index: Number(node.dataset.mapNode), href: node.getAttribute('href'), text: label.textContent,
+          lines: lines.length ? [...lines].map(line => line.textContent) : [label.textContent],
           x: box.x, y: box.y, width: box.width, height: box.height}];
       });
     }''')
@@ -61,6 +63,21 @@ def assert_map_labels_do_not_overlap(labels, interaction):
             overlap_x = min(first['x'] + first['width'], second['x'] + second['width']) - max(first['x'], second['x'])
             overlap_y = min(first['y'] + first['height'], second['y'] + second['height']) - max(first['y'], second['y'])
             assert overlap_x <= 1 or overlap_y <= 1, (interaction, 'overlapping rendered titles', first, second)
+
+
+def assert_map_label_inside_viewport(label, interaction):
+    geometry = label.evaluate('''label => {
+      const box = label.getBoundingClientRect(), plot = label.ownerSVGElement.getBoundingClientRect();
+      return {left: box.left, right: box.right, top: box.top, bottom: box.bottom,
+        width: box.width, height: box.height, viewport: {
+          left: Math.max(plot.left, 0), right: Math.min(plot.right, innerWidth),
+          top: Math.max(plot.top, 0), bottom: Math.min(plot.bottom, innerHeight)}};
+    }''')
+    viewport = geometry['viewport']
+    assert geometry['width'] > 0 and geometry['height'] > 0, (interaction, 'empty rendered title', geometry)
+    assert (geometry['left'] >= viewport['left'] - 1 and geometry['right'] <= viewport['right'] + 1 and
+            geometry['top'] >= viewport['top'] - 1 and geometry['bottom'] <= viewport['bottom'] + 1), (
+                interaction, 'the complete rendered title must fit within the visible map viewport', geometry)
 
 
 def check_constellation_hierarchy(page, width, output):
@@ -100,6 +117,45 @@ def check_constellation_hierarchy(page, width, output):
         'overview must start with the current title, not an all-node title field', initial_labels)
     assert_map_labels_do_not_overlap(initial_labels, 'overview')
     svg.screenshot(path=str(output / f'constellation-overview-{width}.png'))
+
+    # This published Chinese title was invisible at 390px even though its node
+    # was in view: none of its single-line placement candidates fitted the map.
+    # Keep the default selection so the regression cannot be hidden by selecting
+    # or fitting the target, and locate the research by its public route identity.
+    assert initial['selection'] == 'study/ams-thesis', initial
+    long_node = page.locator('#constellation-plot .map-node[href*="who-controls-memory"]')
+    expect(long_node).to_have_count(1)
+    long_label = long_node.locator('.map-node-label')
+    long_node.focus()
+    expect(long_node).to_be_focused()
+    expect(long_label).to_have_css('opacity', '1')
+    assert_map_label_inside_viewport(long_label, 'long Chinese title keyboard focus')
+    assert map_relationships(page) == initial, 'long-title focus must retain the default selection and references'
+    long_title_labels = visible_map_labels(page)
+    for label in long_title_labels:
+        for line in label['lines']:
+            text = line.lstrip()
+            assert text and text[0] not in '，。、；：？！…）］｝〉》」』】〕〗〙〛’”', (
+                'visible label lines must not start with closing Chinese punctuation', label)
+    assert_map_labels_do_not_overlap(long_title_labels, 'long Chinese title keyboard focus')
+    svg.screenshot(path=str(output / f'constellation-long-title-focus-{width}.png'))
+    svg.focus()
+    long_point = long_node.evaluate('''node => {
+      const point = new DOMPoint(0, 0).matrixTransform(node.getScreenCTM());
+      return {x: point.x, y: point.y};
+    }''')
+    page.mouse.move(long_point['x'], long_point['y'])
+    assert long_node.evaluate("node => node.matches(':hover')"), 'the long-title node must receive actual pointer hover'
+    expect(long_label).to_have_css('opacity', '1')
+    assert_map_label_inside_viewport(long_label, 'long Chinese title pointer hover')
+    assert map_relationships(page) == initial, 'long-title hover must retain the default selection and references'
+    long_node.focus()
+    page.mouse.move(1, 1)
+    expect(long_node).to_be_focused()
+    expect(long_label).to_have_css('opacity', '1')
+    assert_map_label_inside_viewport(long_label, 'long Chinese title focus after pointer leave')
+    assert map_relationships(page) == initial, 'long-title pointer leave must retain keyboard preview and selection'
+    svg.focus()
 
     # Choose an actual close pair in the rendered viewport; layout order and the
     # specific neighboring identities are deliberately not part of this test.
