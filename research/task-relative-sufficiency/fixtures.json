@@ -1,0 +1,32 @@
+{
+  "schema": "ams-sufficiency-fixtures/1",
+  "origin": "AMS-authored finite synthetic worlds; no private conversations or upstream benchmark records",
+  "axes": {
+    "old_format": ["CSV", "YAML"],
+    "current_format": ["JSON", "TSV"],
+    "old_speaker": ["Mira", "Theo"],
+    "old_reason": ["client_constraint", "operator_preference"],
+    "wording": ["direct", "rephrased"]
+  },
+  "query_families": {
+    "current": ["current_format"],
+    "later_semantic": ["current_format", "old_format", "old_speaker", "old_reason"],
+    "later_with_wording": ["current_format", "old_format", "old_speaker", "old_reason", "old_wording"]
+  },
+  "source_gates": ["permitted", "available", "correct_revision", "target_bound", "adequate_coverage"],
+  "set_valued_control": {
+    "task": "Choose exactly one route permitted by the original record; abstention and returning all routes are not accepted answers.",
+    "worlds": [
+      {"audit_id": "route-a", "recorded_routes": ["direct", "cached"]},
+      {"audit_id": "route-b", "recorded_routes": ["cached", "replay"]},
+      {"audit_id": "route-c", "recorded_routes": ["direct", "replay"]}
+    ]
+  },
+  "declared_side_information": [
+    "The finite world generator and record grammar are public, fixed before all projections, and identical across conditions.",
+    "The query text and the names v1/v2 are available at answer time; v2 denotes the current version.",
+    "There are no external factual priors, private user state, model parameters, or undeclared retrieval channels in the analytical model.",
+    "Audit identifiers, fixture truth fields, class membership, required-answer sets, and evaluation results are not part of a subject observation.",
+    "Source gates are synthetic process controls shared by every world in that condition; no real permission, network, archive, or retrieval operation is performed."
+  ]
+}
