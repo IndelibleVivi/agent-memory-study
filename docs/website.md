@@ -75,6 +75,10 @@ WebGL 无额外依赖；reduced-motion 默认静止，仍可手动操作和切�
 
 现有 `.github/workflows/reader-validation.yml` 在 PR 和 main 运行同一组检查。PR 不部署；main 只有全部通过后，才上传并由独立 `deploy` job 发布同一 artifact。2026-10-18 的 Pages read-only 检查确认 `build_type: workflow`；本次无需切换账号设置。
 
+`reader` job 固定使用 `ubuntu-24.04`，与 `tools/browser-requirements.txt` 中的 Playwright 1.57.0 对齐。
+该版本支持 Ubuntu 24.04，尚不支持 Ubuntu 26.04；不能让浮动的 `ubuntu-latest` 提前更换 browser build 环境。
+升级 runner 或 Playwright 时，先核对对应版本支持的平台，再完成同一套浏览器与静态站检查。
+
 源码完成、commit、push、CI 通过和 Pages 上线是不同状态。交付时核对目标 commit 的 `reader` / `deploy`，再读取公开首页、详情、sitemap 和一个不存在的路径。不要从本机构建成功推断线上已更新。
 
 回退使用普通 revert commit，经过同一 workflow 重新发布，再核对线上页面和旧链接。不改写共享历史；Pages account settings、DNS、Search Console 与 analytics 配置不属于普通源码发布。

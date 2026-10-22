@@ -117,4 +117,4 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 - 星图 `#constellation` 独立于 legacy disclosure，桌面／手机都保留 SVG、列表、对象详情及真实正文链接。搜索／类型／领域筛选、相机、选取和暂停只在页面内存；不写 URL、storage 或 canonical。选取与 hover 不制造关系；静态 snapshot 移除控制，保留星点与相关对象的普通链接。修改时运行既有 reader browser / static tests。
 - `assets/fonts/` 是经许可分发的字体子集及完整 OFL notices，源 TTF 不入仓库。可选 `tools/build_fonts.py` 读取公开正文／界面字符串离线重建；普通构建不依赖 fontTools。新增缺失字形先确认 fallback，再按字体 README 重建；不要引入远程字体请求。
 
-- `.github/workflows/reader-validation.yml` 的 PR 构建不部署，main 仅发布同一验证通过的 artifact。Pages 使用既有 Actions 发布面；修改 Pages account 设置仍是独立授权操作，源码/CI通过不代表本次 artifact 已上线。流程见 `docs/website.md`。
+- `.github/workflows/reader-validation.yml` 的 PR 构建不部署，main 仅发布同一验证通过的 artifact。`reader` runner 固定在当前 Playwright 支持的 Ubuntu 版本；升级 OS / browser dependency 时核对版本支持并跑完整浏览器与静态检查，不直接换回浮动镜像。Pages 使用既有 Actions 发布面；修改 Pages account 设置仍是独立授权操作，源码/CI通过不代表本次 artifact 已上线。流程见 `docs/website.md`。
