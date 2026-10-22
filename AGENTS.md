@@ -81,6 +81,8 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 - `studies` 是编译后的文章集合，来自 `study/entries/`；以下三类共读保留各自 scenario / artifact 边界，不把它们的字段要求施加给普通学习文章。任何专题都不自动提升 material `noteDepth`。
 - `editorial-synthesis-with-proposed-experiment` 只承载跨源论述与未执行方案，`artifactUrl` 指向公开协议；不得包含 `resultsUrl`、`recordedResults`、`scenarios` 或 `policies`。页面标明未执行并提供方案入口，不制造可运行控件。私人语料、资源 inventory、标签与派生模型留在公开 repo 外。
 - `research/multilingual-use-policy/casebook.py` 负责离线材料与 review sidecar 的合同校验和 HTML 生成；生成页面及私人输入/标注不入 Git。源码消息窗口可追溯不等于完整事件、情境充分或效用已确认；该工具不训练模型，不改变专题的未执行状态。其合成合同测试接入 `tools/verify_reader.py`；修改校准 UI 时运行 `tools/test_casebook_browser.py`，仅使用原创合成材料。
+- Review 使用 `ams-memory-reviews/2`，绑定 canonical case 内容 digest 与 `rubric_version`。改变被审材料或 rubric 后不得沿用 confirmed；旧 sidecar 或不匹配内容只能显式 `rebind-reviews` 到新文件，保留旧审阅并标 stale，再主动确认。Digest 只判断内容身份，不认证审阅者或标签效用。
+- `research/representation-use-study/` 拥有离线事件、gold、三臂执行器及运行证据，保持本研究内的单一实现；未有第二个真实消费者前不抽取跨研究框架。实际送达输入、response 和 score 必须绑定，resume 不覆盖旧 attempt；`used` 默认 unknown。诊断预算明确计数单位，不冒充 provider token。Scripted/oracle 控制与完整自然语言研究状态分开，公开仅用原创合成数据，运行目录留在 repo 外。修改该路径须运行其 unittest 与 `tools/verify_reader.py`；不自动执行模型/API 或私人材料实验。
 - `externalReadings` 允许共读引用官方文档、开源实现与论文线索，必须保留类型、阅读范围与限制；不自动变成 Zotero 书目。`editorial-synthesis-with-recorded-experiment` 的 `resultsUrl` 指向已执行 `research/` JSON；`recordedResults` 仅由 builder 投影，不进入 canonical。录制结果展示与 `revision-study.js` 的实时规则演示分开。
 - `research/decision-learning-study/study.py` 是学习实验唯一训练/评价实现；网页不重新训练。修改实验后用 `--check` 重算并运行该目录 unittest，更新公开方法/结果；自然语言、agent 收益与权重遗忘不能由结构化标签预测代替。
 - Jev 共读使用 `ams-jev-contract-results/1` 保存固定源码的给定判断对照；页面按 case 与 before/after 展示节点和原始 receipt，不重新运行源码。完整复跑需要外部 pinned checkout；本地 reader 入口只校验保存结果。不要把内存 graph/vector 的成员变化写成真实持久化、语义检索或 Jev inference。

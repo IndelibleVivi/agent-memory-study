@@ -12,23 +12,59 @@ Subcommands::
     python3 casebook.py review-template --casebook cases.json [--out reviews.json]
     python3 casebook.py render          --casebook cases.json --out review.html [--reviews reviews.json]
     python3 casebook.py check-reviews   --casebook cases.json --reviews reviews.json
+    python3 casebook.py rebind-reviews  --casebook cases.json --reviews old.json --out rebound.json
 
 Adapters that build ``representations`` from source evidence must construct the
 episode and coexistence strings with :func:`build_episodes` and
 :func:`build_coexistence` so validation can check them deterministically.
 """
 import argparse
+import copy
+import hashlib
+import re
 import json
 import sys
 from pathlib import Path
 
 CASEBOOK_SCHEMA = "ams-memory-casebook/1"
-REVIEWS_SCHEMA = "ams-memory-reviews/1"
+REVIEWS_SCHEMA = "ams-memory-reviews/2"
+LEGACY_REVIEWS_SCHEMA = "ams-memory-reviews/1"
+RUBRIC_VERSION = "ams-memory-use-rubric/1"
+MAX_HISTORY = 32
+MAX_HISTORY_BYTES = 262144
+REBIND_GUIDANCE = "run rebind-reviews --casebook CASES --reviews OLD --out NEW (fresh output; explicit reconfirmation required)"
+
+
+def case_payload_digest(case):
+    """SHA-256 of the complete case JSON: identity, never proof of approval.
+
+    Sorted object keys and compact encoding ignore JSON formatting; array order,
+    provenance, diagnostics and every reviewed field remain significant.
+    """
+    canonical = json.dumps(case, sort_keys=True, ensure_ascii=False,
+                           separators=(",", ":"), allow_nan=False)
+    return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def _history_errors(history, where):
+    if not isinstance(history, list):
+        return [where + " must be a list"]
+    if len(history) > MAX_HISTORY or len(json.dumps(history).encode("utf-8")) > MAX_HISTORY_BYTES:
+        return [where + " exceeds bounded history limit; preserve originals separately"]
+    errors = []
+    for item in history:
+        if not isinstance(item, dict) or not _is_nonempty_str(item.get("schema")) \
+                or not _is_nonempty_str(item.get("dataset_id")) \
+                or not _is_nonempty_str(item.get("reason")) \
+                or not isinstance(item.get("review"), dict) or "history" in item.get("review", {}):
+            errors.append(where + " entries require schema, dataset_id, reason and non-nested review snapshot")
+    return errors
+
 
 COVERAGES = ("resolved-message-window", "quoted-excerpts", "unresolved")
 CONTEXT_KINDS = ("retrospective-next-user", "missing", "constructed")
 LABELS = ("useful", "not-useful", "insufficient-context")
-REVIEW_STATUSES = ("unreviewed", "draft", "confirmed")
+REVIEW_STATUSES = ("unreviewed", "draft", "confirmed", "stale")
 CORRECTION_STATUSES = ("unreviewed", "none")
 
 _UNKNOWN_TIME = "unknown"
@@ -289,13 +325,15 @@ def _validate_correction(case, evidence, label, errors):
 # --------------------------------------------------------------------------- #
 # Review sidecar validation
 # --------------------------------------------------------------------------- #
-def validate_reviews(data, casebook):
+def validate_reviews(data, casebook, *, _rebind=False):
     """Return a list of review-sidecar errors; empty means the sidecar is valid."""
     errors = []
     if not isinstance(data, dict):
         return ["reviews top level must be a JSON object"]
-    if data.get("schema") != REVIEWS_SCHEMA:
-        errors.append("reviews schema must be %r" % REVIEWS_SCHEMA)
+    legacy = data.get("schema") == LEGACY_REVIEWS_SCHEMA
+    if data.get("schema") != REVIEWS_SCHEMA and not (_rebind and legacy):
+        errors.append("reviews schema must be %r; %s" % (REVIEWS_SCHEMA, REBIND_GUIDANCE))
+    errors.extend(_history_errors(data.get("removed_reviews", []), "removed_reviews"))
     if data.get("dataset_id") != casebook.get("dataset_id"):
         errors.append("reviews dataset_id %r does not match casebook dataset_id %r"
                       % (data.get("dataset_id"), casebook.get("dataset_id")))
@@ -316,7 +354,7 @@ def validate_reviews(data, casebook):
         case_id = review.get("case_id")
         if not _is_nonempty_str(case_id):
             errors.append("%s.case_id must be a non-empty string" % where)
-        elif case_id not in case_ids:
+        elif case_id not in case_ids and not _rebind:
             errors.append("%s references unknown case_id %r" % (where, case_id))
         elif case_id in seen:
             errors.append("%s has duplicate case_id %r" % (where, case_id))
@@ -338,7 +376,29 @@ def validate_reviews(data, casebook):
         if not isinstance(review.get("rationale"), str):
             errors.append("%s.rationale must be a string" % label)
         case = cases_by_id.get(case_id) if isinstance(case_id, str) else None
-        _validate_review_state(review, case, label, errors)
+        if legacy and "history" in review:
+            errors.extend(_history_errors(review["history"], label + ".history"))
+        if not legacy:
+            digest = review.get("case_payload_digest")
+            if not isinstance(digest, str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", digest):
+                errors.append(label + ".case_payload_digest must be a SHA-256 identity; " + REBIND_GUIDANCE)
+            if not _is_nonempty_str(review.get("rubric_version")):
+                errors.append(label + ".rubric_version must be a non-empty string; " + REBIND_GUIDANCE)
+            if not _rebind and case and (digest != case_payload_digest(case)
+                    or review.get("rubric_version") != RUBRIC_VERSION):
+                errors.append(label + " content/rubric identity mismatch; " + REBIND_GUIDANCE)
+            errors.extend(_history_errors(review.get("history"), label + ".history"))
+            reason = review.get("stale_reason")
+            if reason is not None and not _is_nonempty_str(reason):
+                errors.append(label + ".stale_reason must be null or a non-empty string")
+            if status == "stale" and not _is_nonempty_str(reason):
+                errors.append(label + " stale requires stale_reason")
+            if status == "confirmed" and reason is not None:
+                errors.append(label + " confirmed must clear stale_reason through active confirmation")
+        # Old context can legitimately have changed (or disappeared). Validate the
+        # prior judgement's structure without pretending it reviewed current context.
+        state_case = {"context": {"text": "prior context unavailable"}} if _rebind else case
+        _validate_review_state(review, state_case, label, errors)
     return errors
 
 
@@ -379,9 +439,48 @@ def _validate_review_state(review, case, label, errors):
 # --------------------------------------------------------------------------- #
 def template_reviews(casebook):
     reviews = [{"case_id": case["case_id"], "status": "unreviewed", "reviewer": None,
-                "reviewed_at": None, "context_sufficient": None, "label": None, "rationale": ""}
+                "reviewed_at": None, "context_sufficient": None, "label": None, "rationale": "",
+                "case_payload_digest": case_payload_digest(case), "rubric_version": RUBRIC_VERSION,
+                "stale_reason": None, "history": []}
                for case in casebook.get("cases", [])]
     return {"schema": REVIEWS_SCHEMA, "dataset_id": casebook.get("dataset_id"), "reviews": reviews}
+
+
+def rebind_reviews(data, casebook, *, archive_removed=False):
+    """Explicit offline migration; never carry confirmation across changed identity."""
+    errors = validate_reviews(data, casebook, _rebind=True)
+    if errors:
+        raise ValueError("; ".join(errors))
+    result = copy.deepcopy(data)
+    result["schema"] = REVIEWS_SCHEMA
+    result["reviews"] = []
+    cases = {case["case_id"]: case for case in casebook["cases"]}
+    removed = result.setdefault("removed_reviews", [])
+    for old in data["reviews"]:
+        case = cases.get(old["case_id"])
+        reason = ("removed-case" if case is None else
+                  "legacy-unbound-review" if data["schema"] == LEGACY_REVIEWS_SCHEMA else
+                  "content-and/or-rubric-changed")
+        snapshot = {"schema": data["schema"], "dataset_id": data["dataset_id"],
+                    "reason": reason, "review": {k: copy.deepcopy(v) for k, v in old.items() if k != "history"}}
+        if case is None:
+            if not archive_removed:
+                raise ValueError("unknown/removed case_id %r; use --removed-cases archive to retain it explicitly" % old["case_id"])
+            # Retain the existing timeline too, without recursive snapshots.
+            removed.extend(copy.deepcopy(old.get("history", [])))
+            removed.append(snapshot)
+            continue
+        current = copy.deepcopy(old)
+        if data["schema"] == LEGACY_REVIEWS_SCHEMA or old.get("case_payload_digest") != case_payload_digest(case) \
+                or old.get("rubric_version") != RUBRIC_VERSION:
+            current["history"] = copy.deepcopy(old.get("history", [])) + [snapshot]
+            current.update(status="stale", reviewed_at=None, stale_reason=reason,
+                           case_payload_digest=case_payload_digest(case), rubric_version=RUBRIC_VERSION)
+        result["reviews"].append(current)
+    errors = validate_reviews(result, casebook)
+    if errors:
+        raise ValueError("; ".join(errors))
+    return result
 
 
 def aggregate(casebook, reviews):
@@ -443,7 +542,11 @@ def _embed_json(payload):
 
 
 def render_html(casebook, reviews):
-    payload = {"casebook": casebook, "reviews": reviews}
+    errors = validate_casebook(casebook) + validate_reviews(reviews, casebook)
+    if errors:
+        raise ValueError("; ".join(errors))
+    payload = {"casebook": casebook, "reviews": reviews,
+               "template": template_reviews(casebook), "rubric_version": RUBRIC_VERSION}
     return HTML_HEAD + _embed_json(payload) + HTML_TAIL
 
 
@@ -549,13 +652,12 @@ HTML_TAIL = """</script>
   var CASES = DATA.casebook.cases || [];
   var state = new Map();
   function blank(id) {
-    return {case_id: id, status: 'unreviewed', reviewer: null, reviewed_at: null,
-            context_sufficient: null, label: null, rationale: ''};
+    return JSON.parse(JSON.stringify(DATA.template.reviews.find(function (r) { return r.case_id === id; })));
   }
   CASES.forEach(function (c) { state.set(c.case_id, blank(c.case_id)); });
   ((DATA.reviews && DATA.reviews.reviews) || []).forEach(function (r) {
     var base = blank(r.case_id);
-    Object.keys(base).forEach(function (k) { if (r[k] !== undefined) { base[k] = r[k]; } });
+    Object.keys(r).forEach(function (k) { if (r[k] !== undefined) { base[k] = r[k]; } });
     state.set(r.case_id, base);
   });
 
@@ -592,7 +694,7 @@ HTML_TAIL = """</script>
   }
   function statusChip(status) {
     if (status === 'confirmed') { return chip(status, 'ok'); }
-    if (status === 'draft') { return chip(status, 'warn'); }
+    if (status === 'draft' || status === 'stale') { return chip(status, 'warn'); }
     return chip(status);
   }
 
@@ -687,6 +789,18 @@ HTML_TAIL = """</script>
     }
     var box = el('div', null, 'block');
     box.appendChild(el('h3', '校准标注'));
+    var staleBanner = null;
+    if (r.stale_reason) {
+      staleBanner = el('p', '需要重新审阅：' + r.stale_reason, 'banner warn');
+      box.appendChild(staleBanner);
+    }
+    box.appendChild(el('p', 'rubric=' + r.rubric_version + ' · digest 仅绑定材料，不证明人工批准。历史记录 ' + r.history.length + ' 条。', 'case-sub'));
+    if (r.history.length) {
+      var history = el('details');
+      history.appendChild(el('summary', '原 review 历史（不适用当前材料）'));
+      history.appendChild(el('div', JSON.stringify(r.history, null, 2), 'pre mono'));
+      box.appendChild(history);
+    }
     box.appendChild(el('p', '在给定情境下，这条 memory 对 answerer 的背景是否有增量价值？缺情境必须与未审阅分开。', 'case-sub'));
 
     box.appendChild(el('label', 'label', 'field'));
@@ -720,8 +834,9 @@ HTML_TAIL = """</script>
     var msg = el('div', null, 'form-msg');
     var statusLine = el('div', null, 'status-line');
     function refreshStatus() {
+      if (staleBanner && !r.stale_reason) { staleBanner.remove(); }
       var badge = detailEl.querySelector('[data-review-status]');
-      if (badge) { badge.textContent = r.status; badge.className = 'chip' + (r.status === 'confirmed' ? ' ok' : r.status === 'draft' ? ' warn' : ''); }
+      if (badge) { badge.textContent = r.status; badge.className = 'chip' + (r.status === 'confirmed' ? ' ok' : (r.status === 'draft' || r.status === 'stale') ? ' warn' : ''); }
       statusLine.textContent = 'status=' + r.status + ' · reviewed_at=' + (r.reviewed_at === null ? 'null' : r.reviewed_at);
     }
     refreshStatus();
@@ -748,6 +863,7 @@ HTML_TAIL = """</script>
         return;
       }
       r.status = 'confirmed';
+      r.stale_reason = null;
       r.reviewed_at = new Date().toISOString();
       msg.className = 'form-msg ok';
       msg.textContent = '已确认（仅本地内存，请下载 JSON 保存）。';
@@ -835,9 +951,9 @@ HTML_TAIL = """</script>
   }
 
   function updateCounts() {
-    var counts = {unreviewed: 0, draft: 0, confirmed: 0};
+    var counts = {unreviewed: 0, draft: 0, confirmed: 0, stale: 0};
     CASES.forEach(function (c) { counts[state.get(c.case_id).status] += 1; });
-    countsEl.textContent = CASES.length + ' cases · ' + counts.confirmed + ' confirmed · ' + counts.draft + ' draft · ' + counts.unreviewed + ' unreviewed';
+    countsEl.textContent = CASES.length + ' cases · ' + counts.confirmed + ' confirmed · ' + counts.draft + ' draft · ' + counts.unreviewed + ' unreviewed · ' + counts.stale + ' stale';
   }
 
   function refilter() {
@@ -853,12 +969,12 @@ HTML_TAIL = """</script>
 
   document.getElementById('download').addEventListener('click', function () {
     var out = {
-      schema: 'ams-memory-reviews/1',
+      schema: DATA.template.schema,
+      removed_reviews: DATA.reviews.removed_reviews || [],
       dataset_id: DATA.casebook.dataset_id,
       reviews: CASES.map(function (c) {
         var r = state.get(c.case_id);
-        return {case_id: r.case_id, status: r.status, reviewer: r.reviewer, reviewed_at: r.reviewed_at,
-                context_sufficient: r.context_sufficient, label: r.label, rationale: r.rationale};
+        return JSON.parse(JSON.stringify(r));
       })
     };
     var blob = new Blob([JSON.stringify(out, null, 2)], {type: 'application/json'});
@@ -913,6 +1029,12 @@ def main(argv=None):
     p_check.add_argument("--casebook", required=True)
     p_check.add_argument("--reviews", required=True)
 
+    p_rebind = sub.add_parser("rebind-reviews", help="migrate/rebind without certifying old judgements")
+    p_rebind.add_argument("--casebook", required=True)
+    p_rebind.add_argument("--reviews", required=True)
+    p_rebind.add_argument("--out", required=True)
+    p_rebind.add_argument("--removed-cases", choices=("reject", "archive"), default="reject")
+
     args = parser.parse_args(argv)
 
     casebook = load_json(args.casebook)
@@ -924,6 +1046,18 @@ def main(argv=None):
     reviews = None
     if getattr(args, "reviews", None):
         reviews = load_json(args.reviews)
+        if args.command == "rebind-reviews":
+            if Path(args.out).exists() or Path(args.out).resolve() in (Path(args.reviews).resolve(), Path(args.casebook).resolve()):
+                parser.error("rebind requires a fresh --out path; original inputs must be preserved")
+            try:
+                rebound = rebind_reviews(reviews, casebook, archive_removed=args.removed_cases == "archive")
+            except ValueError as exc:
+                _print_errors([str(exc)], "migration")
+                return 1
+            with Path(args.out).open("x", encoding="utf-8") as output:
+                output.write(json.dumps(rebound, ensure_ascii=False, indent=2) + "\n")
+            print("wrote rebound reviews; stale judgements require active confirmation")
+            return 0
         review_errors = validate_reviews(reviews, casebook)
         if review_errors:
             _print_errors(review_errors, "review")

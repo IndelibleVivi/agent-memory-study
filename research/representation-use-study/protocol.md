@@ -69,3 +69,68 @@ Agent Memory Study editors · 2026-09-25 · **proposed-not-run**。
 没有运行 answerer、controller、翻译模型、judge 或真实记忆实验；没有任何收益、显著性或
 样本量充足性结论。运行时不得接入私人 live memory 写路径；公开输入使用原创材料。
 从私人经历提炼公开案例需要另行明确选取和公开范围，不能仅改名字就当作已匿名化。
+
+## 2026-10-23 离线执行附录（WP1–WP3 development）
+
+上文的自然语言模型比较仍为 **proposed-not-run**；以下公开 fixture 和已执行结果仅验证
+离线测量链，为 **scripted/oracle controls**。它没有完成模型 tokenizer、provider、翻译、
+judge 或真人检查，也不是 blinded confirmatory evaluation。开发结果不能据此解释 agent 收益。
+
+`corpus.py` 固定八个独立 event families：scope、authority、time、agreement、provenance、
+relations、conflict、unknown。先以 family 分 development（前四组）和 diagnostic（后四组），
+再生成 fixed/updated history × current/expanded task sets 的 2×2 与两个原话变体，共 64 cases。
+current task set 包含当前决定与相邻 scope boundary 两题；expanded 保持这两题不变，并加入
+第一日历史、正式接受、来源时间、逐字原话、直接关系、间接关系六种未来用途，共八题。
+因此总计 320 question rows。scope 是独立题目控制，不以 scope 改名冒充任务用途扩展。
+所有 wording、问题、顺序和三表示变体留在同一个 group；两 split 都已公开，不能用 diagnostic
+名称暗示盲测或将 320 question rows 当作独立样本。
+
+`truth(events, question)` 是 latent event-state interpreter。它在相同时间的合法决定冲突时
+允许 clarify 或 abstain；没有适用决定时允许询问 scope 或暂缓。`writer(events, arm)` 不接收
+问题或 gold。固定 summary 删除 actor、逐字措辞以及第五日之前被合法新决定替代的旧条目，
+保留决定的 scope、time、authority、accepted 与关系种类；不训练或评价 summary 生成。
+三臂均列出 candidate / selected / delivered；prefix truncation 后只有完整 JSONL records
+满足 evidence obligations。历史/来源损失、缺少完整 negative inventory 与明确冲突分别计数。
+这些 obligation 是保守的可检查 sufficient certificate，不宣称涵盖所有自然语言可推理路径。
+
+`scripted` 用独立 reader 读取最终 JSONL，拿不到 latent state 或 accepted set；`latest` 故意
+忽视 scope、authority、acceptance 与生效日期，是有已知反例的弱控制；`abstain` 固定暂缓，
+在信息充分的可答题上有反例。`oracle` 的额外 gold 明确写入 request，是 extra-information
+bound；预算只约束 memory field，不限制 oracle extra information，不能纳入公平胜者排序。
+所有结果均为 structured exact-label scoring，非 semantic judge、LLM 或 human results。
+
+full 与 equal 模式分别报告。equal 默认 memory budget 为 900 **UTF-8 bytes**，不是 model
+tokens；完整 canonical request bytes 另计，包含 system、question、memory、generation 与 oracle
+extra information。forward/reverse/rotate 为 deterministic 位置控制；rotate 把第一条移到末尾。
+选择与截断不看问题/gold，partial UTF-8 字符丢弃，partial JSONL record 不算可用证据。
+报告全任务、各臂同时 `sufficient` 子集、每 family 计数及 fixed→updated 的 changed/preserved
+与相邻 scope boundary 配对；boundary 是 preserved 的子集，不能相加。新增用途与共同题目
+分别报告，任务集的总体分布差异不构成 matched treatment effect。冲突不混入
+all-arms-sufficient 子集；该子集由 planned delivery 决定，与 backend 是否成功无关。
+每 bucket 的 planned/executed/scored denominators 与 outcome statuses 分列，quality 只聚合
+成功解析的 scored responses，不把 failed/refusal/timeout 当作答错。`acceptable` 允许证据不足时有范围的暂缓；`task_correct` 则单列 latent
+gold 一致性，防止以大量 abstain 冒充任务成功。citation validity 只检查完整送达的公开事件 ID，
+不证明使用，`used` 始终为 unknown。
+
+scorer v2 的 `over_abstain` 只计：实际送达证据为 `sufficient`、latent gold 至少允许一个
+`answer`，而 response 选择 clarify/abstain。gold 本来要求 conflict/unknown deferral 时，
+理由不匹配仍令 `task_correct=false`，且在充分/冲突材料下 `acceptable=false`，但不计
+过度暂缓；实际截断为 insufficient 时，有范围的暂缓可 acceptable，也不计 over-abstain。
+这一区分不扩大 gold accepted set；错误 answer 的 exact-label 判断继续独立。
+
+每个 run 的 manifest 冻结 protocol/dataset/backend/parser/scorer/tokenizer/settings/source
+identity，并分配 run ID。每 attempt 保存 request、启动意图、原始 response、receipt 与内容
+digest。启动意图以后中断，一律作为 outcome unknown 的 interrupted attempt 保存，可能已运行；
+request 刚写入而尚未写启动意图的窄窗口也按此处理。resume 验证当前真源与所有已有 artifacts，
+成功 job 不再调用 backend，失败另增 attempt 并引用 retry_of；任何源、预算、数据或 scorer
+变化需新 output。不得在同一 output 同时运行两个 executor。receipt digest 与 run ID 用于
+完整性及身份校验，不是签名或抵御能重写整个目录的攻击者的可信证明。
+
+manifest 记录 exact Python runtime；resume 严格绑定。portable experiment identity 排除 runtime
+和随机 run ID，以便相同 source 的跨 Python patch 汇总核对；raw manifest 仍保留本地 runtime，
+不把 portable identity 当成执行环境同一性的证明。
+
+verify/replay 只从冻结 response 重算分数与报告，不调用 backend，不声称恢复隐藏 provider
+状态。当前没有 provider adapter；未来只能在明确授权后定义 exact imported request/response
+receipt，并保留不同 evidence kind，不能将现有 control labels 改称模型结果。raw runs 留在 repo
+外，公开 `sample-results.json` 仅为紧凑汇总，可按 README 重现核对。
