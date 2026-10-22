@@ -45,7 +45,9 @@ python3 -B research/representation-use-study/study.py dry-run \
 两题，expanded 保留这两题并加入六种历史、来源与关系用途（共八题）。common queries
 保持配对，新增用途单列；不能将任务分布变化解释为 matched treatment effect。所有输入公开，仅供 development/diagnostic。
 `UTF-8 bytes` 是 exact diagnostic unit，**不是模型 tokens**。equal budget 只限制 memory，
-每条 receipt 另存完整 request bytes，provider token budgeting 未验证。
+每条 receipt 另存完整 request bytes，provider token budgeting 未验证。预算恰好送达 record 的
+closing `}`、仅缺终止换行时仍计 complete，与消费者解析一致；实际 memory 不补换行，缺 closing
+`}` 或截断 UTF-8/JSON 的 record 仍计 incomplete。
 
 复现已保存的单位置 compact sample（将示例路径换成容量足够的外部卷新目录；raw 包含数万个
 小文件，不建议写系统盘 temporary directory）：

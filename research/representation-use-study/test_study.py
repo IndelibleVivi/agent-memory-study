@@ -197,6 +197,49 @@ class RepresentationTests(unittest.TestCase):
         self.assertFalse(any(m['record']['id']=='scope:e1' for m in summary))
         with self.assertRaises(TypeError): corpus.writer(events,'summary',{'gold':'secret'})
 
+    def test_complete_json_without_terminal_newline_first_and_later_record(self):
+        case=next(c for c in corpus.corpus()['cases'] if c['group']=='scope' and c['history']=='fixed' and c['task']=='current')
+        materials=corpus.writer(case['events'],'raw'); preceding=b''
+        for index,m in enumerate(materials):
+            record=corpus.canonical(m['record']).encode('utf-8')
+            budget=len(preceding)+len(record)
+            with self.subTest(record=index,budget=budget):
+                config=self.config(memory_budget=budget)
+                job=dict(arm='raw',order='forward',mode='equal',backend='scripted')
+                q=case['questions'][index]
+                request,audit=study.prepare(case,q,job,config)
+                self.assertEqual(request['memory'].encode('utf-8'),preceding+record)
+                self.assertFalse(request['memory'].endswith('\n'))
+                self.assertEqual(audit['memory_bytes'],budget)
+                self.assertEqual(audit['delivered'][-1]['delivered_bytes'],len(record))
+                self.assertEqual(audit['delivered'][-1]['full_bytes'],len(record)+1)
+                self.assertTrue(all(c['complete'] for c in audit['delivered']))
+                self.assertEqual(json.loads(request['memory'].splitlines()[-1]),m['record'])
+                self.assertEqual(audit['availability'],'sufficient')
+                result=study.score(case,q,audit,study.backend(request))
+                self.assertTrue(result['task_correct'])
+                self.assertTrue(result['citations_valid'])
+                self.assertFalse(result['unsupported_answer'])
+            preceding+=record+b'\n'
+
+    def test_missing_closing_brace_and_split_chinese_bytes_stay_incomplete(self):
+        case=next(c for c in corpus.corpus()['cases'] if c['group']=='scope' and c['history']=='fixed' and c['task']=='current')
+        preceding=b''; job=dict(arm='raw',order='forward',mode='equal',backend='scripted')
+        for index,m in enumerate(corpus.writer(case['events'],'raw')):
+            record=corpus.canonical(m['record']).encode('utf-8'); chinese=next(i for i,b in enumerate(record) if b>=128)
+            for endpoint in (len(record)-1,chinese+1,chinese+2):
+                with self.subTest(record=index,endpoint=endpoint):
+                    budget=len(preceding)+endpoint
+                    request,audit=study.prepare(case,case['questions'][index],job,self.config(memory_budget=budget))
+                    self.assertEqual(request['memory'],(preceding+record[:endpoint]).decode('utf-8',errors='ignore'))
+                    self.assertLessEqual(audit['memory_bytes'],budget)
+                    self.assertFalse(audit['delivered'][-1]['complete'])
+                    self.assertTrue(all(c['complete'] for c in audit['delivered'][:-1]))
+                    self.assertEqual(audit['availability'],'insufficient')
+                    with self.assertRaises(json.JSONDecodeError): json.loads(request['memory'].splitlines()[-1])
+                    self.assertNotEqual(study.parse(study.backend(request))['action'],'answer')
+            preceding+=record+b'\n'
+
     def test_actual_budget_count_partial_unicode_order_and_sufficiency(self):
         config,j,c,q=self.first(memory_budget=43)
         j.update(mode='equal'); request,audit=study.prepare(c,q,j,config)

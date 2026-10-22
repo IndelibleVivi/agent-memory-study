@@ -102,7 +102,9 @@ bound；预算只约束 memory field，不限制 oracle extra information，不�
 full 与 equal 模式分别报告。equal 默认 memory budget 为 900 **UTF-8 bytes**，不是 model
 tokens；完整 canonical request bytes 另计，包含 system、question、memory、generation 与 oracle
 extra information。forward/reverse/rotate 为 deterministic 位置控制；rotate 把第一条移到末尾。
-选择与截断不看问题/gold，partial UTF-8 字符丢弃，partial JSONL record 不算可用证据。
+选择与截断不看问题/gold，partial UTF-8 字符丢弃，partial JSON record 不算可用证据。
+末条 record 的 closing `}` 已完整送达而终止换行未送达时，消费者仍可解析，该 record 计为 complete；
+这不补送 newline，不改变实际 bytes/预算。缺 closing `}` 或截断中文字符不能冒充完整 record。
 报告全任务、各臂同时 `sufficient` 子集、每 family 计数及 fixed→updated 的 changed/preserved
 与相邻 scope boundary 配对；boundary 是 preserved 的子集，不能相加。新增用途与共同题目
 分别报告，任务集的总体分布差异不构成 matched treatment effect。冲突不混入

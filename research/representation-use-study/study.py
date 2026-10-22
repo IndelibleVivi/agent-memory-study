@@ -79,9 +79,11 @@ def prepare(case,q,job,config):
         full=canonical(m['record'])+'\n'
         fragment=full if remaining is None else full.encode()[:remaining].decode('utf-8',errors='ignore')
         if fragment:
+            # The consumer parses a complete final JSON record without its terminal LF.
+            complete=fragment in (full,full[:-1])
             chunks.append(dict(id=m['id'],text=fragment,full_bytes=byte_count(full),
-                               delivered_bytes=byte_count(fragment),complete=fragment==full))
-            if fragment==full: delivered.append(m)
+                               delivered_bytes=byte_count(fragment),complete=complete))
+            if complete: delivered.append(m)
         if remaining is not None:
             remaining-=byte_count(fragment)
             if fragment!=full: break
