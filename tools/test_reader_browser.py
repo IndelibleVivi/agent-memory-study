@@ -57,6 +57,52 @@ def map_signal_positions(page):
         "dots => dots.map(dot => [dot.getAttribute('cx'), dot.getAttribute('cy')])")
 
 
+def emulate_map_motion(page, preference, evidence, *, paused=None, refresh_during_transition=False):
+    """Wait for the native preference signal, then check the actual app state.
+
+    Do not read MQL.matches between emulation and its notification: that getter
+    is part of the Chromium timing regression exercised by the refresh action.
+    An unchanged preference need not emit change or reset a manual override.
+    """
+    reduced = preference == 'reduce'
+    expected_pause = reduced if paused is None else paused
+    initial = page.evaluate("""() => {
+      const query = matchMedia('(prefers-reduced-motion: reduce)');
+      const observer = {query, initial: query.matches, events: []};
+      observer.listener = event => observer.events.push({matches: event.matches, time: performance.now()});
+      query.addEventListener('change', observer.listener);
+      window.__amsMotionObservation = observer;
+      return observer.initial;
+    }""")
+    observation = {'preference': preference, 'initial': initial,
+                   'refresh_during_transition': refresh_during_transition}
+    try:
+        page.emulate_media(reduced_motion=preference)
+        if refresh_during_transition:
+            # Exercise the product's existing refresh path while media delivery
+            # is pending; never set paused or dispatch a synthetic change event.
+            page.evaluate("document.querySelector('#map-zoom-in').click()")
+        if initial != reduced:
+            page.wait_for_function("""reduced => window.__amsMotionObservation.events
+              .some(event => event.matches === reduced)""", arg=reduced, timeout=5000)
+        expect(page.locator('#map-motion')).to_have_attribute('aria-pressed', str(expected_pause).lower())
+        observation['passed'] = True
+    finally:
+        observation['state'] = page.evaluate("""() => {
+          const observer = window.__amsMotionObservation, root = document.querySelector('#constellation');
+          const state = {matches: observer.query.matches, events: observer.events, hidden: document.hidden,
+            paused: document.querySelector('#map-motion').getAttribute('aria-pressed'), motion: root.dataset.motion,
+            view: [...root.querySelectorAll('[data-map-view]')].filter(x => x.getAttribute('aria-pressed') === 'true').map(x => x.dataset.mapView),
+            plot: document.querySelector('#constellation-plot').getBoundingClientRect().toJSON(),
+            signals: [...root.querySelectorAll('.map-signals circle.is-active')].map(x => [x.getAttribute('cx'), x.getAttribute('cy')])};
+          observer.query.removeEventListener('change', observer.listener);
+          delete window.__amsMotionObservation;
+          return state;
+        }""")
+        evidence.setdefault('motion_transitions', []).append(observation)
+    assert observation['state']['matches'] == reduced, observation
+
+
 def assert_map_labels_do_not_overlap(labels, interaction):
     for index, first in enumerate(labels):
         for second in labels[index + 1:]:
@@ -475,18 +521,32 @@ def main():
                         page.locator('[data-map-view="list"]').click()
                         expect(page.locator('#constellation-list .map-list-row:visible')).to_have_count(2)
                         if width == 1440:
-                            page.emulate_media(reduced_motion='no-preference')
-                            # Observe each emulated media state after rendering,
-                            # before switching the preference again.
-                            page.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))')
-                            expect(page.locator('#map-motion')).to_have_attribute('aria-pressed','false')
+                            emulate_map_motion(page, 'no-preference', evidence)
                             page.locator('#constellation-list .map-list-row:visible button').last.click()
                         page.locator('[data-map-view="map"]').click()
                         if width == 1440:
                             expect(page.locator('.map-node.is-selected .map-node-label')).to_have_css('opacity','1')
-                            page.emulate_media(reduced_motion='reduce')
-                            page.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))')
-                            expect(page.locator('#map-motion')).to_have_attribute('aria-pressed','true')
+                            emulate_map_motion(page, 'reduce', evidence, refresh_during_transition=True)
+                            page.locator('#map-reset').click()
+                            linked_node = page.locator('.map-node[data-map-node="0"]')
+                            linked_node.focus(); linked_node.press('Enter')
+                            # A finite repetition guards actual signal motion and the
+                            # active-map refresh/media boundary, not just a badge.
+                            for _ in range(3):
+                                emulate_map_motion(page, 'no-preference', evidence)
+                                map_svg.scroll_into_view_if_needed()
+                                expect(star_map).to_have_attribute('data-motion', 'running')
+                                moving_signals = map_signal_positions(page)
+                                assert moving_signals
+                                page.wait_for_function('''before => JSON.stringify([...document.querySelectorAll('.map-signals circle.is-active')]
+                                  .map(dot => [dot.getAttribute('cx'), dot.getAttribute('cy')])) !== JSON.stringify(before)''',
+                                  arg=moving_signals, timeout=5000)
+                                emulate_map_motion(page, 'reduce', evidence, refresh_during_transition=True)
+                                expect(star_map).to_have_attribute('data-motion', 'still')
+                                stopped_signals = map_signal_positions(page)
+                                page.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(resolve))))')
+                                assert map_signal_positions(page) == stopped_signals, 'media reduction must stop actual signals'
+                            record('native media changes across active refresh, repeated actual signal start/stop')
                         page.locator('#map-reset').click()
                         page.locator('#map-query').fill('retrieval-and-relevance')
                         expect(page.locator('#constellation-stats')).to_contain_text('01 /')
@@ -528,6 +588,7 @@ def main():
                             expect(page.locator('#map-motion')).to_have_attribute('aria-pressed','true')
                             page.locator('#map-motion').click()
                             expect(page.locator('#map-motion')).to_have_attribute('aria-pressed','false')
+                            emulate_map_motion(page, 'reduce', evidence, paused=False)
                             # Clicking a control may scroll its plot out of view. Running
                             # motion requires both an unpaused control and a visible plot.
                             map_svg.scroll_into_view_if_needed()
