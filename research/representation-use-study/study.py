@@ -26,9 +26,15 @@ def byte_count(s): return len(s.encode('utf-8'))
 
 def freeze(path, value, raw=False):
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open('x',encoding='utf-8') as f:
-        f.write(value if raw else canonical(value)+'\n')
+    # Same-directory staging + hard link publishes complete bytes without replacing a target.
+    # Keep staging on interruption, including the narrow post-link/pre-unlink window.
+    staged=path.with_name('.'+path.name+'.'+uuid.uuid4().hex+'.pending')
+    payload=(value if raw else canonical(value)+'\n').encode('utf-8')
+    with staged.open('xb') as f:
+        f.write(payload)
         f.flush(); os.fsync(f.fileno())
+    os.link(staged,path)
+    staged.unlink()
 
 
 def load(path): return json.loads(path.read_text(encoding='utf-8'))
@@ -187,10 +193,10 @@ def binding(root,path):
     return dict(path=path.relative_to(root).as_posix(),sha256=hashlib.sha256(path.read_bytes()).hexdigest())
 
 
-def read_bound(root,ref):
+def read_bound(root,ref,raw=False):
     path=safe_ref(root,ref['path'])
     if hashlib.sha256(path.read_bytes()).hexdigest()!=ref['sha256']: raise ValueError('corrupt artifact: '+ref['path'])
-    return path.read_text(encoding='utf-8')
+    return path.read_bytes() if raw else path.read_text(encoding='utf-8')
 
 
 def check_run(root,expected=None):
@@ -213,14 +219,27 @@ def check_run(root,expected=None):
                 started=load(ad/'started.json') if (ad/'started.json').exists() else expected_start
                 if started!=expected_start:
                     raise ValueError('foreign/stale attempt')
-                if load(ad/'request.json')!=request: raise ValueError('request drift')
+                request_exists=(ad/'request.json').exists()
+                started_exists=(ad/'started.json').exists()
+                if (ad/'response.txt').exists() and not started_exists:
+                    raise ValueError('missing published started before response')
+                if request_exists:
+                    if load(ad/'request.json')!=request: raise ValueError('request drift')
+                elif started_exists or (ad/'response.txt').exists():
+                    raise ValueError('missing published request before started/response')
                 rp=ad/'receipt.json'
                 if not rp.exists():
                     pending.append((job,ad,started)); previous=f'{job_dir.name}/{ad.name}'; continue
                 r=load(rp)
                 if r['run_id']!=m['run_id'] or r['job']!=job or r['attempt']!=number or r['retry_of']!=previous or r['audit']!=audit:
                     raise ValueError('receipt binding mismatch')
-                if json.loads(read_bound(root,r['request']))!=request: raise ValueError('receipt request mismatch')
+                if request_exists:
+                    if r['request'] is None or json.loads(read_bound(root,r['request']))!=request:
+                        raise ValueError('receipt request mismatch')
+                elif r['status']!='interrupted' or r['request'] is not None:
+                    raise ValueError('missing request allowed only for interrupted pre-publication attempt')
+                if r['status']=='successful' and not started_exists: raise ValueError('missing published started artifact')
+                for artifact in r['incomplete_artifacts']: read_bound(root,artifact,raw=True)
                 raw=read_bound(root,r['response']) if r['response'] else None
                 if r['status'] not in STATUSES: raise ValueError('unknown attempt status')
                 if r['status']=='successful':
@@ -243,7 +262,8 @@ def make_receipt(root,ad,started,status,raw=None,error=None):
     if raw is not None: freeze(response_path,raw,raw=True)
     case=index()[started['job']['case']]; q=next(q for q in case['questions'] if q['id']==started['job']['question'])
     result=dict(run_id=started['run_id'],job=started['job'],attempt=started['attempt'],retry_of=started['retry_of'],
-        status=status,audit=started['audit'],request=binding(root,ad/'request.json'),
+        status=status,audit=started['audit'],request=binding(root,ad/'request.json') if (ad/'request.json').exists() else None,
+        incomplete_artifacts=[binding(root,p) for p in sorted(ad.glob('.*.pending'))],
         response=binding(root,response_path) if response_path.exists() else None,error=error,
         parser=PARSER,scorer=SCORER,score=score(case,q,started['audit'],raw) if status=='successful' else None)
     freeze(ad/'receipt.json',result)
@@ -257,10 +277,10 @@ def run(root,config,resume=False,limit=None):
         if not resume: raise ValueError('run exists; use --resume')
         _,receipts,pending=check_run(root,wanted)
         for job,ad,start in pending:
-            if not (ad/'started.json').exists(): freeze(ad/'started.json',start)
             receipts.append(make_receipt(root,ad,start,'interrupted',error='Outcome unknown after interruption; may have executed.'))
     else:
-        if root.exists() and any(root.iterdir()): raise ValueError('nonempty output without manifest')
+        if root.exists() and any(root.iterdir()):
+            raise ValueError('nonempty output without complete published manifest; preserve staging and use a new output')
         freeze(root/'manifest.json',dict(wanted,run_id=str(uuid.uuid4()))); receipts=[]
     completed={r['job']['id'] for r in receipts if r['status']=='successful'}
     counts=Counter(r['job']['id'] for r in receipts); cases=index(); executed=0

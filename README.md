@@ -91,6 +91,8 @@ python3 -B tools/test_static_reader.py
 构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、星图与三维研究体共用的身份／引用关系、领域布局，以及既有五组确定性研究和一组 stdlib 分类器学习／纠正实验；另检查表示与修订传播的离线执行合同、casebook 的内容／rubric 绑定和 AgeMem、C2C、Jev 已保存 receipts。修订传播的完整运行与 raw replay 使用其目录命令；统一入口中的 compact summary 检查不能替代它。验证不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
 
 表示执行器保存实际请求、送达材料、原始回答与评分身份，支持 dry-run、续跑和离线重放检查。
+运行文件完整写入后才原子发布，已有文件不覆写；中断尝试保留证据，续跑另建 attempt。
+已正式发布的文件若损坏则拒绝验收，不能把损坏悄悄当作未执行。
 诊断预算的单位与 tokenizer 身份必须随结果保存；离线计数不能冒充实际模型 token。
 完整自然语言效果比较仍待执行。人工校准使用[离线 casebook](research/multilingual-use-policy/README.md)：
 `ams-memory-reviews/2` 将审阅绑定到材料内容和 rubric；旧 sidecar 或材料变更须显式

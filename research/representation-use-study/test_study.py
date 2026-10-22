@@ -19,6 +19,130 @@ class RepresentationTests(unittest.TestCase):
         c=self.config(**kw); j=study.plan(c)[0]; case=study.index()[j['case']]; q=case['questions'][0]
         return c,j,case,q
 
+    def interrupt_write(self,target):
+        """Write a real prefix then interrupt, for official or staged artifact names."""
+        original=Path.open; triggered=[]
+        class PrefixWriter:
+            def __init__(self,stream): self.stream=stream
+            def __enter__(self): self.stream.__enter__(); return self
+            def __exit__(self,*args): return self.stream.__exit__(*args)
+            def __getattr__(self,name): return getattr(self.stream,name)
+            def write(self,value):
+                self.stream.write(value[:max(1,len(value)//2)])
+                self.stream.flush(); triggered.append(True)
+                raise KeyboardInterrupt('synthetic interruption after actual prefix write')
+        def opening(path,*args,**kwargs):
+            stream=original(path,*args,**kwargs)
+            mode=args[0] if args else kwargs.get('mode','r')
+            if not triggered and 'x' in mode and (path.name==target or path.name.startswith('.'+target+'.')):
+                return PrefixWriter(stream)
+            return stream
+        return patch.object(Path,'open',opening)
+
+    def test_receipt_mid_write_is_not_published_and_can_resume(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td); config=self.config()
+            with self.interrupt_write('receipt.json'):
+                with self.assertRaises(KeyboardInterrupt): study.run(root,config,limit=1)
+            self.assertFalse(list(root.glob('attempts/*/*/receipt.json')))
+            partials=list(root.glob('attempts/*/*/.receipt.json.*.pending'))
+            self.assertEqual(len(partials),1)
+            before=partials[0].read_bytes()
+            result=study.run(root,config,resume=True,limit=1)
+            self.assertEqual(result['states'],{'interrupted':1,'successful':1})
+            self.assertEqual(partials[0].read_bytes(),before)
+
+    def test_attempt_artifact_interruptions_during_write_and_publication(self):
+        config=self.config(); one=study.plan(config)[:1]; link=study.os.link
+        for artifact in ('request.json','started.json','response.txt','receipt.json'):
+            for moment in ('mid-write','before-publish','after-publish'):
+                with self.subTest(artifact=artifact,moment=moment),tempfile.TemporaryDirectory() as td:
+                    root=Path(td); hit=[]
+                    def publication(src,dst):
+                        if Path(dst).name==artifact and not hit:
+                            hit.append(True)
+                            if moment=='after-publish': link(src,dst)
+                            raise KeyboardInterrupt('synthetic '+moment)
+                        return link(src,dst)
+                    interrupt=self.interrupt_write(artifact) if moment=='mid-write' else patch.object(study.os,'link',publication)
+                    with patch.object(study,'plan',return_value=one),patch.object(study,'backend',wraps=study.backend) as b:
+                        with interrupt:
+                            with self.assertRaises(KeyboardInterrupt): study.run(root,config,limit=1)
+                        before={p:p.read_bytes() for p in root.rglob('*') if p.is_file()}
+                        official=list(root.glob('attempts/*/*/'+artifact))
+                        self.assertEqual(bool(official),moment=='after-publish')
+                        if official:
+                            if artifact.endswith('.json'): study.load(official[0])
+                            else: study.parse(official[0].read_text())
+                        initial_calls=b.call_count
+                        result=study.run(root,config,resume=True,limit=1)
+                        done=artifact=='receipt.json' and moment=='after-publish'
+                        self.assertEqual(b.call_count-initial_calls,0 if done else 1)
+                        self.assertEqual(result['states'],{'successful':1} if done else {'interrupted':1,'successful':1})
+                        self.assertTrue(all(p.exists() and p.read_bytes()==value for p,value in before.items()))
+                        if not done:
+                            receipts=study.check_run(root)[1]
+                            old=next(r for r in receipts if r['status']=='interrupted')
+                            self.assertTrue(old['incomplete_artifacts'])
+                            self.assertEqual(old['request'] is None,artifact=='request.json' and moment!='after-publish')
+
+    def test_manifest_and_report_atomic_publication_no_overwrite(self):
+        for artifact in ('manifest.json','report.json'):
+            for moment in ('mid-write','before-publish','after-publish'):
+                with self.subTest(artifact=artifact,moment=moment),tempfile.TemporaryDirectory() as td:
+                    root=Path(td); path=root/artifact; value={'complete':'中文'*40}; hit=[]; link=study.os.link
+                    def publication(src,dst):
+                        if Path(dst).name==artifact and not hit:
+                            hit.append(True)
+                            if moment=='after-publish': link(src,dst)
+                            raise KeyboardInterrupt('synthetic '+moment)
+                        return link(src,dst)
+                    interrupt=self.interrupt_write(artifact) if moment=='mid-write' else patch.object(study.os,'link',publication)
+                    with interrupt:
+                        with self.assertRaises(KeyboardInterrupt): study.freeze(path,value)
+                    self.assertEqual(path.exists(),moment=='after-publish')
+                    staged=list(root.glob('.'+artifact+'.*.pending')); self.assertEqual(len(staged),1)
+                    before=staged[0].read_bytes()
+                    if path.exists():
+                        self.assertEqual(study.load(path),value)
+                        with self.assertRaises(FileExistsError): study.freeze(path,{'replace':'forbidden'})
+                        self.assertEqual(study.load(path),value)
+                    else:
+                        study.freeze(path,value); self.assertEqual(study.load(path),value)
+                    self.assertEqual(staged[0].read_bytes(),before)
+
+    def test_no_published_manifest_requires_new_output_and_no_backend(self):
+        for moment in ('mid-write','before-publish','after-publish'):
+            with self.subTest(moment=moment),tempfile.TemporaryDirectory() as td:
+                root=Path(td); config=self.config(); hit=[]; link=study.os.link
+                def publication(src,dst):
+                    if Path(dst).name=='manifest.json' and not hit:
+                        hit.append(True)
+                        if moment=='after-publish': link(src,dst)
+                        raise KeyboardInterrupt('synthetic '+moment)
+                    return link(src,dst)
+                interrupt=self.interrupt_write('manifest.json') if moment=='mid-write' else patch.object(study.os,'link',publication)
+                with interrupt:
+                    with self.assertRaises(KeyboardInterrupt): study.run(root,config,limit=1)
+                before={p:p.read_bytes() for p in root.iterdir() if p.is_file()}
+                if moment=='after-publish':
+                    self.assertEqual(study.run(root,config,resume=True,limit=1)['states'],{'successful':1})
+                else:
+                    with patch.object(study,'backend',side_effect=AssertionError('untrusted startup executed')):
+                        with self.assertRaisesRegex(ValueError,'without complete published manifest'):
+                            study.run(root,config,resume=True,limit=1)
+                self.assertTrue(all(p.read_bytes()==value for p,value in before.items()))
+
+    def test_published_corruption_is_not_recovered_as_interruption(self):
+        for artifact in ('manifest.json','request.json','started.json','receipt.json'):
+            with self.subTest(artifact=artifact),tempfile.TemporaryDirectory() as td:
+                root=Path(td); config=self.config(); study.run(root,config,limit=1)
+                path=root/'manifest.json' if artifact=='manifest.json' else next(root.glob('attempts/*/*/'+artifact))
+                path.write_text('{"truncated":')
+                with patch.object(study,'backend',side_effect=AssertionError('corruption executed')):
+                    with self.assertRaises(json.JSONDecodeError): study.run(root,config,resume=True,limit=1)
+                self.assertEqual(path.read_text(),'{"truncated":')
+
     def test_family_split_before_variants_and_matrix(self):
         data=corpus.corpus(); self.assertEqual(len(data['cases']),64)
         groups={}

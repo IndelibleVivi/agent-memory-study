@@ -126,6 +126,19 @@ request 刚写入而尚未写启动意图的窄窗口也按此处理。resume �
 变化需新 output。不得在同一 output 同时运行两个 executor。receipt digest 与 run ID 用于
 完整性及身份校验，不是签名或抵御能重写整个目录的攻击者的可信证明。
 
+Artifact 发布使用同目录独占 staging + file fsync + hard link（目标存在即拒绝），正式路径
+只有完整文件或不存在。成功后移除 staging，中断时保留 `.name.<uuid>.pending` 的原始 bytes，
+包括可能截断的 UTF-8。request/started/response/receipt 与 manifest/report 都采用此路径。
+receipt 写入中途不产生截断的正式 receipt；resume 对缺失正式文件的 attempt 封存 interrupted，
+其 `incomplete_artifacts` 绑定保留 staging，不修改旧 request/started/response 或 staging。
+若 request 尚未发布，interrupted receipt 的 request 为 null；新 attempt 独立执行。已发布完整
+successful receipt 后即使 staging cleanup 未完成也不再执行该 job。已正式发布的损坏 JSON、
+foreign/source/settings 不符及 digest corruption 仍拒绝，不借恢复路径忽略它们。
+
+无完整已发布 manifest 的非空目录视为未初始化失败：不从 staging 推断权限/settings，不执行
+backend；保留目录，换新 output。此实现验证 process interruption，不承诺 power-loss durability
+或损坏文件系统恢复，需要 output 文件系统支持同目录 hard links；不新增并发 writers 支持。
+
 manifest 记录 exact Python runtime；resume 严格绑定。portable experiment identity 排除 runtime
 和随机 run ID，以便相同 source 的跨 Python patch 汇总核对；raw manifest 仍保留本地 runtime，
 不把 portable identity 当成执行环境同一性的证明。

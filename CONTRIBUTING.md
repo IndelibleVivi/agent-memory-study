@@ -145,7 +145,10 @@ actual delivered payloads and bound request/response/score receipts. Its scripte
 controls are development diagnostics. Keep family counts separate from question, language,
 position and repeat counts; expose the actual budget unit, and retain `used=unknown` unless
 a declared intervention supports a narrower influence claim. The local validation entry
-tests run identity, corruption rejection, retries and replay without provider/model calls.
+tests run identity, corruption rejection, write interruption, retries and replay without
+provider/model calls. Publish complete artifacts atomically without replacing existing files;
+preserve interrupted evidence and retry in a new attempt. A damaged published artifact must
+still fail validation. Source/protocol identity changes require a fresh sample run and raw replay.
 Do not promote these controls into model effectiveness, human validation or a paper benchmark.
 
 The [revision-propagation study](research/revision-propagation-study/README.md) owns a separate

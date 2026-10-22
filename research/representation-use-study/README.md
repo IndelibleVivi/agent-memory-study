@@ -47,13 +47,14 @@ python3 -B research/representation-use-study/study.py dry-run \
 `UTF-8 bytes` 是 exact diagnostic unit，**不是模型 tokens**。equal budget 只限制 memory，
 每条 receipt 另存完整 request bytes，provider token budgeting 未验证。
 
-复现已保存的单位置 compact sample（output 必须为新的 repo 外路径）：
+复现已保存的单位置 compact sample（将示例路径换成容量足够的外部卷新目录；raw 包含数万个
+小文件，不建议写系统盘 temporary directory）：
 
 ```bash
 python3 -B research/representation-use-study/study.py run \
-  --out /tmp/ams-representation-sample --modes full equal --orders forward --budget 900
+  --out /path/to/external-evidence/ams-representation-sample --modes full equal --orders forward --budget 900
 python3 -B research/representation-use-study/study.py replay \
-  --out /tmp/ams-representation-sample \
+  --out /path/to/external-evidence/ams-representation-sample \
   --check-report research/representation-use-study/sample-results.json
 ```
 
@@ -76,10 +77,10 @@ executed、scored denominators 和 outcome statuses，quality 只聚合 scored r
 
 ```bash
 python3 -B research/representation-use-study/study.py run \
-  --out /tmp/ams-representation-resume --modes full --orders forward --fail-once --limit 2
+  --out /path/to/external-evidence/ams-representation-resume --modes full --orders forward --fail-once --limit 2
 python3 -B research/representation-use-study/study.py run \
-  --out /tmp/ams-representation-resume --modes full --orders forward --fail-once --resume
-python3 -B research/representation-use-study/study.py verify --out /tmp/ams-representation-resume
+  --out /path/to/external-evidence/ams-representation-resume --modes full --orders forward --fail-once --resume
+python3 -B research/representation-use-study/study.py verify --out /path/to/external-evidence/ams-representation-resume
 python3 -B research/representation-use-study/test_study.py
 ```
 
@@ -88,8 +89,22 @@ parse_failure/interrupted 与 retry_of 保留。中断不代表从未执行；�
 缺失时，先封存 outcome unknown 再 retry。identity、文件或 request 改变会拒绝 resume；需
 新 output，不能改旧 raw receipts。run 不支持多个并发 writer。完整性不等于可信签名。
 测试覆盖拒绝 corrupt/foreign receipts、预算边界、原话损失、2×2、gold 与 backend 隔离、
-失败和 request-only 窄窗口恢复。统一 reader 验证可调用以上 `test_study.py`；本目录不修改
+失败、各 artifact 真实写入中途、发布前/后以及 request-only 窄窗口恢复。统一 reader 验证可调用以上 `test_study.py`；本目录不修改
 root verifier 或其他 study 的 historical receipts。
+
+artifact 采用同目录 staging：先写 `.name.<uuid>.pending` 并 fsync，再用 hard link 原子发布正式
+路径；目标已存在时拒绝，保持 no-overwrite。发布前中断只留下 staging，正式路径不存在；
+发布后中断时正式路径已完整。成功发布清理 staging；中断 staging 留在原地，不解析/执行其中
+内容，并在 interrupted receipt 的 `incomplete_artifacts` 中绑定原始 bytes。部分 UTF-8 也按 bytes
+保存和核对。request、started、response、receipt、manifest 和 `--report` 都使用同一发布路径。
+
+resume 不补造缺失的 request/started 正式文件：旧 attempt 保留原状，只新增 interrupted receipt；
+尚未发布 request 时该 receipt 的 request 为 null。随后新 attempt 重新开始并引用 retry_of。
+成功 receipt 已发布后即使清理 staging 前中断，job 仍完成，不重跑 backend。已正式发布的损坏
+JSON 或 digest 不符仍拒绝，不能被当作未完成写入吞掉。完整 manifest 尚未发布的启动中断
+不构成可信 run：保留该目录/staging，使用新 output；不从半个 manifest 推断 settings 或执行任务。
+这里验证的是进程中断下的原子发布，不承诺突然掉电、文件系统损坏或跨主机并发恢复；output
+文件系统必须支持同目录 hard link，run 继续限定 single writer。
 
 统一验证也可运行快速、无 backend 的 saved-summary check：
 
