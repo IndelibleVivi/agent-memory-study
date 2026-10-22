@@ -75,6 +75,8 @@ WebGL 无额外依赖；reduced-motion 默认静止，仍可手动操作和切�
 
 现有 `.github/workflows/reader-validation.yml` 在 PR 和 main 运行同一组检查。PR 不部署；main 只有全部通过后，才上传并由独立 `deploy` job 发布同一 artifact。2026-10-18 的 Pages read-only 检查确认 `build_type: workflow`；本次无需切换账号设置。
 
+浏览器依赖安装沿用 runner 的三个 Ubuntu 源；将 Azure 镜像调到官方 HTTPS archive/security 镜像之后，避免慢下载耗尽 job 时限。镜像列表来自 [GitHub runner 配置](https://github.com/actions/runner-images/blob/main/images/ubuntu/scripts/build/configure-apt-sources.sh)，完整依赖安装、签名校验及 15 分钟 job 上限保留；日志会输出实际优先级。失败时先检查下载日志，不跳过浏览器验收。
+
 `reader` job 固定使用 `ubuntu-24.04`，与 `tools/browser-requirements.txt` 中的 Playwright 1.57.0 对齐。
 该版本支持 Ubuntu 24.04，尚不支持 Ubuntu 26.04；不能让浮动的 `ubuntu-latest` 提前更换 browser build 环境。
 升级 runner 或 Playwright 时，先核对对应版本支持的平台，再完成同一套浏览器与静态站检查。

@@ -34,6 +34,9 @@ jobs:
         run: python3 -B tools/verify_reader.py
       - name: Install browser-test dependencies
         run: |
+          # Prefer the runner's existing Ubuntu HTTPS mirrors after slow Azure downloads.
+          sudo sed -i '/azure\.archive\.ubuntu\.com/s/priority:1/priority:4/' /etc/apt/apt-mirrors.txt
+          cat /etc/apt/apt-mirrors.txt
           python3 -m pip install -r tools/browser-requirements.txt
           python3 -m playwright install --with-deps chromium
       - name: Check real navigation on the Pages subpath
