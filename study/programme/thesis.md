@@ -25,7 +25,7 @@ AMS 不预设这些都是固定的零和取舍。更好的表示、任务定义�
 早期 AMS 按 agent memory 的 failure surfaces 组织材料。这套观察方法仍有用：它帮助我们辨认信息在哪一处失去作用。但已有工作也把问题推向了更宽的范围。
 
 - [候选竞争研究](../../research/experience-reuse-retrieval-study/README.md)让“保存了什么”与“有限名额让谁到场”分开。由此可以继续研究相关性、冗余、表示和选择，而不必始终讨论某个 memory 产品。
-- [更正与范围研究](../../research/correction-scope-study/README.md)把新信息与适用条件放到一起。下一步值得理解的是修订关系如何形成、如何被消费；固定标签下的规则输出已经不能回答全部问题。
+- [更正与范围研究](../../research/correction-scope-study/README.md)把新信息与适用条件放到一起；[修订传播实验](../../research/revision-propagation-study/README.md)继续观察多层同步与输出再写入，区分一直未修好的错误和修好后再现的旧影响。修订关系如何从自然语言形成、怎样在真实任务中被消费，仍超出了这些固定标签控制的证据。
 - [学习与纠正研究](../../research/decision-learning-study/README.md)让保存经历和改变选择规则成为两个可分别观察的对象。结构化小实验不能替代自然语言效用评价，但它为“应该改变什么、应该保留什么”提供了具体起点。
 - [缓存撤回研究](../../research/c2c-cache-retraction-study/README.md)提示我们检查来源与派生状态之间的计算依赖。其单模型观察不能直接外推到文本概括或跨模型转移；恰恰是这种差异，使机制之间的对读值得继续。
 

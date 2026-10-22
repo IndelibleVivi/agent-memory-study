@@ -148,6 +148,17 @@ a declared intervention supports a narrower influence claim. The local validatio
 tests run identity, corruption rejection, retries and replay without provider/model calls.
 Do not promote these controls into model effectiveness, human validation or a paper benchmark.
 
+The [revision-propagation study](research/revision-propagation-study/README.md) owns a separate
+longitudinal experiment: canonical/index/summary/context snapshots, delayed updates, isolated
+branches and output writeback. Keep interventions on one declared layer, preserve the common
+pre-revision checkpoint and exogenous task schedule, and treat later branch outputs as mediators.
+Report persistent error separately from recurrence after an observed correction. Read-only
+history/preserved/boundary probes must not write into the main trajectory. Event families, episodes
+and repeated tasks have separate denominators; scheduled replay of early output is a synthetic
+pressure condition, not a measured frequency in real systems. Tombstone/delete comparisons do not
+establish privacy erasure. Changes require its unittest suite, saved-summary check and a fresh
+raw run/replay when experiment semantics change; run directories stay outside Git.
+
 Reader changes should pass:
 
 ```bash
