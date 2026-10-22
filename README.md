@@ -14,11 +14,12 @@ AMS 从 agent memory 出发，研究信息、经验与智能的跨时间关系�
 | --- | --- |
 | jieba、BM25、BGE-M3 究竟在做什么 | [找到一样的，还是找到相关的？](study/entries/retrieval-and-relevance.md)：用一个原创集合例子区分近邻重合、精确率和召回率；网页可以改变候选数、排序和相关性定义。 |
 | Database、Index、Retriever、Memory 怎样区分 | [一条记录、一种表示、一个记忆系统](study/entries/records-representations-systems.md)：从同一条工具版本记录看不同研究对象和功能角色。 |
+| 同一份记忆，后来换个问题还够用吗 | [记忆需要为尚未出现的问题保留什么？](study/entries/future-questions-and-memory.md)：推导完整观察类的答案交集，并运行 32 个原创历史的有限检查。 |
 | 新材料怎样改变已经形成的认识 | [索引也能学习——究竟学了什么？](study/entries/what-an-index-learns.md)：对齐两个作者摘要里的“学习索引”，保留阅读范围、解释的改变和下一问。 |
 | 继续一项已有研究 | [经验怎样长成判断习惯](https://indeliblevivi.github.io/agent-memory-study/study/experience-becomes-policy/)：跨源论述、已保存的分类器学习与纠正结果，以及仍未回答的问题。 |
 | 看项目长期关心什么 | [经验的形式](study/programme/directions/forms-of-experience.md)、[当下的相关性](study/programme/directions/relevance-in-context.md)、[改变与继承](study/programme/directions/change-and-continuity.md)。 |
 
-这些新文章是基于公开来源与原创例子写成的研究内容，不是私人聊天的重建。当前有 12 篇学习／研究文章、27 份来源札记、2 个问题专题、5 条实践判断。领域与方向只是可改的阅读地图；数量、关联和阅读深度不代表个人掌握度。
+这些新文章是基于公开来源与原创例子写成的研究内容，不是私人聊天的重建。当前有 13 篇学习／研究文章、27 份来源札记、2 个问题专题、5 条实践判断。领域与方向只是可改的阅读地图；数量、关联和阅读深度不代表个人掌握度。
 
 ## 研究怎样生长
 
@@ -86,7 +87,7 @@ python3 -B tools/seo_build.py
 python3 -B tools/test_static_reader.py
 ```
 
-构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、星图与三维研究体共用的身份／引用关系、领域布局，以及既有五组确定性研究和一组 stdlib 分类器学习／纠正实验；另检查 AgeMem、C2C、Jev 已保存 receipts。它不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
+构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、星图与三维研究体共用的身份／引用关系、领域布局，以及六组确定性研究（包括任务相对充分性的有限枚举）和一组 stdlib 分类器学习／纠正实验；另检查 AgeMem、C2C、Jev 已保存 receipts。它不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
 
 ## 发布、隐私与来源
 

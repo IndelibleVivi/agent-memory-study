@@ -83,9 +83,9 @@ test('graph follows typed references and compiler anchors, with no dangling, sel
 
 test('all current public objects retain their identity and representative explicit connections', () => {
   const model = researchMap.graph(data);
-  assert.equal(model.nodes.length, 46);
+  assert.equal(model.nodes.length, 47);
   assert.deepEqual(Object.fromEntries(['study', 'material', 'question', 'finding'].map(kind =>
-    [kind, model.nodes.filter(node => node.kind === kind).length])), {study: 12, material: 27, question: 2, finding: 5});
+    [kind, model.nodes.filter(node => node.kind === kind).length])), {study: 13, material: 27, question: 2, finding: 5});
   assert.equal(new Set(model.nodes.map(node => node.key)).size, model.nodes.length);
   assert.equal(new Set(edgeKeys(model)).size, model.edges.length);
   model.edges.forEach(([from, to]) => {
@@ -97,6 +97,8 @@ test('all current public objects retain their identity and representative explic
     ['study/ams-thesis', 'study/how-we-study'],
     ['study/after-a-correction', 'material/truth-maintenance-system'],
     ['study/retrieval-and-relevance', 'study/what-an-index-learns'],
+    ['study/future-questions-and-memory', 'study/forms-of-experience'],
+    ['study/future-questions-and-memory', 'material/fluctlightdb-observation-binding'],
     ['question/experience-becomes-policy', 'study/experience-becomes-policy'],
     ['question/experience-to-capability', 'finding/revision-needs-scope'],
     ['finding/output-guard-is-not-unlearning', 'material/cache-to-cache']
