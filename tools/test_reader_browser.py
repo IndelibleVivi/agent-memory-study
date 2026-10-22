@@ -476,11 +476,17 @@ def main():
                         expect(page.locator('#constellation-list .map-list-row:visible')).to_have_count(2)
                         if width == 1440:
                             page.emulate_media(reduced_motion='no-preference')
+                            # Observe each emulated media state after rendering,
+                            # before switching the preference again.
+                            page.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))')
+                            expect(page.locator('#map-motion')).to_have_attribute('aria-pressed','false')
                             page.locator('#constellation-list .map-list-row:visible button').last.click()
                         page.locator('[data-map-view="map"]').click()
                         if width == 1440:
                             expect(page.locator('.map-node.is-selected .map-node-label')).to_have_css('opacity','1')
                             page.emulate_media(reduced_motion='reduce')
+                            page.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))')
+                            expect(page.locator('#map-motion')).to_have_attribute('aria-pressed','true')
                         page.locator('#map-reset').click()
                         page.locator('#map-query').fill('retrieval-and-relevance')
                         expect(page.locator('#constellation-stats')).to_contain_text('01 /')
@@ -519,8 +525,23 @@ def main():
                         page.mouse.down();page.mouse.move(box['x']+box['width']*.5+45,box['y']+box['height']*.5+25,steps=5);page.mouse.up()
                         assert before_box != map_svg.get_attribute('viewBox'), 'Pan did not move the camera'
                         if width == 1440:
+                            expect(page.locator('#map-motion')).to_have_attribute('aria-pressed','true')
                             page.locator('#map-motion').click()
-                            expect(star_map).to_have_attribute('data-motion','running')
+                            expect(page.locator('#map-motion')).to_have_attribute('aria-pressed','false')
+                            # Clicking a control may scroll its plot out of view. Running
+                            # motion requires both an unpaused control and a visible plot.
+                            map_svg.scroll_into_view_if_needed()
+                            try:
+                                expect(star_map).to_have_attribute('data-motion','running')
+                            except AssertionError:
+                                evidence['motion_failure_state'] = page.evaluate('''() => ({
+                                  hidden: document.hidden,
+                                  reduced: matchMedia('(prefers-reduced-motion: reduce)').matches,
+                                  paused: document.querySelector('#map-motion').getAttribute('aria-pressed'),
+                                  plot: document.querySelector('#constellation-plot').getBoundingClientRect().toJSON(),
+                                  viewportHeight: innerHeight
+                                })''')
+                                raise
                             before_signals = map_signal_positions(page)
                             assert before_signals, 'a selected linked object must expose reference signals'
                             page.wait_for_function('''before => JSON.stringify([...document.querySelectorAll('.map-signals circle.is-active')]
