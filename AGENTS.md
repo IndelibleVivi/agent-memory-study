@@ -81,6 +81,9 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 - `studies` 是编译后的文章集合，来自 `study/entries/`；以下三类共读保留各自 scenario / artifact 边界，不把它们的字段要求施加给普通学习文章。任何专题都不自动提升 material `noteDepth`。
 - `editorial-synthesis-with-proposed-experiment` 只承载跨源论述与未执行方案，`artifactUrl` 指向公开协议；不得包含 `resultsUrl`、`recordedResults`、`scenarios` 或 `policies`。页面标明未执行并提供方案入口，不制造可运行控件。私人语料、资源 inventory、标签与派生模型留在公开 repo 外。
 - `research/multilingual-use-policy/casebook.py` 负责离线材料与 review sidecar 的合同校验和 HTML 生成；生成页面及私人输入/标注不入 Git。源码消息窗口可追溯不等于完整事件、情境充分或效用已确认；该工具不训练模型，不改变专题的未执行状态。其合成合同测试接入 `tools/verify_reader.py`；修改校准 UI 时运行 `tools/test_casebook_browser.py`，仅使用原创合成材料。
+- Review 使用 `ams-memory-reviews/2`，绑定 canonical case 内容 digest 与 `rubric_version`。改变被审材料或 rubric 后不得沿用 confirmed；旧 sidecar 或不匹配内容只能显式 `rebind-reviews` 到新文件，保留旧审阅并标 stale，再主动确认。Digest 只判断内容身份，不认证审阅者或标签效用。
+- `research/representation-use-study/` 拥有离线事件、gold、三臂执行器及运行证据，保持本研究内的单一实现；未有第二个真实消费者前不抽取跨研究框架。实际送达输入、response 和 score 必须绑定；完整 artifact 原子发布且不覆写，中断证据保留，resume 另建 attempt；已发布的损坏文件仍须拒绝。`used` 默认 unknown。诊断预算明确计数单位，不冒充 provider token。Scripted/oracle 控制与完整自然语言研究状态分开，公开仅用原创合成数据，运行目录留在 repo 外。修改该路径须运行其 unittest 与 `tools/verify_reader.py`；source/protocol identity 变化须新跑 sample 并 raw replay。不自动执行模型/API 或私人材料实验。
+- `research/revision-propagation-study/` 是纵向修订传播、延迟调度、单层干预与再写入的唯一实现；原 `correction-scope-study` 继续拥有单次更正的网页规则演示。分支共享修订前 checkpoint 与外生任务安排，后续输出是各自中介，不能重新匹配成相同历史。历史／preserved／boundary probes 只读；持续错误与修好后的再现分别计数。源码或实验语义变化须运行该目录 unittest、`check-sample` 与新的 raw run/replay；原始 run 留在 repo 外，公开汇总不替代 raw 重放。统一 verifier 接入合同与 compact summary 检查，不运行模型；删除消融不代表隐私删除。
 - `externalReadings` 允许共读引用官方文档、开源实现与论文线索，必须保留类型、阅读范围与限制；不自动变成 Zotero 书目。`editorial-synthesis-with-recorded-experiment` 的 `resultsUrl` 指向已执行 `research/` JSON；`recordedResults` 仅由 builder 投影，不进入 canonical。录制结果展示与 `revision-study.js` 的实时规则演示分开。
 - `research/decision-learning-study/study.py` 是学习实验唯一训练/评价实现；网页不重新训练。修改实验后用 `--check` 重算并运行该目录 unittest，更新公开方法/结果；自然语言、agent 收益与权重遗忘不能由结构化标签预测代替。
 - Jev 共读使用 `ams-jev-contract-results/1` 保存固定源码的给定判断对照；页面按 case 与 before/after 展示节点和原始 receipt，不重新运行源码。完整复跑需要外部 pinned checkout；本地 reader 入口只校验保存结果。不要把内存 graph/vector 的成员变化写成真实持久化、语义检索或 Jev inference。
@@ -115,4 +118,4 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 - 星图 `#constellation` 独立于 legacy disclosure，桌面／手机都保留 SVG、列表、对象详情及真实正文链接。搜索／类型／领域筛选、相机、选取和暂停只在页面内存；不写 URL、storage 或 canonical。选取与 hover 不制造关系；静态 snapshot 移除控制，保留星点与相关对象的普通链接。修改时运行既有 reader browser / static tests。
 - `assets/fonts/` 是经许可分发的字体子集及完整 OFL notices，源 TTF 不入仓库。可选 `tools/build_fonts.py` 读取公开正文／界面字符串离线重建；普通构建不依赖 fontTools。新增缺失字形先确认 fallback，再按字体 README 重建；不要引入远程字体请求。
 
-- `.github/workflows/reader-validation.yml` 的 PR 构建不部署，main 仅发布同一验证通过的 artifact。Pages 使用既有 Actions 发布面；修改 Pages account 设置仍是独立授权操作，源码/CI通过不代表本次 artifact 已上线。流程见 `docs/website.md`。
+- `.github/workflows/reader-validation.yml` 的 PR 构建不部署，main 仅发布同一验证通过的 artifact。`reader` runner 固定在当前 Playwright 支持的 Ubuntu 版本；升级 OS / browser dependency 时核对版本支持并跑完整浏览器与静态检查，不直接换回浮动镜像。Pages 使用既有 Actions 发布面；修改 Pages account 设置仍是独立授权操作，源码/CI通过不代表本次 artifact 已上线。流程见 `docs/website.md`。

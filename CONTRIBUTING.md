@@ -131,9 +131,36 @@ A `worked` entry must have an attributed `public-test` artifact. Moving an exist
 result between sections does not change its reading depth or historical receipts.
 
 The reader verification entry also checks the offline casebook's source/context and
-review-sidecar contracts with original synthetic fixtures. Private casebooks, generated
+content/rubric-bound review-sidecar contracts with original synthetic fixtures. Reviews use
+`ams-memory-reviews/2`; legacy or changed-material sidecars require the explicit
+`rebind-reviews` command documented in the [casebook guide](research/multilingual-use-policy/README.md).
+Rebinding preserves prior review provenance and requires fresh confirmation; it does not certify labels.
+Private casebooks, generated
 review HTML and labels stay outside the repository. This is contract validation, not
 a multilingual scorer or answerer experiment; the study remains proposed-not-run.
+
+The [representation-use runner](research/representation-use-study/README.md) adds an offline
+execution contract with original event families, independent gold, three representation arms,
+actual delivered payloads and bound request/response/score receipts. Its scripted and oracle
+controls are development diagnostics. Keep family counts separate from question, language,
+position and repeat counts; expose the actual budget unit, and retain `used=unknown` unless
+a declared intervention supports a narrower influence claim. The local validation entry
+tests run identity, corruption rejection, write interruption, retries and replay without
+provider/model calls. Publish complete artifacts atomically without replacing existing files;
+preserve interrupted evidence and retry in a new attempt. A damaged published artifact must
+still fail validation. Source/protocol identity changes require a fresh sample run and raw replay.
+Do not promote these controls into model effectiveness, human validation or a paper benchmark.
+
+The [revision-propagation study](research/revision-propagation-study/README.md) owns a separate
+longitudinal experiment: canonical/index/summary/context snapshots, delayed updates, isolated
+branches and output writeback. Keep interventions on one declared layer, preserve the common
+pre-revision checkpoint and exogenous task schedule, and treat later branch outputs as mediators.
+Report persistent error separately from recurrence after an observed correction. Read-only
+history/preserved/boundary probes must not write into the main trajectory. Event families, episodes
+and repeated tasks have separate denominators; scheduled replay of early output is a synthetic
+pressure condition, not a measured frequency in real systems. Tombstone/delete comparisons do not
+establish privacy erasure. Changes require its unittest suite, saved-summary check and a fresh
+raw run/replay when experiment semantics change; run directories stay outside Git.
 
 Reader changes should pass:
 
@@ -171,7 +198,8 @@ viewports. All third-party browser requests, including analytics, are blocked.
 The casebook browser check uses only original synthetic fixtures and opens generated
 HTML directly as a local file. It checks editing, explicit confirmation, invalidation after
 edits, JSON download/reload, filters, text escaping, keyboard use and three viewport
-sizes. It does not read private material or certify human acceptance of labels.
+sizes, including stale review migration, download and explicit reconfirmation. It does not
+read private material or certify human acceptance of labels.
 
 On hosts that prohibit browser navigation, `--offline-render` is an explicitly
 labelled DOM/interaction fallback. Its receipt lists HTTP, reload and history as

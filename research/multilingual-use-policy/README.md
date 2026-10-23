@@ -40,6 +40,7 @@ python3 -B research/multilingual-use-policy/casebook.py validate        --casebo
 python3 -B research/multilingual-use-policy/casebook.py review-template --casebook cases.json [--out reviews.json]
 python3 -B research/multilingual-use-policy/casebook.py render          --casebook cases.json --out review.html [--reviews reviews.json]
 python3 -B research/multilingual-use-policy/casebook.py check-reviews   --casebook cases.json --reviews reviews.json
+python3 -B research/multilingual-use-policy/casebook.py rebind-reviews  --casebook cases.json --reviews old-reviews.json --out rebound-reviews.json
 python3 -B -m unittest discover -s research/multilingual-use-policy -p 'test_*.py'
 ```
 
@@ -50,7 +51,7 @@ python3 -B -m unittest discover -s research/multilingual-use-policy -p 'test_*.p
 python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebook
 ```
 
-它只使用原创合成案例，检查三种视口的编辑、确认、修改后退回草稿、下载／重载、筛选与纯文本展示。
+它只使用原创合成案例，检查三种视口的编辑、确认、修改后退回草稿、下载／重载、筛选与纯文本展示，以及内容变更后 stale 的历史保留、重新确认和重载。
 
 ### 数据合同
 
@@ -76,11 +77,41 @@ Casebook 顶层为 `{schema:"ams-memory-casebook/1", dataset_id, cases:[...]}`�
 - `correction_candidate.status` 取 `unreviewed` / `none`，`evidence_ids` 引用证据 id；它只是
   检索线索，**不等于真实纠正标签**。
 
-review sidecar 为 `{schema:"ams-memory-reviews/1", dataset_id:同, reviews:[...]}`，每条含
-`case_id`、`status`（`unreviewed`／`draft`／`confirmed`）、`reviewer`、`reviewed_at`、
+review sidecar 为 `{schema:"ams-memory-reviews/2", dataset_id:同, reviews:[...], removed_reviews?:[...]}`，每条含
+`case_id`、`case_payload_digest`、`rubric_version`、`stale_reason`（字符串或 null）、`history`，以及
+`status`（`unreviewed`／`draft`／`confirmed`／`stale`）、`reviewer`、`reviewed_at`、
 `context_sufficient`、`label`（`null`／`useful`／`not-useful`／`insufficient-context`）与
 `rationale`。sidecar 可以只包含被选中的部分 case；`dataset_id` 必须与 casebook 相同，
 未知 case 与重复 case 会被拒绝。
+
+`case_payload_digest` 为完整 case 对象的 canonical JSON SHA-256：递归排序 object keys，使用
+UTF-8 与紧凑 JSON，保留数组顺序和文本内容。JSON 缩进或 object key 顺序变化不会改变身份；
+context、source（含证据顺序、provenance）、summary／其他表示、纠正范围、diagnostics 或其他
+case 字段变化都会使旧 sidecar 失效。`rubric_version` 当前为 `ams-memory-use-rubric/1`，
+绑定本工具的取用问题、label 定义与确认要求；修改这些规则必须递增版本。digest 只用于内容
+身份比较，不认证 reviewer、人工审批、摘要忠实度或标注质量。
+
+`validate`、`check-reviews` 与 `render` 拒绝未绑定的 v1 sidecar，以及内容／rubric 不匹配的 v2
+sidecar，错误信息指向显式 `rebind-reviews` 命令。该命令完全离线，只写一个**尚不存在的新文件**，
+保留原始 casebook 和 sidecar；不允许覆盖旧文件。v1 迁移时每条旧记录都转为 stale；v2 只对
+身份变化的记录转为 stale（未变记录保持原状态）。迁移重置当前确认时间，绑定当前 digest／rubric，
+并在 `history` 中保存原 schema、dataset ID、reason 与原 review（包括旧身份、状态、审阅者、
+时间、理由及额外 provenance 字段）。history 只保存历史，不参与当前确认与 aggregate；每个
+history／removed_reviews 最多 32 条、JSON 编码最多 256 KiB，超过时拒绝迁移并要求保留原件，
+不截断或静默丢弃。历史不递归嵌套，连续迁移会保留已有 timeline。
+
+case 被移除时，默认明确报错；确定需归档后使用：
+
+```bash
+python3 -B research/multilingual-use-policy/casebook.py rebind-reviews --casebook cases.json --reviews old-reviews.json --out rebound-reviews.json --removed-cases archive
+```
+
+此选项将被移除的 review 及其已有 history 放入顶层 `removed_reviews`，不再作为活动 review。
+不同 dataset、重复 case 或格式错误仍拒绝。迁移容许原确认时的 context 后来变更或缺失；这只
+保留旧判断记录，当前 stale 状态不声称适用于新情境。浏览器显示 stale 原因、rubric 与历史，
+允许修改并主动重新确认，下载保留所有身份和历史字段；`confirmed` 必须清空 `stale_reason`。
+旧 label／理由可供参考，必须在当前材料与规则下重新审阅后点击确认。
+
 
 ### 视图含义与标注规则
 

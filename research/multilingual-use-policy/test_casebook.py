@@ -73,6 +73,9 @@ def sample_casebook():
 def review(case_id, **overrides):
     base = {"case_id": case_id, "status": "unreviewed", "reviewer": None, "reviewed_at": None,
             "context_sufficient": None, "label": None, "rationale": ""}
+    matching = next((c for c in sample_casebook()['cases'] if c['case_id'] == case_id), None)
+    base.update(case_payload_digest=casebook.case_payload_digest(matching or {}),
+                rubric_version=casebook.RUBRIC_VERSION, stale_reason=None, history=[])
     base.update(overrides)
     return base
 
@@ -167,7 +170,7 @@ class ReviewTemplateTests(unittest.TestCase):
 
     def test_template_is_all_unreviewed_and_unlabeled(self):
         template = casebook.template_reviews(self.book)
-        self.assertEqual(template["schema"], "ams-memory-reviews/1")
+        self.assertEqual(template["schema"], casebook.REVIEWS_SCHEMA)
         self.assertEqual(template["dataset_id"], "synthetic-demo")
         self.assertEqual(len(template["reviews"]), 3)
         for entry in template["reviews"]:
@@ -255,7 +258,7 @@ class ReviewTemplateTests(unittest.TestCase):
         self.assertTrue(any("duplicate case_id" in e for e in casebook.validate_reviews(sidecar, self.book)))
 
     def test_subset_sidecar_is_valid(self):
-        sidecar = {"schema": "ams-memory-reviews/1", "dataset_id": "synthetic-demo",
+        sidecar = {"schema": casebook.REVIEWS_SCHEMA, "dataset_id": "synthetic-demo",
                    "reviews": [review("case-1", status="draft", reviewer="alice")]}
         self.assertEqual(casebook.validate_reviews(sidecar, self.book), [])
 
@@ -332,19 +335,148 @@ class AggregateTests(unittest.TestCase):
         self.assertEqual(report["by_group"]["g1"]["status"]["confirmed"], 1)
         self.assertEqual(report["by_group"]["g1"]["status"]["draft"], 1)
         self.assertEqual(report["by_group"]["g2"]["cases"], 1)
-        self.assertEqual(report["status_counts"], {"unreviewed": 1, "draft": 1, "confirmed": 1})
+        self.assertEqual(report["status_counts"], {"unreviewed": 1, "draft": 1, "confirmed": 1, "stale": 0})
         self.assertEqual(report["label_counts"]["useful"], 1)
         self.assertEqual(report["label_counts"]["null"], 2)
 
     def test_aggregate_is_subset_aware_and_leaks_no_text(self):
         book = sample_casebook()
-        sidecar = {"schema": "ams-memory-reviews/1", "dataset_id": "synthetic-demo",
+        sidecar = {"schema": casebook.REVIEWS_SCHEMA, "dataset_id": "synthetic-demo",
                    "reviews": [review("case-1", status="draft", reviewer="alice")]}
         report = casebook.aggregate(book, sidecar)
-        self.assertEqual(report["status_counts"], {"unreviewed": 2, "draft": 1, "confirmed": 0})
+        self.assertEqual(report["status_counts"], {"unreviewed": 2, "draft": 1, "confirmed": 0, "stale": 0})
         blob = json.dumps(report, ensure_ascii=False)
         self.assertNotIn("plain replies", blob)
         self.assertNotIn("Berlin", blob)
+
+
+class ReviewIdentityRegressionTests(unittest.TestCase):
+    def test_changed_context_same_ids_cannot_keep_confirmation(self):
+        book = sample_casebook()
+        sidecar = casebook.template_reviews(book)
+        sidecar['reviews'][0].update(status='confirmed', reviewer='synthetic',
+            reviewed_at='2026-01-03', label='useful', context_sufficient=True, rationale='reviewed')
+        book['cases'][0]['context']['text'] = 'A different task.'
+        self.assertTrue(casebook.validate_reviews(sidecar, book))
+
+
+class BoundReviewTests(unittest.TestCase):
+    def setUp(self):
+        self.book = sample_casebook()
+        self.sidecar = casebook.template_reviews(self.book)
+        self.sidecar['reviews'][0].update(status='confirmed', reviewer='synthetic',
+            reviewed_at='2026-01-03', label='useful', context_sufficient=True, rationale='reviewed',
+            provenance={'method': 'synthetic original review'})
+
+    def test_format_and_key_order_do_not_change_identity(self):
+        reordered = json.loads(json.dumps(self.book, sort_keys=True, indent=4))
+        self.assertEqual(casebook.validate_reviews(self.sidecar, reordered), [])
+        self.assertEqual(casebook.rebind_reviews(self.sidecar, reordered)['reviews'], self.sidecar['reviews'])
+
+    def test_all_reviewed_fields_invalidate_and_preserve_old_confirmation(self):
+        def summary(c):
+            c['memory']['text'] = c['representations']['summary'] = 'Changed summary.'
+            c['representations']['coexistence'] = casebook.build_coexistence(
+                c['representations']['episodes'], c['representations']['summary'])
+        def reverse(c):
+            c['source']['evidence'].reverse()
+            c['representations']['episodes'] = casebook.build_episodes(c['source']['evidence'])
+            c['representations']['coexistence'] = casebook.build_coexistence(
+                c['representations']['episodes'], c['representations']['summary'])
+        mutations = [lambda c: c['context'].update(text='Changed context'),
+            lambda c: c.update(context=missing_context()), summary, reverse,
+            lambda c: c['source']['evidence'][0]['locator'].update(pointer='/changed'),
+            lambda c: c['correction_candidate'].update(scope='different scope'),
+            lambda c: c['source'].update(sequence_verified=False)]
+        for change in mutations:
+            with self.subTest(change=change):
+                book = copy.deepcopy(self.book)
+                change(book['cases'][0])
+                self.assertEqual(casebook.validate_casebook(book), [])
+                self.assertTrue(casebook.validate_reviews(self.sidecar, book))
+                with self.assertRaisesRegex(ValueError, 'rebind-reviews'):
+                    casebook.render_html(book, self.sidecar)
+                migrated = casebook.rebind_reviews(self.sidecar, book)
+                r = migrated['reviews'][0]
+                self.assertEqual(r['status'], 'stale')
+                self.assertIsNone(r['reviewed_at'])
+                old = r['history'][0]['review']
+                self.assertEqual(old['status'], 'confirmed')
+                self.assertEqual(old['reviewer'], 'synthetic')
+                self.assertEqual(old['provenance'], {'method': 'synthetic original review'})
+                self.assertEqual(old['case_payload_digest'], self.sidecar['reviews'][0]['case_payload_digest'])
+                self.assertEqual(casebook.validate_reviews(migrated, book), [])
+                self.assertEqual(self.sidecar['reviews'][0]['status'], 'confirmed')
+
+    def test_rubric_revision_requires_reconfirmation(self):
+        from unittest.mock import patch
+        with patch.object(casebook, 'RUBRIC_VERSION', 'ams-memory-use-rubric/2'):
+            self.assertTrue(casebook.validate_reviews(self.sidecar, self.book))
+            migrated = casebook.rebind_reviews(self.sidecar, self.book)
+            self.assertEqual(migrated['reviews'][0]['status'], 'stale')
+            self.assertEqual(migrated['reviews'][0]['history'][0]['review']['rubric_version'],
+                             'ams-memory-use-rubric/1')
+            self.assertEqual(casebook.validate_reviews(migrated, self.book), [])
+
+    def test_legacy_migration_and_removed_cases(self):
+        legacy = copy.deepcopy(self.sidecar)
+        legacy['schema'] = 'ams-memory-reviews/1'
+        for r in legacy['reviews']:
+            for key in ('rubric_version', 'case_payload_digest', 'history', 'stale_reason'):
+                r.pop(key)
+        self.book['cases'][0]['context'] = missing_context()
+        self.assertTrue(casebook.validate_reviews(legacy, self.book))
+        migrated = casebook.rebind_reviews(legacy, self.book)
+        self.assertEqual(migrated['reviews'][0]['status'], 'stale')
+        self.assertEqual(migrated['reviews'][0]['history'][0]['schema'], 'ams-memory-reviews/1')
+        self.assertEqual(migrated['reviews'][0]['history'][0]['review']['status'], 'confirmed')
+        self.book['cases'].pop(0)
+        with self.assertRaisesRegex(ValueError, '--removed-cases archive'):
+            casebook.rebind_reviews(legacy, self.book)
+        archived = casebook.rebind_reviews(legacy, self.book, archive_removed=True)
+        self.assertEqual(archived['removed_reviews'][0]['review']['case_id'], 'case-1')
+        self.assertEqual(archived['removed_reviews'][0]['review']['status'], 'confirmed')
+        self.assertEqual(casebook.validate_reviews(archived, self.book), [])
+
+    def test_malformed_migration_and_history_are_rejected(self):
+        for mutate in (lambda d: d['reviews'].append(copy.deepcopy(d['reviews'][0])),
+                       lambda d: d['reviews'][0].update(case_id=[]),
+                       lambda d: d['reviews'][0].update(history=[{}]),
+                       lambda d: d['reviews'][0].update(case_payload_digest='wrong')):
+            broken = copy.deepcopy(self.sidecar)
+            mutate(broken)
+            with self.assertRaises(ValueError):
+                casebook.rebind_reviews(broken, self.book)
+
+    def test_history_limit_never_silently_discards_confirmation(self):
+        self.book['cases'][0]['context']['text'] = 'changed'
+        once = casebook.rebind_reviews(self.sidecar, self.book)
+        prior = once['reviews'][0]['history'][0]
+        once['reviews'][0]['history'] = [copy.deepcopy(prior) for _ in range(casebook.MAX_HISTORY)]
+        self.book['cases'][0]['context']['text'] = 'changed again'
+        with self.assertRaisesRegex(ValueError, 'bounded history limit'):
+            casebook.rebind_reviews(once, self.book)
+        self.assertEqual(len(once['reviews'][0]['history']), casebook.MAX_HISTORY)
+        self.assertEqual(once['reviews'][0]['history'][0]['review']['status'], 'confirmed')
+
+    def test_cli_rebind_preserves_input_and_requires_fresh_output(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory(prefix='ams-casebook-') as work:
+            root = Path(work)
+            book_path, old_path, new_path = (root / n for n in ('book.json', 'old.json', 'new.json'))
+            self.book['cases'][0]['context']['text'] = 'changed'
+            book_path.write_text(json.dumps(self.book))
+            original = json.dumps(self.sidecar)
+            old_path.write_text(original)
+            args = ['rebind-reviews', '--casebook', str(book_path), '--reviews', str(old_path), '--out']
+            self.assertEqual(casebook.main(args + [str(new_path)]), 0)
+            self.assertEqual(old_path.read_text(), original)
+            self.assertEqual(json.loads(new_path.read_text())['reviews'][0]['status'], 'stale')
+            import contextlib
+            import io
+            with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+                casebook.main(args + [str(old_path)])
 
 
 class EpisodeBuilderTests(unittest.TestCase):

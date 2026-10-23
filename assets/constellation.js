@@ -11,9 +11,10 @@
     let layout=ResearchMap.clusterLayout(model,data.room.domains,width,height);
     const $=id=>root.querySelector(id), plot=$('#constellation-plot'), panel=$('#constellation-reading');
     const motion=matchMedia('(prefers-reduced-motion: reduce)');
+    let reducedMotion=motion.matches;
     let hovered=-1, focused=-1;
     let selected=Math.max(0,model.nodes.findIndex(n=>n.id==='ams-thesis')), focus=false, kind='', domain='', query='', view='map';
-    let camera={x:0,y:0,w:width,h:height}, target={...camera}, frame=0, previous=0, visible=false, paused=motion.matches, drag=null;
+    let camera={x:0,y:0,w:width,h:height}, target={...camera}, frame=0, previous=0, visible=false, paused=reducedMotion, drag=null;
     let flowPhase=0, labelCamera=null;
     let matching=new Set(model.nodes.map((_,i)=>i));
     const svg=svgEl('svg',{viewBox:`0 0 ${width} ${height}`,role:'group','aria-label':'研究星图，可拖动平移；选择节点查看详情。缩放与复位按钮位于图下。',tabindex:'0'});
@@ -155,7 +156,7 @@
     }
     function animate(now) {
       frame=0;const dt=previous?Math.min(40,now-previous):16;previous=now;
-      const step=motion.matches?1:1-Math.exp(-dt/100);
+      const step=reducedMotion?1:1-Math.exp(-dt/100);
       for(const k of ['x','y','w','h'])camera[k]+=(target[k]-camera[k])*step;
       if(!paused)flowPhase=(flowPhase+dt*.000045)%1;
       paint();
@@ -166,7 +167,7 @@
       if(frame)cancelAnimationFrame(frame);frame=0;previous=0;
       const running=visible&&!document.hidden&&view==='map';root.dataset.motion=running&&!paused?'running':'still';
       $('#map-motion').setAttribute('aria-pressed',String(paused));$('#map-motion').textContent=paused?'动态 ○':'静止 Ⅱ';
-      if(motion.matches)camera={...target};
+      if(reducedMotion)camera={...target};
       placeLabels();paint();
       if(running)frame=requestAnimationFrame(animate);
     }
@@ -208,7 +209,10 @@
       camera={x:0,y:0,w:width,h:height};target={...camera};placeLabels();if(focus||query||domain||kind)fit();refresh();
     });
     new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;refresh();},{threshold:.02}).observe(plot);
-    document.addEventListener('visibilitychange',refresh);motion.addEventListener('change',()=>{paused=motion.matches;refresh();});
+    document.addEventListener('visibilitychange',refresh);
+    // Keep frames/refresh on the delivered preference: reading matches during
+    // a media transition can precede its change notification in Chromium.
+    motion.addEventListener('change',event=>{reducedMotion=event.matches;paused=reducedMotion;refresh();});
     root.querySelectorAll('[data-js-control]').forEach(el=>el.hidden=false);
     describe();updateAppearance();paint();
     document.fonts.ready.then(placeLabels);

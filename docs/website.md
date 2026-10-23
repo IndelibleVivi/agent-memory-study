@@ -61,7 +61,7 @@ WebGL 无额外依赖；reduced-motion 默认静止，仍可手动操作和切�
 
 排版中的集合、索引映射和状态更新注记由 `study/map.json` 的可选 `notation` 提供，依据相连正文；它们不是新实验结果。学习入口的 SVG 分别解释集合交集、索引映射和参数更新，是原创示意而非实验数据；手机重排图形、控制与对象说明，正文阅读顺序保持完整。
 
-`#constellation` 是主导航中的研究星图，不再藏于 legacy disclosure。`constellation.js` 使用 SVG、数学坐标与短程 camera easing；深色全宽图面与下方浅色阅读区区分观察和阅读。全景只显示当前对象和悬停／键盘定位对象的标题；放大、筛选或聚焦时展开更多视口内标题，回缩时收回，长标题按可用宽度换行，并按实际字体和视口避让。领域只留方位标签，不绘制领域轮廓或逐节点编号；类型由星点形状和颜色区分。当前对象的显式引用被强调，其余引用留在背景；预览不改变选取或引用关系。类型／领域／标题和摘要关键词筛选、目录切换、聚焦引用、平移、缩放、复位及正文入口在手机和桌面相同；小屏重新计算纵向布局。支持 Fullscreen API 的浏览器提供“展开星图”，可通过同一按钮或 Escape 退出；打开正文时退出全屏。选中引用上的微小光点沿真实曲线缓慢移动，手动暂停、reduced-motion、离屏与页面隐藏均停止持续动画。地图不解释语义距离或证据强度，未分类对象保留独立星域。
+`#constellation` 是主导航中的研究星图，不再藏于 legacy disclosure。`constellation.js` 使用 SVG、数学坐标与短程 camera easing；深色全宽图面与下方浅色阅读区区分观察和阅读。全景只显示当前对象和悬停／键盘定位对象的标题；放大、筛选或聚焦时展开更多视口内标题，回缩时收回，长标题按可用宽度换行，并按实际字体和视口避让。领域只留方位标签，不绘制领域轮廓或逐节点编号；类型由星点形状和颜色区分。当前对象的显式引用被强调，其余引用留在背景；预览不改变选取或引用关系。类型／领域／标题和摘要关键词筛选、目录切换、聚焦引用、平移、缩放、复位及正文入口在手机和桌面相同；小屏重新计算纵向布局。支持 Fullscreen API 的浏览器提供“展开星图”，可通过同一按钮或 Escape 退出；打开正文时退出全屏。选中引用上的微小光点沿真实曲线缓慢移动，手动暂停、离屏与页面隐藏均停止持续动画。reduced-motion 初始默认静止；系统偏好变化时按原生事件更新暂停状态，仍可主动播放或暂停，未变化的偏好不会覆盖手动选择。地图不解释语义距离或证据强度，未分类对象保留独立星域。
 
 星图搜索、相机、选取和筛选只存在当前页面内存，不写 URL、history、storage 或网络。星点与图下引用本身是实际正文链接；静态捕获移除 JS controls，关闭 JS 仍可打开正文。浏览器验收覆盖真实点击、键盘选取、平移／缩放、筛选空态与恢复、motion、深链接和 history。
 
@@ -74,6 +74,12 @@ WebGL 无额外依赖；reduced-motion 默认静止，仍可手动操作和切�
 ## 发布与回退
 
 现有 `.github/workflows/reader-validation.yml` 在 PR 和 main 运行同一组检查。PR 不部署；main 只有全部通过后，才上传并由独立 `deploy` job 发布同一 artifact。2026-10-18 的 Pages read-only 检查确认 `build_type: workflow`；本次无需切换账号设置。
+
+浏览器依赖安装沿用 runner 的三个 Ubuntu 源；将 Azure 镜像调到官方 HTTPS archive/security 镜像之后，避免慢下载耗尽 job 时限。镜像列表来自 [GitHub runner 配置](https://github.com/actions/runner-images/blob/main/images/ubuntu/scripts/build/configure-apt-sources.sh)，完整依赖安装、签名校验及 15 分钟 job 上限保留；日志会输出实际优先级。失败时先检查下载日志，不跳过浏览器验收。
+
+`reader` job 固定使用 `ubuntu-24.04`，与 `tools/browser-requirements.txt` 中的 Playwright 1.57.0 对齐。
+该版本支持 Ubuntu 24.04，尚不支持 Ubuntu 26.04；不能让浮动的 `ubuntu-latest` 提前更换 browser build 环境。
+升级 runner 或 Playwright 时，先核对对应版本支持的平台，再完成同一套浏览器与静态站检查。
 
 源码完成、commit、push、CI 通过和 Pages 上线是不同状态。交付时核对目标 commit 的 `reader` / `deploy`，再读取公开首页、详情、sitemap 和一个不存在的路径。不要从本机构建成功推断线上已更新。
 
