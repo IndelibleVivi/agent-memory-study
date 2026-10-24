@@ -61,6 +61,18 @@ node tools/export_study.cjs --kind question --id experience-to-capability --form
 
 读到一半，可以在详情页写一段自己的接续笔记，主动下载 JSON，之后从首页“打开接续文件”恢复公开对象、章节位置和支持的演算状态。笔记只在页面内存与自己保存的文件里；刷新前未下载的修改会丢失。导入不执行文件中的文字，也不加载任意 URL。它不是在线批注、账号服务或云同步。
 
+研究案头把多份文章、来源、问题和判断组织成一次工作：选材、排序、两份内容对读、自己的问题／解释／笔记、回正文阅读与整组保存相连。私人案头 JSON 可以先预览再打开，移出和打开可以撤销；保存后公开正文有变化时提示重读，旧笔记保留原样。案头最多 24 个对象、文件最多 2 MiB，仅在页面内存与用户主动保存的文件中。单篇接续继续可用，两者共享笔记状态。
+
+“公开选材包”只导出选定的当前公开对象，案头名称、问题和私人笔记不会混入。机器也能沿同源出口取用：
+
+```bash
+node tools/export_study.cjs --select study:retrieval-and-relevance \
+  --select study:what-an-index-learns --format markdown
+node tools/export_study.cjs --workspace /path/to/ams-workspace.json --format json
+```
+
+[案头使用说明](docs/study-workspace.md)记录完整使用、恢复和公私导出边界；[研究系统与建设方向](docs/research-system.md)说明这些能力如何服务 thesis，以及仍需继续的内容、研究连接与可靠性交付。
+
 已有实践 brief 仍可独立取用：
 
 ```bash
@@ -134,7 +146,7 @@ flowchart LR
 
 Newsreader、Noto Serif SC 与 Instrument Sans 的 OFL 字体子集由本站提供；图形用 SVG / WebGL 与数学代码绘制。字体来源、修改范围和重建方法见 [字体说明](assets/fonts/README.md)。
 
-站点没有账号或访客档案。个人接续文字不上传、不写 URL 或 localStorage。书架搜索、阅读分组筛选和公开演算状态会进入可分享 URL 与浏览器历史，直接加载／刷新时 URL 会发送给托管服务；不要把私人内容输入公开搜索。既有 Cloudflare Web Analytics aggregate beacon 是唯一 analytics，不使用 cookie 或 localStorage 识别访客，无 custom events；它不记录 query string。外部来源链接在你打开时访问相应网站。构建与浏览器验收拦截非本机请求。
+站点没有账号或访客档案。个人接续与研究案头文字不上传、不写 URL 或 localStorage，案头搜索也只在页面内存。书架搜索、阅读分组筛选和公开演算状态会进入可分享 URL 与浏览器历史，直接加载／刷新时 URL 会发送给托管服务；不要把私人内容输入公开搜索。既有 Cloudflare Web Analytics aggregate beacon 是唯一 analytics，不使用 cookie 或 localStorage 识别访客，无 custom events；它不记录 query string。外部来源链接在你打开时访问相应网站。构建与浏览器验收拦截非本机请求。
 
 来源札记明确区分原文主张、作者报告、AMS 观察与编辑推论，`noteDepth` 只表示来源阅读范围。未执行协议、教学例子、确定性实验、固定源码 receipts 与实际模型研究各自标明边界；不因文章变成熟或页面重做而提升结论。
 

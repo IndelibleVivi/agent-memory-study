@@ -39,7 +39,7 @@ def build(output: Path, executable: str | None = None):
         'publications/agent-memory-study-project-introduction.zh-CN.pdf'}
     files.update(item['pdf']['url'] for item in data['materials'] if item['pdf']['delivery'] == 'bundled')
     files.update(item['sourcePath'] for item in data['studies'])
-    files.add('docs/authoring.md')
+    files.update({'docs/authoring.md', 'docs/study-workspace.md', 'docs/research-system.md'})
     source = (ROOT / 'index.html').read_text()
     shell = source.split('<main id="main-content" tabindex="-1">', 1)[1].split('</main>', 1)[0]
     shell_script = 'window.AMS_READER_SHELL = ' + json.dumps(shell, ensure_ascii=False).replace('</', '<\\/') + ';\n'

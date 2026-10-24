@@ -1,6 +1,6 @@
 # 在 AMS 里写、接收与修订研究
 
-先有值得留下的理解，再选择容器。一个概念解释、例子或推导可以成为 `learning-note`；持续论述可以成为 `research-essay`。它们都无需实验、既有书目或固定章节。长期工作的判断方法见[AMS 怎样学习与生长](../study/programme/method.md)。
+先有值得留下的理解，再选择容器。跨材料推敲可以先在[研究案头](study-workspace.md)中进行；私人问题、笔记和导出不会自动成为公开内容。作者仍须选择可公开的论证、核对来源与署名，再进入 canonical。一个概念解释、例子或推导可以成为 `learning-note`；持续论述可以成为 `research-essay`。它们都无需实验、既有书目或固定章节。长期工作的判断方法见[AMS 怎样学习与生长](../study/programme/method.md)。
 
 ## 接住一份新材料
 

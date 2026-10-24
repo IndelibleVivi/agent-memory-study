@@ -67,7 +67,9 @@ WebGL 无额外依赖；reduced-motion 默认静止，仍可手动操作和切�
 
 排版使用本站提供的 OFL 字体子集，字体原始出处、许可、修改与离线重建流程见 [字体说明](../assets/fonts/README.md)。日常构建直接复制 checked-in WOFF2 与 notices，不获取外部字体，也不需要 fontTools。
 
-接续笔记只存在页面内存及主动下载的文件，不上传或写入 URL / localStorage。导入最多 128 KB，恢复已知对象、受支持的 anchor 与演算，文本不执行。刷新前未下载的修改会丢失。公开研究包与个人接续是两个独立出口，不把个人文字带入共享包。
+接续与研究案头只存在页面内存及主动下载的文件，不上传或写入 URL / localStorage。既有单篇文件上限 128 KB；新案头最多 24 个已知对象、2 MiB UTF-8 文件，先预览再显式打开，支持移出／打开后的撤销、对读、笔记与章节／演算恢复。单篇与案头共用笔记状态；当前正文与所存快照不同就提示重读，导入快照始终是惰性文字。刷新前未下载的修改会丢失，离开确认不替代保存。
+
+案头的搜索、问题、笔记、对读和排序不进入 URL 或 metadata。静态捕获通过 `data-js-control` 移除私人工作区、导入入口与详情“加入案头”控件，保留说明与 `#workbench` 普通入口；hydration 从同一 shell 恢复功能。公开包与私人保存分开，`StudyPackets.collection` 只按选定身份生成当前公开包；browser 和 CLI 共用实现。完整使用见[案头说明](study-workspace.md)，系统与建设边界见[研究系统](research-system.md)。
 
 站点保留既有 Cloudflare aggregate beacon，不加 custom events 或其他 tracking。构建与测试拦截非本机请求；在线打开外部来源链接按用户操作发生。公开查询写入 URL 与 browser history，直接加载／刷新时 URL 会发给静态托管服务。完整使用边界见 [README](../README.md)。
 

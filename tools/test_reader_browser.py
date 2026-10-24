@@ -15,7 +15,7 @@ import tempfile
 import threading
 from urllib.parse import parse_qs, urldefrag, urlparse
 
-from playwright.sync_api import sync_playwright, expect
+from playwright.sync_api import sync_playwright, expect, Error as PlaywrightError
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -55,6 +55,250 @@ def map_relationships(page):
 def map_signal_positions(page):
     return page.locator('.map-signals circle.is-active').evaluate_all(
         "dots => dots.map(dot => [dot.getAttribute('cx'), dot.getAttribute('cy')])")
+
+def download_json(page, trigger):
+    with page.expect_download() as event:
+        trigger()
+    return json.loads(Path(event.value.path()).read_text())
+
+def download_text(page, trigger):
+    with page.expect_download() as event:
+        trigger()
+    return Path(event.value.path()).read_text()
+
+def workspace_keys(page):
+    return page.locator('.workspace-item').evaluate_all(
+        "rows => rows.map(row => row.dataset.workspaceKey)")
+
+def external_http_requests(requests):
+    return [url for url in requests if urlparse(url).scheme in ('http', 'https')
+            and urlparse(url).hostname not in (None, '127.0.0.1', 'static.cloudflareinsights.com')]
+
+def check_workspace_flow(page, data, width, record, layout, go, external_requests):
+    """Exercise the research desk through visible controls, not workspace internals."""
+    private_title = f"Synthetic desk {width}"
+    private_question = f"Private question {width} <img src=x onerror=alert(1)>"
+    private_note = f"Private note {width} <script>window.WORKSPACE_BAD=true</script>"
+
+    go("?study=after-a-correction")
+    action = page.locator(".workspace-object-actions button", has_text="加入研究案头")
+    expect(action).to_be_visible()
+    action.click()
+    expect(page.locator(".workspace-object-actions button", has_text="已在研究案头")).to_be_visible()
+    page.locator(".workspace-object-actions a[data-route=home]").click()
+    expect(page.locator("#workspace-title")).to_be_visible()
+    expect(page.locator("#workspace-question")).to_be_visible()
+    expect(page.locator("#workspace-synthesis")).to_be_visible()
+    expect(page.locator("#workspace-next")).to_be_visible()
+    page.locator("#workspace-title").fill(private_title)
+    page.locator("#workspace-question").fill(private_question)
+    page.locator("#workspace-synthesis").fill(f"Private synthesis {width}")
+    page.locator("#workspace-next").fill(f"Private next {width}")
+    dirty_dialog = []
+    page.once("dialog", lambda dialog: (dirty_dialog.append(dialog.type), dialog.dismiss()))
+    try:
+        page.reload(wait_until="domcontentloaded", timeout=1500)
+    except PlaywrightError:
+        # Dismissing beforeunload cancels navigation. Depending on the browser
+        # build reload reports that as aborted or waits for the cancelled load.
+        assert dirty_dialog == ["beforeunload"], dirty_dialog
+    assert dirty_dialog == ["beforeunload"], dirty_dialog
+    expect(page.locator("#workspace-title")).to_have_value(private_title)
+    page.once("dialog", lambda dialog: dialog.accept())
+    page.reload(wait_until="domcontentloaded")
+    expect(page.locator("#workspace-title")).to_have_value("")
+    go("?study=after-a-correction")
+    page.locator(".workspace-object-actions button", has_text="加入研究案头").click()
+    page.locator(".workspace-object-actions a[data-route=home]").click()
+    page.locator("#workspace-title").fill(private_title)
+    page.locator("#workspace-question").fill(private_question)
+    page.locator("#workspace-synthesis").fill(f"Private synthesis {width}")
+    page.locator("#workspace-next").fill(f"Private next {width}")
+    expect(page.locator("#workbench")).to_be_visible()
+
+    question = data["questions"][0]
+    finding = next(item for item in data["findings"]
+                   if item["id"] == "correction-needs-retention-checks")
+    for query, label, title in [
+        ("TRUSTMEM", "来源札记", "TRUSTMEM"),
+        (question["title"], "问题专题", question["title"]),
+        (finding["title"], "实践判断", finding["title"]),
+    ]:
+        if not page.locator("#workspace-search").is_visible():
+            page.locator(".workspace-picker summary").click()
+        page.locator("#workspace-search").fill(query)
+        result = page.locator(".workspace-picker-results button").filter(
+            has_text=title).filter(has_text=label).first
+        expect(result).to_be_visible()
+        result.click()
+    keys = workspace_keys(page)
+    assert len(keys) == 4 and len(set(keys)) == 4, keys
+    assert {"study", "material", "question", "finding"} == {key.split(":", 1)[0] for key in keys}
+    expect(page.locator(".workspace-comparison")).to_have_count(2)
+    expect(page.locator("[data-workspace-count]").first).to_contain_text("4")
+    assert page.evaluate("localStorage.length") == 0
+    assert private_title not in page.url and private_question not in page.url
+    first_before = workspace_keys(page)
+    first_title = page.locator(".workspace-item").first.locator(
+        ".workspace-item-copy > button").inner_text()
+    page.locator(".workspace-item").first.get_by_role(
+        "button", name=f"下移 {first_title}").click()
+    moved = workspace_keys(page)
+    assert moved[0] == first_before[1] and moved[1] == first_before[0], (first_before, moved)
+    page.get_by_role("button", name="撤销上次整理", exact=True).click()
+    assert workspace_keys(page) == first_before
+
+    note = page.locator("#workspace-note-study-after-a-correction")
+    note.fill(private_note)
+    assert page.evaluate("window.WORKSPACE_BAD") is None
+    assert page.evaluate("localStorage.length") == 0
+    assert not any(text in page.url for text in (private_title, private_question, private_note))
+    page.locator('.workspace-item').first.get_by_role('button', name=f'移出 {first_title}', exact=True).click()
+    assert len(workspace_keys(page)) == 3
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    assert workspace_keys(page) == first_before
+    expect(page.locator('#workspace-note-study-after-a-correction')).to_have_value(private_note)
+
+    # Dirty navigation is visible without discarding in-memory state.
+    page.locator(".workspace-item").first.locator(".workspace-item-copy > button").click()
+    expect(page.locator("#study-title")).to_be_visible()
+    expect(page.locator('#continuation-note')).to_have_value(private_note)
+    page.locator(".workspace-object-actions a[data-route=home]").click()
+    expect(page.locator("#workspace-question")).to_have_value(private_question)
+    expect(page.locator("#workspace-note-study-after-a-correction")).to_have_value(private_note)
+    assert workspace_keys(page) == first_before
+    page.go_back()
+    expect(page.locator('#study-title')).to_be_visible()
+    expect(page.locator('#continuation-note')).to_have_value(private_note)
+    page.go_forward()
+    expect(page.locator('#workspace-question')).to_have_value(private_question)
+
+    # Private and public downloads must separate metadata and references.
+    workspace_json = download_json(page, lambda: page.get_by_role(
+        "button", name="保存案头 JSON ↓", exact=True).click())
+    private_markdown = download_text(page, lambda: page.get_by_role(
+        "button", name="导出私人札记 Markdown ↓", exact=True).click())
+    assert workspace_json["schema"] == "ams-workspace/1"
+    assert workspace_json["title"] == private_title
+    assert any(ref.get("note") == private_note for ref in workspace_json["items"])
+    assert private_title in private_markdown and private_note in private_markdown
+    # Saving a composition must not disable recovery. Undo after save changes
+    # the current workspace, marks it dirty and exports the restored version.
+    page.locator('.workspace-item').first.get_by_role('button', name=f'下移 {first_title}', exact=True).click()
+    moved_json = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    assert [ref['id'] for ref in moved_json['items']] != [ref['id'] for ref in workspace_json['items']]
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    expect(page.locator('#workspace-save-state')).to_have_text('有未保存的整理')
+    restored_json = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    assert restored_json == workspace_json
+    page.locator(".workspace-public summary").click()
+    public_json = download_json(page, lambda: page.get_by_role(
+        "button", name="公开选材 JSON ↓", exact=True).click())
+    public_markdown = download_text(page, lambda: page.get_by_role(
+        "button", name="公开选材 Markdown ↓", exact=True).click())
+    public_blob = json.dumps(public_json, ensure_ascii=False) + public_markdown
+    for private in (private_title, private_question, private_note, f'Private synthesis {width}', f'Private next {width}'):
+        assert private not in public_blob, private
+    assert [item["id"] for item in public_json["objects"]] == [
+        key.split(":", 1)[1] for key in first_before]
+    assert public_json["schema"] == "ams-study-collection/1"
+    assert all("recordedResults" not in object["content"] for object in public_json["objects"])
+
+    stable_keys = workspace_keys(page)
+    page.locator("#workspace-file").set_input_files({
+        "name": "malformed.json", "mimeType": "application/json",
+        "buffer": b'{"schema":"ams-workspace/1","items":[',
+    })
+    expect(page.locator("#workspace-status")).to_contain_text("不是有效 JSON")
+    assert workspace_keys(page) == stable_keys
+    page.locator("#workspace-file").set_input_files({
+        "name": "too-large.json", "mimeType": "application/json",
+        "buffer": b"x" * (2 * 1024 * 1024 + 1),
+    })
+    expect(page.locator("#workspace-status")).to_contain_text("2 MiB")
+    assert workspace_keys(page) == stable_keys
+    assert page.locator("#workspace-import-preview").count() == 0
+
+    imported = {
+        "schema": "ams-workspace/1", "title": "Imported synthetic desk",
+        "question": "Imported private question", "synthesis": "Imported private synthesis",
+        "next": "Imported private next",
+        "items": [{
+            "kind": "material", "id": "trustmem-consolidation",
+            "note": "Imported private note", "anchor": "",
+            "contentVersion": workspace_json["items"][0]["contentVersion"],
+            "basis": workspace_json["items"][0]["basis"],
+        }],
+        "compare": [],
+    }
+    page.locator("#workspace-file").set_input_files({
+        "name": "imported.json", "mimeType": "application/json",
+        "buffer": json.dumps(imported).encode(),
+    })
+    preview = page.locator("#workspace-import-preview")
+    expect(preview).to_be_visible()
+    expect(preview).to_contain_text("Imported synthetic desk")
+    expect(preview).to_contain_text("TRUSTMEM")
+    page.get_by_role("button", name="取消打开", exact=True).click()
+    expect(preview).to_have_count(0)
+    assert workspace_keys(page) == stable_keys
+    expect(page.locator("#workspace-title")).to_have_value(private_title)
+
+    imported["items"][0]["note"] = "Imported private note after explicit open"
+    imported["items"][0]["basis"] = "opaque imported text only"
+    page.locator("#workspace-file").set_input_files({
+        "name": "imported.json", "mimeType": "application/json",
+        "buffer": json.dumps(imported).encode(),
+    })
+    page.get_by_role("button", name="打开这份案头", exact=True).click()
+    expect(page.locator("#workspace-title")).to_have_value("Imported synthetic desk")
+    expect(page.locator("#workspace-question")).to_have_value("Imported private question")
+    expect(page.locator("#workspace-synthesis")).to_have_value("Imported private synthesis")
+    expect(page.locator("#workspace-next")).to_have_value("Imported private next")
+    assert workspace_keys(page) == ["material:trustmem-consolidation"]
+    assert page.evaluate("window.WORKSPACE_BAD") is None
+    page.get_by_role("button", name="撤销上次整理", exact=True).click()
+    expect(page.locator("#workspace-title")).to_have_value(private_title)
+    assert workspace_keys(page) == stable_keys
+    assert page.evaluate("localStorage.length") == 0
+    assert urlparse(page.url).hostname == "127.0.0.1"
+    assert not external_http_requests(external_requests), external_http_requests(external_requests)
+
+    # Re-imported private metadata can never turn into a public collection title.
+    poisoned = json.loads(json.dumps(imported))
+    poisoned["items"][0]["basis"] = json.dumps({
+        "title": "POISONED-BASIS-TITLE", "html": "<img src=x onerror=alert(1)>",
+    })
+    poisoned['compare'] = ['material:trustmem-consolidation']
+    page.locator("#workspace-file").set_input_files({
+        "name": "poisoned.json", "mimeType": "application/json",
+        "buffer": json.dumps(poisoned).encode(),
+    })
+    page.get_by_role("button", name="打开这份案头", exact=True).click()
+    expect(page.locator('.workspace-comparison')).to_contain_text('公开内容在保存后已有变化')
+    expect(page.locator('img[src=x]')).to_have_count(0)
+    assert page.evaluate('window.WORKSPACE_BAD') is None
+    page.locator(".workspace-public summary").click()
+    poisoned_public = download_json(page, lambda: page.get_by_role(
+        "button", name="公开选材 JSON ↓", exact=True).click())
+    assert "POISONED-BASIS-TITLE" not in json.dumps(poisoned_public, ensure_ascii=False)
+    assert "<img src=x" not in json.dumps(poisoned_public, ensure_ascii=False)
+    page.get_by_role("button", name="撤销上次整理", exact=True).click()
+
+    # Restore the actual downloaded file, retaining all mixed references/notes.
+    page.locator('#workspace-file').set_input_files({
+        'name':'roundtrip.json', 'mimeType':'application/json',
+        'buffer':json.dumps(workspace_json).encode(),
+    })
+    page.get_by_role('button', name='打开这份案头', exact=True).click()
+    expect(page.locator('#workspace-title')).to_have_value(private_title)
+    expect(page.locator('#workspace-note-study-after-a-correction')).to_have_value(private_note)
+    assert workspace_keys(page) == stable_keys
+    download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+
+    layout("workspace private desk and public collection")
+    record("workspace mixed selection, compare, notes, undo, private/public downloads, import preview, privacy and navigation")
+    go()
 
 
 def emulate_map_motion(page, preference, evidence, *, paused=None, refresh_during_transition=False):
@@ -312,6 +556,9 @@ def main():
                     for width, height in [(1440, 1000), (390, 844), (320, 740)]:
                         context = browser.new_context(viewport={'width': width, 'height': height}, reduced_motion='reduce', has_touch=width <= 390)
                         # No third-party requests or analytics during tests.
+                        external_requests = []
+                        context.on('request', lambda request: external_requests.append(request.url)
+                                   if urlparse(request.url).hostname not in (None, '127.0.0.1') else None)
                         context.route('**/*', lambda r: r.continue_() if urlparse(r.request.url).hostname == '127.0.0.1' else r.abort())
                         page = context.new_page()
                         page.on('pageerror', lambda error: evidence['errors'].append(str(error)))
@@ -374,6 +621,8 @@ def main():
                         go()
                         expect(page.locator('#room-start-list a[data-route=study]')).to_have_count(6)
                         expect(page.locator('#study-index')).to_contain_text('一条更正之后')
+                        if not args.offline_render:
+                            check_workspace_flow(page, data, width, record, layout, go, external_requests)
                         if width <= 390:
                             expect(page.locator('#menu-button')).to_be_visible()
                             expect(page.locator('#search')).to_be_visible()

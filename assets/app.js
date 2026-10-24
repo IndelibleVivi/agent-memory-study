@@ -134,6 +134,7 @@
   }
 
   function navigate(nextRoute, options = {}) {
+    captureDeskPosition();
     const { replace = false, hash = "", focus = true } = options;
     route = {
       ...route,
@@ -904,13 +905,231 @@
     }lab.append(results,el("p",`返回 {${x.selected.join(", ")}} · 参考近邻 {${x.reference.join(", ")}} · 相关 {${x.relevant.join(", ")}}`,"study-locator"));return lab;
   }
 
-  const deskNotes = new Map();
+  const desk = window.StudyDesk;
+  let workspaceState = desk.emptyWorkspace();
+  let workspacePrevious = null;
+  let workspacePending = null;
+  let workspaceDirty = false;
+  let workspaceOpened = false;
+  let workspaceImportSequence = 0;
+  let workspaceMessage = "选材与札记只在本页内存中；刷新或关闭前，请保存案头文件。";
+  const workspaceLabels = {material: "来源札记", study: "研究文章", question: "问题专题", finding: "实践判断"};
+  function currentDeskRef(kind, id) { return workspaceState.items.find(ref => ref.kind === kind && ref.id === id); }
+  function captureDeskPosition() {
+    const kind = seo.kinds.find(key => route[key]);
+    const ref = kind && currentDeskRef(kind, route[kind]);
+    if (!ref) return;
+    const anchor = /^#[a-zA-Z0-9_-]{1,120}$/.test(window.location.hash) ? window.location.hash : "";
+    const ex = kind === "study" && studiesById.get(ref.id)?.exercise ? desk.exercise(route) : null;
+    if (anchor !== ref.anchor || (ex && JSON.stringify(ref.exercise) !== JSON.stringify({k: ex.k, need: ex.need, ranking: ex.ranking}))) workspaceDirty = true;
+    ref.anchor = anchor;
+    if (ex) ref.exercise = {k: ex.k, need: ex.need, ranking: ex.ranking};
+  }
+  function updateWorkspaceStatus() {
+    document.querySelectorAll('[data-workspace-count]').forEach(node => { node.textContent = workspaceState.items.length ? ` · ${workspaceState.items.length}` : ""; });
+    document.querySelectorAll('#workspace-save-state, [data-workspace-save-state]').forEach(state => {
+      state.hidden = false;
+      state.textContent = workspaceDirty ? "有未保存的整理" : "仅在本页内存中";
+    });
+  }
+  function changeWorkspace(next, message) {
+    workspacePrevious = workspaceState;
+    workspaceState = desk.workspace(next, data);
+    workspaceDirty = true;
+    workspaceMessage = message;
+    renderWorkspace();
+  }
+  function addToWorkspace(kind, item) {
+    try {
+      if (currentDeskRef(kind, item.id)) { workspaceMessage = "已在案头；可以打开案头继续整理。"; renderWorkspace(); return; }
+      changeWorkspace(desk.add(workspaceState, {kind, id: item.id}, data), `已加入：${item.title}`);
+    } catch (error) { workspaceMessage = error.message; renderWorkspace(); }
+  }
+  function openDeskRef(ref) {
+    navigate({material: null, study: null, question: null, finding: null, thread: null, path: null,
+      scenario: null, phase: "before", [ref.kind]: ref.id, ...(ref.exercise || {})}, {focus: true, hash: ref.anchor});
+  }
+  function workspaceButton(text, action, className = "") {
+    const button = createTextElement("button", text, className); button.type = "button";
+    button.addEventListener("click", action); return button;
+  }
+  function renderWorkspaceComparison(ref) {
+    const el = createTextElement, item = desk.resolve(ref, data), panel = el("article", "", "workspace-comparison");
+    panel.dataset.workspaceObject = desk.key(ref);
+    panel.append(el("p", workspaceLabels[ref.kind], "content-kind"), el("h3", item.title));
+    const byline = ref.kind === "material" ? `${item.authors.join(", ")} · ${item.year}；札记范围 ${item.noteDepth}` : `${item.byline} · ${item.date || item.updated}`;
+    panel.append(el("p", byline, "workspace-meta"));
+    if (ref.kind === "material") panel.append(el("p", item.readingScope, "workspace-scope"));
+    if (ref.kind === "material") panel.append(el("p", "来源作者见上；本站札记及具体贡献的署名保留在完整研究包中。", "desk-hint"));
+    if (item.boundary || item.limit) panel.append(el("p", item.boundary || item.limit, "workspace-scope"));
+    if (desk.changed(ref, data)) panel.append(el("p", "这份公开内容在保存后已有变化。原笔记与快照保留；对读展示当前内容。", "workspace-stale"), workspaceButton("已核对，改以当前正文为据", () => {
+      const next = desk.workspace(workspaceState, data), entry = next.items.find(value => desk.key(value) === desk.key(ref));
+      entry.basis = desk.basis(ref, data); entry.contentVersion = item.date || item.updated || data.room.edition;
+      changeWorkspace(next, "已记录以当前正文为据；这不提升阅读范围或证明笔记正确。");
+    }));
+    if (!ref.basis) panel.append(el("p", "这条笔记来自旧版单篇接续，只有内容日期，无法据此判断正文是否相同。", "desk-hint"));
+    const body = el("div", "", "workspace-reading");
+    body.tabIndex = 0; body.setAttribute("role", "region"); body.setAttribute("aria-label", `${item.title}的当前公开内容`);
+    if (item.bodyHtml) {
+      // The same compiler output as the main article; no browser Markdown parser
+      // and never HTML from an imported workspace snapshot.
+      body.innerHTML = item.bodyHtml;
+      if (body.firstElementChild?.tagName === "H1") body.firstElementChild.remove();
+      body.querySelectorAll("[id]").forEach(node => node.removeAttribute("id"));
+      body.querySelectorAll("h2").forEach((node, i) => {node.id = `workspace-${ref.id}-section-${i + 1}`;});
+      body.querySelectorAll("a").forEach(link => {
+        const href = link.getAttribute("href");
+        const url = new URL(href, siteRoot), id = url.searchParams.get("study");
+        if (id && studiesById.has(id)) {link.dataset.route = "study"; link.dataset.routeId = id; link.href = routeHref("study", id) + url.hash;}
+        else if (href.startsWith("#")) {
+          link.href = routeHref(ref.kind, ref.id) + href; link.dataset.route = ref.kind; link.dataset.routeId = ref.id;
+        } else link.href = url.href;
+      });
+    } else {
+      body.append(el("p", item.intro || item.claim || item.question));
+      if (item.keyPoints?.length) {const list = el("ul", ""); item.keyPoints.forEach(text => list.append(el("li", text))); body.append(list);}
+      for (const [field, label] of [["judgment", "目前的认识"], ["when", "适用情境"], ["action", "建议做法"], ["editorialQuestion", "继续追问"]]) if (item[field]) body.append(el("h4", label), el("p", item[field]));
+      body.append(el("p", "这里并列核心内容与范围；完整论证、实验和证据在正文与研究包中。", "desk-hint"));
+    }
+    panel.append(body);
+    const evidence = el("details", "", "workspace-references");
+    evidence.append(el("summary", "出处、依据与完整研究包"));
+    if (item.sourceUrl) evidence.append(createExternalLink(item.sourceUrl, "来源原文 ↗"));
+    (item.readings || []).forEach(reading => {
+      const source = materialsById.get(reading.materialId);
+      evidence.append(createRouteLink("material", source.id, reading.label), el("p", reading.takeaway), el("p", `${reading.locator} · ${reading.limit}`, "desk-hint"));
+    });
+    (item.externalReadings || []).forEach(reading => evidence.append(createExternalLink(reading.url, reading.label), el("p", `${reading.locator} · ${reading.limit}`, "desk-hint")));
+    (item.evidence || []).forEach(part => evidence.append(el("p", `${part.label}：${part.observation} · ${part.limit}`, "desk-hint")));
+    const packet = window.StudyPackets.packet(data, ref.kind, ref.id);
+    (item.evidenceLimits || []).forEach(limit => evidence.append(el("p", limit, "workspace-scope")));
+    packet.manifest.forEach(part => {if (!part.missing) evidence.append(createRouteLink(part.publicKind || {source:"material",entry:"study",inquiry:"question",transfer:"finding"}[part.kind], part.id, part.title));});
+    evidence.append(workspaceButton("下载此对象公开研究包", () => downloadFile(`${ref.kind}-${ref.id}.md`, window.StudyPackets.markdown(packet), "text/markdown")));
+    panel.append(evidence, workspaceButton("打开完整正文 ↗", () => openDeskRef(ref), "workspace-open-reading"));
+    const label = el("label", "我的对读笔记"); label.htmlFor = `workspace-note-${ref.kind}-${ref.id}`;
+    const note = el("textarea", ""); note.id = label.htmlFor; note.rows = 4; note.maxLength = 20000; note.value = ref.note;
+    note.placeholder = "它解释了什么？与另一份材料哪里相合、哪里不能互推？";
+    note.addEventListener("input", () => {ref.note = note.value; workspaceDirty = true; updateWorkspaceStatus();});
+    panel.append(label, note); return panel;
+  }
+  function renderWorkspace() {
+    const el = createTextElement, root = document.querySelector('#workspace-controls');
+    workspaceOpened = workspaceOpened || window.location.hash === "#workbench" || workspaceState.items.length > 0;
+    root.hidden = !workspaceOpened;
+    const launch = document.querySelector('#workspace-launch'); launch.hidden = workspaceOpened;
+    launch.replaceChildren(workspaceButton("开始一份研究案头 ↗", () => {workspaceOpened = true; renderWorkspace(); document.querySelector('#workspace-title').focus();}));
+    document.querySelector('.workspace-nojs').hidden = true;
+    updateWorkspaceStatus();
+    const fragment = document.createDocumentFragment();
+    const status = el("p", workspaceMessage, "workspace-status"); status.id = "workspace-status"; status.setAttribute("role", "status"); fragment.append(status);
+    const actions = el("div", "", "workspace-actions");
+    actions.append(workspaceButton("保存案头 JSON ↓", () => {
+      captureDeskPosition();
+      const serialized = JSON.stringify(desk.workspace(workspaceState, data), null, 2);
+      if (new TextEncoder().encode(serialized).length > desk.workspaceBytes) {workspaceMessage = "案头超过 2 MiB，请缩减笔记或分成两份保存。"; renderWorkspace(); return;}
+      downloadFile("ams-workspace.json", serialized, "application/json"); workspaceDirty = false;
+      workspaceMessage = "已生成案头文件，含私人文字与公开内容快照；请保管下载的文件。"; renderWorkspace();
+    }), workspaceButton("导出私人札记 Markdown ↓", () => {captureDeskPosition(); downloadFile("ams-private-notes.md", desk.workspaceMarkdown(workspaceState, data, window.StudyPackets), "text/markdown");}));
+    const fileLabel = el("label", "打开案头文件 ↗", "file-button"); fileLabel.htmlFor = "workspace-file";
+    const file = el("input", "", "sr-only"); file.type = "file"; file.accept = ".json,application/json"; file.id = "workspace-file";
+    file.addEventListener("change", async () => {
+      const input = file.files[0]; if (!input) return;
+      const sequence = ++workspaceImportSequence;
+      try {
+        if (input.size > desk.workspaceBytes) throw new Error("案头文件过大，限 2 MiB。");
+        const parsed = desk.parseWorkspace(await input.text(), data);
+        if (sequence !== workspaceImportSequence) return;
+        workspacePending = parsed;
+        workspaceMessage = "文件已检查；确认打开后才会替换当前案头。";
+      } catch (error) {if (sequence !== workspaceImportSequence) return; workspacePending = null; workspaceMessage = error.message;}
+      renderWorkspace();
+    }); actions.append(fileLabel, file);
+    const undo = workspaceButton("撤销上次整理", () => {
+      if (!workspacePrevious) return;
+      const saved = workspaceState; workspaceState = workspacePrevious; workspacePrevious = saved;
+      workspaceDirty = true; workspaceMessage = "已恢复上一次整理前的案头。"; renderWorkspace();
+    }); undo.disabled = !workspacePrevious;
+    const saveState=el("span",workspaceDirty?"有未保存的整理":"仅在本页内存中","workspace-save-hint");saveState.dataset.workspaceSaveState="";
+    actions.append(undo,saveState); fragment.append(actions);
+    if (workspacePending) {
+      const preview = el("div", "", "workspace-import-preview"); preview.id = "workspace-import-preview";
+      preview.append(el("h3", workspacePending.title || "未命名案头"), el("p", `${workspacePending.items.length} 个已知对象；私人笔记按纯文字读取。打开会替换当前案头，可撤销；尚未保存的内容建议先下载。`));
+      workspacePending.items.forEach(ref => preview.append(el("p", desk.resolve(ref, data).title)));
+      preview.append(workspaceButton("打开这份案头", () => { const next = workspacePending; workspacePending = null; changeWorkspace(next, "已从本地文件恢复案头；没有请求文件中的链接。"); }), workspaceButton("取消打开", () => {workspacePending = null; workspaceMessage = "已取消，当前案头保持原样。"; renderWorkspace();}));
+      fragment.append(preview);
+    }
+    const writing = el("div", "", "workspace-writing");
+    for (const [field, label, hint, max] of [["title", "这次在研究什么", "给这份案头起一个名字，也可以暂时留空。", 240], ["question", "当前问题", "从一个词、一处困惑或两种不同解释开始。", 8000], ["synthesis", "已经讲清了什么", "留下使理解成立的例子、推导与条件；也允许不确定。", 20000], ["next", "回来时，从哪里继续", "一个段落、一个反例，或下一步值得做的动作。", 8000]]) {
+      const wrap = el("div", "", `workspace-field workspace-field-${field}`), caption = el("label", label); caption.htmlFor = `workspace-${field}`;
+      const input = el(field === "title" ? "input" : "textarea", ""); input.id = caption.htmlFor; input.maxLength = max; input.value = workspaceState[field]; input.placeholder = hint;
+      if (field !== "title") input.rows = field === "synthesis" ? 6 : 3;
+      input.addEventListener("input", () => {workspaceState[field] = input.value; workspaceDirty = true; updateWorkspaceStatus();});
+      wrap.append(caption, input); writing.append(wrap);
+    } fragment.append(writing);
+    const picking = el("details", "", "workspace-picker"); picking.open = !workspaceState.items.length;
+    picking.append(el("summary", `选择公开内容 · 案头 ${workspaceState.items.length} / ${desk.workspaceLimit}`));
+    const searchLabel = el("label", "查找可选对象"); searchLabel.htmlFor = "workspace-search";
+    const search = el("input", ""); search.type = "search"; search.id = "workspace-search"; search.placeholder = "只搜索公开内容；不写入 URL。";
+    const results = el("div", "", "workspace-picker-results");
+    function fillChoices() {
+      const hits = window.ReadingSearch.search(searchIndex, search.value);
+      results.replaceChildren();
+      if (!hits.length) results.append(el("p", "没有匹配内容。可以换个词，或从正文加入。"));
+      hits.forEach(hit => {
+        const button = workspaceButton(`${workspaceLabels[hit.kind]} · ${hit.item.title}`, () => addToWorkspace(hit.kind, hit.item));
+        button.disabled = Boolean(currentDeskRef(hit.kind, hit.item.id)); results.append(button);
+      });
+    } search.addEventListener("input", fillChoices); fillChoices(); picking.append(searchLabel, search, results); fragment.append(picking);
+    const list = el("ol", "", "workspace-list");
+    workspaceState.items.forEach((ref, i) => {
+      const row = el("li", "", "workspace-item"), item = desk.resolve(ref, data), id = desk.key(ref); row.dataset.workspaceKey = id;
+      const heading = el("div", "", "workspace-item-copy"); heading.append(el("p", `${String(i + 1).padStart(2, "0")} / ${workspaceLabels[ref.kind]}`, "content-kind"), workspaceButton(item.title, () => openDeskRef(ref)));
+      if (ref.note) heading.append(el("p", ref.note.slice(0, 140), "workspace-note-preview"));
+      if (desk.changed(ref, data)) heading.append(el("p", "正文有变化 · 笔记保持原样", "workspace-stale"));
+      const controls = el("div", "", "workspace-item-actions");
+      const compare = workspaceButton(workspaceState.compare.includes(id) ? "正在对读" : "放入对读", () => {
+        const next = desk.workspace(workspaceState, data);
+        if (next.compare.includes(id)) next.compare = next.compare.filter(value => value !== id);
+        else if (next.compare.length < 2) next.compare.push(id);
+        else {workspaceMessage = "先取消一个对读对象，再选择另一个；案头中的选材会保留。"; renderWorkspace(); return;}
+        changeWorkspace(next, "已更新对读选择。");
+      }); compare.setAttribute("aria-pressed", String(workspaceState.compare.includes(id))); controls.append(compare);
+      for (const [offset, label] of [[-1, "上移"], [1, "下移"]]) {
+        const button = workspaceButton(label, () => changeWorkspace(desk.move(workspaceState, id, offset, data), `已${label}：${item.title}`));
+        button.setAttribute("aria-label", `${label} ${item.title}`); button.disabled = i + offset < 0 || i + offset >= workspaceState.items.length; controls.append(button);
+      }
+      const remove = workspaceButton("移出", () => changeWorkspace(desk.remove(workspaceState, id, data), `已移出：${item.title}；可撤销恢复笔记。`)); remove.setAttribute("aria-label", `移出 ${item.title}`); controls.append(remove);
+      row.append(heading, controls); list.append(row);
+    }); fragment.append(list);
+    if (workspaceState.items.length) {
+      const publicActions = el("details", "", "workspace-public"); publicActions.append(el("summary", "只带走公开选材 · 不含私人文字"), el("p", "按当前顺序导出公开对象，包含正文、署名、依据与范围。案头名称、问题和笔记不在包内。", "desk-hint"));
+      for (const format of ["markdown", "json"]) publicActions.append(workspaceButton(`公开选材 ${format === "json" ? "JSON" : "Markdown"} ↓`, () => {
+        const bundle = window.StudyPackets.collection(data, workspaceState.items);
+        downloadFile(`ams-public-collection.${format === "json" ? "json" : "md"}`, format === "json" ? JSON.stringify(bundle, null, 2) : window.StudyPackets.collectionMarkdown(bundle), format === "json" ? "application/json" : "text/markdown");
+      })); fragment.append(publicActions);
+    }
+    if (workspaceState.compare.length) {
+      const heading = el("div", "", "workspace-compare-heading"); heading.append(el("p", "READ TOGETHER / 当前公开内容与自己的笔记", "eyebrow"), el("h3", "让区别，出现在同一张桌上。")); fragment.append(heading);
+      const panels = el("div", "", "workspace-comparisons"); workspaceState.compare.forEach(id => panels.append(renderWorkspaceComparison(workspaceState.items.find(ref => desk.key(ref) === id)))); fragment.append(panels);
+    } else fragment.append(el("p", workspaceState.items.length ? "从选材中放入一至两个对读对象，正文阅读和笔记会并列出现。" : "案头还空着。可以在上方选材，也可以阅读正文时点“加入研究案头”。", "workspace-empty"));
+    root.replaceChildren(fragment);
+  }
   function downloadFile(name, text, type) {
     const url=URL.createObjectURL(new Blob([text],{type}));const link=document.createElement("a");link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
   function mountDesk(kind,item,view) {
     view.querySelector(".study-desk")?.remove();
+    view.querySelector(".workspace-object-actions")?.remove();
     const el=createTextElement, area=el("section","","study-desk");
+    const objectActions=el("div","","workspace-object-actions"); objectActions.dataset.jsControl="";
+    const add=workspaceButton(currentDeskRef(kind,item.id)?"已在研究案头":"加入研究案头",()=>{
+      addToWorkspace(kind,item); add.textContent=currentDeskRef(kind,item.id)?"已在研究案头":"加入研究案头";
+      feedback.textContent=workspaceMessage;
+    });
+    const back=createRouteLink("home","","回到研究案头 ↗");back.dataset.scrollTarget="workbench";
+    const feedback=el("span","","desk-hint");feedback.setAttribute("role","status");
+    objectActions.append(add,back,feedback);
+    view.querySelector(".study-heading, .material-heading, .inquiry-heading").after(objectActions);
     const actions=el("div","","packet-actions");actions.append(el("p","带走这份公开研究","eyebrow"));
     ["markdown","json"].forEach(format=>{
       const name=`${kind}-${item.id}.${format==="markdown"?"md":"json"}`;
@@ -919,14 +1138,22 @@
     });
     area.append(actions,el("p","含当前正文、出处、阅读范围与接续线索；链接的全文不随包附带。","desk-hint"));
     const details=el("details","","private-continuation");details.append(el("summary","记下自己的继续位置"));
-    const key=`${kind}:${item.id}`, previous=deskNotes.get(key);
+    const previous=currentDeskRef(kind,item.id);
     const label=el("label","下次想从哪里接着？");label.htmlFor="continuation-note";
     const input=el("textarea","");input.id="continuation-note";input.maxLength=20000;input.rows=4;input.placeholder="一个没想通的地方、一个例子，或下一步想试的事。";input.value=previous?.note||"";
-    input.addEventListener("input",()=>deskNotes.set(key,{...deskNotes.get(key),note:input.value}));
+    input.addEventListener("input",()=>{
+      try {if(!currentDeskRef(kind,item.id)) workspaceState=desk.add(workspaceState,{kind,id:item.id},data);}
+      catch(error) {feedback.textContent=error.message+" 仍可保存单篇接续文件。";return;}
+      currentDeskRef(kind,item.id).note=input.value;workspaceDirty=true;updateWorkspaceStatus();
+      add.textContent="已在研究案头";
+    });
     const button=el("button","保存接续文件 ↓");button.type="button";button.addEventListener("click",()=>{
+      captureDeskPosition();
       const state={schema:window.StudyDesk.schema,kind,id:item.id,note:input.value,anchor:/^#[a-zA-Z0-9_-]{1,120}$/.test(window.location.hash)?window.location.hash:"",contentVersion:item.date||item.updated||data.room.edition};
       if(item.exercise) {const x=window.StudyDesk.exercise(route);state.exercise={k:x.k,ranking:x.ranking,need:x.need};}
       downloadFile(`ams-${item.id}.json`,JSON.stringify(window.StudyDesk.validate(state,data),null,2),"application/json");
+      if(workspaceState.items.length===1 && !workspaceState.title && !workspaceState.question && !workspaceState.synthesis && !workspaceState.next) workspaceDirty=false;
+      updateWorkspaceStatus();
     });
     details.append(label,input,button,el("p","只保留在本页内存中；刷新前请保存文件。文件由你保管，可从首页重新打开，不上传，也不写入浏览器存储。","desk-hint"));
     if(previous?.contentVersion && previous.contentVersion !== (item.date||item.updated||data.room.edition)) details.append(el("p","内容日期已变化；你的笔记仍按原样保留。","study-boundary"));
@@ -1282,6 +1509,9 @@
   }
 
   function render(options = {}) {
+    // Drafts live in StudyDesk state. Inactive views must not retain duplicate
+    // note inputs or stale workspace action controls with the same DOM IDs.
+    document.querySelectorAll('.study-desk, .workspace-object-actions').forEach(node=>node.remove());
     renderView(options);
     const activeKind=seo.kinds.find(key=>route[key]);
     if(activeKind) {
@@ -1289,6 +1519,7 @@
       const view=activeKind==="material"?refs.materialView:activeKind==="study"?refs.studyView:refs.inquiryView;
       mountDesk(activeKind,collection.get(route[activeKind]),view);
     }
+    renderWorkspace();
     if (physicalRoutes) {
       document.querySelectorAll('a[href^="#"], a[data-fragment]').forEach(link => {
         const hash = link.dataset.fragment || link.getAttribute("href");
@@ -1484,12 +1715,21 @@
     try {
       if(file.size>128000)throw new Error("接续文件过大，限 128 KB。");
       const state=window.StudyDesk.parse(await file.text(),data);
-      deskNotes.set(`${state.kind}:${state.id}`,state);
+      const wasDirty=workspaceDirty;
+      const next=desk.add(workspaceState,state,data),ref=next.items.find(value=>desk.key(value)===desk.key(state));
+      Object.assign(ref,state);delete ref.schema;ref.basis="";
+      changeWorkspace(next,"已恢复单篇接续；可在案头撤销这次导入。");
+      workspaceDirty=wasDirty || workspaceState.items.length>1 || Boolean(workspaceState.title || workspaceState.question || workspaceState.synthesis || workspaceState.next);
       navigate({material:null,study:null,question:null,finding:null,scenario:null,phase:"before",[state.kind]:state.id,...(state.exercise||{})},{focus:true,hash:state.anchor});
       refs.routeStatus.textContent="已从本地文件恢复接续位置。";
       status.textContent="接续文件已在本地打开。";
     } catch(error) {status.textContent=error.message;}
     event.target.value="";
+  });
+
+  window.addEventListener("beforeunload", event => {
+    if (!workspaceDirty) return;
+    event.preventDefault(); event.returnValue="";
   });
 
   if (physicalRoutes) {

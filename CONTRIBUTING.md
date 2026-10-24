@@ -1,6 +1,6 @@
 # Contributing
 
-Agent Memory Study 是一个开放的研究体。贡献可以让一个概念更可理解、一段推导更清楚、一项判断更可定位，也可以带来尚未收束的新问题。公开修改通过 pull request 提交；网页的个人接续笔记只供本地保存，不自动成为公开贡献。
+Agent Memory Study 是一个开放的研究体。贡献可以让一个概念更可理解、一段推导更清楚、一项判断更可定位，也可以带来尚未收束的新问题。公开修改通过 pull request 提交；网页的个人接续与案头笔记只供本地保存，不自动成为公开贡献。跨材料整理、文件恢复和公私导出见[案头说明](docs/study-workspace.md)。
 
 ## 可以贡献什么
 
@@ -174,7 +174,7 @@ python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebo
 
 The first command uses only local public/synthetic data, including actual fitting of a
 small stdlib classifier; it downloads no pretrained models or external data. It
-checks both generated projections without rewriting them, validates authoring, study packets, local continuation, shared constellation/sculpture relations and domain layout and question/finding
+checks both generated projections without rewriting them, validates authoring, study packets, public selected collections, local continuation and workspaces, shared constellation/sculpture relations and domain layout and question/finding
 references, lexical query and portable brief contracts, and the existing
 RDF, freshly reruns the five small deterministic studies and the decision-learning
 experiment (including classifier fitting and correction), and checks the saved
