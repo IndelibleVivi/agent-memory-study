@@ -946,15 +946,20 @@
   }
   // One focus session is one undo step, including IME composition. Do not
   // replace the textarea DOM while typing or the browser loses selection.
-  function bindWorkspaceInput(input, apply) {
+  function bindWorkspaceInput(input, apply, onStatus) {
     let group, acceptedValue = input.value;
     input.addEventListener("focus", () => {group = `edit-${++workspaceEditSequence}`;});
     input.addEventListener("input", () => {
       const next = desk.workspace(workspaceState, data);
-      try {apply(next, input.value); workspaceState = workspaceHistory.commit(next, group || (group = `edit-${++workspaceEditSequence}`));}
-      catch (error) {workspaceMessage = error.message; input.value = acceptedValue;}
+      let errorMessage = "";
+      try {
+        apply(next, input.value); workspaceState = workspaceHistory.commit(next, group || (group = `edit-${++workspaceEditSequence}`));
+        workspaceMessage = "修改仅在本页内存中；刷新或关闭前，请保存文件。";
+      }
+      catch (error) {workspaceMessage = errorMessage = error.message; input.value = acceptedValue;}
       acceptedValue = input.value;
-      const status = document.querySelector('#workspace-status'); if (status) status.textContent = workspaceMessage;
+      onStatus?.(errorMessage);
+      const status = document.querySelector('#workspace-status'); if (status && status.textContent !== workspaceMessage) status.textContent = workspaceMessage;
       updateWorkspaceStatus();
     });
   }
@@ -1311,7 +1316,10 @@
     const input=el("textarea","");input.id="continuation-note";input.maxLength=20000;input.rows=4;input.placeholder="一个没想通的地方、一个例子，或下一步想试的事。";input.value=previous?.note||"";
     bindWorkspaceInput(input, (next, text) => {
       if(!next.items.some(ref => ref.kind === kind && ref.id === item.id)) Object.assign(next, desk.add(next, {kind, id: item.id}, data));
-      next.items.find(ref => ref.kind === kind && ref.id === item.id).note = text; add.textContent="已在研究案头";
+      next.items.find(ref => ref.kind === kind && ref.id === item.id).note = text;
+    }, message => {
+      feedback.textContent = message;
+      add.textContent = currentDeskRef(kind,item.id) ? "已在研究案头" : "加入研究案头";
     });
     const button=el("button","保存接续文件 ↓");button.type="button";button.addEventListener("click",()=>{
       captureDeskPosition();

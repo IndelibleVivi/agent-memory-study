@@ -437,6 +437,15 @@ def check_workspace_capacity(page, data, record, go):
     saved = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
     assert saved == json.loads(text)
     assert page.evaluate('localStorage.length') == 0
+    page.locator('#room-start-list a[data-route-id=retrieval-and-relevance]').first.click()
+    page.locator('.private-continuation summary').click()
+    page.locator('#continuation-note').fill('A note that cannot join the full desk')
+    expect(page.locator('#continuation-note')).to_have_value('')
+    expect(page.locator('.workspace-object-actions [role=status]')).to_contain_text('已满')
+    expect(page.locator('.workspace-object-actions > button')).to_have_text('加入研究案头')
+    page.locator('.workspace-object-actions a[data-route=home]').click()
+    unchanged = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    assert unchanged == saved
     record('near-2-MiB 24-object desk rejects oversized edit atomically and keeps native typing/undo/save usable')
     page.reload(wait_until='load')
     expect(page.locator('.workspace-item')).to_have_count(0)

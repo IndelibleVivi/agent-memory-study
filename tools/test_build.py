@@ -120,7 +120,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_material_payload_cache_key_tracks_current_projection(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/materials-data.js?v=20261025-desk-4'),
+            source.count('assets/materials-data.js?v=20261025-desk-5'),
             1,
         )
         self.assertNotIn('assets/materials-data.js?v=20260918-c2c-1', source)
@@ -128,7 +128,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
     def test_stylesheet_cache_key_tracks_current_reader(self):
         source = (build.ROOT / "index.html").read_text(encoding="utf-8")
         self.assertEqual(
-            source.count('assets/styles.css?v=20261025-desk-4'),
+            source.count('assets/styles.css?v=20261025-desk-5'),
             1,
         )
         self.assertNotIn('assets/styles.css?v=20260909-evidence-discovery-1', source)
@@ -2296,7 +2296,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         for asset in ("materials-data.js", "styles.css", "practice.js", "reading-search.js", "seo.js", "app.js"):
             with self.subTest(asset=asset):
                 self.assertEqual(
-                    source.count(f'assets/{asset}?v=20261025-desk-4'),
+                    source.count(f'assets/{asset}?v=20261025-desk-5'),
                     1,
                 )
 
