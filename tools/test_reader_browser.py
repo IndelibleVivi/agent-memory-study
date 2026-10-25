@@ -443,6 +443,37 @@ def check_workspace_capacity(page, data, record, go):
     go()
 
 
+def check_continuation_checkpoint(page, record, go):
+    """Saving another article must never acknowledge the sole desk note."""
+    go('?study=retrieval-and-relevance')
+    page.locator('.private-continuation summary').click()
+    note = 'Synthetic unsaved note belonging only to retrieval-and-relevance'
+    page.locator('#continuation-note').fill(note)
+    page.locator('#study-view .study-essay a[data-route-id=what-an-index-learns]').first.click()
+    expect(page.locator('#continuation-note')).to_have_value('')
+    page.locator('.private-continuation summary').click()
+    other = download_json(page, lambda: page.get_by_role('button', name='保存接续文件 ↓', exact=True).click())
+    assert other['id'] == 'what-an-index-learns' and other['note'] == ''
+    expect(page.locator('#workspace-save-state')).to_have_text('有未保存的整理')
+    page.locator('.workspace-object-actions a[data-route=home]').click()
+    assert workspace_keys(page) == ['study:retrieval-and-relevance']
+    expect(page.locator('#workspace-note-study-retrieval-and-relevance')).to_have_value(note)
+    dialogs = []
+    page.once('dialog', lambda dialog: (dialogs.append(dialog.type), dialog.dismiss()))
+    try:
+        page.reload(wait_until='domcontentloaded', timeout=1500)
+    except PlaywrightError:
+        assert dialogs == ['beforeunload'], dialogs
+    assert dialogs == ['beforeunload'], dialogs
+    # The matching single-article download still acknowledges its own note.
+    page.locator('.workspace-item-copy > button').click()
+    own = download_json(page, lambda: page.get_by_role('button', name='保存接续文件 ↓', exact=True).click())
+    assert own['id'] == 'retrieval-and-relevance' and own['note'] == note
+    expect(page.locator('#workspace-save-state')).not_to_have_text('有未保存的整理')
+    record('single-article save acknowledges only the matching object; unrelated note and beforeunload stay dirty')
+    go()
+
+
 def emulate_map_motion(page, preference, evidence, *, paused=None, refresh_during_transition=False):
     """Wait for the native preference signal, then check the actual app state.
 
@@ -764,6 +795,7 @@ def main():
                         expect(page.locator('#room-start-list a[data-route=study]')).to_have_count(6)
                         expect(page.locator('#study-index')).to_contain_text('一条更正之后')
                         if not args.offline_render:
+                            check_continuation_checkpoint(page, record, go)
                             check_workspace_flow(page, data, width, record, layout, go, external_requests)
                             check_workspace_maturation(page, data, width, record, layout, go, output)
                             if width == 1440:

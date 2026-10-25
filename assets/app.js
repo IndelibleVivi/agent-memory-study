@@ -1318,7 +1318,8 @@
       const state={schema:window.StudyDesk.schema,kind,id:item.id,note:input.value,anchor:/^#[a-zA-Z0-9_-]{1,120}$/.test(window.location.hash)?window.location.hash:"",contentVersion:item.date||item.updated||data.room.edition};
       if(item.exercise) {const x=window.StudyDesk.exercise(route);state.exercise={k:x.k,ranking:x.ranking,need:x.need};}
       downloadFile(`ams-${item.id}.json`,JSON.stringify(window.StudyDesk.validate(state,data),null,2),"application/json");
-      if(workspaceState.items.length===1 && !workspaceState.items[0].excerpts.length && !workspaceState.title && !workspaceState.question && !workspaceState.synthesis && !workspaceState.next) workspaceHistory.markSaved();
+      const sole = workspaceState.items.length === 1 && workspaceState.items[0];
+      if(sole && sole.kind === kind && sole.id === item.id && !sole.excerpts.length && !workspaceState.title && !workspaceState.question && !workspaceState.synthesis && !workspaceState.next) workspaceHistory.markSaved();
       updateWorkspaceStatus();
     });
     details.append(label,input,button,el("p","只保留在本页内存中；刷新前请保存文件。文件由你保管，可从首页重新打开，不上传，也不写入浏览器存储。","desk-hint"));

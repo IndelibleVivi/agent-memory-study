@@ -11,7 +11,7 @@ import threading
 from urllib.parse import urlparse, parse_qs
 from xml.etree import ElementTree as ET
 from playwright.sync_api import sync_playwright, expect
-from test_reader_browser import check_workspace_maturation
+from test_reader_browser import check_workspace_maturation, check_continuation_checkpoint
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -150,6 +150,8 @@ def main():
                                     expect(page.locator('h1:visible')).to_have_count(1)
                                 def artifact_layout(name):
                                     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1'), name
+                                check_continuation_checkpoint(page,
+                                    lambda name: checks.append({'width':width, 'static_continuation':name}), artifact_go)
                                 check_workspace_maturation(page, data, width,
                                     lambda name: checks.append({'width':width, 'static_workspace':name}),
                                     artifact_layout, artifact_go)
