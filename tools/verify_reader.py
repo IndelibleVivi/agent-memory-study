@@ -45,7 +45,7 @@ def main():
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/c2c-cache-retraction-study', '-p', 'test_*.py'])
     run([python, '-B', 'research/jev-memory-contract-study/study.py', '--verify-checked'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/jev-memory-contract-study', '-p', 'test_*.py'])
-    print('PASS: reader contracts, generated data, local workspaces/public collections, bound reviews, offline representation/revision controls, five deterministic studies, synthetic classifier refits and checked AgeMem/C2C/Jev receipts')
+    print('PASS: reader contracts, generated data, source-aware workspaces/public collections, shared references/author drafts, bound reviews, offline representation/revision controls, five deterministic studies, synthetic classifier refits and checked AgeMem/C2C/Jev receipts')
 
 
 if __name__ == '__main__':

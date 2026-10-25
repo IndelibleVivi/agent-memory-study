@@ -11,6 +11,7 @@ import threading
 from urllib.parse import urlparse, parse_qs
 from xml.etree import ElementTree as ET
 from playwright.sync_api import sync_playwright, expect
+from test_reader_browser import check_workspace_maturation
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -144,6 +145,14 @@ def main():
                             for width in (1440,390,320):
                                 page.set_viewport_size({'width':width,'height':900})
                                 check_workspace_artifact(page, base, width, checks)
+                                def artifact_go(query=''):
+                                    page.goto(base + query, wait_until='load')
+                                    expect(page.locator('h1:visible')).to_have_count(1)
+                                def artifact_layout(name):
+                                    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1'), name
+                                check_workspace_maturation(page, data, width,
+                                    lambda name: checks.append({'width':width, 'static_workspace':name}),
+                                    artifact_layout, artifact_go)
                                 page.goto(base+'?study=after-a-correction&scenario=legacy&phase=after',wait_until='load')
                                 assert urlparse(page.url).path.endswith('/study/after-a-correction/')
                                 expect(page.locator('#study-scenario')).to_have_value('legacy')

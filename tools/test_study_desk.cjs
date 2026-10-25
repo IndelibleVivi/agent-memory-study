@@ -124,7 +124,100 @@ test("workspace rejects unknown and prototype-shaped identities while rebuilding
   assert.equal(rebuilt.extra, undefined);
   for (const key of ["externalUrl", "html", "nested"]) assert.equal(rebuilt.items[0][key], undefined);
   assert.deepEqual(Object.keys(rebuilt.items[0]).sort(),
-    ["anchor", "basis", "contentVersion", "id", "kind", "note"]);
+    ["anchor", "basis", "contentVersion", "excerpts", "id", "kind", "note"]);
+});
+
+test("workspace/1 migrates once; workspace/2 excerpts retain their original basis through rebase", () => {
+  const ref = {kind: "study", id: "entry-a"};
+  const legacy = added([ref]); legacy.schema = "ams-workspace/1";
+  delete legacy.items[0].excerpts;
+  const migrated = desk.parseWorkspace(JSON.stringify(legacy), room);
+  assert.equal(migrated.schema, "ams-workspace/2");
+  assert.deepEqual(migrated.items[0].excerpts, []);
+  const captured = desk.addExcerpt(migrated, desk.key(ref), {
+    quote: "Literal **public** prose.", anchor: "#section-1", role: "contrast", comment: "My uncertainty",
+  }, room);
+  const original = structuredClone(captured.items[0].excerpts[0]);
+  assert.equal(original.id, "excerpt-1");
+  assert.equal(original.basis, captured.items[0].basis);
+  assert.equal(migrated.items[0].excerpts.length, 0, "capture is atomic and does not mutate its input");
+  const revised = structuredClone(room); revised.studies[0].bodyMarkdown += "\nNew claim";
+  const rebased = desk.rebase(captured, desk.key(ref), revised);
+  assert.equal(desk.changed(rebased.items[0], revised), false);
+  assert.deepEqual(rebased.items[0].excerpts[0], original, "reviewing the object cannot rewrite a quotation's origin");
+  assert.equal(desk.revision({...ref, basis: original.basis}, revised).status, "changed");
+  const roundTrip = desk.parseWorkspace(desk.serializeWorkspace(rebased, revised), revised);
+  assert.deepEqual(roundTrip, rebased);
+  assert.match(desk.workspaceMarkdown(rebased, revised, require("../assets/study-packets.js")), /My uncertainty/);
+});
+
+test("excerpt imports rebuild fields and reject invalid or excessive input atomically", () => {
+  const work = added([{kind: "material", id: "source-a"}]);
+  const first = desk.addExcerpt(work, "material:source-a", {quote: "<script>literal</script>", comment: "c", role: "question", anchor: ""}, room);
+  const snapshot = JSON.stringify(first);
+  for (const part of [{role: "proven"}, {quote: ""}, {quote: "a".repeat(8001)}, {anchor: "#<bad>"}]) {
+    assert.throws(() => desk.addExcerpt(first, "material:source-a", {quote: "q", role: "context", anchor: "", comment: "", ...part}, room));
+  }
+  assert.equal(JSON.stringify(first), snapshot);
+  const hostile = structuredClone(first); hostile.items[0].excerpts[0].url = "https://example.invalid/private";
+  const parsed = desk.workspace(hostile, room);
+  assert.equal(parsed.items[0].excerpts[0].url, undefined);
+  hostile.items[0].excerpts.push({...hostile.items[0].excerpts[0]});
+  assert.throws(() => desk.workspace(hostile, room), /重复/);
+  let full = work;
+  for (let i = 0; i < desk.excerptLimit; i++) full = desk.addExcerpt(full, "material:source-a", {quote: "q", role: "context", comment: "", anchor: ""}, room);
+  assert.throws(() => desk.addExcerpt(full, "material:source-a", {quote: "q"}, room), /摘录/);
+});
+
+test("revision inspection is literal, distinguishes unknown from mismatched snapshots, and handles same-day changes", () => {
+  const ref = added([{kind: "study", id: "entry-a"}]).items[0];
+  assert.equal(desk.revision(ref, room).status, "current");
+  assert.equal(desk.changed({...ref, basis: JSON.stringify(JSON.parse(ref.basis), null, 2)}, room), false,
+    "JSON envelope whitespace alone does not create a contradictory changed flag");
+  assert.equal(desk.revision({...ref, basis: ""}, room).status, "unknown");
+  assert.equal(desk.revision({...ref, basis: '{"id":"other","bodyHtml":"<img onerror=bad()>"}'}, room).status, "invalid");
+  const modified = structuredClone(room); modified.studies[0].bodyMarkdown += "\nChanged on the same day";
+  const result = desk.revision(ref, modified);
+  assert.equal(result.status, "changed");
+  assert.match(result.before, /Literal/); assert.match(result.after, /Changed on the same day/);
+  assert.deepEqual(result.fields, ["bodyMarkdown"]);
+});
+
+test("history coalesces one editing session, restores several operations, branches, and compares exact save checkpoints", () => {
+  const history = desk.history(desk.emptyWorkspace(), room);
+  const a = added([{kind: "material", id: "source-a"}]); history.commit(a);
+  history.commit({...a, question: "first"}, "question-focus-1");
+  history.commit({...a, question: "second"}, "question-focus-1");
+  history.markSaved(); assert.equal(history.dirty(), false);
+  history.commit({...history.value(), next: "later"}, "next-focus-2");
+  assert.equal(history.dirty(), true);
+  assert.equal(history.undo().question, "second"); assert.equal(history.dirty(), false);
+  assert.equal(history.undo().question, "");
+  assert.equal(history.redo().question, "second");
+  history.commit({...history.value(), synthesis: "new branch"});
+  assert.equal(history.canRedo(), false);
+  history.undo(); history.undo(); history.undo();
+  assert.equal(history.value().items.length, 0);
+  assert.equal(history.canUndo(), false);
+  for (let i = 0; i < 30; i++) history.commit({...history.value(), title: String(i)});
+  let steps = 0; while (history.canUndo()) {history.undo(); steps++;}
+  assert.equal(steps, 20, "bounded history retains the latest twenty transitions");
+});
+
+test("large work remains saveable; size rejection keeps the last accepted state and history stays bounded", () => {
+  const target = {room: room.room, materials: [], questions: [], findings: [],
+    studies: Array.from({length: 9}, (_, i) => ({id: `large-${i}`, title: `Large ${i}`, bodyMarkdown: "课".repeat(60000)}))};
+  let work = desk.emptyWorkspace();
+  for (let i = 0; i < 9; i++) work = desk.add(work, {kind: "study", id: `large-${i}`}, target);
+  const history = desk.history(work, target);
+  const before = desk.serializeWorkspace(history.value(), target);
+  const oversized = desk.workspace(work, target);
+  for (const ref of oversized.items) ref.note = "课".repeat(20000);
+  assert.throws(() => history.commit(oversized), /2 MiB/);
+  assert.equal(desk.serializeWorkspace(history.value(), target), before);
+  for (let i = 0; i < 12; i++) history.commit({...work, title: String(i)});
+  let steps = 0; while (history.canUndo()) {history.undo(); steps++;}
+  assert.ok(steps > 0 && steps < 20, "the byte bound reduces retained steps for large work");
 });
 
 test("workspace file limit counts UTF-8 bytes at the 2 MiB boundary", () => {

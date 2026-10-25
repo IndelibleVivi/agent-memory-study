@@ -178,7 +178,7 @@ def check_workspace_flow(page, data, width, record, layout, go, external_request
         "button", name="保存案头 JSON ↓", exact=True).click())
     private_markdown = download_text(page, lambda: page.get_by_role(
         "button", name="导出私人札记 Markdown ↓", exact=True).click())
-    assert workspace_json["schema"] == "ams-workspace/1"
+    assert workspace_json["schema"] == "ams-workspace/2"
     assert workspace_json["title"] == private_title
     assert any(ref.get("note") == private_note for ref in workspace_json["items"])
     assert private_title in private_markdown and private_note in private_markdown
@@ -275,7 +275,7 @@ def check_workspace_flow(page, data, width, record, layout, go, external_request
         "buffer": json.dumps(poisoned).encode(),
     })
     page.get_by_role("button", name="打开这份案头", exact=True).click()
-    expect(page.locator('.workspace-comparison')).to_contain_text('公开内容在保存后已有变化')
+    expect(page.locator('.workspace-comparison [data-revision-status=invalid]')).to_contain_text('快照不可比较')
     expect(page.locator('img[src=x]')).to_have_count(0)
     assert page.evaluate('window.WORKSPACE_BAD') is None
     page.locator(".workspace-public summary").click()
@@ -298,6 +298,148 @@ def check_workspace_flow(page, data, width, record, layout, go, external_request
 
     layout("workspace private desk and public collection")
     record("workspace mixed selection, compare, notes, undo, private/public downloads, import preview, privacy and navigation")
+    go()
+
+
+def check_workspace_maturation(page, data, width, record, layout, go, output=None):
+    """A public passage -> private annotation -> revision -> recovered author input."""
+    go('?study=retrieval-and-relevance')
+    references = page.locator('#study-view > .object-reference-browser')
+    references.locator('> summary').click()
+    source_id = next(row for row in data['studies'] if row['id'] == 'retrieval-and-relevance')['continuation']['studyIds'][0]
+    row = references.locator('.object-reference-row').filter(
+        has=page.locator(f'a[data-route=study][data-route-id="{source_id}"]')).first
+    expect(row).to_be_visible()
+    row.get_by_role('button', name='加入案头', exact=True).click()
+    expect(page.locator('[data-workspace-count]').first).to_contain_text('1')
+    # Select actual canonical DOM; the private textarea is never the quote source.
+    passage = page.locator('#study-view .study-essay p').last
+    quote = passage.inner_text().strip()
+    passage.scroll_into_view_if_needed()
+    passage.evaluate('''node => {
+      const range = document.createRange(); range.selectNodeContents(node);
+      const selection = getSelection(); selection.removeAllRanges(); selection.addRange(range);
+    }''')
+    capture = page.locator('#study-view .workspace-object-actions').get_by_role(
+        'button', name='留下选中文字', exact=True)
+    expect(capture).to_be_enabled(); expect(capture).to_be_in_viewport(); capture.click()
+    expect(page.locator('.workspace-article-capture.has-public-selection')).to_have_count(0)
+    expect(page.locator('[data-workspace-count]').first).to_contain_text('2')
+    page.locator('#study-view .workspace-object-actions a[data-route=home]').click()
+    panel = page.locator('[data-workspace-object="study:retrieval-and-relevance"]')
+    excerpt = panel.locator('.workspace-excerpt')
+    expect(excerpt.locator('blockquote')).to_have_text(quote)
+    comment = f'Private excerpt reasoning {width} <script>window.EXCERPT_BAD=true</script>'
+    excerpt.locator('textarea').fill(comment)
+    excerpt.get_by_role('combobox', name='excerpt-1 的用途').select_option('contrast')
+    expect(excerpt.locator('textarea')).to_have_value(comment)
+    page.locator('#workspace-question').fill('One research question')
+    page.locator('#workspace-next').fill('A next reading step')
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    expect(page.locator('#workspace-next')).to_have_value('')
+    expect(page.locator('#workspace-question')).to_have_value('One research question')
+    expect(page.locator('[data-workspace-undo]')).to_be_focused()
+    page.keyboard.press('Enter')
+    expect(page.locator('#workspace-question')).to_have_value('')
+    for _ in range(2):
+        page.get_by_role('button', name='重做整理', exact=True).click()
+    expect(page.locator('#workspace-next')).to_have_value('A next reading step')
+    saved = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    entry = next(ref for ref in saved['items'] if ref['id'] == 'retrieval-and-relevance')
+    assert saved['schema'] == 'ams-workspace/2'
+    assert entry['excerpts'][0]['quote'] == quote
+    assert entry['excerpts'][0]['comment'] == comment
+    assert entry['excerpts'][0]['role'] == 'contrast'
+    assert entry['excerpts'][0]['basis'] == entry['basis']
+    page.locator('.workspace-public summary').click()
+    public = download_json(page, lambda: page.get_by_role('button', name='公开选材 JSON ↓', exact=True).click())
+    assert comment not in json.dumps(public)
+    assert all('excerpts' not in obj and 'excerpts' not in obj['content'] for obj in public['objects'])
+
+    older = json.loads(entry['basis'])
+    older['bodyMarkdown'] = '# Older synthetic revision\n\n<img src=x onerror=window.EXCERPT_BAD=true>'
+    entry['basis'] = json.dumps(older)
+    entry['excerpts'][0]['basis'] = entry['basis']
+    original_excerpt_basis = entry['excerpts'][0]['basis']
+    page.locator('#workspace-file').set_input_files({
+        'name':'older-desk.json', 'mimeType':'application/json', 'buffer':json.dumps(saved).encode(),
+    })
+    page.get_by_role('button', name='打开这份案头', exact=True).click()
+    expect(panel.locator(':scope > .workspace-revision')).to_have_attribute('data-revision-status', 'changed')
+    revision = panel.locator(':scope > .workspace-revision')
+    revision.locator('summary').click()
+    expect(revision.locator('[data-revision-before]')).to_contain_text('Older synthetic revision')
+    expect(revision.locator('[data-revision-after]')).to_contain_text('recall')
+    assert page.locator('img[src=x]').count() == 0
+    assert page.evaluate('window.EXCERPT_BAD') is None
+    expect(panel.locator('.workspace-reading')).not_to_contain_text('Older synthetic revision')
+    panel.get_by_role('button', name='已核对，改以当前正文为据', exact=True).click()
+    expect(panel.locator(':scope > .workspace-revision')).to_have_attribute('data-revision-status', 'current')
+    expect(excerpt.locator('.workspace-revision')).to_have_attribute('data-revision-status', 'changed')
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    expect(panel.locator(':scope > .workspace-revision')).to_have_attribute('data-revision-status', 'changed')
+    page.get_by_role('button', name='重做整理', exact=True).click()
+    recovered = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    recovered_entry = next(ref for ref in recovered['items'] if ref['id'] == 'retrieval-and-relevance')
+    assert recovered_entry['excerpts'][0]['basis'] == original_excerpt_basis
+    assert recovered_entry['excerpts'][0]['comment'] == comment
+    assert recovered_entry['basis'] != original_excerpt_basis
+    # Selecting a private comment cannot feed the public passage capture action.
+    excerpt.locator('textarea').focus()
+    excerpt.locator('textarea').evaluate('node => node.select()')
+    expect(panel.get_by_role('button', name='留下选中文字', exact=True)).to_be_disabled()
+    excerpt.get_by_role('button', name='移除这条摘录', exact=True).click()
+    expect(panel.locator('.workspace-excerpt')).to_have_count(0)
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    expect(panel.locator('.workspace-excerpt textarea')).to_have_value(comment)
+    layout('excerpt editing and source revision')
+    if output:
+        Path(output, f'workspace-{width}.json').write_text(json.dumps(recovered, ensure_ascii=False, indent=2))
+        panel.screenshot(path=str(Path(output, f'workspace-revision-{width}.png')))
+    record('real passage capture, bidirectional citations, private annotation, multi-step history, revision inspection and preserved origins')
+    # Save before a document navigation; private state is still only page memory.
+    download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    go()
+
+
+def check_workspace_capacity(page, data, record, go):
+    """The accepted desk stays saveable when a large native edit is rejected."""
+    go('#workbench')
+    text = page.evaluate('''data => {
+      const desk = StudyDesk; let work = desk.emptyWorkspace();
+      for (const item of data.materials.slice(0, 24)) work = desk.add(work, {kind:'material', id:item.id}, data);
+      for (const ref of work.items.slice(1)) ref.note = '课'.repeat(20000);
+      work.question = '问'.repeat(8000); work.synthesis = '思'.repeat(20000); work.next = '续'.repeat(8000);
+      work = desk.workspace(work, data); let full = false;
+      outer: for (const ref of work.items) for (let i = 0; i < 12; i++) {
+        try {work = desk.addExcerpt(work, desk.key(ref), {quote:'A synthetic capacity fixture', comment:'', role:'context', anchor:''}, data);}
+        catch (error) {if (!error.message.includes('2 MiB')) throw error; full = true; break outer;}
+      }
+      if (!full) throw Error('Fixture did not reach the byte boundary');
+      return desk.serializeWorkspace(work, data);
+    }''', data)
+    assert 1900000 < len(text.encode()) <= 2 * 1024 * 1024
+    page.locator('#workspace-file').set_input_files({
+        'name':'capacity.json', 'mimeType':'application/json', 'buffer':text.encode(),
+    })
+    page.get_by_role('button', name='打开这份案头', exact=True).click()
+    expect(page.locator('.workspace-item')).to_have_count(24)
+    first = page.locator('.workspace-comparison').first.locator(':scope > textarea')
+    expect(first).to_have_value('')
+    first.fill('更' * 20000)
+    expect(page.locator('#workspace-status')).to_contain_text('2 MiB')
+    expect(first).to_have_value('')
+    title = page.locator('#workspace-title'); title.focus()
+    page.keyboard.type('continued')
+    expect(title).to_have_value('continued')
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    expect(title).to_have_value('')
+    saved = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    assert saved == json.loads(text)
+    assert page.evaluate('localStorage.length') == 0
+    record('near-2-MiB 24-object desk rejects oversized edit atomically and keeps native typing/undo/save usable')
+    page.reload(wait_until='load')
+    expect(page.locator('.workspace-item')).to_have_count(0)
     go()
 
 
@@ -623,6 +765,9 @@ def main():
                         expect(page.locator('#study-index')).to_contain_text('一条更正之后')
                         if not args.offline_render:
                             check_workspace_flow(page, data, width, record, layout, go, external_requests)
+                            check_workspace_maturation(page, data, width, record, layout, go, output)
+                            if width == 1440:
+                                check_workspace_capacity(page, data, record, go)
                         if width <= 390:
                             expect(page.locator('#menu-button')).to_be_visible()
                             expect(page.locator('#search')).to_be_visible()
@@ -1118,7 +1263,7 @@ def main():
                             page.reload(wait_until='domcontentloaded')
                             expect(page.locator('#study-lab')).to_contain_text('研究方案尚未执行')
                             go('?question=experience-becomes-policy')
-                            page.locator('a[data-route=study]').filter(has_text='概括之后').click()
+                            page.locator('a.inquiry-onward[data-route=study]').filter(has_text='概括之后').click()
                             expect(page.locator('#study-title')).to_have_text('概括之后，往事还记得准吗？')
                             page.go_back()
                             expect(page.locator('#inquiry-title')).to_be_visible()

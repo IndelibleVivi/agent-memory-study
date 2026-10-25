@@ -17,15 +17,16 @@
   ```
 
 - `tools/content.py --check` / `tools/build.py --check-drift` 只检查 drift，不修复。书目变化需要同次 `--rdf-source /path/to/zotero-source.rdf` 重建；单纯编辑文章无需重导 RDF。`--rdf-source` 接受经过验证的 native Zotero RDF 或明确 provenance 的 derived RDF；derived 不能称为 native export。
-- `tools/author.py` 是 offline identity / explicit impact helper，不 fetch 来源、不验证论点。草稿只生成在 repo 外，发布前移除 draft、替换提示、核对公开署名与依据。具体作者路径见 `docs/authoring.md`。
+- `tools/author.py` 是 offline identity / explicit impact / 私人案头到草稿 helper，不 fetch 来源、不验证论点。`impact` 从当前 canonical 编译并调用 `research-map.js` 的唯一有向引用；保留旧 source 输出，任意公开对象用 `--kind`。`tools/research_context.cjs` 只连接既有 compiler / ResearchMap / StudyDesk，不维护第二份关系提取或案头校验。草稿只生成在 repo 外，拒绝覆盖；发布前逐段核对隐私、署名、引用权利与依据，完成正文后移除 draft。具体作者路径见 `docs/authoring.md`。
 
 ## 研究包与个人接续
 
 - `assets/study-packets.js` 是 browser、`tools/export_study.cjs` 和静态 `index.md` / `index.json` 的唯一研究包实现。包包含当前对象和直接引用 manifest，不递归抓取全文；编辑日期不是 immutable revision。论文作者与札记署名不可混同。
-- `assets/study-desk.js` 负责原创集合演算、`ams-continuation/1` 与 `ams-workspace/1` 合同及其页面内笔记状态。近邻集合、相关性标签与排序是教学设定，不运行 embedding 或 ANN，不是论文或用户学习结果。
+- `assets/study-desk.js` 负责原创集合演算、`ams-continuation/1` 与 `ams-workspace/2` 合同及其页面内状态／有限历史；继续兼读实际已保存的 `ams-workspace/1` 并迁移为 v2。近邻集合、相关性标签与排序是教学设定，不运行 embedding 或 ANN，不是论文或用户学习结果。
 - 私人接续只保存在页面内存和用户主动下载的文件。不得进入 canonical、analytics、URL、localStorage、repo 或构建。导入限制大小与字段，仅恢复已知公开对象；文字按文本使用，不执行指令、不请求文件中的 URL。刷新未保存内容会丢失，界面必须说明。
-- 研究案头最多 24 个已知公开对象、2 MiB UTF-8 文件；导入先完整验证再显式打开，未知对象／重复身份／无效值拒绝且不改变已有工作。私有 `basis` 是受限惰性文字，用于比较保存后公开内容是否变化；只 render 当前 canonical HTML，不能执行或显示导入快照 HTML。日期不替代内容身份，比较也不认证来源。
-- `StudyPackets.collection` 是 browser / `tools/export_study.cjs --select` / `--workspace` 的唯一公开选材 projection。只从已知 kind / id 重建当前公开包，不 spread 私人输入，不带案头名称、问题、笔记或旧快照；`ams-study-collection/1` 中仍保留各对象的 packet / attribution / scope。私人 JSON 与 Markdown 出口明确标记且留用户侧。
+- 研究案头最多 24 个已知公开对象、每对象 12 条摘录、2 MiB UTF-8 文件；所有被接受状态须能按实际 JSON 下载格式保存。导入先完整验证再显式打开，未知对象／重复对象或摘录身份／无效值拒绝且不改变已有工作。私有 `basis` 是受限惰性文字；旧／新字段检查只用 textContent，正文只 render 当前 canonical HTML，不执行导入 HTML。日期不替代内容身份，比较也不认证来源。摘录保留独立 basis／日期／anchor，确认对象当前依据不得改写既有摘录；私人用途不提升公开支持关系。
+- 文字编辑、摘录、选材、导入与 rebase 共用 StudyDesk history；最多 20 次变更／8 MiB 页面内历史，大文件可减少步数，不保存到文件。焦点内连续文字输入合为一步；dirty 按整个状态与最近文件检查点比较，局部单篇保存不得清除其他对象、摘录或案头文字的改动。
+- `StudyPackets.collection` 是 browser / `tools/export_study.cjs --select` / `--workspace` 的唯一公开选材 projection。只从已知 kind / id 重建当前公开包，不 spread 私人输入，不带案头名称、问题、笔记、摘录记录／用途／批注或旧快照；`ams-study-collection/1` 中仍保留各对象的 packet / attribution / scope。私人 JSON 与 Markdown 出口明确标记且留用户侧。
 - 改动上述行为运行 `tools/test_study_packets.cjs`、`tools/test_study_desk.cjs`、`tools/test_export_study.cjs`（已接入统一验证）与 reader browser tests，覆盖导出／导入、恶意及过大文件、历史与页面内接续。
 
 ## Zotero：CLI / local API first

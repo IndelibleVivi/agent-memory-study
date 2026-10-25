@@ -21,7 +21,8 @@ test('ordered multi-object CLI matches the shared public projection', () => {
 test('workspace CLI reads identities without publishing any private content or old snapshots', () => {
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'ams-export-'));
   try {
-    const work=desk.add(desk.emptyWorkspace(),{kind:'study',id:'retrieval-and-relevance'},data);
+    let work=desk.add(desk.emptyWorkspace(),{kind:'study',id:'retrieval-and-relevance'},data);
+    work=desk.addExcerpt(work,'study:retrieval-and-relevance',{quote:'PRIVATE-EXCERPT',role:'contrast',comment:'PRIVATE-COMMENT',anchor:'#section-1'},data);
     for(const key of ['title','question','synthesis','next'])work[key]='PRIVATE-SENTINEL';
     work.items[0].note='PRIVATE-SENTINEL'; work.items[0].basis='OLD-SNAPSHOT-SENTINEL';
     const input=path.join(dir,'work.json');fs.writeFileSync(input,JSON.stringify(work));
@@ -30,6 +31,8 @@ test('workspace CLI reads identities without publishing any private content or o
       assert.equal(result.status,0,result.stderr);
       assert.ok(!result.stdout.includes('PRIVATE-SENTINEL'));
       assert.ok(!result.stdout.includes('OLD-SNAPSHOT-SENTINEL'));
+      assert.ok(!result.stdout.includes('PRIVATE-EXCERPT'));
+      assert.ok(!result.stdout.includes('PRIVATE-COMMENT'));
       assert.ok(result.stdout.includes('retrieval-and-relevance'));
     }
   } finally { fs.rmSync(dir,{recursive:true,force:true}); }

@@ -6,7 +6,7 @@ Agent Memory Study 是一个开放的研究体。贡献可以让一个概念更�
 
 ### 学习记录与研究论述
 
-先写真实内容。`learning-note` 和 `research-essay` 的 Markdown 可以从名字、例子、定义或推导开始，无需先有实验或论文清单。最小 metadata、草稿与编译步骤见[作者指南](docs/authoring.md)。新材料可以补基础、修订解释、提出反例或开启旁支；不要仅为了填满领域或统一外观而创建文章。
+先写真实内容。`learning-note` 和 `research-essay` 的 Markdown 可以从名字、例子、定义或推导开始，无需先有实验或论文清单。最小 metadata、草稿与编译步骤见[作者指南](docs/authoring.md)；`draft-from-workspace` 可将主动选择的本地案头接到 repo 外的私人草稿，须逐段核对后才主动采用，不能把整个案头或 draft 放进 Git。修订可用任意公开对象的 `impact --kind` 查看直接／间接引用路径；这不代替论证检查。新材料可以补基础、修订解释、提出反例或开启旁支；不要仅为了填满领域或统一外观而创建文章。
 
 ### 1. Source correction / version watch
 
@@ -174,7 +174,7 @@ python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebo
 
 The first command uses only local public/synthetic data, including actual fitting of a
 small stdlib classifier; it downloads no pretrained models or external data. It
-checks both generated projections without rewriting them, validates authoring, study packets, public selected collections, local continuation and workspaces, shared constellation/sculpture relations and domain layout and question/finding
+checks both generated projections without rewriting them, validates authoring and private draft boundaries, study packets, public selected collections, local continuation, workspace migration/excerpts/history, shared directed references and reverse impact, constellation/sculpture projections and domain layout and question/finding
 references, lexical query and portable brief contracts, and the existing
 RDF, freshly reruns the five small deterministic studies and the decision-learning
 experiment (including classifier fitting and correction), and checks the saved

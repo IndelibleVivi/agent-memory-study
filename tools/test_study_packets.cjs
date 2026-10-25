@@ -78,7 +78,8 @@ test("runtime receipts do not change packets and markdown is readable prose", ()
 const privateText = "PRIVATE-WORKSPACE-SENTINEL";
 const privateWorkspaceRefs = [
   {kind: "material", id: data.materials[0].id, title: privateText, note: privateText,
-   basis: privateText, question: privateText, synthesis: privateText, next: privateText},
+   basis: privateText, question: privateText, synthesis: privateText, next: privateText,
+   excerpts: [{id: "excerpt-1", quote: privateText, comment: privateText, role: "question", basis: privateText}]},
   {kind: "study", id: data.studies[0].id, title: privateText, note: privateText,
    basis: privateText, question: privateText, synthesis: privateText, next: privateText},
   {kind: "question", id: data.questions[0].id, title: privateText, note: privateText,

@@ -26,7 +26,7 @@ AMS 从 agent memory 出发，研究信息、经验与智能的跨时间关系�
 
 [交叉研究准备包](research/relata-ams-campaign/README.md)把未知未来用途、更正传播与原生操作的可观察边界接到现有实验。共享来源、family lineage 和实际交付证据；各自的 estimand、允许行动与研究结论保持独立。P1/P2 的独立出题流程和 operation map 是研究准备，不是新的自然语言模型结果。P3/P4/P6 保留各自设计，Relata 的人与互动研究独立进行；参数学习、cache 与跨模型 KV 研究也不以关系应用为前提。
 
-该准备包位于 PR #8 研究分支，未由此合入 main 或部署。Relata 的固定 capture reader 后续另有具名执行包；既有 scripted/oracle 矩阵不冒充真实语义能力。
+该准备包与当前研究案头／作者接续变化位于 PR #8 研究分支，未由此合入 main 或部署。Relata 的固定 capture reader 后续另有具名执行包；既有 scripted/oracle 矩阵不冒充真实语义能力。
 
 ## 研究怎样生长
 
@@ -61,15 +61,19 @@ node tools/export_study.cjs --kind question --id experience-to-capability --form
 
 读到一半，可以在详情页写一段自己的接续笔记，主动下载 JSON，之后从首页“打开接续文件”恢复公开对象、章节位置和支持的演算状态。笔记只在页面内存与自己保存的文件里；刷新前未下载的修改会丢失。导入不执行文件中的文字，也不加载任意 URL。它不是在线批注、账号服务或云同步。
 
-研究案头把多份文章、来源、问题和判断组织成一次工作：选材、排序、两份内容对读、自己的问题／解释／笔记、回正文阅读与整组保存相连。私人案头 JSON 可以先预览再打开，移出和打开可以撤销；保存后公开正文有变化时提示重读，旧笔记保留原样。案头最多 24 个对象、文件最多 2 MiB，仅在页面内存与用户主动保存的文件中。单篇接续继续可用，两者共享笔记状态。
+研究案头把多份文章、来源、问题和判断组织成一次工作：选材、对读、带来源版本的摘录／批注、自己的问题与解释、回正文核对和整组保存相连。详情中的双向显式引用可以继续阅读和选材；修订检查范围保留引用路径，不把引用当作论证依赖。案头可以逐字段查看保存时与当前的内容；确认当前正文不会改写旧摘录的来源。
 
-“公开选材包”只导出选定的当前公开对象，案头名称、问题和私人笔记不会混入。机器也能沿同源出口取用：
+私人案头 JSON 先预览再打开，编辑、选材、摘录和导入共享有限撤销／重做。案头最多 24 个对象、每对象 12 条摘录、文件最多 2 MiB，仅在页面内存与用户主动保存的文件中。新文件使用 `ams-workspace/2`，仍兼读旧版案头；单篇接续继续可用，两者共享笔记状态。刷新前请保存文件，历史与离开提示都不替代备份。
+
+“公开选材包”只导出选定的当前公开对象，案头名称、问题、私人笔记、摘录记录／用途／批注和旧快照不会混入。机器也能沿同源出口取用：
 
 ```bash
 node tools/export_study.cjs --select study:retrieval-and-relevance \
   --select study:what-an-index-learns --format markdown
 node tools/export_study.cjs --workspace /path/to/ams-workspace.json --format json
 ```
+
+私人案头也能经 `tools/author.py draft-from-workspace` 整理成 repo 外的 draft，保留问题、推敲、摘录与来源限制；不会自动发表或把选材升级为支持关系。作者影响检查 `impact ID --kind study` 与网页共享显式引用图，并从当前 canonical 编译，列出直接／间接检查路径。命令与正式采用步骤见[作者指南](docs/authoring.md)。
 
 [案头使用说明](docs/study-workspace.md)记录完整使用、恢复和公私导出边界；[研究系统与建设方向](docs/research-system.md)说明这些能力如何服务 thesis，以及仍需继续的内容、研究连接与可靠性交付。
 

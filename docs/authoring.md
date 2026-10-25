@@ -10,9 +10,14 @@
 python3 tools/author.py inspect 'https://arxiv.org/abs/2502.01736v1'
 python3 tools/author.py inspect 'The Pain Axis'
 python3 tools/author.py impact pain-axis
+python3 tools/author.py impact retrieval-and-relevance --kind study
 ```
 
-`inspect` 接受 URL、DOI、arXiv ID 或标题；输出区分身份匹配、版本候选、标题候选与未识别。标题接近不足以认定是同一篇论文，版本也仍需回原文核对。`impact` 列出 source ID 在文章 reading / continuation、问题、实践判断和地图中的显式关系；它不解析任意正文链接或发现所有间接依赖，也不验证支持强度。
+`inspect` 接受 URL、DOI、arXiv ID 或标题；输出区分身份匹配、版本候选、标题候选与未识别。标题接近不足以认定是同一篇论文，版本也仍需回原文核对。识别到来源后，返回的依赖信息与 `impact` 共用当前编译路径，因此也需要下述 Node.js 和 Markdown parser；不联网补齐身份或用旧 projection 兜底。
+
+`impact SOURCE_ID` 保留原有 source 关系与地图字段；`--kind material|study|question|finding` 可以指定任一公开对象。它先编译当前 canonical，再调用与网页共用的 `ResearchMap.referenceGraph`，沿 reading、显式 ID、continuation 和已知内部正文链接反向查找，给出直接／间接条目、距离与最短引用路径。环和重复路径不会重复计算目标；领域、方向和共享主题不构成依赖。输出只是编辑检查范围，不验证支持强度，也不声明每个引用者都必须修改。该入口需要本项目的 Node.js 和 `tools/content-requirements.txt`；不会用过期 generated projection 兜底。
+
+CLI 默认使用 PATH 中的 `node`；需要明确指定已安装的本地 runtime 时，可用 `AMS_NODE=/absolute/path/to/node`，该值必须是可执行文件。它不安装或启动远程服务。
 
 阅读后判断它补充基础、改变机制解释、提供反例、开启旁支、修正来源身份，还是暂不采用。只把实际选择过的内容编入研究体。新来源札记放 `study/sources/<id>.json`，沿现有 source 合同填写身份、范围和依据；短小外部阅读也可先放文章的 `externalReadings`，不自动增加 Zotero 书目。`failureSurfaces` 可为空，有关联时在 source 填写 ID，反向 `materialIds` 由 compiler 生成。
 
@@ -52,6 +57,24 @@ python3 tools/author.py new-study a-question-about-retrieval \
 - `takeaways`、`boundary`、`closing` 按内容需要填写，缺省不制造空栏目。
 
 研究方案与实验沿既有三类合同：`editorial-synthesis-with-proposed-experiment` 只链接未执行协议；`editorial-synthesis-with-recorded-experiment` 链接真实 `resultsUrl`；`editorial-synthesis-with-deterministic-demo` 使用现有共用规则实现。不得把学习笔记套成假实验；实际运行结果只在原研究 artifact 中维护。
+
+## 从私人案头继续成文
+
+已经在案头整理的思考不必重新手工抄一遍：
+
+```bash
+python3 tools/author.py draft-from-workspace \
+  --input /path/to/ams-workspace.json \
+  --slug a-question-about-retrieval \
+  --title '一次检索留下的问题' --kind learning-note \
+  --out /path/to/private-drafts
+```
+
+命令调用 `StudyDesk.parseWorkspace` 的同一验证，兼读案头 v1 / v2；不 fetch 来源或文件中的 URL。输出目录必须在 repo 外（包括解析 symlink 后的位置），两个目标文件都必须尚不存在。损坏、过大、未知对象或不合合同的案头会在写入前拒绝。
+
+输出是一对明确标记私人工作材料和 `draft: true` 的 Markdown / JSON，保留问题、已有理解、继续位置、对象笔记、摘录用途／批注／章节、所据日期与版本限制，以及当前公开对象的署名和阅读范围。来源作者与本站札记署名分别保留；未核实的旧快照不变成可信原文，私人用途不生成支持声明或自动填入 `readings`。
+
+它只接续写作，不能替代作者决定：逐段选择可公开的内容，复查当前原文、旧摘录和引用权利，补足论证、署名与简介；移除草稿标记并按上一节的 canonical 文件路径主动采用。不要把整个私人 draft 或案头原样放进 Git；compiler 拒绝 draft 是最后一道格式保护，不是隐私审查。
 
 ## 改变理解时，改哪里
 
