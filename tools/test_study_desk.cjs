@@ -283,3 +283,20 @@ test("workspace Markdown keeps private fields and anchors while projecting curre
   assert.match(markdown, /Source A/);
   assert.match(markdown, /Entry A/);
 });
+
+test('ordered index state roundtrips through continuation and workspace by canonical exercise type', () => {
+  const source = {studies:[{id:'index',title:'Index',date:'2026-10-26',exercise:'ordered-index'},
+    {id:'retrieval',title:'Retrieval',exercise:'retrieval-sets'}, {id:'plain',title:'Plain'}]};
+  const values = {dataset:'clustered',mutation:'insert',repair:'rebound',query:0};
+  const continuation = {schema:desk.schema,kind:'study',id:'index',note:'literal <script>',anchor:'#study-lab',exercise:{...values,k:8,url:'https://example.org'}};
+  const parsed = desk.parse(JSON.stringify(continuation),source);
+  assert.deepEqual(parsed.exercise, values);
+  let work = desk.add(desk.emptyWorkspace(),{kind:'study',id:'index'},source);
+  work.items[0].exercise = continuation.exercise;
+  assert.deepEqual(desk.parseWorkspace(desk.serializeWorkspace(work,source),source).items[0].exercise,values);
+  const other = desk.validate({...continuation,id:'retrieval'},source);
+  assert.deepEqual(other.exercise,{k:8,ranking:'reference',need:'understand'});
+  assert.equal(desk.validate({...continuation,id:'plain'},source).exercise,undefined);
+  const malformed = desk.validate({...continuation,exercise:{dataset:'__proto__',mutation:'bad',repair:'bad',query:Infinity}},source);
+  assert.deepEqual(malformed.exercise,{dataset:'uniform',mutation:'base',repair:'stale',query:70});
+});

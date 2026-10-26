@@ -2,6 +2,8 @@
 
 Agent Memory Study 是一个开放的研究体。贡献可以让一个概念更可理解、一段推导更清楚、一项判断更可定位，也可以带来尚未收束的新问题。公开修改通过 pull request 提交；网页的个人接续与案头笔记只供本地保存，不自动成为公开贡献。跨材料整理、文件恢复和公私导出见[案头说明](docs/study-workspace.md)。
 
+普通学习文章也可以声明已支持的 `exercise`：`retrieval-sets` 或 `ordered-index`。索引演算由 `assets/index-study.js` 单独拥有计算，renderer 不复制算法；固定数据、拟合、误差界、局部核对与回退均需可检查，不能把它标为论文效果。新的演算状态要贯通 URL、单篇接续与案头，并验证无 JavaScript 的默认结果及移除控件。统一验证含 `tools/test_index_study.cjs`；真实交互由 source/static tests 共用 `tools/index_browser_checks.py`。
+
 ## 可以贡献什么
 
 ### 学习记录与研究论述

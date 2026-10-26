@@ -49,7 +49,7 @@ python3 -B tools/test_static_reader.py
 
 公开路径有 `study/<id>/`、`material/<id>/`、`question/<id>/`、`finding/<id>/`。旧 `?study=` 等链接通过 browser location replace 转到相应物理页面，不是 HTTP 301。没有 JS 时直接使用物理路径；正文、普通阅读链接与静态研究包可读。源码 file mode 保留 query links。
 
-首页 `?domain=` / `?direction=` 选择阅读分组，`?q=` 与 filters 用于搜索；旧 `?thread=` / `?path=` 自动展开 atlas 入口。已有场景 `scenario` / `phase` 保留。检索集合演算用 `k` / `ranking` / `need`，只作用于相应学习文章。Browser history 可恢复这些公开状态，sitemap 和 canonical 不收录查询／场景变体。
+首页 `?domain=` / `?direction=` 选择阅读分组，`?q=` 与 filters 用于搜索；旧 `?thread=` / `?path=` 自动展开 atlas 入口。已有场景 `scenario` / `phase` 保留。检索集合演算用 `k` / `ranking` / `need`；索引演算用 `dataset` / `mutation` / `repair` / `query`，后者只接收固定分布／维护选项及 0–130 整数。参数只作用于各自文章，切换到其他文章时清除。Browser history 可恢复这些公开状态，sitemap 和 canonical 不收录查询／场景变体。
 
 标题、description、canonical、Open Graph 与 JSON-LD 由同一 SEO module 生成。论文作者不被标成札记作者；展示、导出或索引不改变阅读深度与证据状态。
 

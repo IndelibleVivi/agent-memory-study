@@ -114,7 +114,7 @@
     return {
       domain: data.room.domains.some(x=>x.id===params.get("domain")) ? params.get("domain") : null,
       direction: data.room.directions.some(x=>x.id===params.get("direction")) ? params.get("direction") : null,
-      ...window.StudyDesk.exercise({k:params.get("k") || 3, need:params.get("need"), ranking:params.get("ranking")}),
+      ...window.StudyDesk.exerciseState(studiesById.get(study)?.exercise, Object.fromEntries(params)),
       question, finding, practice: params.get("practice") || "",
       material,
       study,
@@ -140,6 +140,9 @@
       ...route,
       ...nextRoute,
     };
+    const exercise = window.StudyDesk.exerciseState(studiesById.get(route.study)?.exercise, route);
+    for (const key of ["k", "ranking", "need", "dataset", "mutation", "repair", "query"]) delete route[key];
+    Object.assign(route, exercise);
     const method = replace ? "replaceState" : "pushState";
     window.history[method]({}, "", routeUrl(route, hash));
     render({ focus, hash });
@@ -854,6 +857,7 @@
     if (lab) fragment.append(lab.element);
     if (lab || study.exercise) { const a=el("a", study.kind === "editorial-synthesis-with-proposed-experiment" ? "下一项研究" : study.exercise ? "亲手演算" : "亲手比较"); a.href="#study-lab"; toc.append(a); }
     if (study.exercise === "retrieval-sets") fragment.append(renderRetrievalExercise());
+    if (study.exercise === "ordered-index") fragment.append(renderIndexExercise());
     const sourceCount = study.readings.length + study.externalReadings.length;
     if (sourceCount) {
       const sources = el("details", "", "study-sources"); sources.id="study-sources"; const sourceJump=el("a","来源与阅读范围"); sourceJump.href="#study-sources"; toc.append(sourceJump); sources.append(el("summary", `来源与实际阅读范围 · ${sourceCount}`));
@@ -891,7 +895,7 @@
     const el=createTextElement, x=window.StudyDesk.exercise(route);
     const lab=el("section","","study-lab retrieval-exercise");lab.id="study-lab";
     lab.append(el("p","ORIGINAL TEACHING SET / 原创集合演算","eyebrow"),el("h2","换一个集合，看看比例怎样变化。"),el("p","a–h、顺序与相关集合均为设定；这里没有执行 embedding、ANN 或模型检索。"));
-    const controls=el("div","","study-controls");
+    const controls=el("div","","study-controls"); controls.dataset.jsControl="";
     for(const [field,label,options] of [["ranking","返回的排序",[["reference","A · 与参考近邻相同"],["contrast","B · 手工对照"]]],["need","当前相关集合",[["understand","R₁ = {a, d, e, f}"],["implement","R₂ = {b, c, g}"]]]]) {
       const wrap=el("label",label);const select=el("select","");select.id=`retrieval-${field}`;options.forEach(([value,text])=>{const o=el("option",text);o.value=value;select.append(o);});select.value=x[field];
       select.addEventListener("change",()=>{navigate({[field]:select.value},{focus:false,hash:"study-lab"});document.querySelector(`#retrieval-${field}`).focus({preventScroll:true});});wrap.append(select);controls.append(wrap);
@@ -903,6 +907,90 @@
     for(const [label,value,formula] of [["近邻集合召回",x.neighborRecall,`${x.overlap.length} / ${x.k}`],[`Precision@${x.k}`,x.precision,`${x.hits.length} / ${x.k}`],[`Recall@${x.k}`,x.recall,`${x.hits.length} / ${x.relevant.length}`]]) {
       const cell=el("div","");cell.append(el("span",label),el("strong",`${(value*100).toFixed(1)}%`),el("span",formula));results.append(cell);
     }lab.append(results,el("p",`返回 {${x.selected.join(", ")}} · 参考近邻 {${x.reference.join(", ")}} · 相关 {${x.relevant.join(", ")}}`,"study-locator"));return lab;
+  }
+
+  function renderIndexExercise() {
+    const el = createTextElement, engine = window.IndexStudy, x = engine.evaluate(route);
+    const lab = el("section", "", "study-lab index-exercise"); lab.id = "study-lab";
+    lab.append(el("p", "A POSITION IS A PREDICTION / 原创索引演算", "eyebrow"),
+      el("h2", "预测可以出错。查找怎样保持正确？"),
+      el("p", "先查找 70，再插入四个键：原来正确的位置会移动。试着只重测误差界，再重新拟合，观察哪些状态改变了。这里实际计算线性回归与二分查找，没有运行论文模型或 DSI。", "study-lab-intro"));
+    const controls = el("div", "", "study-controls index-controls"); controls.dataset.jsControl = "";
+    const update = (next, id) => {
+      navigate(next, {focus: false, hash: "study-lab"});
+      document.getElementById(id)?.focus({preventScroll: true});
+    };
+    for (const [field, label, options] of [
+      ["dataset", "键的分布", engine.DATASETS.map(d => [d.id, d.label])],
+      ["mutation", "记录状态", [["base", "原始记录"], ["insert", "插入一组新键"]]],
+      ["repair", "索引怎样跟上", [["stale", "沿用旧模型与旧界"], ["rebound", "保留模型，重测误差界"], ["retrain", "重新拟合与校准"]]],
+    ]) {
+      const labelEl = el("label", label), select = el("select", ""); select.id = `index-${field}`;
+      for (const [value, text] of options) { const option = el("option", text); option.value = value; select.append(option); }
+      select.value = x.state[field]; select.disabled = field === "repair" && x.state.mutation === "base";
+      select.addEventListener("change", () => update(field === "dataset"
+        ? {dataset: select.value, mutation: "base", repair: "stale", query: engine.DATASETS.find(d => d.id === select.value).query}
+        : {[field]: select.value}, select.id));
+      labelEl.append(select); controls.append(labelEl);
+    }
+    const form = el("form", "", "index-query"), queryLabel = el("label", "查找键 · 0–130"), query = el("input", "");
+    query.id = "index-query"; query.type = "number"; query.min = 0; query.max = 130; query.step = 1; query.required = true; query.value = x.state.query;
+    queryLabel.append(query); const search = el("button", "查找 →"); search.type = "submit";
+    form.append(queryLabel, search); form.addEventListener("submit", event => {event.preventDefault(); if(form.reportValidity()) update({query: Number(query.value)}, query.id);});
+    controls.append(form); lab.append(controls);
+
+    const board = el("div", "", "index-board"), figure = el("figure", "", "index-figure");
+    const svgns = "http://www.w3.org/2000/svg";
+    const svgEl = (name, attrs) => { const node = document.createElementNS(svgns, name); for(const [key, value] of Object.entries(attrs)) node.setAttribute(key, value); return node; };
+    const svg = svgEl("svg", {viewBox: "0 0 600 260", role: "img", "aria-label": "真实键的位置与当前线性预测；具体数值见下面的逐键误差表"});
+    const px = key => 40 + key / 130 * 520, py = rank => 220 - Math.max(-1, Math.min(x.keys.length + 1, rank)) / (x.keys.length + 1) * 190;
+    for (let rank = 0; rank <= x.keys.length; rank += 2) svg.append(svgEl("line", {x1:40,x2:560,y1:py(rank),y2:py(rank),class:"index-gridline"}));
+    svg.append(svgEl("rect", {x:40,y:py(x.window.hi),width:520,height:Math.max(2, py(x.window.lo)-py(x.window.hi)),class:"index-band"}));
+    const curve = Array.from({length:131},(_,key)=>`${key ? "L" : "M"}${px(key)},${py(x.model.a*key+x.model.b)}`).join(" ");
+    svg.append(svgEl("path",{d:curve,class:"index-prediction"}), svgEl("line",{x1:px(x.state.query),x2:px(x.state.query),y1:14,y2:244,class:"index-query-line"}));
+    for (const row of x.rows) {
+      const cx=px(row.key), cy=py(row.rank);
+      const dot=row.inserted
+        ? svgEl("path",{d:`M${cx},${cy-7} l7,7 -7,7 -7,-7 Z`,class:"index-point is-inserted"})
+        : svgEl("circle",{cx,cy,r:row.key===x.state.query?7:5.5,class:"index-point"});
+      const title=svgEl("title",{}); title.textContent=`键 ${row.key} · 位置 ${row.rank}${row.inserted?" · 新插入":""}`;dot.append(title);svg.append(dot);
+    }
+    for (const key of [0,65,130]) {const label=svgEl("text",{x:px(key),y:250,"text-anchor":"middle",class:"index-axis-label"});label.textContent=key;svg.append(label);}
+    for (const rank of [0,Math.floor(x.keys.length/2),x.keys.length]) {const label=svgEl("text",{x:24,y:py(rank)+5,"text-anchor":"end",class:"index-axis-label"});label.textContent=rank;svg.append(label);}
+    figure.append(el("p", "位置 ↑ · 预测线与真实记录", "index-axis"),svg,
+      el("figcaption", "圆点：原有记录　铜色菱形：新增记录　斜线：f(k)　色带：当前搜索窗口　竖线：查找键 →", "index-legend"));
+    const summary = el("div", "", "index-summary"); summary.id = "index-summary"; summary.setAttribute("aria-live", "polite");
+    summary.dataset.fallback = String(x.result.fallback);
+    const accepted = x.result.found ? `找到 ${x.state.query}` : x.result.position === x.keys.length ? "没有相等键 · 位于末尾" : `没有相等键 · 后继 ${x.keys[x.result.position]}`;
+    summary.append(el("p", x.result.fallback ? "旧窗口未通过检查 → 全区间回退" : "相邻键检查通过 → 接受局部结果", "index-verdict"),el("h3", accepted));
+    const metrics = el("dl", "", "index-metrics");
+    for(const [label, value] of [["预测位置 p(q)", x.window.prediction],["局部候选位置",x.local.position],["最终 lower_bound",x.result.position]]) {
+      const pair=el("div","");pair.append(el("dt",label),el("dd",String(value)));metrics.append(pair);
+    }
+    summary.append(metrics,el("p",`窗口 [${x.window.lo}, ${x.window.hi})；返回位置允许等于右端 ${x.window.hi}。`,"study-locator"),
+      el("p",`f(k) = ${x.model.a.toFixed(5)}k ${x.model.b < 0 ? "−" : "+"} ${Math.abs(x.model.b).toFixed(5)}；p(k) = floor(f(k))。`,"index-formula"),
+      el("p",`误差界 [${x.model.minError}, ${x.model.maxError}] · 拟合 ${x.model.trainedCount} 条 · 校准 ${x.model.calibratedCount} 条。`,"study-locator"),
+      el("p",x.model.calibrationValid ? "误差界已在当前记录上校准。" : "记录已经变化，旧校准不再保证当前全部记录；一次查对也不恢复这项保证。", "index-calibration"));
+    board.append(figure,summary);lab.append(board);
+
+    const records=el("ol","","index-records"); records.setAttribute("aria-label","当前有序记录及从零开始的位置");
+    x.rows.forEach(row=>{const cell=el("li","",`${row.inserted?"is-inserted ":""}${row.inWindow?"in-window ":""}${row.key===x.state.query?"is-query":""}`);cell.append(el("span",`#${row.rank}`),el("strong",String(row.key)),el("small",row.inserted?"新增":"原有"));records.append(cell);});lab.append(records);
+    const guard = el("p", `位置 i=${x.local.position}：左侧须不存在或小于 ${x.state.query}，右侧须不存在或大于等于 ${x.state.query}。${x.local.certified ? "两个条件成立，已定位第一个不小于查询的记录。" : "条件不成立，局部候选不能当作查找答案；下面保留失败路径。"}`, "index-guard");lab.append(guard);
+    const traces=el("div","","index-traces");
+    const traceSection=(title,trace)=>{
+      const section=el("section","");section.append(el("h3",title));const steps=el("ol","");
+      trace.forEach(step=>steps.append(el("li",`[${step.lo}, ${step.hi}) → #${step.mid} 的键 ${step.key} ${step.relation} ${x.state.query}`)));
+      if(!trace.length)section.append(el("p","区间为空；直接检查边界位置。"));else section.append(steps);return section;
+    };
+    traces.append(traceSection("① 窗口内实际查找",x.local.trace),traceSection(x.result.fallback?"② 检查失败后的全区间回退":"对照 · 从全区间直接二分",x.result.fallback?x.result.trace:x.baseline.trace));lab.append(traces);
+    lab.append(el("p",`本次安全路径共 ${x.result.comparisons} 次键比较，其中相邻检查 ${x.result.guardComparisons} 次；包括局部搜索、必要的回退与相等检查。右侧对照单独运行，不给左侧提供答案。没有测量时间、内存访问或训练成本，次数不是速度排名。`,"study-locator"));
+    const details=el("details","","index-audit");details.append(el("summary","逐键检查预测与误差"));
+    details.append(el("p",`旁路检查：${x.audit.covered} / ${x.audit.total} 个存储键的位置落在本例的候选位置范围内。${x.audit.missedKeys.length?`超出范围的键：${x.audit.missedKeys.join("、")}。`:""}该检查只解释状态，查询算法不读取它。`));
+    const scroll=el("div","","table-scroll");scroll.tabIndex=0;scroll.setAttribute("role","region");scroll.setAttribute("aria-label","逐键误差表，可横向滚动");
+    const table=el("table","");const head=el("thead","");const hr=el("tr","");["键","真实位置","预测位置","位置 − 预测","记录"].forEach(t=>{const th=el("th",t);th.scope="col";hr.append(th);});head.append(hr);table.append(head);const body=el("tbody","");
+    x.rows.forEach(row=>{const tr=el("tr","");[row.key,row.rank,row.prediction,row.error,row.inserted?"新增":"原有"].forEach(t=>tr.append(el("td",String(t))));body.append(tr);});table.append(body);scroll.append(table);details.append(scroll);lab.append(details);
+    lab.append(el("p", "这些是固定整数集合上的原创计算：线性回归压缩位置映射，真实键负责核对。重新校准需要扫描当前记录；重新拟合也有成本。它不训练 DSI，不比较论文性能，也不保证现实数据库的吞吐与更新延迟。", "study-boundary"));
+    return lab;
   }
 
   const desk = window.StudyDesk;
@@ -922,10 +1010,10 @@
     const ref = kind && currentDeskRef(kind, route[kind]);
     if (!ref) return;
     const anchor = /^#[a-zA-Z0-9_-]{1,120}$/.test(window.location.hash) ? window.location.hash : "";
-    const ex = kind === "study" && studiesById.get(ref.id)?.exercise ? desk.exercise(route) : null;
+    const ex = kind === "study" ? desk.exerciseState(studiesById.get(ref.id)?.exercise, route) : null;
     const next = desk.workspace(workspaceState, data), entry = next.items.find(value => desk.key(value) === desk.key(ref));
     entry.anchor = anchor;
-    if (ex) entry.exercise = {k: ex.k, need: ex.need, ranking: ex.ranking};
+    if (ex) entry.exercise = ex;
     workspaceState = workspaceHistory.commit(next);
   }
   function updateWorkspaceStatus() {
@@ -1324,7 +1412,8 @@
     const button=el("button","保存接续文件 ↓");button.type="button";button.addEventListener("click",()=>{
       captureDeskPosition();
       const state={schema:window.StudyDesk.schema,kind,id:item.id,note:input.value,anchor:/^#[a-zA-Z0-9_-]{1,120}$/.test(window.location.hash)?window.location.hash:"",contentVersion:item.date||item.updated||data.room.edition};
-      if(item.exercise) {const x=window.StudyDesk.exercise(route);state.exercise={k:x.k,ranking:x.ranking,need:x.need};}
+      const exercise = desk.exerciseState(item.exercise, route);
+      if (exercise) state.exercise = exercise;
       downloadFile(`ams-${item.id}.json`,JSON.stringify(window.StudyDesk.validate(state,data),null,2),"application/json");
       const sole = workspaceState.items.length === 1 && workspaceState.items[0];
       if(sole && sole.kind === kind && sole.id === item.id && !sole.excerpts.length && !workspaceState.title && !workspaceState.question && !workspaceState.synthesis && !workspaceState.next) workspaceHistory.markSaved();

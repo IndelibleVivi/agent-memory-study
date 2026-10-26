@@ -1,9 +1,9 @@
 /* Local, explicit continuation/workspace files and the original retrieval-set exercise. */
 (function (root, factory) {
-  const api = factory();
+  const api = factory(typeof module === "object" && module.exports ? require("./index-study.js") : root.IndexStudy);
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.StudyDesk = api;
-})(typeof globalThis !== "undefined" ? globalThis : this, function () {
+})(typeof globalThis !== "undefined" ? globalThis : this, function (indexStudy) {
   "use strict";
   const schema = "ams-continuation/1";
   const workspaceSchema = "ams-workspace/2";
@@ -26,6 +26,15 @@
     return {k, ranking, need, selected, reference, relevant, hits, overlap,
       neighborRecall: overlap.length / k, precision: hits.length / k, recall: hits.length / relevant.length};
   }
+  // The canonical article selects the state shape, never a type supplied by a file.
+  function exerciseState(type, input = {}) {
+    if (type === "ordered-index") return indexStudy.normalize(input);
+    if (type === "retrieval-sets") {
+      const {k, ranking, need} = exercise(input);
+      return {k, ranking, need};
+    }
+    return null;
+  }
   const families = {material: "materials", study: "studies", question: "questions", finding: "findings"};
   function validate(value, data) {
     if (!value || typeof value !== "object" || Array.isArray(value) || value.schema !== schema) throw new Error("这不是支持的 AMS 接续文件。");
@@ -36,9 +45,8 @@
     if (typeof value.anchor !== "string" || !/^(?:#[a-zA-Z0-9_-]{1,120})?$/.test(value.anchor)) throw new Error("接续位置格式无效。");
     const state = {schema, kind: value.kind, id: value.id, note: value.note, anchor: value.anchor,
       contentVersion: typeof value.contentVersion === "string" ? value.contentVersion.slice(0, 160) : ""};
-    if (value.exercise && item.exercise === "retrieval-sets") {
-      const ex = exercise(value.exercise); state.exercise = {k: ex.k, need: ex.need, ranking: ex.ranking};
-    }
+    const ex = value.exercise && exerciseState(item.exercise, value.exercise);
+    if (ex) state.exercise = ex;
     return state;
   }
   function parse(text, data) {
@@ -98,9 +106,8 @@
         if (!excerpt.quote.trim() || !/^(?:#[a-zA-Z0-9_-]{1,120})?$/.test(excerpt.anchor)) throw new Error("摘录须有文字及有效位置。");
         entry.excerpts.push(excerpt);
       }
-      if (ref.exercise && item.exercise === "retrieval-sets") {
-        const ex = exercise(ref.exercise); entry.exercise = {k: ex.k, need: ex.need, ranking: ex.ranking};
-      }
+      const ex = ref.exercise && exerciseState(item.exercise, ref.exercise);
+      if (ex) entry.exercise = ex;
       result.items.push(entry);
     }
     if (!Array.isArray(value.compare) || value.compare.length > 2 || value.compare.some(id => typeof id !== "string" || !seen.has(id)) || new Set(value.compare).size !== value.compare.length) throw new Error("对读须选取案头内的一至两个不同对象，也可以留空。");
@@ -216,6 +223,6 @@
     });
     return lines.join("\n") + "\n";
   }
-  return {schema, documents, exercise, validate, parse, workspaceSchema, workspaceLimit, workspaceBytes, excerptLimit, excerptRoles,
+  return {schema, documents, exercise, exerciseState, validate, parse, workspaceSchema, workspaceLimit, workspaceBytes, excerptLimit, excerptRoles,
     key, resolve, basis, emptyWorkspace, workspace, serializeWorkspace, parseWorkspace, add, remove, move, changed, addExcerpt, rebase, revision, history, workspaceMarkdown};
 });

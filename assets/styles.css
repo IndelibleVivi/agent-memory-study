@@ -539,3 +539,55 @@ body {background:white;color:black}
 @media print{.research-workspace,.workspace-object-actions{display:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 @media print{.sculpture-inspector,.sculpture-toolbar,.hero-marginalia{display:none}#atlas-title>span{font-size:60px!important}.constellation{--map-ink:#24343b;--map-muted:#4f6973;--map-rule:#aebdc0;--map-accent:#a9550f;--map-ground:white;color:#111;background:white}.map-observatory{background:white}.map-node,.map-domains{color:#4f6973;fill:#4f6973}.map-node.is-selected .map-star{fill:#a9550f;stroke:#a9550f}.map-node.is-selected .map-node-label{fill:#24343b}.map-signals{display:none}.map-controls,.map-filters,.map-view-switch{display:none}}
+
+/* Ordered-index teaching surface: prediction, records, and correction stay together. */
+.index-controls {gap:18px;align-items:end}
+.index-controls>label {flex:1 1 190px;min-width:0}
+.index-controls select:disabled {opacity:.6}
+.index-query {display:flex;align-items:end;gap:10px;flex:1 1 170px}
+.index-query label {flex:1;min-width:0;margin:0}
+.index-query input {display:block;width:100%;min-width:0;box-sizing:border-box;border:1px solid var(--hairline);background:var(--paper);color:var(--ink);padding:11px;font:inherit;min-height:46px}
+.index-query button {min-height:46px;border:0;background:var(--blue);color:#fff;padding:10px 16px;white-space:nowrap;font:inherit;cursor:pointer}
+.index-board {display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:30px;padding:28px;background:var(--paper-deep);border-block:1px solid var(--hairline)}
+.index-figure {min-width:0;margin:0;align-self:center}
+.index-figure svg {display:block;width:100%;height:auto;overflow:visible}
+.index-axis,.index-legend {font-size:12px;color:var(--muted);line-height:1.8}
+.index-axis-label {font-family:var(--sans);font-size:15px;fill:var(--muted)}
+.index-gridline {stroke:var(--hairline);stroke-width:1}
+.index-band {fill:var(--tide);opacity:.09}
+.index-prediction {fill:none;stroke:var(--tide);stroke-width:2}
+.index-query-line {stroke:var(--copper,#9b6c4c);stroke-width:1.5;stroke-dasharray:4 5}
+.index-point {fill:var(--tide);stroke:var(--paper-deep);stroke-width:1.5}
+.index-point.is-inserted {fill:var(--copper,#9b6c4c)}
+.index-verdict {font-size:12px;color:var(--blue);margin-bottom:12px}
+.index-summary h3 {font-size:26px;line-height:1.4}
+.index-metrics {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0}
+.index-metrics dt {font-size:11px;color:var(--muted)}
+.index-metrics dd {font-family:var(--serif);font-size:36px;margin:5px 0;color:var(--blue)}
+.index-formula {font-family:var(--sans);font-size:14px;margin:10px 0}
+.index-calibration {font-size:13px;line-height:1.8;margin-top:14px}
+.index-records {display:grid;grid-template-columns:repeat(12,minmax(0,1fr));list-style:none;padding:0;margin:24px 0;gap:6px}
+.index-records li {display:grid;gap:6px;margin:0;padding:9px 3px;text-align:center;border-top:2px solid var(--hairline);background:var(--paper-deep)}
+.index-records li.in-window {border-top-color:var(--tide)}
+.index-records li.is-query {background:var(--blue);color:#fff}
+.index-records span,.index-records small {font-size:10px}
+.index-records strong {font-family:var(--serif);font-size:24px;font-weight:400}
+.index-records .is-inserted:not(.is-query) strong {color:var(--copper,#9b6c4c)}
+.index-guard {max-width:850px;font-size:15px;line-height:1.9;margin:25px 0}
+.index-traces {display:grid;grid-template-columns:1fr 1fr;gap:30px;border-top:1px solid var(--hairline);padding-top:20px;margin-bottom:20px}
+.index-traces h3 {font-size:17px;margin-bottom:16px}
+.index-traces ol {padding-left:20px;font-size:13px;line-height:2}
+.index-audit {margin:25px 0;border-block:1px solid var(--hairline);padding:15px 0;font-size:14px}
+.index-audit summary {cursor:pointer;color:var(--blue)}
+.index-audit p {margin:15px 0}
+.index-audit table {width:100%;border-collapse:collapse;text-align:left;font-size:13px}
+.index-audit th,.index-audit td {border-bottom:1px solid var(--hairline);padding:10px;white-space:nowrap}
+@media(max-width:760px) {
+  .index-axis-label {font-size:26px}
+  .index-board {grid-template-columns:1fr;padding:20px 16px;gap:22px}
+  .index-summary h3 {font-size:23px}
+  .index-records {grid-template-columns:repeat(6,minmax(0,1fr))}
+  .index-traces {grid-template-columns:1fr;gap:22px}
+  .index-controls {gap:12px}
+  .index-controls>label,.index-query {flex-basis:100%}
+}

@@ -12,6 +12,7 @@ from urllib.parse import urlparse, parse_qs
 from xml.etree import ElementTree as ET
 from playwright.sync_api import sync_playwright, expect
 from test_reader_browser import check_workspace_maturation, check_continuation_checkpoint
+from index_browser_checks import check_index_exercise
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -106,6 +107,14 @@ def main():
                             assert page.title() == page.locator('meta[property="og:title"]').get_attribute('content')
                             initial_title = page.locator('h1:visible').inner_text()
                             if not enabled:
+                                if '/study/what-an-index-learns/' in canonical:
+                                    expect(page.locator('#index-summary h3')).to_have_text('找到 70')
+                                    expect(page.locator('#index-summary .index-metrics dd').nth(2)).to_have_text('6')
+                                    expect(page.locator('.index-records li')).to_have_count(8)
+                                    expect(page.locator('#study-lab input, #study-lab select, #study-lab button')).to_have_count(0)
+                                    expect(page.locator('.index-audit tbody tr')).to_have_count(8)
+                                if '/study/retrieval-and-relevance/' in canonical:
+                                    expect(page.locator('#study-lab input, #study-lab select')).to_have_count(0)
                                 expect(page.locator('.workspace-object-actions, #workspace-controls, #workspace-launch')).to_have_count(0)
                                 if canonical.rstrip('/').endswith('agent-memory-study'):
                                     expect(page.locator('.sculpture-fallback')).to_be_visible()
@@ -144,6 +153,8 @@ def main():
                         if enabled:
                             for width in (1440,390,320):
                                 page.set_viewport_size({'width':width,'height':900})
+                                check_index_exercise(page, base + 'study/what-an-index-learns/#study-lab',
+                                    lambda name: checks.append({'width':width, 'static_index':name}))
                                 check_workspace_artifact(page, base, width, checks)
                                 def artifact_go(query=''):
                                     page.goto(base + query, wait_until='load')

@@ -16,6 +16,7 @@ import threading
 from urllib.parse import parse_qs, urldefrag, urlparse
 
 from playwright.sync_api import sync_playwright, expect, Error as PlaywrightError
+from index_browser_checks import check_index_exercise
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -756,7 +757,7 @@ def main():
                                     };
                                   }
                                 }''', base + query)
-                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js', 'practice.js', 'study-packets.js', 'study-desk.js', 'seo.js', 'research-map.js', 'constellation.js']:
+                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js', 'practice.js', 'study-packets.js', 'index-study.js', 'study-desk.js', 'seo.js', 'research-map.js', 'constellation.js']:
                                     page.add_script_tag(content=(ROOT / 'assets' / name).read_text())
                                 page.add_script_tag(content=offline_app)
                             else:
@@ -800,6 +801,13 @@ def main():
                                                           'output-guard-is-not-unlearning')]
                         assert len(new_findings) == 2
 
+                        if not args.offline_render:
+                            check_index_exercise(page, base + '?study=what-an-index-learns#study-lab', record)
+                            page.locator('#study-lab').screenshot(path=str(output / f'index-lab-{width}.png'))
+                            page.locator('#study-lab').evaluate('(node) => window.scrollTo(0, node.getBoundingClientRect().top + scrollY - 100)')
+                            page.screenshot(path=str(output / f'index-viewport-{width}.png'))
+                            page.locator('.index-board').evaluate('(node) => window.scrollTo(0, node.getBoundingClientRect().top + scrollY - 100)')
+                            page.screenshot(path=str(output / f'index-board-{width}.png'))
                         go()
                         expect(page.locator('#room-start-list a[data-route=study]')).to_have_count(6)
                         expect(page.locator('#study-index')).to_contain_text('一条更正之后')

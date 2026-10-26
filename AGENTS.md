@@ -23,6 +23,7 @@
 
 - `assets/study-packets.js` 是 browser、`tools/export_study.cjs` 和静态 `index.md` / `index.json` 的唯一研究包实现。包包含当前对象和直接引用 manifest，不递归抓取全文；编辑日期不是 immutable revision。论文作者与札记署名不可混同。
 - `assets/study-desk.js` 负责原创集合演算、`ams-continuation/1` 与 `ams-workspace/2` 合同及其页面内状态／有限历史；继续兼读实际已保存的 `ams-workspace/1` 并迁移为 v2。近邻集合、相关性标签与排序是教学设定，不运行 embedding 或 ANN，不是论文或用户学习结果。
+- `assets/index-study.js` 是 `ordered-index` 原创教学演算的唯一计算实现：固定唯一整数键、OLS 位置预测、误差校准、局部二分、相邻键核对与显式全区间回退。`StudyDesk.exerciseState` 按 canonical exercise 类型归一化接续／案头状态，禁止从导入文件自定类型；演算四字段可进入公开 URL，私人文字不得进入。修改时运行 `tools/test_index_study.cjs`、StudyDesk／SEO tests 与 source/static browser checks；`tools/index_browser_checks.py` 共用真实交互验收。比较次数不等于时间性能，教学拟合不升级为论文复现或模型研究。
 - 私人接续只保存在页面内存和用户主动下载的文件。不得进入 canonical、analytics、URL、localStorage、repo 或构建。导入限制大小与字段，仅恢复已知公开对象；文字按文本使用，不执行指令、不请求文件中的 URL。刷新未保存内容会丢失，界面必须说明。
 - 研究案头最多 24 个已知公开对象、每对象 12 条摘录、2 MiB UTF-8 文件；所有被接受状态须能按实际 JSON 下载格式保存。导入先完整验证再显式打开，未知对象／重复对象或摘录身份／无效值拒绝且不改变已有工作。私有 `basis` 是受限惰性文字；旧／新字段检查只用 textContent，正文只 render 当前 canonical HTML，不执行导入 HTML。日期不替代内容身份，比较也不认证来源。摘录保留独立 basis／日期／anchor，确认对象当前依据不得改写既有摘录；私人用途不提升公开支持关系。
 - 文字编辑、摘录、选材、导入与 rebase 共用 StudyDesk history；最多 20 次变更／8 MiB 页面内历史，大文件可减少步数，不保存到文件。焦点内连续文字输入合为一步；dirty 按整个状态与最近文件检查点比较，局部单篇保存不得清除其他对象、摘录或案头文字的改动。

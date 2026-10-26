@@ -52,6 +52,7 @@ PUBLIC_COPY_PATHS = (
     "assets/practice.js",
     "assets/study-packets.js",
     "assets/study-desk.js",
+    "assets/index-study.js",
     "assets/continuity-sculpture.js",
     "assets/styles.css",
     "assets/materials-data.js",
