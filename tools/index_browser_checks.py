@@ -75,6 +75,12 @@ def check_index_exercise(page, url, record):
     state({"dataset": "uniform", "mutation": "base", "repair": "stale", "query": 70})
     base_keys = result(6, False, "找到 70")
     assert len(base_keys) == 8, base_keys
+    # For the known base line f(k)=0.1k-1, k=130 is above the plotted
+    # eight-record range. Clip the line; never clamp its y-values into a fake plateau.
+    prediction = page.locator(".index-prediction")
+    assert prediction.get_attribute("clip-path") == "url(#index-plot-clip)"
+    endpoint_y = [float(pair.split(",")[1]) for pair in prediction.get_attribute("d").split("L")[-3:]]
+    assert endpoint_y[0] > endpoint_y[1] > endpoint_y[2] and endpoint_y[2] < 0, endpoint_y
     expect(page.locator("#index-repair")).to_be_disabled()
     select("mutation", "insert")
     expect(page.locator("#index-repair")).to_be_enabled()

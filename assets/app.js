@@ -943,11 +943,13 @@
     const svgns = "http://www.w3.org/2000/svg";
     const svgEl = (name, attrs) => { const node = document.createElementNS(svgns, name); for(const [key, value] of Object.entries(attrs)) node.setAttribute(key, value); return node; };
     const svg = svgEl("svg", {viewBox: "0 0 600 260", role: "img", "aria-label": "真实键的位置与当前线性预测；具体数值见下面的逐键误差表"});
-    const px = key => 40 + key / 130 * 520, py = rank => 220 - Math.max(-1, Math.min(x.keys.length + 1, rank)) / (x.keys.length + 1) * 190;
+    const px = key => 40 + key / 130 * 520, py = rank => 220 - rank / (x.keys.length + 1) * 190;
+    const defs=svgEl("defs",{}), clip=svgEl("clipPath",{id:"index-plot-clip"});
+    clip.append(svgEl("rect",{x:40,y:10,width:520,height:224}));defs.append(clip);svg.append(defs);
     for (let rank = 0; rank <= x.keys.length; rank += 2) svg.append(svgEl("line", {x1:40,x2:560,y1:py(rank),y2:py(rank),class:"index-gridline"}));
     svg.append(svgEl("rect", {x:40,y:py(x.window.hi),width:520,height:Math.max(2, py(x.window.lo)-py(x.window.hi)),class:"index-band"}));
     const curve = Array.from({length:131},(_,key)=>`${key ? "L" : "M"}${px(key)},${py(x.model.a*key+x.model.b)}`).join(" ");
-    svg.append(svgEl("path",{d:curve,class:"index-prediction"}), svgEl("line",{x1:px(x.state.query),x2:px(x.state.query),y1:14,y2:244,class:"index-query-line"}));
+    svg.append(svgEl("path",{d:curve,class:"index-prediction","clip-path":"url(#index-plot-clip)"}), svgEl("line",{x1:px(x.state.query),x2:px(x.state.query),y1:14,y2:244,class:"index-query-line"}));
     for (const row of x.rows) {
       const cx=px(row.key), cy=py(row.rank);
       const dot=row.inserted
