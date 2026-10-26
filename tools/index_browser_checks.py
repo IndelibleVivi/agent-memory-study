@@ -218,3 +218,96 @@ def check_index_exercise(page, url, record):
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
     page.locator("#study-lab").scroll_into_view_if_needed()
     record("restored index graph and complete audit table are visible, nonempty and fit the viewport")
+
+
+def check_index_capacity(page, home_url, record):
+    """An accepted exact-limit desk survives failed automatic exercise capture.
+
+    Run once per source/static artifact, not once per viewport. The fixture is
+    created from known public object identities plus explicitly synthetic inert
+    basis text. It never contains private material or a model-produced result.
+    """
+    assert urlparse(home_url).scheme in ("http", "https") and home_url.endswith("/"), home_url
+    response = page.goto(home_url + "#workbench", wait_until="load")
+    # The source suite may already be on this homepage: a fragment-only hop
+    # has no HTTP response. Reload also starts this fixture with an empty desk.
+    if response is None:
+        response = page.reload(wait_until="load")
+    assert response is not None and response.status == 200, home_url
+    expect(page.locator("#atlas-view")).to_be_visible()
+    expect(page.locator("#workspace-file")).to_be_attached()
+    text = page.evaluate('''() => {
+      const desk = StudyDesk, data = READING_ROOM;
+      let work = desk.add(desk.emptyWorkspace(), {kind:'study', id:'what-an-index-learns'}, data);
+      for (const item of data.materials.slice(0, 11)) {
+        work = desk.add(work, {kind:'material', id:item.id}, data);
+      }
+      work.title = 'A'; work.compare = [];
+      work.items[0].note = 'Synthetic existing index note at capacity';
+      work.items[0].anchor = '#study-lab';
+      for (const ref of work.items) {
+        ref.basis = JSON.stringify({id:ref.id, synthetic:'Original ASCII capacity filler; no source claims.'});
+      }
+      let remaining = desk.workspaceBytes - new TextEncoder().encode(desk.serializeWorkspace(work, data)).length;
+      for (const ref of work.items) {
+        const count = Math.min(remaining, 200000 - ref.basis.length);
+        ref.basis = ref.basis.slice(0, -2) + 'x'.repeat(count) + '"}';
+        remaining -= count;
+      }
+      if (remaining !== 0) throw Error('Capacity fixture could not reach the exact byte limit');
+      const serialized = desk.serializeWorkspace(work, data);
+      if (new TextEncoder().encode(serialized).length !== desk.workspaceBytes) throw Error('Wrong capacity bytes');
+      if ('exercise' in work.items[0]) throw Error('Capacity fixture must omit optional exercise');
+      return serialized;
+    }''')
+    assert len(text.encode("utf-8")) == 2 * 1024 * 1024
+    expected = json.loads(text)
+    assert "exercise" not in expected["items"][0]
+    page.locator("#workspace-file").set_input_files({
+        "name": "synthetic-exact-capacity.json", "mimeType": "application/json", "buffer": text.encode("utf-8"),
+    })
+    expect(page.locator("#workspace-import-preview")).to_be_visible()
+    page.get_by_role("button", name="打开这份案头", exact=True).click()
+    expect(page.locator(".workspace-item")).to_have_count(12)
+    expect(page.locator("#workspace-title")).to_have_value("A")
+    # Same UTF-8 byte count, but a real unsaved history transition. An automatic
+    # capture refusal must neither append a partial transition nor mark it saved.
+    page.locator("#workspace-title").fill("B")
+    expected["title"] = "B"
+    expect(page.locator("#workspace-save-state")).to_contain_text("有未保存")
+    page.locator('[data-workspace-key="study:what-an-index-learns"] .workspace-item-copy > button').click()
+    expect(page.locator("#index-summary")).to_be_visible()
+    expect(page.locator("#continuation-note")).to_have_value(expected["items"][0]["note"])
+    single = _download_json(page, lambda: page.get_by_role("button", name="保存接续文件 ↓", exact=True).click())
+    assert single["id"] == "what-an-index-learns"
+    assert single["note"] == expected["items"][0]["note"] and single["anchor"] == "#study-lab"
+    assert single["exercise"] == {"dataset": "uniform", "mutation": "base", "repair": "stale", "query": 70}
+    assert len(json.dumps(single, ensure_ascii=False).encode("utf-8")) < 128000
+    article_status = page.locator(".workspace-object-actions [role=status]")
+    expect(article_status).to_be_visible()
+    expect(article_status).to_contain_text("2 MiB")
+    expect(article_status).to_contain_text("已保留")
+    expect(page.locator("#workspace-save-state")).to_contain_text("有未保存")
+    page.get_by_role("link", name="回到研究案头 ↗", exact=True).click()
+    expect(page.locator("#atlas-view")).to_be_visible()
+    expect(page.locator("#workspace-status")).to_be_visible()
+    expect(page.locator("#workspace-status")).to_contain_text("2 MiB")
+    expect(page.locator("#workspace-status")).to_contain_text("已保留")
+    expect(page.locator("#workspace-title")).to_have_value("B")
+    expect(page.locator("#workspace-save-state")).to_contain_text("有未保存")
+    # There is only the accepted title edit in history; no partial capture step.
+    page.get_by_role("button", name="撤销上次整理", exact=True).click()
+    expect(page.locator("#workspace-title")).to_have_value("A")
+    page.get_by_role("button", name="重做整理", exact=True).click()
+    expect(page.locator("#workspace-title")).to_have_value("B")
+    with page.expect_download() as event:
+        page.get_by_role("button", name="保存案头 JSON ↓", exact=True).click()
+    saved_text = Path(event.value.path()).read_text(encoding="utf-8")
+    assert len(saved_text.encode("utf-8")) == 2 * 1024 * 1024
+    assert json.loads(saved_text) == expected
+    assert "exercise" not in json.loads(saved_text)["items"][0]
+    assert page.evaluate("localStorage.length") == 0
+    record("exact-2-MiB accepted index workspace preserves state/history on capture refusal, reports capacity, navigates and saves single/full files without clearing unrelated dirty edits")
+    # The large synthetic fixture must not affect the caller's later checks.
+    page.reload(wait_until="load")
+    expect(page.locator(".workspace-item")).to_have_count(0)

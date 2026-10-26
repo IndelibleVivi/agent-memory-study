@@ -12,7 +12,7 @@ from urllib.parse import urlparse, parse_qs
 from xml.etree import ElementTree as ET
 from playwright.sync_api import sync_playwright, expect
 from test_reader_browser import check_workspace_maturation, check_continuation_checkpoint
-from index_browser_checks import check_index_exercise
+from index_browser_checks import check_index_exercise, check_index_capacity
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -155,6 +155,9 @@ def main():
                                 page.set_viewport_size({'width':width,'height':900})
                                 check_index_exercise(page, base + 'study/what-an-index-learns/#study-lab',
                                     lambda name: checks.append({'width':width, 'static_index':name}))
+                                if width == 1440:
+                                    check_index_capacity(page, base,
+                                        lambda name: checks.append({'width':width, 'static_index_capacity':name}))
                                 check_workspace_artifact(page, base, width, checks)
                                 def artifact_go(query=''):
                                     page.goto(base + query, wait_until='load')

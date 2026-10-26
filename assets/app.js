@@ -134,7 +134,7 @@
   }
 
   function navigate(nextRoute, options = {}) {
-    captureDeskPosition();
+    const captureError = captureDeskPosition();
     const { replace = false, hash = "", focus = true } = options;
     route = {
       ...route,
@@ -146,6 +146,8 @@
     const method = replace ? "replaceState" : "pushState";
     window.history[method]({}, "", routeUrl(route, hash));
     render({ focus, hash });
+    const feedback = document.querySelector('.workspace-object-actions [role=status]');
+    if (captureError && feedback) feedback.textContent = captureError;
   }
 
   function normalize(value) {
@@ -1010,13 +1012,22 @@
   function captureDeskPosition() {
     const kind = seo.kinds.find(key => route[key]);
     const ref = kind && currentDeskRef(kind, route[kind]);
-    if (!ref) return;
+    if (!ref) return "";
     const anchor = /^#[a-zA-Z0-9_-]{1,120}$/.test(window.location.hash) ? window.location.hash : "";
     const ex = kind === "study" ? desk.exerciseState(studiesById.get(ref.id)?.exercise, route) : null;
     const next = desk.workspace(workspaceState, data), entry = next.items.find(value => desk.key(value) === desk.key(ref));
     entry.anchor = anchor;
     if (ex) entry.exercise = ex;
-    workspaceState = workspaceHistory.commit(next);
+    try {
+      workspaceState = workspaceHistory.commit(next);
+      return "";
+    } catch (error) {
+      // History validates before changing any accepted state or checkpoint.
+      // Recording an optional position must not trap the reader or prevent export.
+      workspaceMessage = `未更新本次继续位置：${error.message} 已保留原案头，仍可离开正文或保存文件。`;
+      document.querySelectorAll('#workspace-status, .workspace-object-actions [role=status]').forEach(node => {node.textContent = workspaceMessage;});
+      return workspaceMessage;
+    }
   }
   function updateWorkspaceStatus() {
     document.querySelectorAll('[data-workspace-count]').forEach(node => { node.textContent = workspaceState.items.length ? ` · ${workspaceState.items.length}` : ""; });
@@ -1273,10 +1284,10 @@
     const status = el("p", workspaceMessage, "workspace-status"); status.id = "workspace-status"; status.setAttribute("role", "status"); fragment.append(status);
     const actions = el("div", "", "workspace-actions");
     actions.append(workspaceButton("保存案头 JSON ↓", () => {
-      captureDeskPosition();
+      const captureError = captureDeskPosition();
       const serialized = desk.serializeWorkspace(workspaceState, data);
       downloadFile("ams-workspace.json", serialized, "application/json"); workspaceHistory.markSaved();
-      workspaceMessage = "已生成案头文件，含私人文字与公开内容快照；请保管下载的文件。"; renderWorkspace();
+      workspaceMessage = `${captureError ? captureError + " " : ""}已生成案头文件，含私人文字与公开内容快照；请保管下载的文件。`; renderWorkspace();
     }), workspaceButton("导出私人札记 Markdown ↓", () => {captureDeskPosition(); downloadFile("ams-private-notes.md", desk.workspaceMarkdown(workspaceState, data, window.StudyPackets), "text/markdown");}));
     const fileLabel = el("label", "打开案头文件 ↗", "file-button"); fileLabel.htmlFor = "workspace-file";
     const file = el("input", "", "sr-only"); file.type = "file"; file.accept = ".json,application/json"; file.id = "workspace-file";
@@ -1412,13 +1423,13 @@
       add.textContent = currentDeskRef(kind,item.id) ? "已在研究案头" : "加入研究案头";
     });
     const button=el("button","保存接续文件 ↓");button.type="button";button.addEventListener("click",()=>{
-      captureDeskPosition();
+      const captureError = captureDeskPosition();
       const state={schema:window.StudyDesk.schema,kind,id:item.id,note:input.value,anchor:/^#[a-zA-Z0-9_-]{1,120}$/.test(window.location.hash)?window.location.hash:"",contentVersion:item.date||item.updated||data.room.edition};
       const exercise = desk.exerciseState(item.exercise, route);
       if (exercise) state.exercise = exercise;
       downloadFile(`ams-${item.id}.json`,JSON.stringify(window.StudyDesk.validate(state,data),null,2),"application/json");
       const sole = workspaceState.items.length === 1 && workspaceState.items[0];
-      if(sole && sole.kind === kind && sole.id === item.id && !sole.excerpts.length && !workspaceState.title && !workspaceState.question && !workspaceState.synthesis && !workspaceState.next) workspaceHistory.markSaved();
+      if(!captureError && sole && sole.kind === kind && sole.id === item.id && !sole.excerpts.length && !workspaceState.title && !workspaceState.question && !workspaceState.synthesis && !workspaceState.next) workspaceHistory.markSaved();
       updateWorkspaceStatus();
     });
     details.append(label,input,button,el("p","只保留在本页内存中；刷新前请保存文件。文件由你保管，可从首页重新打开，不上传，也不写入浏览器存储。","desk-hint"));

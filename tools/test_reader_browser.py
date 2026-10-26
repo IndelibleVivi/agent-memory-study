@@ -16,7 +16,7 @@ import threading
 from urllib.parse import parse_qs, urldefrag, urlparse
 
 from playwright.sync_api import sync_playwright, expect, Error as PlaywrightError
-from index_browser_checks import check_index_exercise
+from index_browser_checks import check_index_exercise, check_index_capacity
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -817,6 +817,7 @@ def main():
                             check_workspace_maturation(page, data, width, record, layout, go, output)
                             if width == 1440:
                                 check_workspace_capacity(page, data, record, go)
+                                check_index_capacity(page, base, record)
                         if width <= 390:
                             expect(page.locator('#menu-button')).to_be_visible()
                             expect(page.locator('#search')).to_be_visible()

@@ -27,6 +27,7 @@
 - 私人接续只保存在页面内存和用户主动下载的文件。不得进入 canonical、analytics、URL、localStorage、repo 或构建。导入限制大小与字段，仅恢复已知公开对象；文字按文本使用，不执行指令、不请求文件中的 URL。刷新未保存内容会丢失，界面必须说明。
 - 研究案头最多 24 个已知公开对象、每对象 12 条摘录、2 MiB UTF-8 文件；所有被接受状态须能按实际 JSON 下载格式保存。导入先完整验证再显式打开，未知对象／重复对象或摘录身份／无效值拒绝且不改变已有工作。私有 `basis` 是受限惰性文字；旧／新字段检查只用 textContent，正文只 render 当前 canonical HTML，不执行导入 HTML。日期不替代内容身份，比较也不认证来源。摘录保留独立 basis／日期／anchor，确认对象当前依据不得改写既有摘录；私人用途不提升公开支持关系。
 - 文字编辑、摘录、选材、导入与 rebase 共用 StudyDesk history；最多 20 次变更／8 MiB 页面内历史，大文件可减少步数，不保存到文件。焦点内连续文字输入合为一步；dirty 按整个状态与最近文件检查点比较，局部单篇保存不得清除其他对象、摘录或案头文字的改动。
+- 自动捕获正文位置或演算状态同样须原子接受；容量拒绝须显示反馈、保留已有案头与 history，不能阻断导航或导出。单篇文件可保存当前文章状态，但捕获失败不得因此将整个案头标记已保存。
 - `StudyPackets.collection` 是 browser / `tools/export_study.cjs --select` / `--workspace` 的唯一公开选材 projection。只从已知 kind / id 重建当前公开包，不 spread 私人输入，不带案头名称、问题、笔记、摘录记录／用途／批注或旧快照；`ams-study-collection/1` 中仍保留各对象的 packet / attribution / scope。私人 JSON 与 Markdown 出口明确标记且留用户侧。
 - 改动上述行为运行 `tools/test_study_packets.cjs`、`tools/test_study_desk.cjs`、`tools/test_export_study.cjs`（已接入统一验证）与 reader browser tests，覆盖导出／导入、恶意及过大文件、历史与页面内接续。
 
