@@ -75,6 +75,7 @@
   function mount(data) {
     const stage=document.querySelector("#continuity-sculpture");
     if(!stage || !data)return;
+    const sculpture=stage.closest(".room-hero");
     const model=graph(data); if(!model.nodes.length)return;
     const canvas=stage.querySelector("canvas"), motion=matchMedia("(prefers-reduced-motion: reduce)");
     const labelLayer=document.createElement("div");labelLayer.className="sculpture-labels";stage.append(labelLayer);
@@ -155,7 +156,7 @@
       const reveal=new IntersectionObserver(entries=>entries.forEach(entry=>entry.target.classList.toggle("is-in-view",entry.isIntersecting)),{threshold:.12});
       document.querySelectorAll(".section-heading,.room-changes,.about").forEach(node=>reveal.observe(node));
     }
-    document.querySelectorAll("[data-js-control]").forEach(node=>node.hidden=false);
+    sculpture.querySelectorAll("[data-sculpture-control]").forEach(node=>node.hidden=false);
     gl=canvas.getContext("webgl",{alpha:true,antialias:true,powerPreference:"low-power",premultipliedAlpha:false});
     function drawFallback() {
       const svg=stage.querySelector('.sculpture-fallback'),NS='http://www.w3.org/2000/svg';
