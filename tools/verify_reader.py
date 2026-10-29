@@ -33,6 +33,7 @@ def main():
                           ('experience-reuse-retrieval-study', 'study.py'),
                           ('proactive-prefix-study', 'study.py'),
                           ('mosaic-score-dependency-study', 'study.py'),
+                          ('task-relative-sufficiency', 'study.py'),
                           ('decision-learning-study', 'study.py')]:
         directory = f'research/{study}'
         run([python, '-B', f'{directory}/{runner}', '--check'])
@@ -45,7 +46,7 @@ def main():
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/c2c-cache-retraction-study', '-p', 'test_*.py'])
     run([python, '-B', 'research/jev-memory-contract-study/study.py', '--verify-checked'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/jev-memory-contract-study', '-p', 'test_*.py'])
-    print('PASS: reader contracts, generated data, source-aware workspaces/public collections, shared references/author drafts, bound reviews, offline representation/revision controls, five deterministic studies, synthetic classifier refits and checked AgeMem/C2C/Jev receipts')
+    print('PASS: reader contracts, generated data, source-aware workspaces/public collections, shared references/author drafts, bound reviews, offline representation/revision controls, six deterministic studies, synthetic classifier refits and checked AgeMem/C2C/Jev receipts')
 
 
 if __name__ == '__main__':

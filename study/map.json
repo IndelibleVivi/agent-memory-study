@@ -29,7 +29,8 @@
       "studyIds": [
         "forms-of-experience",
         "retrieval-and-relevance",
-        "representation-and-use"
+        "representation-and-use",
+        "future-questions-and-memory"
       ],
       "materialIds": [
         "a-tma-state-aware-memory",
@@ -81,7 +82,8 @@
       "studyIds": [
         "records-representations-systems",
         "representation-and-use",
-        "who-controls-memory"
+        "who-controls-memory",
+        "future-questions-and-memory"
       ],
       "materialIds": [
         "coala-cognitive-architecture",
@@ -144,7 +146,8 @@
       "studyIds": [
         "how-we-study",
         "retrieval-and-relevance",
-        "change-and-continuity"
+        "change-and-continuity",
+        "future-questions-and-memory"
       ],
       "materialIds": [
         "longmemeval-v2-experienced-colleague",
@@ -168,7 +171,8 @@
         "forms-of-experience",
         "records-representations-systems",
         "representation-and-use",
-        "what-an-index-learns"
+        "what-an-index-learns",
+        "future-questions-and-memory"
       ],
       "materialIds": [
         "a-tma-state-aware-memory",
@@ -208,7 +212,8 @@
         "change-and-continuity",
         "after-a-correction",
         "experience-becomes-policy",
-        "what-an-index-learns"
+        "what-an-index-learns",
+        "future-questions-and-memory"
       ],
       "materialIds": [
         "truth-maintenance-system",
@@ -248,6 +253,12 @@
       "title": "预测出错以后，怎样仍然查对",
       "text": "从指定章节走到原创推导与演算：插入记录，分开观察参数、误差界和最后的核对。",
       "studyId": "what-an-index-learns"
+    },
+    {
+      "date": "2026-10-22",
+      "title": "让未来用途进入表示问题",
+      "text": "同一组历史上的任务族扩大，让已有表示显露新边界；全局答案交集、压缩正例和源文重访分别检查。",
+      "studyId": "future-questions-and-memory"
     },
     {
       "date": "2026-10-18",

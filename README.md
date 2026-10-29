@@ -14,13 +14,14 @@ AMS 从 agent memory 出发，研究信息、经验与智能的跨时间关系�
 | --- | --- |
 | jieba、BM25、BGE-M3 究竟在做什么 | [找到一样的，还是找到相关的？](study/entries/retrieval-and-relevance.md)：从词项权重与混合排序的可行区间，走到原创集合中的近邻重合、精确率和召回率；网页可以改变候选数、排序和相关性定义。 |
 | Database、Index、Retriever、Memory 怎样区分 | [一条记录、一种表示、一个记忆系统](study/entries/records-representations-systems.md)：从同一条工具版本记录看不同研究对象和功能角色。 |
+| 同一份记忆，后来换个问题还够用吗 | [记忆需要为尚未出现的问题保留什么？](study/entries/future-questions-and-memory.md)：推导完整观察类的答案交集，并运行 32 个原创历史的有限检查。 |
 | 新材料怎样改变已经形成的认识 | [索引也能学习——究竟学了什么？](study/entries/what-an-index-learns.md)：从指定章节追问监督与错误恢复；网页可插入记录，比较旧界、重新校准与重新拟合，并检查真实二分路径。 |
 | 继续一项已有研究 | [经验怎样长成判断习惯](https://indeliblevivi.github.io/agent-memory-study/study/experience-becomes-policy/)：跨源论述、已保存的分类器学习与纠正结果，以及仍未回答的问题。 |
 | 运行表示研究的离线控制 | [原事件／概括／并存执行器](research/representation-use-study/README.md)：原创事件、可执行真值、实际送达材料与绑定的运行证据；scripted/oracle 控制不等于模型效果。 |
 | 检查更正怎样传到后续行动 | [修订传播与再写入实验](research/revision-propagation-study/README.md)：多层快照、延迟同步、单层干预与后续任务，区分持续错误和修好后的旧影响再现。 |
 | 看项目长期关心什么 | [经验的形式](study/programme/directions/forms-of-experience.md)、[当下的相关性](study/programme/directions/relevance-in-context.md)、[改变与继承](study/programme/directions/change-and-continuity.md)。 |
 
-这些新文章是基于公开来源与原创例子写成的研究内容，不是私人聊天的重建。当前有 12 篇学习／研究文章、27 份来源札记、2 个问题专题、5 条实践判断。领域与方向只是可改的阅读地图；数量、关联和阅读深度不代表个人掌握度。
+这些新文章是基于公开来源与原创例子写成的研究内容，不是私人聊天的重建。当前有 13 篇学习／研究文章、27 份来源札记、2 个问题专题、5 条实践判断。领域与方向只是可改的阅读地图；数量、关联和阅读深度不代表个人掌握度。
 
 ## Relata × AMS 交叉研究
 
@@ -114,7 +115,7 @@ python3 -B tools/seo_build.py
 python3 -B tools/test_static_reader.py
 ```
 
-构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、原创索引演算的拟合／校准／查找与回退、星图与三维研究体共用的身份／引用关系、领域布局，以及既有五组确定性研究和一组 stdlib 分类器学习／纠正实验；另检查表示与修订传播的离线执行合同、casebook 的内容／rubric 绑定和 AgeMem、C2C、Jev 已保存 receipts。修订传播的完整运行与 raw replay 使用其目录命令；统一入口中的 compact summary 检查不能替代它。验证不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
+构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、原创索引演算的拟合／校准／查找与回退、星图与三维研究体共用的身份／引用关系、领域布局，以及六组确定性研究（包括任务相对充分性的有限枚举）和一组 stdlib 分类器学习／纠正实验；另检查表示与修订传播的离线执行合同、casebook 的内容／rubric 绑定和 AgeMem、C2C、Jev 已保存 receipts。修订传播的完整运行与 raw replay 使用其目录命令；统一入口中的 compact summary 检查不能替代它。验证不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
 
 表示执行器保存实际请求、送达材料、原始回答与评分身份，支持 dry-run、续跑和离线重放检查。
 运行文件完整写入后才原子发布，已有文件不覆写；中断尝试保留证据，续跑另建 attempt。

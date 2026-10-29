@@ -178,7 +178,8 @@ The first command uses only local public/synthetic data, including actual fittin
 small stdlib classifier; it downloads no pretrained models or external data. It
 checks both generated projections without rewriting them, validates authoring and private draft boundaries, study packets, public selected collections, local continuation, workspace migration/excerpts/history, shared directed references and reverse impact, constellation/sculpture projections and domain layout and question/finding
 references, lexical query and portable brief contracts, and the existing
-RDF, freshly reruns the five small deterministic studies and the decision-learning
+RDF, freshly reruns the six small deterministic studies (including finite task-relative
+sufficiency) and the decision-learning
 experiment (including classifier fitting and correction), and checks the saved
 AgeMem reward, C2C cache-retraction and Jev source-contract receipts for fixture binding and internal consistency.
 The [Jev source experiment](research/jev-memory-contract-study/README.md) requires a
