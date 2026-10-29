@@ -59,6 +59,8 @@ Run保存执行时plan/source identity；replay返回独立Analysis，指向原R
 
 `apps/reader/src/lab.tsx`导出`LabView({catalogue,link,desk})`，复用当前WorkspaceAdapter与DeskStore。local且jobs已启用时才读取`/studies`和`/jobs`；public/file模式只读取明确选择的公开保存结果、协议与原生复验说明，不探测本机服务。P8显示声明模型、pair、步数/成本界限与实际区分trace；P9显示真实原生cells及candidate/rank/score/selected、实际送达、response和score。部分执行默认先看已记录cells，可明确包括未执行计划；family、executor、arm、送达预算分开筛选，不把同family任务数当独立样本。
 
+研究选择可先于 registry 返回；表单操作始终由当前研究实际支持的能力确定。支持本地计算的研究默认 `run`，历史检查研究默认 `inspect`；切换研究本身不提交任务。
+
 提交`POST /jobs {plan,idempotency_key}`等待回执；HTTP acknowledgement丢失时保留同一key与参数，禁止自动新attempt。选择历史job后通过`GET /job?id=`恢复，关闭页面不取消任务。取消、明确retry、owned-source-job raw replay分别调用原有接口；indeterminate不显示自动retry。表单/Observation草稿在异步错误时保留；未保存Observation草稿和失败时的当前输入可主动下载；刷新仍会丢弃未保存草稿，Lab没有额外浏览器持久化。
 
 `POST /job/snapshot {id}`由`ExperimentViewService(repo,project,jobs).snapshot(id)`处理，不需新migration。它只在用户明确固定成功的真实run时，先核验native raw及源identity，再把当时绑定的code/protocol/dataset、执行config、result和inspection保存为private CAS Artifacts与canonical Run。rubric_ref指向实际拥有原生评分器的study.py；没有单独绑定protocol文档的有限runner，protocol_ref也明确指向该执行源码，config标明这一范围，不临时捏造执行时文档。已有快照按job/attempt固定复用，检查CAS完整性；重开不是fresh raw replay。原生raw后来缺失时，原canonical bytes仍可保留，新的raw核验必须拒绝。inspect、prepare和历史receipt不能制造新Run。

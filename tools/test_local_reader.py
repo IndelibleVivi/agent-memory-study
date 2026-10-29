@@ -89,6 +89,31 @@ def propose_apply(page,reason,body=None):
     expect(page.locator('.review-changeset')).to_contain_text(re.compile('检查后保持不变|已应用'))
 
 
+def lab_registry_checks(page,url,report):
+    pending=[]
+    def hold_registry(route):pending.append(route)
+    page.route('**/api/studies',hold_registry)
+    navigate(page,url,'?space=lab')
+    choice=page.get_by_label('选择一项研究',exact=True)
+    choice.select_option('c2c-cache-retraction-study')
+    choice.select_option('observation-contract-study')
+    expect(page.locator('.lab-plan')).to_contain_text('Registry 尚未连接')
+    assert len(pending)==1
+    pending[0].fulfill(response=pending[0].fetch())
+    page.unroute('**/api/studies',hold_registry)
+    operation=page.get_by_label('操作',exact=True)
+    expect(operation).to_have_value('run')
+    expect(page.get_by_label('声明模型',exact=True)).to_be_visible()
+    operation.select_option('prepare')
+    expect(operation).to_have_value('prepare')
+    choice.select_option('c2c-cache-retraction-study')
+    expect(operation).to_have_value('inspect')
+    expect(operation.locator('option[value="run"]')).to_have_count(0)
+    expect(page.get_by_label('声明模型',exact=True)).to_have_count(0)
+    assert api(page,'/jobs')['jobs']==[]
+    report['checks'].append('Study selection before delayed registry resolves to an advertised operation; explicit prepare works, history-only study stays inspect, and selection never submits a job')
+
+
 def story_one(page,url,output,report):
     navigate(page,url);page.get_by_role('button',name='＋ 带进来',exact=True).click();dialog=page.locator('.capture-dialog')
     dialog.get_by_label('遇见了什么？',exact=True).fill(QUESTION);dialog.get_by_label('为什么现在留它？',exact=True).fill(CANARY+' 原创合成来件，不是注册论文。')
@@ -228,7 +253,7 @@ def main():
         with sync_playwright() as p:
             browser=p.chromium.launch(executable_path=args.browser_executable);context=browser.new_context(viewport={'width':1440,'height':1000},reduced_motion='reduce');page=context.new_page();observe(page,url,report)
             try:
-                story_one(page,url,output,report);story_two(page,url,output,report);story_three(page,url,output,report);recovery_checks(page,context,url,output,report);page,url=restart_assertions(browser,service,page,output,report);page,url=cli_backup_restore(browser,service,page,output,runtime,report)
+                lab_registry_checks(page,url,report);story_one(page,url,output,report);story_two(page,url,output,report);story_three(page,url,output,report);recovery_checks(page,context,url,output,report);page,url=restart_assertions(browser,service,page,output,report);page,url=cli_backup_restore(browser,service,page,output,runtime,report)
             except Exception:
                 report['status']='failed'
                 page.screenshot(path=str(output/'failure.png'),full_page=True);(output/'failure-text.txt').write_text(page.locator('body').inner_text());raise
