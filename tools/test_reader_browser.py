@@ -71,6 +71,26 @@ def workspace_keys(page):
     return page.locator('.workspace-item').evaluate_all(
         "rows => rows.map(row => row.dataset.workspaceKey)")
 
+def check_desk_visibility(page, go, record):
+    """Check that the desk launcher owns its initial state and entry actions."""
+    go()
+    launcher = page.locator('#workspace-launch')
+    controls = page.locator('#workspace-controls')
+    expect(launcher).to_be_visible()
+    expect(launcher.get_by_role('button', name='开始一份研究案头 ↗', exact=True)).to_be_visible()
+    expect(controls).to_be_hidden()
+    expect(page.locator('.sculpture-toolbar')).to_be_visible()
+    expect(page.locator('.sculpture-inspector')).to_be_visible()
+    launcher.get_by_role('button', name='开始一份研究案头 ↗', exact=True).click()
+    expect(launcher).to_be_hidden()
+    expect(controls).to_be_visible()
+    expect(page.locator('#workspace-title')).to_be_focused()
+    go('?study=ams-thesis')
+    go('#workbench')
+    expect(controls).to_be_visible()
+    expect(launcher).to_be_hidden()
+    record('unopened desk keeps its launcher visible and controls hidden; launcher and #workbench open the desk while sculpture controls remain available')
+
 def external_http_requests(requests):
     return [url for url in requests if urlparse(url).scheme in ('http', 'https')
             and urlparse(url).hostname not in (None, '127.0.0.1', 'static.cloudflareinsights.com')]
@@ -757,7 +777,7 @@ def main():
                                     };
                                   }
                                 }''', base + query)
-                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js', 'practice.js', 'study-packets.js', 'index-study.js', 'study-desk.js', 'seo.js', 'research-map.js', 'constellation.js']:
+                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js', 'practice.js', 'study-packets.js', 'index-study.js', 'study-desk.js', 'seo.js', 'research-map.js', 'constellation.js', 'continuity-sculpture.js']:
                                     page.add_script_tag(content=(ROOT / 'assets' / name).read_text())
                                 page.add_script_tag(content=offline_app)
                             else:
@@ -809,6 +829,7 @@ def main():
                             page.locator('.index-board').evaluate('(node) => window.scrollTo(0, node.getBoundingClientRect().top + scrollY - 100)')
                             page.screenshot(path=str(output / f'index-board-{width}.png'))
                         go()
+                        check_desk_visibility(page, go, record)
                         expect(page.locator('#room-start-list a[data-route=study]')).to_have_count(6)
                         expect(page.locator('#study-index')).to_contain_text('一条更正之后')
                         if not args.offline_render:

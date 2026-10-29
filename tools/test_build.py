@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 import runpy
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -11,6 +12,7 @@ from unittest import mock
 from pathlib import Path
 
 from tools import build
+from tools import content
 
 
 class PublicReadingRoomBuildTests(unittest.TestCase):
@@ -1736,6 +1738,33 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
 
         validated = self.validate_copy(grown)
         self.assertEqual(len(validated["materials"]), len(self.data["materials"]) + 1)
+
+    def test_canonical_material_without_failure_surfaces_passes_full_build(self):
+        first = self.data["materials"][0]["id"]
+        original_surfaces = copy.deepcopy(self.data["atlas"]["failureSurfaces"])
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "study"
+            shutil.copytree(build.ROOT / "study", root)
+
+            source_path = root / "sources" / f"{first}.json"
+            source = json.loads(source_path.read_text(encoding="utf-8"))
+            source["failureSurfaces"] = []
+            source_path.write_text(json.dumps(source, ensure_ascii=False), encoding="utf-8")
+
+            validated = build.validate_data(content.compile_content(root))
+
+        materials = {material["id"]: material for material in validated["materials"]}
+        surfaces = {surface["id"]: surface for surface in validated["atlas"]["failureSurfaces"]}
+        self.assertEqual(materials[first]["failureSurfaces"], [])
+        self.assertEqual(len(surfaces), len(original_surfaces))
+        for surface in surfaces.values():
+            self.assertNotIn(first, surface["materialIds"])
+
+        invalid = copy.deepcopy(validated)
+        invalid["materials"][0]["failureSurfaces"] = ["not-a-public-surface"]
+        with self.assertRaisesRegex(ValueError, "unknown failure surfaces"):
+            build.validate_data(invalid)
 
     def test_existing_close_read_entries_keep_richer_read_schema(self):
         by_id = {material["id"]: material for material in self.data["materials"]}
