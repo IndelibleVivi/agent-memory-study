@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
-    <link rel="stylesheet" href="assets/styles.css?v=20261019-night-2" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261026-index-1" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -22,6 +22,7 @@
       <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="site-nav"><span>目录</span><span aria-hidden="true">＋</span></button>
       <nav class="site-nav" id="site-nav" aria-label="主要导航">
         <a href="./#starts" data-route="home" data-scroll-target="starts">开始与继续</a>
+        <a href="./#workbench" data-route="home" data-scroll-target="workbench">研究案头<span data-workspace-count></span></a>
         <a href="./#directions" data-route="home" data-scroll-target="directions">研究方向</a>
         <a href="./#constellation" data-route="home" data-scroll-target="constellation">研究星图</a>
         <a href="./#library" data-route="home" data-scroll-target="library">书架</a>
@@ -41,12 +42,12 @@
             </div>
             <figcaption class="sculpture-caption"><span><b>01</b> / THE INHERITANCE FIELD</span><span><span data-research-count>46</span> 份研究 · 一个不断改变的整体</span></figcaption><div class="hero-marginalia" aria-hidden="true"><span>MEMORY IS<br>A RELATION<br>THROUGH TIME.</span><code>experience<br>↳ representation<br>↳ use<br>↳ revision</code></div>
           </figure>
-          <div class="sculpture-toolbar" data-js-control hidden>
+          <div class="sculpture-toolbar" data-js-control data-sculpture-control hidden>
             <div class="sculpture-views" aria-label="研究体视图"><button type="button" data-sculpture-view="field" aria-pressed="true"><span>01</span> 环形</button><button type="button" data-sculpture-view="spread" aria-pressed="false"><span>02</span> 展开</button><button type="button" data-sculpture-view="links" aria-pressed="false"><span>03</span> 关联</button></div>
             <p id="sculpture-instructions">拖动旋转 · 点击环带选取<span>领域决定编排；连线来自显式引用。</span></p>
             <div class="sculpture-motion"><button class="sculpture-toggle" type="button" aria-pressed="false">静止 Ⅱ</button><button id="sculpture-reset" type="button">复位 ↺</button></div>
           </div>
-          <div class="sculpture-inspector" data-js-control hidden>
+          <div class="sculpture-inspector" data-js-control data-sculpture-control hidden>
             <div class="inspector-head"><span id="sculpture-kind"></span><span id="sculpture-ordinal"></span></div>
             <div class="inspector-copy"><p id="sculpture-title" aria-live="polite"></p><p id="sculpture-summary"></p></div>
             <div class="inspector-actions"><button type="button" data-sculpture-step="-1" aria-label="上一份研究">←</button><button type="button" data-sculpture-step="1" aria-label="下一份研究">→</button><a id="sculpture-open" href="?study=ams-thesis">打开研究 ↗</a></div>
@@ -55,6 +56,13 @@
           <div class="hero-baseline"><span id="room-edition"></span><span id="room-invitation"></span></div>
         </section>
         <section class="room-starts section-wrap" id="starts"><div class="section-heading"><div><p class="eyebrow">BEGIN ANYWHERE</p><h2>从一个词，<br><em>打开一个问题。</em></h2></div><div class="resume-open"><label class="file-button" for="resume-file">打开接续文件 ↗</label><input class="sr-only" id="resume-file" type="file" accept=".json,application/json"><p id="resume-status" role="status">接续文件只在当前浏览器读取。</p></div></div><div id="room-start-list"></div></section>
+        <section class="research-workspace section-wrap" id="workbench" aria-labelledby="workspace-heading">
+          <div class="workspace-register"><p class="eyebrow">ON THE DESK / 从阅读到自己的理解</p><span id="workspace-save-state" data-js-control hidden>仅在本页内存中</span></div>
+          <div class="workspace-intro"><h2 id="workspace-heading" tabindex="-1">把几份材料，<br><em>放在一起想。</em></h2><p>从文章、来源、问题或实践判断中选材。沿正文来回读，在案头留下自己的区别、解释与下一问。</p></div>
+          <p class="workspace-nojs">启用 JavaScript 后可以整理私人案头；公开正文与单篇研究包仍可直接阅读和下载。</p>
+          <div id="workspace-launch" data-js-control hidden></div>
+          <div id="workspace-controls" data-js-control hidden></div>
+        </section>
         <section class="constellation section-wrap" id="constellation" aria-labelledby="constellation-title">
           <div class="section-heading constellation-heading"><div><p class="eyebrow">02 / THE RESEARCH ATLAS</p><h2 id="constellation-title">研究星图<span class="map-title-english" lang="en">A constellation of ideas.</span></h2></div><div class="map-introduction"><p>沿着一条引用，去另一颗星。</p><p id="constellation-caption">选取星点阅读，放大展开标题。位置按领域编排，连线只表示显式引用，不代表语义距离。</p></div></div>
           <div class="constellation-frame"><div class="map-observatory">
@@ -278,17 +286,18 @@
     <footer class="site-footer"><div><strong>Agent Memory Study</strong><p>信息、经验，与跨时间的智能。</p></div><nav aria-label="项目链接"><a href="https://github.com/IndelibleVivi/agent-memory-study">GitHub · 研究真源 ↗</a><a href="NOTICE.md">Notice</a><a href="THIRD_PARTY_NOTICES.md">Third-party notices</a></nav></footer>
     <p class="sr-only" id="route-status" aria-live="polite"></p>
     <noscript>公开部署提供完整静态正文。源码模式需要 JavaScript；也可在 GitHub 的 study 目录阅读研究正文。</noscript>
-    <script src="assets/materials-data.js?v=20261019-night-2"></script>
+    <script src="assets/materials-data.js?v=20261026-index-1"></script>
     <script src="assets/revision-study.js?v=20260908-studies-1"></script>
-    <script src="assets/reading-search.js?v=20261019-night-2"></script>
-    <script src="assets/practice.js?v=20261019-night-2"></script>
-    <script src="assets/study-packets.js?v=20261019-night-2"></script>
-    <script src="assets/study-desk.js?v=20261019-night-2"></script>
-    <script src="assets/seo.js?v=20261019-night-2"></script>
-    <script src="assets/research-map.js?v=20261019-night-2"></script>
-    <script src="assets/constellation.js?v=20261019-night-2"></script>
-    <script src="assets/app.js?v=20261019-night-2"></script>
-    <script src="assets/continuity-sculpture.js?v=20261019-night-2"></script>
+    <script src="assets/reading-search.js?v=20261026-index-1"></script>
+    <script src="assets/practice.js?v=20261026-index-1"></script>
+    <script src="assets/study-packets.js?v=20261026-index-1"></script>
+    <script src="assets/index-study.js?v=20261026-index-1"></script>
+    <script src="assets/study-desk.js?v=20261026-index-1"></script>
+    <script src="assets/seo.js?v=20261026-index-1"></script>
+    <script src="assets/research-map.js?v=20261026-index-1"></script>
+    <script src="assets/constellation.js?v=20261026-index-1"></script>
+    <script src="assets/app.js?v=20261026-index-1"></script>
+    <script src="assets/continuity-sculpture.js?v=20261026-index-1"></script>
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"4e0929eca0504d43aca1cc1a1f30ffaf"}'></script>
   </body>
 </html>

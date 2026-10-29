@@ -15,7 +15,8 @@ import tempfile
 import threading
 from urllib.parse import parse_qs, urldefrag, urlparse
 
-from playwright.sync_api import sync_playwright, expect
+from playwright.sync_api import sync_playwright, expect, Error as PlaywrightError
+from index_browser_checks import check_index_exercise, check_index_capacity
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -55,6 +56,498 @@ def map_relationships(page):
 def map_signal_positions(page):
     return page.locator('.map-signals circle.is-active').evaluate_all(
         "dots => dots.map(dot => [dot.getAttribute('cx'), dot.getAttribute('cy')])")
+
+def download_json(page, trigger):
+    with page.expect_download() as event:
+        trigger()
+    return json.loads(Path(event.value.path()).read_text())
+
+def download_text(page, trigger):
+    with page.expect_download() as event:
+        trigger()
+    return Path(event.value.path()).read_text()
+
+def workspace_keys(page):
+    return page.locator('.workspace-item').evaluate_all(
+        "rows => rows.map(row => row.dataset.workspaceKey)")
+
+def check_desk_visibility(page, go, record):
+    """Check that the desk launcher owns its initial state and entry actions."""
+    go()
+    launcher = page.locator('#workspace-launch')
+    controls = page.locator('#workspace-controls')
+    expect(launcher).to_be_visible()
+    expect(launcher.get_by_role('button', name='开始一份研究案头 ↗', exact=True)).to_be_visible()
+    expect(controls).to_be_hidden()
+    expect(page.locator('.sculpture-toolbar')).to_be_visible()
+    expect(page.locator('.sculpture-inspector')).to_be_visible()
+    launcher.get_by_role('button', name='开始一份研究案头 ↗', exact=True).click()
+    expect(launcher).to_be_hidden()
+    expect(controls).to_be_visible()
+    expect(page.locator('#workspace-title')).to_be_focused()
+    go('?study=ams-thesis')
+    go('#workbench')
+    expect(controls).to_be_visible()
+    expect(launcher).to_be_hidden()
+    record('unopened desk keeps its launcher visible and controls hidden; launcher and #workbench open the desk while sculpture controls remain available')
+
+def external_http_requests(requests):
+    return [url for url in requests if urlparse(url).scheme in ('http', 'https')
+            and urlparse(url).hostname not in (None, '127.0.0.1', 'static.cloudflareinsights.com')]
+
+def check_workspace_flow(page, data, width, record, layout, go, external_requests):
+    """Exercise the research desk through visible controls, not workspace internals."""
+    private_title = f"Synthetic desk {width}"
+    private_question = f"Private question {width} <img src=x onerror=alert(1)>"
+    private_note = f"Private note {width} <script>window.WORKSPACE_BAD=true</script>"
+
+    go("?study=after-a-correction")
+    action = page.locator(".workspace-object-actions button", has_text="加入研究案头")
+    expect(action).to_be_visible()
+    action.click()
+    expect(page.locator(".workspace-object-actions button", has_text="已在研究案头")).to_be_visible()
+    page.locator(".workspace-object-actions a[data-route=home]").click()
+    expect(page.locator("#workspace-title")).to_be_visible()
+    expect(page.locator("#workspace-question")).to_be_visible()
+    expect(page.locator("#workspace-synthesis")).to_be_visible()
+    expect(page.locator("#workspace-next")).to_be_visible()
+    page.locator("#workspace-title").fill(private_title)
+    page.locator("#workspace-question").fill(private_question)
+    page.locator("#workspace-synthesis").fill(f"Private synthesis {width}")
+    page.locator("#workspace-next").fill(f"Private next {width}")
+    dirty_dialog = []
+    page.once("dialog", lambda dialog: (dirty_dialog.append(dialog.type), dialog.dismiss()))
+    try:
+        page.reload(wait_until="domcontentloaded", timeout=1500)
+    except PlaywrightError:
+        # Dismissing beforeunload cancels navigation. Depending on the browser
+        # build reload reports that as aborted or waits for the cancelled load.
+        assert dirty_dialog == ["beforeunload"], dirty_dialog
+    assert dirty_dialog == ["beforeunload"], dirty_dialog
+    expect(page.locator("#workspace-title")).to_have_value(private_title)
+    page.once("dialog", lambda dialog: dialog.accept())
+    page.reload(wait_until="domcontentloaded")
+    expect(page.locator("#workspace-title")).to_have_value("")
+    go("?study=after-a-correction")
+    page.locator(".workspace-object-actions button", has_text="加入研究案头").click()
+    page.locator(".workspace-object-actions a[data-route=home]").click()
+    page.locator("#workspace-title").fill(private_title)
+    page.locator("#workspace-question").fill(private_question)
+    page.locator("#workspace-synthesis").fill(f"Private synthesis {width}")
+    page.locator("#workspace-next").fill(f"Private next {width}")
+    expect(page.locator("#workbench")).to_be_visible()
+
+    question = data["questions"][0]
+    finding = next(item for item in data["findings"]
+                   if item["id"] == "correction-needs-retention-checks")
+    for query, label, title in [
+        ("TRUSTMEM", "来源札记", "TRUSTMEM"),
+        (question["title"], "问题专题", question["title"]),
+        (finding["title"], "实践判断", finding["title"]),
+    ]:
+        if not page.locator("#workspace-search").is_visible():
+            page.locator(".workspace-picker summary").click()
+        page.locator("#workspace-search").fill(query)
+        result = page.locator(".workspace-picker-results button").filter(
+            has_text=title).filter(has_text=label).first
+        expect(result).to_be_visible()
+        result.click()
+    keys = workspace_keys(page)
+    assert len(keys) == 4 and len(set(keys)) == 4, keys
+    assert {"study", "material", "question", "finding"} == {key.split(":", 1)[0] for key in keys}
+    expect(page.locator(".workspace-comparison")).to_have_count(2)
+    expect(page.locator("[data-workspace-count]").first).to_contain_text("4")
+    assert page.evaluate("localStorage.length") == 0
+    assert private_title not in page.url and private_question not in page.url
+    first_before = workspace_keys(page)
+    first_title = page.locator(".workspace-item").first.locator(
+        ".workspace-item-copy > button").inner_text()
+    page.locator(".workspace-item").first.get_by_role(
+        "button", name=f"下移 {first_title}").click()
+    moved = workspace_keys(page)
+    assert moved[0] == first_before[1] and moved[1] == first_before[0], (first_before, moved)
+    page.get_by_role("button", name="撤销上次整理", exact=True).click()
+    assert workspace_keys(page) == first_before
+
+    note = page.locator("#workspace-note-study-after-a-correction")
+    note.fill(private_note)
+    assert page.evaluate("window.WORKSPACE_BAD") is None
+    assert page.evaluate("localStorage.length") == 0
+    assert not any(text in page.url for text in (private_title, private_question, private_note))
+    page.locator('.workspace-item').first.get_by_role('button', name=f'移出 {first_title}', exact=True).click()
+    assert len(workspace_keys(page)) == 3
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    assert workspace_keys(page) == first_before
+    expect(page.locator('#workspace-note-study-after-a-correction')).to_have_value(private_note)
+
+    # Dirty navigation is visible without discarding in-memory state.
+    page.locator(".workspace-item").first.locator(".workspace-item-copy > button").click()
+    expect(page.locator("#study-title")).to_be_visible()
+    expect(page.locator('#continuation-note')).to_have_value(private_note)
+    page.locator(".workspace-object-actions a[data-route=home]").click()
+    expect(page.locator("#workspace-question")).to_have_value(private_question)
+    expect(page.locator("#workspace-note-study-after-a-correction")).to_have_value(private_note)
+    assert workspace_keys(page) == first_before
+    page.go_back()
+    expect(page.locator('#study-title')).to_be_visible()
+    expect(page.locator('#continuation-note')).to_have_value(private_note)
+    page.go_forward()
+    expect(page.locator('#workspace-question')).to_have_value(private_question)
+
+    # Private and public downloads must separate metadata and references.
+    workspace_json = download_json(page, lambda: page.get_by_role(
+        "button", name="保存案头 JSON ↓", exact=True).click())
+    private_markdown = download_text(page, lambda: page.get_by_role(
+        "button", name="导出私人札记 Markdown ↓", exact=True).click())
+    assert workspace_json["schema"] == "ams-workspace/2"
+    assert workspace_json["title"] == private_title
+    assert any(ref.get("note") == private_note for ref in workspace_json["items"])
+    assert private_title in private_markdown and private_note in private_markdown
+    # Saving a composition must not disable recovery. Undo after save changes
+    # the current workspace, marks it dirty and exports the restored version.
+    page.locator('.workspace-item').first.get_by_role('button', name=f'下移 {first_title}', exact=True).click()
+    moved_json = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    assert [ref['id'] for ref in moved_json['items']] != [ref['id'] for ref in workspace_json['items']]
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    expect(page.locator('#workspace-save-state')).to_have_text('有未保存的整理')
+    restored_json = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    assert restored_json == workspace_json
+    page.locator(".workspace-public summary").click()
+    public_json = download_json(page, lambda: page.get_by_role(
+        "button", name="公开选材 JSON ↓", exact=True).click())
+    public_markdown = download_text(page, lambda: page.get_by_role(
+        "button", name="公开选材 Markdown ↓", exact=True).click())
+    public_blob = json.dumps(public_json, ensure_ascii=False) + public_markdown
+    for private in (private_title, private_question, private_note, f'Private synthesis {width}', f'Private next {width}'):
+        assert private not in public_blob, private
+    assert [item["id"] for item in public_json["objects"]] == [
+        key.split(":", 1)[1] for key in first_before]
+    assert public_json["schema"] == "ams-study-collection/1"
+    assert all("recordedResults" not in object["content"] for object in public_json["objects"])
+
+    stable_keys = workspace_keys(page)
+    page.locator("#workspace-file").set_input_files({
+        "name": "malformed.json", "mimeType": "application/json",
+        "buffer": b'{"schema":"ams-workspace/1","items":[',
+    })
+    expect(page.locator("#workspace-status")).to_contain_text("不是有效 JSON")
+    assert workspace_keys(page) == stable_keys
+    page.locator("#workspace-file").set_input_files({
+        "name": "too-large.json", "mimeType": "application/json",
+        "buffer": b"x" * (2 * 1024 * 1024 + 1),
+    })
+    expect(page.locator("#workspace-status")).to_contain_text("2 MiB")
+    assert workspace_keys(page) == stable_keys
+    assert page.locator("#workspace-import-preview").count() == 0
+
+    imported = {
+        "schema": "ams-workspace/1", "title": "Imported synthetic desk",
+        "question": "Imported private question", "synthesis": "Imported private synthesis",
+        "next": "Imported private next",
+        "items": [{
+            "kind": "material", "id": "trustmem-consolidation",
+            "note": "Imported private note", "anchor": "",
+            "contentVersion": workspace_json["items"][0]["contentVersion"],
+            "basis": workspace_json["items"][0]["basis"],
+        }],
+        "compare": [],
+    }
+    page.locator("#workspace-file").set_input_files({
+        "name": "imported.json", "mimeType": "application/json",
+        "buffer": json.dumps(imported).encode(),
+    })
+    preview = page.locator("#workspace-import-preview")
+    expect(preview).to_be_visible()
+    expect(preview).to_contain_text("Imported synthetic desk")
+    expect(preview).to_contain_text("TRUSTMEM")
+    page.get_by_role("button", name="取消打开", exact=True).click()
+    expect(preview).to_have_count(0)
+    assert workspace_keys(page) == stable_keys
+    expect(page.locator("#workspace-title")).to_have_value(private_title)
+
+    imported["items"][0]["note"] = "Imported private note after explicit open"
+    imported["items"][0]["basis"] = "opaque imported text only"
+    page.locator("#workspace-file").set_input_files({
+        "name": "imported.json", "mimeType": "application/json",
+        "buffer": json.dumps(imported).encode(),
+    })
+    page.get_by_role("button", name="打开这份案头", exact=True).click()
+    expect(page.locator("#workspace-title")).to_have_value("Imported synthetic desk")
+    expect(page.locator("#workspace-question")).to_have_value("Imported private question")
+    expect(page.locator("#workspace-synthesis")).to_have_value("Imported private synthesis")
+    expect(page.locator("#workspace-next")).to_have_value("Imported private next")
+    assert workspace_keys(page) == ["material:trustmem-consolidation"]
+    assert page.evaluate("window.WORKSPACE_BAD") is None
+    page.get_by_role("button", name="撤销上次整理", exact=True).click()
+    expect(page.locator("#workspace-title")).to_have_value(private_title)
+    assert workspace_keys(page) == stable_keys
+    assert page.evaluate("localStorage.length") == 0
+    assert urlparse(page.url).hostname == "127.0.0.1"
+    assert not external_http_requests(external_requests), external_http_requests(external_requests)
+
+    # Re-imported private metadata can never turn into a public collection title.
+    poisoned = json.loads(json.dumps(imported))
+    poisoned["items"][0]["basis"] = json.dumps({
+        "title": "POISONED-BASIS-TITLE", "html": "<img src=x onerror=alert(1)>",
+    })
+    poisoned['compare'] = ['material:trustmem-consolidation']
+    page.locator("#workspace-file").set_input_files({
+        "name": "poisoned.json", "mimeType": "application/json",
+        "buffer": json.dumps(poisoned).encode(),
+    })
+    page.get_by_role("button", name="打开这份案头", exact=True).click()
+    expect(page.locator('.workspace-comparison [data-revision-status=invalid]')).to_contain_text('快照不可比较')
+    expect(page.locator('img[src=x]')).to_have_count(0)
+    assert page.evaluate('window.WORKSPACE_BAD') is None
+    page.locator(".workspace-public summary").click()
+    poisoned_public = download_json(page, lambda: page.get_by_role(
+        "button", name="公开选材 JSON ↓", exact=True).click())
+    assert "POISONED-BASIS-TITLE" not in json.dumps(poisoned_public, ensure_ascii=False)
+    assert "<img src=x" not in json.dumps(poisoned_public, ensure_ascii=False)
+    page.get_by_role("button", name="撤销上次整理", exact=True).click()
+
+    # Restore the actual downloaded file, retaining all mixed references/notes.
+    page.locator('#workspace-file').set_input_files({
+        'name':'roundtrip.json', 'mimeType':'application/json',
+        'buffer':json.dumps(workspace_json).encode(),
+    })
+    page.get_by_role('button', name='打开这份案头', exact=True).click()
+    expect(page.locator('#workspace-title')).to_have_value(private_title)
+    expect(page.locator('#workspace-note-study-after-a-correction')).to_have_value(private_note)
+    assert workspace_keys(page) == stable_keys
+    download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+
+    layout("workspace private desk and public collection")
+    record("workspace mixed selection, compare, notes, undo, private/public downloads, import preview, privacy and navigation")
+    go()
+
+
+def check_workspace_maturation(page, data, width, record, layout, go, output=None):
+    """A public passage -> private annotation -> revision -> recovered author input."""
+    go('?study=retrieval-and-relevance')
+    references = page.locator('#study-view > .object-reference-browser')
+    references.locator('> summary').click()
+    source_id = next(row for row in data['studies'] if row['id'] == 'retrieval-and-relevance')['continuation']['studyIds'][0]
+    row = references.locator('.object-reference-row').filter(
+        has=page.locator(f'a[data-route=study][data-route-id="{source_id}"]')).first
+    expect(row).to_be_visible()
+    row.get_by_role('button', name='加入案头', exact=True).click()
+    expect(page.locator('[data-workspace-count]').first).to_contain_text('1')
+    # Select actual canonical DOM; the private textarea is never the quote source.
+    passage = page.locator('#study-view .study-essay p').last
+    quote = passage.inner_text().strip()
+    passage.scroll_into_view_if_needed()
+    passage.evaluate('''node => {
+      const range = document.createRange(); range.selectNodeContents(node);
+      const selection = getSelection(); selection.removeAllRanges(); selection.addRange(range);
+    }''')
+    capture = page.locator('#study-view .workspace-object-actions').get_by_role(
+        'button', name='留下选中文字', exact=True)
+    expect(capture).to_be_enabled(); expect(capture).to_be_in_viewport(); capture.click()
+    expect(page.locator('.workspace-article-capture.has-public-selection')).to_have_count(0)
+    expect(page.locator('[data-workspace-count]').first).to_contain_text('2')
+    page.locator('#study-view .workspace-object-actions a[data-route=home]').click()
+    panel = page.locator('[data-workspace-object="study:retrieval-and-relevance"]')
+    excerpt = panel.locator('.workspace-excerpt')
+    expect(excerpt.locator('blockquote')).to_have_text(quote)
+    comment = f'Private excerpt reasoning {width} <script>window.EXCERPT_BAD=true</script>'
+    excerpt.locator('textarea').fill(comment)
+    excerpt.get_by_role('combobox', name='excerpt-1 的用途').select_option('contrast')
+    expect(excerpt.locator('textarea')).to_have_value(comment)
+    page.locator('#workspace-question').fill('One research question')
+    page.locator('#workspace-next').fill('A next reading step')
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    expect(page.locator('#workspace-next')).to_have_value('')
+    expect(page.locator('#workspace-question')).to_have_value('One research question')
+    expect(page.locator('[data-workspace-undo]')).to_be_focused()
+    page.keyboard.press('Enter')
+    expect(page.locator('#workspace-question')).to_have_value('')
+    for _ in range(2):
+        page.get_by_role('button', name='重做整理', exact=True).click()
+    expect(page.locator('#workspace-next')).to_have_value('A next reading step')
+    saved = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    entry = next(ref for ref in saved['items'] if ref['id'] == 'retrieval-and-relevance')
+    assert saved['schema'] == 'ams-workspace/2'
+    assert entry['excerpts'][0]['quote'] == quote
+    assert entry['excerpts'][0]['comment'] == comment
+    assert entry['excerpts'][0]['role'] == 'contrast'
+    assert entry['excerpts'][0]['basis'] == entry['basis']
+    page.locator('.workspace-public summary').click()
+    public = download_json(page, lambda: page.get_by_role('button', name='公开选材 JSON ↓', exact=True).click())
+    assert comment not in json.dumps(public)
+    assert all('excerpts' not in obj and 'excerpts' not in obj['content'] for obj in public['objects'])
+
+    older = json.loads(entry['basis'])
+    older['bodyMarkdown'] = '# Older synthetic revision\n\n<img src=x onerror=window.EXCERPT_BAD=true>'
+    entry['basis'] = json.dumps(older)
+    entry['excerpts'][0]['basis'] = entry['basis']
+    original_excerpt_basis = entry['excerpts'][0]['basis']
+    page.locator('#workspace-file').set_input_files({
+        'name':'older-desk.json', 'mimeType':'application/json', 'buffer':json.dumps(saved).encode(),
+    })
+    page.get_by_role('button', name='打开这份案头', exact=True).click()
+    expect(panel.locator(':scope > .workspace-revision')).to_have_attribute('data-revision-status', 'changed')
+    revision = panel.locator(':scope > .workspace-revision')
+    revision.locator('summary').click()
+    expect(revision.locator('[data-revision-before]')).to_contain_text('Older synthetic revision')
+    expect(revision.locator('[data-revision-after]')).to_contain_text('recall')
+    assert page.locator('img[src=x]').count() == 0
+    assert page.evaluate('window.EXCERPT_BAD') is None
+    expect(panel.locator('.workspace-reading')).not_to_contain_text('Older synthetic revision')
+    panel.get_by_role('button', name='已核对，改以当前正文为据', exact=True).click()
+    expect(panel.locator(':scope > .workspace-revision')).to_have_attribute('data-revision-status', 'current')
+    expect(excerpt.locator('.workspace-revision')).to_have_attribute('data-revision-status', 'changed')
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    expect(panel.locator(':scope > .workspace-revision')).to_have_attribute('data-revision-status', 'changed')
+    page.get_by_role('button', name='重做整理', exact=True).click()
+    recovered = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    recovered_entry = next(ref for ref in recovered['items'] if ref['id'] == 'retrieval-and-relevance')
+    assert recovered_entry['excerpts'][0]['basis'] == original_excerpt_basis
+    assert recovered_entry['excerpts'][0]['comment'] == comment
+    assert recovered_entry['basis'] != original_excerpt_basis
+    # Selecting a private comment cannot feed the public passage capture action.
+    excerpt.locator('textarea').focus()
+    excerpt.locator('textarea').evaluate('node => node.select()')
+    expect(panel.get_by_role('button', name='留下选中文字', exact=True)).to_be_disabled()
+    excerpt.get_by_role('button', name='移除这条摘录', exact=True).click()
+    expect(panel.locator('.workspace-excerpt')).to_have_count(0)
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    expect(panel.locator('.workspace-excerpt textarea')).to_have_value(comment)
+    layout('excerpt editing and source revision')
+    if output:
+        Path(output, f'workspace-{width}.json').write_text(json.dumps(recovered, ensure_ascii=False, indent=2))
+        panel.screenshot(path=str(Path(output, f'workspace-revision-{width}.png')))
+    record('real passage capture, bidirectional citations, private annotation, multi-step history, revision inspection and preserved origins')
+    # Save before a document navigation; private state is still only page memory.
+    download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    go()
+
+
+def check_workspace_capacity(page, data, record, go):
+    """The accepted desk stays saveable when a large native edit is rejected."""
+    go('#workbench')
+    text = page.evaluate('''data => {
+      const desk = StudyDesk; let work = desk.emptyWorkspace();
+      for (const item of data.materials.slice(0, 24)) work = desk.add(work, {kind:'material', id:item.id}, data);
+      for (const ref of work.items.slice(1)) ref.note = '课'.repeat(20000);
+      work.question = '问'.repeat(8000); work.synthesis = '思'.repeat(20000); work.next = '续'.repeat(8000);
+      work = desk.workspace(work, data); let full = false;
+      outer: for (const ref of work.items) for (let i = 0; i < 12; i++) {
+        try {work = desk.addExcerpt(work, desk.key(ref), {quote:'A synthetic capacity fixture', comment:'', role:'context', anchor:''}, data);}
+        catch (error) {if (!error.message.includes('2 MiB')) throw error; full = true; break outer;}
+      }
+      if (!full) throw Error('Fixture did not reach the byte boundary');
+      return desk.serializeWorkspace(work, data);
+    }''', data)
+    assert 1900000 < len(text.encode()) <= 2 * 1024 * 1024
+    page.locator('#workspace-file').set_input_files({
+        'name':'capacity.json', 'mimeType':'application/json', 'buffer':text.encode(),
+    })
+    page.get_by_role('button', name='打开这份案头', exact=True).click()
+    expect(page.locator('.workspace-item')).to_have_count(24)
+    first = page.locator('.workspace-comparison').first.locator(':scope > textarea')
+    expect(first).to_have_value('')
+    first.fill('更' * 20000)
+    expect(page.locator('#workspace-status')).to_contain_text('2 MiB')
+    expect(first).to_have_value('')
+    title = page.locator('#workspace-title'); title.focus()
+    page.keyboard.type('continued')
+    expect(title).to_have_value('continued')
+    page.get_by_role('button', name='撤销上次整理', exact=True).click()
+    expect(title).to_have_value('')
+    saved = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    assert saved == json.loads(text)
+    assert page.evaluate('localStorage.length') == 0
+    page.locator('#room-start-list a[data-route-id=retrieval-and-relevance]').first.click()
+    page.locator('.private-continuation summary').click()
+    page.locator('#continuation-note').fill('A note that cannot join the full desk')
+    expect(page.locator('#continuation-note')).to_have_value('')
+    expect(page.locator('.workspace-object-actions [role=status]')).to_contain_text('已满')
+    expect(page.locator('.workspace-object-actions > button')).to_have_text('加入研究案头')
+    page.locator('.workspace-object-actions a[data-route=home]').click()
+    unchanged = download_json(page, lambda: page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click())
+    assert unchanged == saved
+    record('near-2-MiB 24-object desk rejects oversized edit atomically and keeps native typing/undo/save usable')
+    page.reload(wait_until='load')
+    expect(page.locator('.workspace-item')).to_have_count(0)
+    go()
+
+
+def check_continuation_checkpoint(page, record, go):
+    """Saving another article must never acknowledge the sole desk note."""
+    go('?study=retrieval-and-relevance')
+    page.locator('.private-continuation summary').click()
+    note = 'Synthetic unsaved note belonging only to retrieval-and-relevance'
+    page.locator('#continuation-note').fill(note)
+    page.locator('#study-view .study-essay a[data-route-id=what-an-index-learns]').first.click()
+    expect(page.locator('#continuation-note')).to_have_value('')
+    page.locator('.private-continuation summary').click()
+    other = download_json(page, lambda: page.get_by_role('button', name='保存接续文件 ↓', exact=True).click())
+    assert other['id'] == 'what-an-index-learns' and other['note'] == ''
+    expect(page.locator('#workspace-save-state')).to_have_text('有未保存的整理')
+    page.locator('.workspace-object-actions a[data-route=home]').click()
+    assert workspace_keys(page) == ['study:retrieval-and-relevance']
+    expect(page.locator('#workspace-note-study-retrieval-and-relevance')).to_have_value(note)
+    dialogs = []
+    page.once('dialog', lambda dialog: (dialogs.append(dialog.type), dialog.dismiss()))
+    try:
+        page.reload(wait_until='domcontentloaded', timeout=1500)
+    except PlaywrightError:
+        assert dialogs == ['beforeunload'], dialogs
+    assert dialogs == ['beforeunload'], dialogs
+    # The matching single-article download still acknowledges its own note.
+    page.locator('.workspace-item-copy > button').click()
+    own = download_json(page, lambda: page.get_by_role('button', name='保存接续文件 ↓', exact=True).click())
+    assert own['id'] == 'retrieval-and-relevance' and own['note'] == note
+    expect(page.locator('#workspace-save-state')).not_to_have_text('有未保存的整理')
+    record('single-article save acknowledges only the matching object; unrelated note and beforeunload stay dirty')
+    go()
+
+
+def emulate_map_motion(page, preference, evidence, *, paused=None, refresh_during_transition=False):
+    """Wait for the native preference signal, then check the actual app state.
+
+    Do not read MQL.matches between emulation and its notification: that getter
+    is part of the Chromium timing regression exercised by the refresh action.
+    An unchanged preference need not emit change or reset a manual override.
+    """
+    reduced = preference == 'reduce'
+    expected_pause = reduced if paused is None else paused
+    initial = page.evaluate("""() => {
+      const query = matchMedia('(prefers-reduced-motion: reduce)');
+      const observer = {query, initial: query.matches, events: []};
+      observer.listener = event => observer.events.push({matches: event.matches, time: performance.now()});
+      query.addEventListener('change', observer.listener);
+      window.__amsMotionObservation = observer;
+      return observer.initial;
+    }""")
+    observation = {'preference': preference, 'initial': initial,
+                   'refresh_during_transition': refresh_during_transition}
+    try:
+        page.emulate_media(reduced_motion=preference)
+        if refresh_during_transition:
+            # Exercise the product's existing refresh path while media delivery
+            # is pending; never set paused or dispatch a synthetic change event.
+            page.evaluate("document.querySelector('#map-zoom-in').click()")
+        if initial != reduced:
+            page.wait_for_function("""reduced => window.__amsMotionObservation.events
+              .some(event => event.matches === reduced)""", arg=reduced, timeout=5000)
+        expect(page.locator('#map-motion')).to_have_attribute('aria-pressed', str(expected_pause).lower())
+        observation['passed'] = True
+    finally:
+        observation['state'] = page.evaluate("""() => {
+          const observer = window.__amsMotionObservation, root = document.querySelector('#constellation');
+          const state = {matches: observer.query.matches, events: observer.events, hidden: document.hidden,
+            paused: document.querySelector('#map-motion').getAttribute('aria-pressed'), motion: root.dataset.motion,
+            view: [...root.querySelectorAll('[data-map-view]')].filter(x => x.getAttribute('aria-pressed') === 'true').map(x => x.dataset.mapView),
+            plot: document.querySelector('#constellation-plot').getBoundingClientRect().toJSON(),
+            signals: [...root.querySelectorAll('.map-signals circle.is-active')].map(x => [x.getAttribute('cx'), x.getAttribute('cy')])};
+          observer.query.removeEventListener('change', observer.listener);
+          delete window.__amsMotionObservation;
+          return state;
+        }""")
+        evidence.setdefault('motion_transitions', []).append(observation)
+    assert observation['state']['matches'] == reduced, observation
 
 
 def assert_map_labels_do_not_overlap(labels, interaction):
@@ -266,6 +759,9 @@ def main():
                     for width, height in [(1440, 1000), (390, 844), (320, 740)]:
                         context = browser.new_context(viewport={'width': width, 'height': height}, reduced_motion='reduce', has_touch=width <= 390)
                         # No third-party requests or analytics during tests.
+                        external_requests = []
+                        context.on('request', lambda request: external_requests.append(request.url)
+                                   if urlparse(request.url).hostname not in (None, '127.0.0.1') else None)
                         context.route('**/*', lambda r: r.continue_() if urlparse(r.request.url).hostname == '127.0.0.1' else r.abort())
                         page = context.new_page()
                         page.on('pageerror', lambda error: evidence['errors'].append(str(error)))
@@ -281,7 +777,7 @@ def main():
                                     };
                                   }
                                 }''', base + query)
-                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js', 'practice.js', 'study-packets.js', 'study-desk.js', 'seo.js', 'research-map.js', 'constellation.js']:
+                                for name in ['materials-data.js', 'revision-study.js', 'reading-search.js', 'practice.js', 'study-packets.js', 'index-study.js', 'study-desk.js', 'seo.js', 'research-map.js', 'constellation.js', 'continuity-sculpture.js']:
                                     page.add_script_tag(content=(ROOT / 'assets' / name).read_text())
                                 page.add_script_tag(content=offline_app)
                             else:
@@ -325,9 +821,24 @@ def main():
                                                           'output-guard-is-not-unlearning')]
                         assert len(new_findings) == 2
 
+                        if not args.offline_render:
+                            check_index_exercise(page, base + '?study=what-an-index-learns#study-lab', record)
+                            page.locator('#study-lab').screenshot(path=str(output / f'index-lab-{width}.png'))
+                            page.locator('#study-lab').evaluate('(node) => window.scrollTo(0, node.getBoundingClientRect().top + scrollY - 100)')
+                            page.screenshot(path=str(output / f'index-viewport-{width}.png'))
+                            page.locator('.index-board').evaluate('(node) => window.scrollTo(0, node.getBoundingClientRect().top + scrollY - 100)')
+                            page.screenshot(path=str(output / f'index-board-{width}.png'))
                         go()
+                        check_desk_visibility(page, go, record)
                         expect(page.locator('#room-start-list a[data-route=study]')).to_have_count(6)
                         expect(page.locator('#study-index')).to_contain_text('一条更正之后')
+                        if not args.offline_render:
+                            check_continuation_checkpoint(page, record, go)
+                            check_workspace_flow(page, data, width, record, layout, go, external_requests)
+                            check_workspace_maturation(page, data, width, record, layout, go, output)
+                            if width == 1440:
+                                check_workspace_capacity(page, data, record, go)
+                                check_index_capacity(page, base, record)
                         if width <= 390:
                             expect(page.locator('#menu-button')).to_be_visible()
                             expect(page.locator('#search')).to_be_visible()
@@ -475,12 +986,32 @@ def main():
                         page.locator('[data-map-view="list"]').click()
                         expect(page.locator('#constellation-list .map-list-row:visible')).to_have_count(2)
                         if width == 1440:
-                            page.emulate_media(reduced_motion='no-preference')
+                            emulate_map_motion(page, 'no-preference', evidence)
                             page.locator('#constellation-list .map-list-row:visible button').last.click()
                         page.locator('[data-map-view="map"]').click()
                         if width == 1440:
                             expect(page.locator('.map-node.is-selected .map-node-label')).to_have_css('opacity','1')
-                            page.emulate_media(reduced_motion='reduce')
+                            emulate_map_motion(page, 'reduce', evidence, refresh_during_transition=True)
+                            page.locator('#map-reset').click()
+                            linked_node = page.locator('.map-node[data-map-node="0"]')
+                            linked_node.focus(); linked_node.press('Enter')
+                            # A finite repetition guards actual signal motion and the
+                            # active-map refresh/media boundary, not just a badge.
+                            for _ in range(3):
+                                emulate_map_motion(page, 'no-preference', evidence)
+                                map_svg.scroll_into_view_if_needed()
+                                expect(star_map).to_have_attribute('data-motion', 'running')
+                                moving_signals = map_signal_positions(page)
+                                assert moving_signals
+                                page.wait_for_function('''before => JSON.stringify([...document.querySelectorAll('.map-signals circle.is-active')]
+                                  .map(dot => [dot.getAttribute('cx'), dot.getAttribute('cy')])) !== JSON.stringify(before)''',
+                                  arg=moving_signals, timeout=5000)
+                                emulate_map_motion(page, 'reduce', evidence, refresh_during_transition=True)
+                                expect(star_map).to_have_attribute('data-motion', 'still')
+                                stopped_signals = map_signal_positions(page)
+                                page.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(resolve))))')
+                                assert map_signal_positions(page) == stopped_signals, 'media reduction must stop actual signals'
+                            record('native media changes across active refresh, repeated actual signal start/stop')
                         page.locator('#map-reset').click()
                         page.locator('#map-query').fill('retrieval-and-relevance')
                         expect(page.locator('#constellation-stats')).to_contain_text('01 /')
@@ -519,8 +1050,24 @@ def main():
                         page.mouse.down();page.mouse.move(box['x']+box['width']*.5+45,box['y']+box['height']*.5+25,steps=5);page.mouse.up()
                         assert before_box != map_svg.get_attribute('viewBox'), 'Pan did not move the camera'
                         if width == 1440:
+                            expect(page.locator('#map-motion')).to_have_attribute('aria-pressed','true')
                             page.locator('#map-motion').click()
-                            expect(star_map).to_have_attribute('data-motion','running')
+                            expect(page.locator('#map-motion')).to_have_attribute('aria-pressed','false')
+                            emulate_map_motion(page, 'reduce', evidence, paused=False)
+                            # Clicking a control may scroll its plot out of view. Running
+                            # motion requires both an unpaused control and a visible plot.
+                            map_svg.scroll_into_view_if_needed()
+                            try:
+                                expect(star_map).to_have_attribute('data-motion','running')
+                            except AssertionError:
+                                evidence['motion_failure_state'] = page.evaluate('''() => ({
+                                  hidden: document.hidden,
+                                  reduced: matchMedia('(prefers-reduced-motion: reduce)').matches,
+                                  paused: document.querySelector('#map-motion').getAttribute('aria-pressed'),
+                                  plot: document.querySelector('#constellation-plot').getBoundingClientRect().toJSON(),
+                                  viewportHeight: innerHeight
+                                })''')
+                                raise
                             before_signals = map_signal_positions(page)
                             assert before_signals, 'a selected linked object must expose reference signals'
                             page.wait_for_function('''before => JSON.stringify([...document.querySelectorAll('.map-signals circle.is-active')]
@@ -787,7 +1334,7 @@ def main():
                             page.reload(wait_until='domcontentloaded')
                             expect(page.locator('#study-lab')).to_contain_text('研究方案尚未执行')
                             go('?question=experience-becomes-policy')
-                            page.locator('a[data-route=study]').filter(has_text='概括之后').click()
+                            page.locator('a.inquiry-onward[data-route=study]').filter(has_text='概括之后').click()
                             expect(page.locator('#study-title')).to_have_text('概括之后，往事还记得准吗？')
                             page.go_back()
                             expect(page.locator('#inquiry-title')).to_be_visible()

@@ -49,7 +49,7 @@ python3 -B tools/test_static_reader.py
 
 公开路径有 `study/<id>/`、`material/<id>/`、`question/<id>/`、`finding/<id>/`。旧 `?study=` 等链接通过 browser location replace 转到相应物理页面，不是 HTTP 301。没有 JS 时直接使用物理路径；正文、普通阅读链接与静态研究包可读。源码 file mode 保留 query links。
 
-首页 `?domain=` / `?direction=` 选择阅读分组，`?q=` 与 filters 用于搜索；旧 `?thread=` / `?path=` 自动展开 atlas 入口。已有场景 `scenario` / `phase` 保留。检索集合演算用 `k` / `ranking` / `need`，只作用于相应学习文章。Browser history 可恢复这些公开状态，sitemap 和 canonical 不收录查询／场景变体。
+首页 `?domain=` / `?direction=` 选择阅读分组，`?q=` 与 filters 用于搜索；旧 `?thread=` / `?path=` 自动展开 atlas 入口。已有场景 `scenario` / `phase` 保留。检索集合演算用 `k` / `ranking` / `need`；索引演算用 `dataset` / `mutation` / `repair` / `query`，后者只接收固定分布／维护选项及 0–130 整数。参数只作用于各自文章，切换到其他文章时清除。Browser history 可恢复这些公开状态，sitemap 和 canonical 不收录查询／场景变体。
 
 标题、description、canonical、Open Graph 与 JSON-LD 由同一 SEO module 生成。论文作者不被标成札记作者；展示、导出或索引不改变阅读深度与证据状态。
 
@@ -61,19 +61,29 @@ WebGL 无额外依赖；reduced-motion 默认静止，仍可手动操作和切�
 
 排版中的集合、索引映射和状态更新注记由 `study/map.json` 的可选 `notation` 提供，依据相连正文；它们不是新实验结果。学习入口的 SVG 分别解释集合交集、索引映射和参数更新，是原创示意而非实验数据；手机重排图形、控制与对象说明，正文阅读顺序保持完整。
 
-`#constellation` 是主导航中的研究星图，不再藏于 legacy disclosure。`constellation.js` 使用 SVG、数学坐标与短程 camera easing；深色全宽图面与下方浅色阅读区区分观察和阅读。全景只显示当前对象和悬停／键盘定位对象的标题；放大、筛选或聚焦时展开更多视口内标题，回缩时收回，长标题按可用宽度换行，并按实际字体和视口避让。领域只留方位标签，不绘制领域轮廓或逐节点编号；类型由星点形状和颜色区分。当前对象的显式引用被强调，其余引用留在背景；预览不改变选取或引用关系。类型／领域／标题和摘要关键词筛选、目录切换、聚焦引用、平移、缩放、复位及正文入口在手机和桌面相同；小屏重新计算纵向布局。支持 Fullscreen API 的浏览器提供“展开星图”，可通过同一按钮或 Escape 退出；打开正文时退出全屏。选中引用上的微小光点沿真实曲线缓慢移动，手动暂停、reduced-motion、离屏与页面隐藏均停止持续动画。地图不解释语义距离或证据强度，未分类对象保留独立星域。
+`#constellation` 是主导航中的研究星图，不再藏于 legacy disclosure。`constellation.js` 使用 SVG、数学坐标与短程 camera easing；深色全宽图面与下方浅色阅读区区分观察和阅读。全景只显示当前对象和悬停／键盘定位对象的标题；放大、筛选或聚焦时展开更多视口内标题，回缩时收回，长标题按可用宽度换行，并按实际字体和视口避让。领域只留方位标签，不绘制领域轮廓或逐节点编号；类型由星点形状和颜色区分。当前对象的显式引用被强调，其余引用留在背景；预览不改变选取或引用关系。类型／领域／标题和摘要关键词筛选、目录切换、聚焦引用、平移、缩放、复位及正文入口在手机和桌面相同；小屏重新计算纵向布局。支持 Fullscreen API 的浏览器提供“展开星图”，可通过同一按钮或 Escape 退出；打开正文时退出全屏。选中引用上的微小光点沿真实曲线缓慢移动，手动暂停、离屏与页面隐藏均停止持续动画。reduced-motion 初始默认静止；系统偏好变化时按原生事件更新暂停状态，仍可主动播放或暂停，未变化的偏好不会覆盖手动选择。地图不解释语义距离或证据强度，未分类对象保留独立星域。
 
 星图搜索、相机、选取和筛选只存在当前页面内存，不写 URL、history、storage 或网络。星点与图下引用本身是实际正文链接；静态捕获移除 JS controls，关闭 JS 仍可打开正文。浏览器验收覆盖真实点击、键盘选取、平移／缩放、筛选空态与恢复、motion、深链接和 history。
 
 排版使用本站提供的 OFL 字体子集，字体原始出处、许可、修改与离线重建流程见 [字体说明](../assets/fonts/README.md)。日常构建直接复制 checked-in WOFF2 与 notices，不获取外部字体，也不需要 fontTools。
 
-接续笔记只存在页面内存及主动下载的文件，不上传或写入 URL / localStorage。导入最多 128 KB，恢复已知对象、受支持的 anchor 与演算，文本不执行。刷新前未下载的修改会丢失。公开研究包与个人接续是两个独立出口，不把个人文字带入共享包。
+接续与研究案头只存在页面内存及主动下载的文件，不上传或写入 URL / localStorage。既有单篇文件上限 128 KB；新案头最多 24 个已知对象、每对象 12 条摘录、2 MiB UTF-8 文件，先预览再显式打开，兼读 workspace v1、写出 v2。文字、选材、摘录、导入和依据确认共用有限撤销／重做，历史最多 20 步／8 MiB，不写进案头文件。单篇与案头共用笔记状态，保留章节／演算恢复。刷新前未下载的修改会丢失，离开确认不替代保存。
+
+对读可从当前公开正文选区留下摘录，在案头编辑用途与批注；选区不能跨入私人输入。对象基准与每条摘录来源独立，正文变化时可逐字段并列检查旧／新文字，确认对象当前依据不会改写旧摘录。导入快照只用纯文字显示，缺失、不可比较与内容变化分开说明；当前正文仍由 canonical HTML 渲染。
+
+案头的搜索、问题、笔记、摘录／用途／批注、对读和排序不进入 URL 或 metadata。静态捕获通过 `data-js-control` 移除私人工作区、导入入口与详情“加入案头”／摘录控件，保留说明与 `#workbench` 普通入口；hydration 从同一 shell 恢复功能。双向公开引用保留普通正文链接，无 JavaScript 时仍可阅读，加入操作在捕获时移除。`research-map.js` 为此与星图、三维图、作者 impact 共用显式有向引用真源。公开包与私人保存分开，`StudyPackets.collection` 只按选定身份生成当前公开包；browser 和 CLI 共用实现。完整使用见[案头说明](study-workspace.md)，系统与建设边界见[研究系统](research-system.md)。
 
 站点保留既有 Cloudflare aggregate beacon，不加 custom events 或其他 tracking。构建与测试拦截非本机请求；在线打开外部来源链接按用户操作发生。公开查询写入 URL 与 browser history，直接加载／刷新时 URL 会发给静态托管服务。完整使用边界见 [README](../README.md)。
 
 ## 发布与回退
 
 现有 `.github/workflows/reader-validation.yml` 在 PR 和 main 运行同一组检查。PR 不部署；main 只有全部通过后，才上传并由独立 `deploy` job 发布同一 artifact。2026-10-18 的 Pages read-only 检查确认 `build_type: workflow`；本次无需切换账号设置。
+
+浏览器依赖安装沿用 runner 的三个 Ubuntu 源；将 Azure 镜像调到官方 HTTPS archive/security 镜像之后，避免慢下载耗尽 job 时限。镜像列表来自 [GitHub runner 配置](https://github.com/actions/runner-images/blob/main/images/ubuntu/scripts/build/configure-apt-sources.sh)，完整依赖安装、签名校验及 15 分钟 job 上限保留；日志会输出实际优先级。失败时先检查下载日志，不跳过浏览器验收。
+
+`reader` job 固定使用 `ubuntu-24.04`，与 `tools/browser-requirements.txt` 中的 Playwright 1.57.0 对齐。
+该版本支持 Ubuntu 24.04，尚不支持 Ubuntu 26.04；不能让浮动的 `ubuntu-latest` 提前更换 browser build 环境。
+升级 runner 或 Playwright 时，先核对对应版本支持的平台，再完成同一套浏览器与静态站检查。
 
 源码完成、commit、push、CI 通过和 Pages 上线是不同状态。交付时核对目标 commit 的 `reader` / `deploy`，再读取公开首页、详情、sitemap 和一个不存在的路径。不要从本机构建成功推断线上已更新。
 

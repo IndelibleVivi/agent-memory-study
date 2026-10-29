@@ -11,8 +11,58 @@ import threading
 from urllib.parse import urlparse, parse_qs
 from xml.etree import ElementTree as ET
 from playwright.sync_api import sync_playwright, expect
+from test_reader_browser import check_desk_visibility, check_workspace_maturation, check_continuation_checkpoint
+from index_browser_checks import check_index_exercise, check_index_capacity
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def check_workspace_artifact(page, base, width, checks):
+    """Use the delivered shell and physical routes, then restore a saved file."""
+    note = f'Synthetic static workspace {width} <script>literal note</script>'
+    page.goto(base+'study/retrieval-and-relevance/', wait_until='load')
+    page.get_by_role('button', name='加入研究案头', exact=True).click()
+    page.get_by_role('link', name='回到研究案头 ↗', exact=True).click()
+    assert urlparse(page.url).path == '/agent-memory-study/'
+    page.locator('#workspace-question').fill('A private comparison in the delivered artifact')
+    page.locator('#workspace-note-study-retrieval-and-relevance').fill(note)
+    page.locator('.workspace-picker summary').click()
+    page.locator('#workspace-search').fill('On the logic of theory change')
+    page.locator('.workspace-picker-results button').click()
+    expect(page.locator('.workspace-item')).to_have_count(2)
+    expect(page.locator('.workspace-comparison')).to_have_count(2)
+    page.locator('.workspace-item').first.locator('.workspace-item-copy > button').click()
+    assert urlparse(page.url).path.endswith('/study/retrieval-and-relevance/')
+    expect(page.locator('#continuation-note')).to_have_value(note)
+    page.go_back()
+    expect(page.locator('#workspace-note-study-retrieval-and-relevance')).to_have_value(note)
+    page.go_forward()
+    expect(page.locator('#continuation-note')).to_have_value(note)
+    page.get_by_role('link', name='回到研究案头 ↗', exact=True).click()
+    page.locator('.workspace-public summary').click()
+    with page.expect_download() as event:
+        page.get_by_role('button', name='公开选材 JSON ↓', exact=True).click()
+    public = json.loads(Path(event.value.path()).read_text())
+    assert [p['id'] for p in public['objects']] == ['retrieval-and-relevance', 'agm-theory-change']
+    assert note not in json.dumps(public)
+    assert 'A private comparison' not in json.dumps(public)
+    with page.expect_download() as event:
+        page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click()
+    saved = Path(event.value.path()).read_bytes()
+    page.reload(wait_until='load')
+    expect(page.locator('.workspace-item')).to_have_count(0)
+    page.locator('#workspace-file').set_input_files({'name':'local-desk.json', 'mimeType':'application/json', 'buffer':saved})
+    expect(page.locator('#workspace-import-preview')).to_be_visible()
+    expect(page.locator('.workspace-item')).to_have_count(0)
+    page.get_by_role('button', name='打开这份案头', exact=True).click()
+    expect(page.locator('#workspace-note-study-retrieval-and-relevance')).to_have_value(note)
+    expect(page.locator('#workspace-question')).to_have_value('A private comparison in the delivered artifact')
+    assert page.evaluate('localStorage.length') == 0
+    assert 'Synthetic' not in page.url
+    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
+    with page.expect_download():
+        page.get_by_role('button', name='保存案头 JSON ↓', exact=True).click()
+    checks.append({'width':width, 'workspace_hydration_physical_routes_history_download_restore':True})
 
 
 def main():
@@ -57,6 +107,15 @@ def main():
                             assert page.title() == page.locator('meta[property="og:title"]').get_attribute('content')
                             initial_title = page.locator('h1:visible').inner_text()
                             if not enabled:
+                                if '/study/what-an-index-learns/' in canonical:
+                                    expect(page.locator('#index-summary h3')).to_have_text('找到 70')
+                                    expect(page.locator('#index-summary .index-metrics dd').nth(2)).to_have_text('6')
+                                    expect(page.locator('.index-records li')).to_have_count(8)
+                                    expect(page.locator('#study-lab input, #study-lab select, #study-lab button')).to_have_count(0)
+                                    expect(page.locator('.index-audit tbody tr')).to_have_count(8)
+                                if '/study/retrieval-and-relevance/' in canonical:
+                                    expect(page.locator('#study-lab input, #study-lab select')).to_have_count(0)
+                                expect(page.locator('.workspace-object-actions, #workspace-controls, #workspace-launch')).to_have_count(0)
                                 if canonical.rstrip('/').endswith('agent-memory-study'):
                                     expect(page.locator('.sculpture-fallback')).to_be_visible()
                                     expect(page.locator('[data-js-control]')).to_have_count(0)
@@ -92,8 +151,29 @@ def main():
                                         checks.append({'finding_static_body':item['id'],'javascript':False})
                             checks.append({'url':canonical,'javascript':enabled,'heading':initial_title})
                         if enabled:
+                            check_desk_visibility(
+                                page,
+                                lambda query="": page.goto(base + query, wait_until="load"),
+                                lambda name: checks.append({"static_desk": name}),
+                            )
                             for width in (1440,390,320):
                                 page.set_viewport_size({'width':width,'height':900})
+                                check_index_exercise(page, base + 'study/what-an-index-learns/#study-lab',
+                                    lambda name: checks.append({'width':width, 'static_index':name}))
+                                if width == 1440:
+                                    check_index_capacity(page, base,
+                                        lambda name: checks.append({'width':width, 'static_index_capacity':name}))
+                                check_workspace_artifact(page, base, width, checks)
+                                def artifact_go(query=''):
+                                    page.goto(base + query, wait_until='load')
+                                    expect(page.locator('h1:visible')).to_have_count(1)
+                                def artifact_layout(name):
+                                    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1'), name
+                                check_continuation_checkpoint(page,
+                                    lambda name: checks.append({'width':width, 'static_continuation':name}), artifact_go)
+                                check_workspace_maturation(page, data, width,
+                                    lambda name: checks.append({'width':width, 'static_workspace':name}),
+                                    artifact_layout, artifact_go)
                                 page.goto(base+'?study=after-a-correction&scenario=legacy&phase=after',wait_until='load')
                                 assert urlparse(page.url).path.endswith('/study/after-a-correction/')
                                 expect(page.locator('#study-scenario')).to_have_value('legacy')

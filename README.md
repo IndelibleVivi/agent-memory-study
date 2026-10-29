@@ -12,13 +12,21 @@ AMS 从 agent memory 出发，研究信息、经验与智能的跨时间关系�
 
 | 想进入的地方 | 可以读什么 |
 | --- | --- |
-| jieba、BM25、BGE-M3 究竟在做什么 | [找到一样的，还是找到相关的？](study/entries/retrieval-and-relevance.md)：用一个原创集合例子区分近邻重合、精确率和召回率；网页可以改变候选数、排序和相关性定义。 |
+| jieba、BM25、BGE-M3 究竟在做什么 | [找到一样的，还是找到相关的？](study/entries/retrieval-and-relevance.md)：从词项权重与混合排序的可行区间，走到原创集合中的近邻重合、精确率和召回率；网页可以改变候选数、排序和相关性定义。 |
 | Database、Index、Retriever、Memory 怎样区分 | [一条记录、一种表示、一个记忆系统](study/entries/records-representations-systems.md)：从同一条工具版本记录看不同研究对象和功能角色。 |
-| 新材料怎样改变已经形成的认识 | [索引也能学习——究竟学了什么？](study/entries/what-an-index-learns.md)：对齐两个作者摘要里的“学习索引”，保留阅读范围、解释的改变和下一问。 |
+| 新材料怎样改变已经形成的认识 | [索引也能学习——究竟学了什么？](study/entries/what-an-index-learns.md)：从指定章节追问监督与错误恢复；网页可插入记录，比较旧界、重新校准与重新拟合，并检查真实二分路径。 |
 | 继续一项已有研究 | [经验怎样长成判断习惯](https://indeliblevivi.github.io/agent-memory-study/study/experience-becomes-policy/)：跨源论述、已保存的分类器学习与纠正结果，以及仍未回答的问题。 |
+| 运行表示研究的离线控制 | [原事件／概括／并存执行器](research/representation-use-study/README.md)：原创事件、可执行真值、实际送达材料与绑定的运行证据；scripted/oracle 控制不等于模型效果。 |
+| 检查更正怎样传到后续行动 | [修订传播与再写入实验](research/revision-propagation-study/README.md)：多层快照、延迟同步、单层干预与后续任务，区分持续错误和修好后的旧影响再现。 |
 | 看项目长期关心什么 | [经验的形式](study/programme/directions/forms-of-experience.md)、[当下的相关性](study/programme/directions/relevance-in-context.md)、[改变与继承](study/programme/directions/change-and-continuity.md)。 |
 
 这些新文章是基于公开来源与原创例子写成的研究内容，不是私人聊天的重建。当前有 12 篇学习／研究文章、27 份来源札记、2 个问题专题、5 条实践判断。领域与方向只是可改的阅读地图；数量、关联和阅读深度不代表个人掌握度。
+
+## Relata × AMS 交叉研究
+
+[交叉研究准备包](research/relata-ams-campaign/README.md)把未知未来用途、更正传播与原生操作的可观察边界接到现有实验。共享来源、family lineage 和实际交付证据；各自的 estimand、允许行动与研究结论保持独立。P1/P2 的独立出题流程和 operation map 是研究准备，不是新的自然语言模型结果。P3/P4/P6 保留各自设计，Relata 的人与互动研究独立进行；参数学习、cache 与跨模型 KV 研究也不以关系应用为前提。
+
+该准备包、当前研究案头／作者接续与索引演算变化位于 PR #8 研究分支，未由此合入 main 或部署。Relata 的固定 capture reader 后续另有具名执行包；既有 scripted/oracle 矩阵不冒充真实语义能力。
 
 ## 研究怎样生长
 
@@ -53,6 +61,26 @@ node tools/export_study.cjs --kind question --id experience-to-capability --form
 
 读到一半，可以在详情页写一段自己的接续笔记，主动下载 JSON，之后从首页“打开接续文件”恢复公开对象、章节位置和支持的演算状态。笔记只在页面内存与自己保存的文件里；刷新前未下载的修改会丢失。导入不执行文件中的文字，也不加载任意 URL。它不是在线批注、账号服务或云同步。
 
+研究案头把多份文章、来源、问题和判断组织成一次工作：选材、对读、带来源版本的摘录／批注、自己的问题与解释、回正文核对和整组保存相连。详情中的双向显式引用可以继续阅读和选材；修订检查范围保留引用路径，不把引用当作论证依赖。案头可以逐字段查看保存时与当前的内容；确认当前正文不会改写旧摘录的来源。
+
+私人案头 JSON 先预览再打开，编辑、选材、摘录和导入共享有限撤销／重做。案头最多 24 个对象、每对象 12 条摘录、文件最多 2 MiB，仅在页面内存与用户主动保存的文件中。新文件使用 `ams-workspace/2`，仍兼读旧版案头；单篇接续继续可用，两者共享笔记状态。刷新前请保存文件，历史与离开提示都不替代备份。
+
+案头达到容量上限时，无法自动记下的新阅读位置会明确提示，原有工作保留；仍可离开正文、下载单篇接续或保存已接受的案头。
+
+“公开选材包”只导出选定的当前公开对象，案头名称、问题、私人笔记、摘录记录／用途／批注和旧快照不会混入。机器也能沿同源出口取用：
+
+```bash
+node tools/export_study.cjs --select study:retrieval-and-relevance \
+  --select study:what-an-index-learns --format markdown
+node tools/export_study.cjs --workspace /path/to/ams-workspace.json --format json
+```
+
+索引演算的分布、插入状态、维护方式与查找键可以随单篇接续或案头 JSON 恢复，也保留在公开演算 URL 中。这里只能选择固定教学数据与有限整数键；个人笔记继续留在文件内。无 JavaScript 页面保留默认图解、结果与逐键表，移除操作控件。
+
+私人案头也能经 `tools/author.py draft-from-workspace` 整理成 repo 外的 draft，保留问题、推敲、摘录与来源限制；不会自动发表或把选材升级为支持关系。作者影响检查 `impact ID --kind study` 与网页共享显式引用图，并从当前 canonical 编译，列出直接／间接检查路径。命令与正式采用步骤见[作者指南](docs/authoring.md)。
+
+[案头使用说明](docs/study-workspace.md)记录完整使用、恢复和公私导出边界；[研究系统与建设方向](docs/research-system.md)说明这些能力如何服务 thesis，以及仍需继续的内容、研究连接与可靠性交付。
+
 已有实践 brief 仍可独立取用：
 
 ```bash
@@ -86,7 +114,35 @@ python3 -B tools/seo_build.py
 python3 -B tools/test_static_reader.py
 ```
 
-构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、星图与三维研究体共用的身份／引用关系、领域布局，以及既有五组确定性研究和一组 stdlib 分类器学习／纠正实验；另检查 AgeMem、C2C、Jev 已保存 receipts。它不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
+构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、原创索引演算的拟合／校准／查找与回退、星图与三维研究体共用的身份／引用关系、领域布局，以及既有五组确定性研究和一组 stdlib 分类器学习／纠正实验；另检查表示与修订传播的离线执行合同、casebook 的内容／rubric 绑定和 AgeMem、C2C、Jev 已保存 receipts。修订传播的完整运行与 raw replay 使用其目录命令；统一入口中的 compact summary 检查不能替代它。验证不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
+
+表示执行器保存实际请求、送达材料、原始回答与评分身份，支持 dry-run、续跑和离线重放检查。
+运行文件完整写入后才原子发布，已有文件不覆写；中断尝试保留证据，续跑另建 attempt。
+已正式发布的文件若损坏则拒绝验收，不能把损坏悄悄当作未执行。
+诊断预算的单位与 tokenizer 身份必须随结果保存；离线计数不能冒充实际模型 token。
+完整自然语言效果比较仍待执行。人工校准使用[离线 casebook](research/multilingual-use-policy/README.md)：
+`ams-memory-reviews/2` 将审阅绑定到材料内容和 rubric；旧 sidecar 或材料变更须显式
+`rebind-reviews` 到新文件，保留旧审阅并重新确认，不能凭同一 case ID 沿用 confirmed。
+
+[修订传播执行器](research/revision-propagation-study/README.md)进一步把 canonical、index、summary、context 和后续写回拆开观察。各分支从同一修订前检查点出发，按预先固定的任务与同步调度演进；第 1、3、10 个后续任务分别检查应改、应保留、范围外与合法历史查询。单层干预后产生的输出属于该分支自己的后续历史，不能再把它与其他分支匹配成相同输入。这里使用 typed synthetic events 与 scripted policies；规则能消费正确标签，不表示语言模型能从对话中识别这些标签。删除消融也不构成隐私删除保证。
+
+离线执行把材料生成、消费者和评价分开；图中的普通消费者只读取最终送达材料：
+
+```mermaid
+flowchart LR
+  E[原创事件家族] --> W[固定表示 writer]
+  W --> D[排序与预算后的实际输入]
+  D --> R[Scripted 消费者]
+  R --> O[原始回答]
+  E --> G[可执行 gold]
+  G -->|额外信息| Q[Oracle 对照]
+  D --> Q
+  Q --> O
+  G --> S[独立评分]
+  O --> S
+  D --> A[绑定 request / response / score]
+  S --> A
+```
 
 ## 发布、隐私与来源
 
@@ -98,7 +154,7 @@ python3 -B tools/test_static_reader.py
 
 Newsreader、Noto Serif SC 与 Instrument Sans 的 OFL 字体子集由本站提供；图形用 SVG / WebGL 与数学代码绘制。字体来源、修改范围和重建方法见 [字体说明](assets/fonts/README.md)。
 
-站点没有账号或访客档案。个人接续文字不上传、不写 URL 或 localStorage。书架搜索、阅读分组筛选和公开演算状态会进入可分享 URL 与浏览器历史，直接加载／刷新时 URL 会发送给托管服务；不要把私人内容输入公开搜索。既有 Cloudflare Web Analytics aggregate beacon 是唯一 analytics，不使用 cookie 或 localStorage 识别访客，无 custom events；它不记录 query string。外部来源链接在你打开时访问相应网站。构建与浏览器验收拦截非本机请求。
+站点没有账号或访客档案。个人接续与研究案头文字不上传、不写 URL 或 localStorage，案头搜索也只在页面内存。书架搜索、阅读分组筛选和公开演算状态会进入可分享 URL 与浏览器历史，直接加载／刷新时 URL 会发送给托管服务；不要把私人内容输入公开搜索。既有 Cloudflare Web Analytics aggregate beacon 是唯一 analytics，不使用 cookie 或 localStorage 识别访客，无 custom events；它不记录 query string。外部来源链接在你打开时访问相应网站。构建与浏览器验收拦截非本机请求。
 
 来源札记明确区分原文主张、作者报告、AMS 观察与编辑推论，`noteDepth` 只表示来源阅读范围。未执行协议、教学例子、确定性实验、固定源码 receipts 与实际模型研究各自标明边界；不因文章变成熟或页面重做而提升结论。
 

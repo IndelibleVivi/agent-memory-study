@@ -2,9 +2,9 @@
   "id": "retrieval-and-relevance",
   "title": "找到一样的，还是找到相关的？",
   "kind": "learning-note",
-  "date": "2026-10-18",
+  "date": "2026-10-25",
   "byline": "Agent Memory Study editors",
-  "intro": "从 jieba、BM25、BGE-M3 出发，用两个 recall 的集合演算理解匹配与相关性的差距。",
+  "intro": "从 jieba、BM25、BGE-M3 的操作区别出发，推导加权词项匹配与混合排序的能力边界，再用两个 recall 理解匹配与相关性的差距。",
   "subtitle": "基础学习 · 八个文档标识与两种评价对象",
   "number": "11",
   "bodyFile": "entries/retrieval-and-relevance.md",
@@ -23,9 +23,9 @@
       "label": "jieba 官方 README",
       "url": "https://github.com/fxsjy/jieba",
       "kind": "官方资料",
-      "locator": "Features 与 Algorithm 的分词说明",
+      "locator": "2026-10-25 回查 README 的特点、算法及 jieba.cut / cut_for_search 说明。",
       "takeaway": "分词确定后续处理所用的文本单位。",
-      "limit": "阅读范围见定位；未运行相关软件或模型。"
+      "limit": "核对官方功能与分词模式说明，未实际调用 jieba；后文手工词项不冒充其分词输出。"
     },
     {
       "label": "Okapi BM25: a non-binary model",
@@ -39,9 +39,9 @@
       "label": "BGE-M3 documentation",
       "url": "https://bge-model.com/bge/bge_m3.html",
       "kind": "官方资料",
-      "locator": "Dense / Sparse / Multi-Vector 与 hybrid 说明",
-      "takeaway": "同一模型提供多种检索表示，机制不宜按词项/神经简单二分。",
-      "limit": "阅读范围见定位；未运行相关软件或模型。"
+      "locator": "2026-10-25 回查官方文档 Multi-Functionality 下的 Dense Retrieval、Sparse Retrieval、Multi-Vector 与 Hybrid Ranking 定义和打分式。",
+      "takeaway": "词项交集与学习权重属于不同维度；多向量匹配与分数组合又改变不同操作，可据此逐层定位排序限制。",
+      "limit": "本轮核对官方打分结构，未运行 BGE-M3、tokenizer、训练或效果评价。三文档、权重、dense 分数及相关性均为 AMS 原创设定；区间推导只约束声明的凸组合。"
     },
     {
       "label": "Faiss documentation",
@@ -68,9 +68,13 @@
     {
       "title": "同时改善是可能的",
       "text": "固定 k 和相关集合，找回更多相关对象可以同时改善 precision 与 recall。"
+    },
+    {
+      "title": "先定位能改变结果的操作",
+      "text": "固定分数后，某些排序要求超出所选凸组合的表达范围；丢在候选层的对象也无法由集合内重排找回。先区分这两种限制，再选择调权、改排序或改变候选范围。"
     }
   ],
-  "boundary": "a–h、排序与相关集合均为原创教学设定；只计算集合比例，没有运行 embedding、ANN、BM25 或 BGE-M3。",
+  "boundary": "a–h 集合、三文档、词项权重、dense 分数、相关性及排序条件均为原创教学设定和公式推导；只核对定义与算术，没有运行 embedding、ANN、BM25、BGE-M3 或检索 benchmark。",
   "exercise": "retrieval-sets",
   "continuation": {
     "question": "训练正负例中的相关性，与当前的信息需求有什么差异？",
@@ -80,5 +84,13 @@
       "what-an-index-learns"
     ],
     "materialIds": []
-  }
+  },
+  "changes": [
+    {
+      "date": "2026-10-25",
+      "before": "以几个名字和两个 recall 区分匹配与相关性，尚未展开词项权重与分数组合能够表达的排序。",
+      "after": "从共有单位、学习权重、凸组合条件与候选范围逐层推导；固定分数反例与邻近可行例一起说明条件如何改变。",
+      "basis": "回查 jieba 与 BGE-M3 官方说明；新增三文档和全部数值由 AMS 明确设定，区间与分数以有理数算术核对。未升级成真实模型结果。"
+    }
+  ]
 }

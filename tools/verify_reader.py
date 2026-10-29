@@ -22,7 +22,12 @@ def main():
          'tools.test_practice_data'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s',
          'research/multilingual-use-policy', '-p', 'test_casebook.py'])
-    run(['node', '--test', 'tools/test_research_map.cjs', 'tools/test_research_sculpture.cjs', 'tools/test_study_packets.cjs', 'tools/test_study_desk.cjs', 'tools/test_revision_study.cjs',
+    run([python, '-B', '-m', 'unittest', 'discover', '-s',
+         'research/representation-use-study', '-p', 'test_*.py'])
+    run([python, '-B', '-m', 'unittest', 'discover', '-s',
+         'research/revision-propagation-study', '-p', 'test_*.py'])
+    run([python, '-B', 'research/revision-propagation-study/study.py', 'check-sample'])
+    run(['node', '--test', 'tools/test_research_map.cjs', 'tools/test_research_sculpture.cjs', 'tools/test_study_packets.cjs', 'tools/test_study_desk.cjs', 'tools/test_index_study.cjs', 'tools/test_export_study.cjs', 'tools/test_revision_study.cjs',
          'tools/test_reading_search.cjs', 'tools/test_practice.cjs', 'tools/test_seo.cjs'])
     for study, runner in [('trustmem-transition-study', 'audit.py'),
                           ('experience-reuse-retrieval-study', 'study.py'),
@@ -40,7 +45,7 @@ def main():
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/c2c-cache-retraction-study', '-p', 'test_*.py'])
     run([python, '-B', 'research/jev-memory-contract-study/study.py', '--verify-checked'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/jev-memory-contract-study', '-p', 'test_*.py'])
-    print('PASS: reader contracts, generated data, five deterministic studies, synthetic classifier refits and checked AgeMem/C2C/Jev receipts')
+    print('PASS: reader contracts, generated data, source-aware workspaces/public collections, shared references/author drafts, bound reviews, offline representation/revision controls, five deterministic studies, synthetic classifier refits and checked AgeMem/C2C/Jev receipts')
 
 
 if __name__ == '__main__':
