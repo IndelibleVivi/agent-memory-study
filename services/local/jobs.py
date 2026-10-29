@@ -159,7 +159,10 @@ class JobManager:
             (work/'plan.json').write_text(encoded(plan));(work/'status.log').write_text('preparing\n')
             argv=[sys.executable,'-B','-m','services.local.studies','--project',str(self.project),'--work',str(work),'--plan',str(work/'plan.json')]
             if source:argv+=['--source',str(source)]
-            env={'PATH':os.defpath,'PYTHONPATH':str(self.project),'PYTHONIOENCODING':'utf-8'}
+            # Keep the parent's selected runtime libraries (not provider credentials).
+            # Otherwise Linux workers can silently load a different SQLite build.
+            env={key:os.environ[key] for key in ('LD_LIBRARY_PATH','DYLD_LIBRARY_PATH','DYLD_FALLBACK_LIBRARY_PATH') if key in os.environ}
+            env.update({'PATH':os.defpath,'PYTHONPATH':str(self.project),'PYTHONIOENCODING':'utf-8'})
             self.process=subprocess.Popen(argv,cwd=self.project,env=env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,start_new_session=True)
             process=self.process
             deadline=time.monotonic()+3

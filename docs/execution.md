@@ -24,6 +24,8 @@ manager.close()
 
 异步状态为queued/preparing/running/succeeded/failed/cancelled/interrupted/indeterminate/blocked，另有cancel-requested过渡。submit幂等键同payload返回同job，不同payload拒绝；retry必须新幂等键，在同job下保留新attempt。实例持有OS排他lease，不能两个manager同时控制同data root。新实例取得lease后，把前实例未完成的本地执行标interrupted；外部提交未知标indeterminate且禁止自动重试。本registry不执行外部provider。
 
+原生子进程只继承执行所需的固定 PATH / Python 配置与宿主的 `LD_LIBRARY_PATH`、`DYLD_LIBRARY_PATH`、`DYLD_FALLBACK_LIBRARY_PATH`。这些路径保持父子进程使用同一套 runtime 库，避免 SQLite 版本在执行与 replay 间漂移；其他环境变量（包括 provider 凭据）不自动传入。
+
 关闭tab不终止任务；服务shutdown必须先manager.close，再repo.close。close终止本owner子进程组并等待cleanup。取消在确认进程退出后才终态cancelled；超时或服务退出保留partial文件，不伪造成功receipt。日志默认只记服务端状态，不复制研究prompt/secret；stdout/stderr不公开，结果保留原生研究内容。非零退出、result缺失/损坏、run后native核验失败都不得标成功。
 
 ## 能力矩阵与限制

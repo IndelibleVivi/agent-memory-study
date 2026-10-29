@@ -8,6 +8,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 from services.local.repository import Repository, RepositoryError, restore
 from services.local.jobs import JobManager,TERMINAL
 
@@ -36,6 +37,15 @@ class JobsTests(unittest.TestCase):
         done=self.wait(j['id']);self.assertEqual(done['state'],'succeeded')
         self.assertEqual(done['result']['result']['result']['word'],['prepare','inspect'])
         self.assertEqual(len(done['attempts']),1)
+    def test_child_keeps_runtime_libraries_without_inheriting_credentials(self):
+        library=os.pathsep.join(filter(None,[os.environ.get('LD_LIBRARY_PATH'),str(Path(self.tmp.name)/'runtime-libraries')]))
+        with patch.dict(os.environ,{'LD_LIBRARY_PATH':library,'AMS_SYNTHETIC_PRIVATE_TOKEN':'must-not-reach-child'}):
+            with patch('services.local.jobs.subprocess.Popen',wraps=subprocess.Popen) as spawn:
+                done=self.wait(self.manager.submit(P8,idempotency_key='runtime-env')['id'])
+                self.assertEqual(done['state'],'succeeded')
+                child=next(call.kwargs for call in spawn.call_args_list if 'env' in call.kwargs)
+        self.assertEqual(child['env']['LD_LIBRARY_PATH'],library)
+        self.assertNotIn('AMS_SYNTHETIC_PRIVATE_TOKEN',child['env'])
     def test_real_p9_and_owned_replay(self):
         j=self.wait(self.manager.submit(P9,idempotency_key='run')['id']);self.assertEqual(j['state'],'succeeded')
         e=self.manager.evidence(j['id']);self.assertEqual(len(e['stages']),2)

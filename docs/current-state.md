@@ -10,4 +10,4 @@
 
 2026-10-30，本地统一 `verify_reader.py --browser` 通过：454 个 Python tests、134 个 Node tests，以及独立 public / static / local / casebook 浏览器流程；50 个阅读页面加 404，49 个对象正文。覆盖五种视口、200% 字号、10,000 项 metadata、三条完整研究接续与真实进程／备份恢复。检查使用原创合成材料和公开内容，不代表真人研究、provider 效果或作者的视觉接受。
 
-下一集成门是 Linux CI 与 PR 审查。发布状态只在实际发生后更新；部署流程见[网站运维](website.md)，备份与升级见[本地环境](local-workspace.md)。
+集成还需 PR 审查；Linux CI 以 PR 当前 head 的 checks 为准。发布状态只在实际发生后更新；部署流程见[网站运维](website.md)，备份与升级见[本地环境](local-workspace.md)。
