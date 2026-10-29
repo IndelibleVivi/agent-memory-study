@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:proactive-wake-anchor",
+  "revision": "rev:sha256:e7c864e33ff0a2d4f",
+  "state_revision": "rev:sha256:e7c864e33ff0a2d4f",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:proactive-wake-anchor",
+    "revision": "rev:work-sha256:e7c864e33ff0a2d4f"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2605.30152v1",
+    "source_locator": "https://arxiv.org/pdf/2605.30152v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "43e6d0b046b978d0f628393c480dc0c4b414619933fa41dfa4d2b60bc7380202",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

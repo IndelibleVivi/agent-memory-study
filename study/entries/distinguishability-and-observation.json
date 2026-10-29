@@ -1,0 +1,15 @@
+{
+  "id": "distinguishability-and-observation",
+  "title": "观察相同以后，还能怎样把机制分开？",
+  "kind": "research-essay",
+  "date": "2026-10-29",
+  "byline": "Agent Memory Study editors",
+  "intro": "从完整观察类的答案兼容性出发，用三个有限机制家族区分目标碰撞、允许行动产生的差异，以及在界内尚未找到与声明模型内不可分；实际枚举不涉及模型或经验样本。",
+  "subtitle": "观察合同、全局答案交集与最短区分行动的有限研究",
+  "bodyFile": "entries/distinguishability-and-observation.md",
+  "domains": ["representation", "memory", "evaluation"],
+  "directionIds": ["forms", "change"],
+  "readings": [],
+  "externalReadings": [],
+  "boundary": "AMS 编者原创有限确定性构造；13 个模型、三个主家族与一个全交控制家族。经验样本数为 0。搜索只接 plant，不接目标或答案合同；精确结论限定于声明转移、可见信息、允许动作、成本与界。无理论首创、真实模型机制识别或人类理解收益主张。"
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:midca-dual-cycle",
+  "revision": "rev:work-sha256:368b1148807ef3f64",
+  "state_revision": "rev:work-sha256:368b1148807ef3f64",
+  "title": "MIDCA: a metacognitive, integrated dual-cycle architecture for self-regulated autonomy",
+  "work_type": "paper",
+  "authors": [
+    "Michael Cox",
+    "Zohreh Alavi",
+    "Dustin Dannenhauer",
+    "Vahid Eyorokon",
+    "Hector Munoz-Avila",
+    "Don Perlis"
+  ],
+  "year": 2016,
+  "short_author": "Cox 等",
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.1609/aaai.v30i1.9886",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "url",
+      "value": "https://ojs.aaai.org/index.php/AAAI/article/view/9886",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://ojs.aaai.org/index.php/AAAI/article/view/9886",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://ojs.aaai.org/index.php/AAAI/article/view/9886/9745",
+      "delivery": "official-link",
+      "original_locator": "https://ojs.aaai.org/index.php/AAAI/article/view/9886/9745"
+    }
+  ],
+  "aliases": [
+    "midca-dual-cycle"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "836f45d7cc01a677990a4f9b27c8750cd274f37986596e01ce7d7b37aa39a4bc",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

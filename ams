@@ -1,0 +1,5 @@
+#!/usr/bin/env python3
+"""Run with the project's supported Python environment, with no package install."""
+from services.local.cli import main
+
+raise SystemExit(main())

@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:statefuse-conflict-preserving-memory",
+  "revision": "rev:sha256:ae013071e2d5b4c39",
+  "state_revision": "rev:sha256:ae013071e2d5b4c39",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:statefuse-conflict-preserving-memory",
+    "revision": "rev:work-sha256:ae013071e2d5b4c39"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2607.05844v1",
+    "source_locator": "https://arxiv.org/abs/2607.05844v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "921b91e7c80757fefc0b97b3b8c688fd49caf53125127c44580c5b2e29dfc6a3",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

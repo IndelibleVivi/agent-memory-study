@@ -1,0 +1,61 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:truth-maintenance-system",
+  "revision": "rev:work-sha256:abb4561fdbe7c2e4c",
+  "state_revision": "rev:work-sha256:abb4561fdbe7c2e4c",
+  "title": "A truth maintenance system",
+  "work_type": "paper",
+  "authors": [
+    "Jon Doyle"
+  ],
+  "year": 1979,
+  "short_author": "Doyle",
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.1016/0004-3702(79)90008-0",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "url",
+      "value": "https://hdl.handle.net/1721.1/5733",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://hdl.handle.net/1721.1/5733",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://dspace.mit.edu/server/api/core/bitstreams/4fdf6aa2-170b-45e6-ae88-8f10d61e1c6d/content",
+      "delivery": "official-link",
+      "original_locator": "https://dspace.mit.edu/server/api/core/bitstreams/4fdf6aa2-170b-45e6-ae88-8f10d61e1c6d/content"
+    }
+  ],
+  "aliases": [
+    "truth-maintenance-system"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "6ea614992b68a74b7540adfd81af9202f28cbd8f58e018bf751ea90d5d5c8ac0",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

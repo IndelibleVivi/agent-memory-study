@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:pain-axis",
+  "revision": "rev:sha256:696f4b975d571611e",
+  "state_revision": "rev:sha256:696f4b975d571611e",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:pain-axis",
+    "revision": "rev:work-sha256:696f4b975d571611e"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2609.16247v1",
+    "source_locator": "https://arxiv.org/abs/2609.16247v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "bdcc6cf914221657e21de9eb574775b29c62cc061334b65764087f24a09b3b21",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

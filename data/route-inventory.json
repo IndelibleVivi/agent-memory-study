@@ -1,0 +1,63 @@
+{
+  "schema": "ams-route-inventory/1",
+  "home": "/",
+  "material": [
+    "/material/a-tma-state-aware-memory/",
+    "/material/trustmem-consolidation/",
+    "/material/verifiable-memory/",
+    "/material/mosaic-long-term-memory/",
+    "/material/proactive-wake-anchor/",
+    "/material/pm-bench/",
+    "/material/mistake-notebook-learning/",
+    "/material/coala-cognitive-architecture/",
+    "/material/storage-to-experience/",
+    "/material/continual-learning-experience-reuse/",
+    "/material/agentic-memory/",
+    "/material/midca-dual-cycle/",
+    "/material/truth-maintenance-system/",
+    "/material/agm-theory-change/",
+    "/material/memory-beyond-recall/",
+    "/material/insightemb-action-intent-retrieval/",
+    "/material/longmemeval-v2-experienced-colleague/",
+    "/material/statefuse-conflict-preserving-memory/",
+    "/material/fluctlightdb-observation-binding/",
+    "/material/memora-from-recall-to-forgetting/",
+    "/material/memprobe-hidden-user-state-recovery/",
+    "/material/useful-memories-become-faulty/",
+    "/material/recuris-memory-evolution/",
+    "/material/cache-to-cache/",
+    "/material/cross-model-kv-prefill-reuse/",
+    "/material/pain-axis/",
+    "/material/jev-mem-system-one-control/"
+  ],
+  "study": [
+    "/study/after-a-correction/",
+    "/study/experience-becomes-policy/",
+    "/study/who-controls-memory/",
+    "/study/representation-and-use/",
+    "/study/change-and-continuity/",
+    "/study/forms-of-experience/",
+    "/study/records-representations-systems/",
+    "/study/relevance-in-context/",
+    "/study/future-questions-and-memory/",
+    "/study/ams-thesis/",
+    "/study/how-we-study/",
+    "/study/retrieval-and-relevance/",
+    "/study/what-an-index-learns/",
+    "/study/conditional-information-and-use/",
+    "/study/distinguishability-and-observation/"
+  ],
+  "question": [
+    "/question/experience-to-capability/",
+    "/question/experience-becomes-policy/"
+  ],
+  "finding": [
+    "/finding/retrieval-candidate-competition/",
+    "/finding/revision-needs-scope/",
+    "/finding/retraction-needs-recomputation/",
+    "/finding/correction-needs-retention-checks/",
+    "/finding/output-guard-is-not-unlearning/"
+  ],
+  "object_count": 49,
+  "page_count": 50
+}

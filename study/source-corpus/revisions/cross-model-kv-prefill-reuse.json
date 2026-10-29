@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:cross-model-kv-prefill-reuse",
+  "revision": "rev:sha256:89527263ef5be2f8d",
+  "state_revision": "rev:sha256:89527263ef5be2f8d",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:cross-model-kv-prefill-reuse",
+    "revision": "rev:work-sha256:89527263ef5be2f8d"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2608.03893v1",
+    "source_locator": "https://arxiv.org/abs/2608.03893v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "1999f4cd9b80353fce4b605390090623d8c94ba2ce12b18cff3fd16735f2244e",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

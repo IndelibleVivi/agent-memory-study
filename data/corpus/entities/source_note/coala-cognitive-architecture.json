@@ -1,0 +1,80 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_note",
+  "id": "note:coala-cognitive-architecture",
+  "revision": "rev:note-sha256:f3bbf0987f273e0a9",
+  "state_revision": "rev:note-sha256:f3bbf0987f273e0a9",
+  "alias": "coala-cognitive-architecture",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:coala-cognitive-architecture",
+    "revision": "rev:work-sha256:f3bbf0987f273e0a9"
+  },
+  "source_revision_ref": {
+    "kind": "source_revision",
+    "id": "work:coala-cognitive-architecture",
+    "revision": "rev:sha256:f3bbf0987f273e0a9"
+  },
+  "title": "Cognitive architectures for language agents",
+  "byline": "Agent Memory Study editors",
+  "date": "2026-09-08",
+  "intro": "用 memory modules、structured action space 与 repeated decision cycle 为 language agent 提供一套组件语言。",
+  "note_depth": "skim",
+  "reading_scope": "Abstract、§3–§4、§6–§8；case studies 仅用于理解框架，未逐个通读。",
+  "navigation": {
+    "categories": [
+      "记忆架构"
+    ],
+    "failure_surfaces": [
+      "retrieval-active-context",
+      "abstraction-experience"
+    ],
+    "domains": []
+  },
+  "payload": {
+    "number": 8,
+    "id": "coala-cognitive-architecture",
+    "kind": "paper",
+    "doi": null,
+    "keyPoints": [
+      "CoALA 把 agent 拆成 memory modules、structured action space 与 repeated decision cycle；external actions 负责 grounding，internal actions 包括 retrieval、reasoning 与 learning。（§4）",
+      "memory 分为 working、episodic、semantic 与 procedural；working memory 是跨多次 LLM call 持续存在的数据结构，而非单个 prompt。（§4.1）",
+      "retrieval 从长期记忆读入 working memory，reasoning 在其中读写，learning 写回长期记忆；修改 procedural memory 被视为更高风险。（§4.3–§4.5）"
+    ],
+    "keywords": [
+      "cognitive architecture",
+      "memory modules",
+      "agent actions"
+    ],
+    "editorialQuestion": "框架主要用 controllability 与 coupling 划 internal/external boundary；如何加入 provenance、authority 与 reversibility，避免“可写”被误当成“有权写”？",
+    "sourceNote": "",
+    "designTransfer": {
+      "byline": "Agent Memory Study editors",
+      "date": "2026-09-08",
+      "when": "agent 的 prompt、缓存、工具操作与长期规则混在一起，难以说明某次调用读写了什么。",
+      "move": "用 working / episodic / semantic / procedural memory 和内外部 action 画出实际读写路径；在会修改长期规则的路径上标明谁能批准变化。",
+      "check": "沿一件真实但可匿名化的任务，逐次标出读取对象、写入对象和留下的状态；找出“数据可写”却没有清楚授权语义的地方。",
+      "boundary": "这是 skim 范围内的架构梳理建议，未测试效果。CoALA 提供组件语言，不直接提供适合你项目的 provenance 或授权实现。",
+      "basis": "既有札记 “关键抓手”：§§4.1、4.3–4.5；“继续追问”。",
+      "status": "proposed-not-run"
+    }
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "eacb0f92b4113242867d58522661611fcd8722602054eac1540375c3f2116cd0",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "alias",
+      "byline",
+      "date",
+      "intro",
+      "navigation",
+      "note_depth",
+      "payload",
+      "reading_scope",
+      "source_revision_ref",
+      "title",
+      "work_ref"
+    ]
+  }
+}

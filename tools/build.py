@@ -43,17 +43,16 @@ DISALLOWED_TRACKING_PATTERNS = (
 CLOUDFLARE_WEB_ANALYTICS_SRC = "https://static.cloudflareinsights.com/beacon.min.js"
 CLOUDFLARE_WEB_ANALYTICS_TOKEN = "4e0929eca0504d43aca1cc1a1f30ffaf"
 PUBLIC_COPY_PATHS = (
-    "index.html",
+    "apps/reader/site-config.json",
     "site.webmanifest",
-    "assets/app.js",
     "assets/seo.js",
     "assets/revision-study.js",
     "assets/reading-search.js",
     "assets/practice.js",
     "assets/study-packets.js",
     "assets/study-desk.js",
+    "assets/index-study.js",
     "assets/continuity-sculpture.js",
-    "assets/styles.css",
     "assets/materials-data.js",
     "data/materials.json",
     "README.md",
@@ -168,6 +167,9 @@ def public_copy_paths() -> list[Path]:
                 for path in sorted(root.rglob("*"))
                 if path.is_file() and path.suffix.lower() in suffixes
             )
+    paths.extend(sorted((ROOT / "apps/reader/src").glob("*.tsx")))
+    paths.extend(sorted((ROOT / "apps/reader/src").glob("*.ts")))
+    paths.extend(sorted((ROOT / "apps/reader/src").glob("*.css")))
     return paths
 
 
@@ -188,23 +190,12 @@ def validate_public_copy_files() -> None:
                     f"unapproved analytics or tracking token in {relative_path}: {match.group(0)!r}"
                 )
 
-    index_text = (ROOT / "index.html").read_text(encoding="utf-8")
-    beacon_pattern = re.compile(
-        r'<script\s+type="module"\s+'
-        rf'src="{re.escape(CLOUDFLARE_WEB_ANALYTICS_SRC)}"\s+'
-        rf'data-cf-beacon=\'\{{"token":"{CLOUDFLARE_WEB_ANALYTICS_TOKEN}"\}}\'>'
-        r'</script>'
-    )
-    if len(beacon_pattern.findall(index_text)) != 1:
-        raise ValueError("index.html must contain exactly one approved Cloudflare Web Analytics beacon")
-    if index_text.count("static.cloudflareinsights.com") != 1:
-        raise ValueError("index.html must not contain additional Cloudflare Insights scripts")
-    root_relative_asset = re.search(r"(?:src|href)=[\"']/[^/\"']", index_text)
-    if root_relative_asset:
-        raise ValueError(
-            "index.html uses a root-relative asset URL that will break on the GitHub Pages subpath: "
-            f"{root_relative_asset.group(0)!r}"
-        )
+    config = json.loads((ROOT / "apps/reader/site-config.json").read_text(encoding="utf-8"))
+    expected = {"source": CLOUDFLARE_WEB_ANALYTICS_SRC, "token": CLOUDFLARE_WEB_ANALYTICS_TOKEN, "host": "indeliblevivi.github.io"}
+    if config.get("analytics") != expected:
+        raise ValueError("Reader configuration must retain exactly the approved public aggregate beacon")
+    if config.get("site") != "https://indeliblevivi.github.io/agent-memory-study/":
+        raise ValueError("Public canonical site changed without a corresponding route contract")
 
 
 def validate_icon_assets() -> None:
@@ -231,11 +222,10 @@ def validate_icon_assets() -> None:
     if manifest_icons != MANIFEST_ICONS:
         raise ValueError("site.webmanifest icons differ from the public app-icon contract")
 
-    index_text = (ROOT / "index.html").read_text(encoding="utf-8")
+    config = json.loads((ROOT / "apps/reader/site-config.json").read_text(encoding="utf-8"))
     browser_icons = set(ICON_SIZES) - set(MANIFEST_ICONS)
-    missing_links = sorted(path for path in browser_icons if f'href="{path}"' not in index_text)
-    if missing_links:
-        raise ValueError(f"index.html does not link browser icons: {missing_links}")
+    if set(config.get("icons", [])) != browser_icons:
+        raise ValueError("Reader configuration does not link the complete browser icon family")
 
 
 def is_https_url(value: Any) -> bool:
@@ -737,7 +727,9 @@ def validate_data(data: dict[str, Any]) -> dict[str, Any]:
         assert_string_list(paper["authors"], f"{paper['id']}.authors")
         assert_string_list(paper["keyPoints"], f"{paper['id']}.keyPoints")
         assert_string_list(paper["categories"], f"{paper['id']}.categories")
-        assert_string_list(paper["failureSurfaces"], f"{paper['id']}.failureSurfaces")
+        assert_string_list(
+            paper["failureSurfaces"], f"{paper['id']}.failureSurfaces", allow_empty=True
+        )
         unknown_topics = set(paper["categories"]) - set(filters)
         if unknown_topics:
             raise ValueError(f"{paper['id']} has unknown topics: {sorted(unknown_topics)}")
@@ -1210,11 +1202,15 @@ def main() -> int:
     data = load_and_validate(args.data) if args.data else validate_data(content.compile_content(args.content))
     if args.check_drift:
         drift = content.check_projection(data, content.DATA_OUTPUT, args.js_output)
+        if "public_manifest" in data:
+            drift += content.check_public_corpus(data)
         if drift:
             raise SystemExit(
                 "; ".join(drift) + "\nRun python3 tools/build.py --write-json."
             )
     if not args.check_drift:
+        if "public_manifest" in data:
+            content.write_public_corpus(data)
         write_browser_data(data, args.js_output)
     if args.write_json and not args.check_drift:
         content.write_projection(data, content.DATA_OUTPUT)

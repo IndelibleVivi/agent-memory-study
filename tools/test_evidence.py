@@ -94,12 +94,12 @@ class EvidenceTests(unittest.TestCase):
         self.assertIn('57.85%', t)
         self.assertIn('Table 5', t)
 
-    def test_early_why_read_and_later_transfer_keep_stable_ids(self):
-        html = (build.ROOT / 'index.html').read_text()
-        self.assertLess(html.index('id="why-read-block"'), html.index('id="paper-problem"'))
-        self.assertGreater(html.index('id="paper-transfer"'), html.index('id="paper-findings"'))
-        self.assertIn('AMS audit · 本站复核与实验', html)
-        self.assertIn('Paper-reported findings', html)
+    def test_paper_reported_and_site_observed_evidence_keep_distinct_sections(self):
+        reader=(build.ROOT / 'apps/reader/src/content.tsx').read_text()
+        self.assertLess(reader.index('"paper-reading"'),reader.index('"paper-findings"'))
+        self.assertGreater(reader.index('id="paper-transfer"'),reader.index('"paper-findings"'))
+        self.assertIn('本站的已执行观察',reader)
+        self.assertIn('论文报告了什么',reader)
 
 
 if __name__ == '__main__':

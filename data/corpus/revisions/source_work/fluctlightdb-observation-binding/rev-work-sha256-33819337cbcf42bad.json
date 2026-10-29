@@ -1,0 +1,62 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:fluctlightdb-observation-binding",
+  "revision": "rev:work-sha256:33819337cbcf42bad",
+  "state_revision": "rev:work-sha256:33819337cbcf42bad",
+  "title": "FluctlightDB: A Memory Model of Data for AI Agents",
+  "work_type": "paper",
+  "authors": [
+    "Ganesh S"
+  ],
+  "year": 2026,
+  "short_author": "Ganesh S",
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.48550/arXiv.2608.12365",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2608.12365v1",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2608.12365v1",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://arxiv.org/pdf/2608.12365v1",
+      "delivery": "official-link",
+      "original_locator": "https://arxiv.org/pdf/2608.12365v1",
+      "access_note": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
+    }
+  ],
+  "aliases": [
+    "fluctlightdb-observation-binding"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "64a9b897797dd8169d4a0b573332b2b2b3757d8b6585ad9cb983c8d3a11965c9",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

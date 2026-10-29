@@ -1,0 +1,82 @@
+{
+  "schema": "ams-core/2",
+  "kind": "claim_revision",
+  "id": "claim:retrieval-candidate-competition",
+  "title": "旧经验还在，也可能失去被使用的机会",
+  "byline": "Agent Memory Study editors",
+  "payload": {
+    "id": "retrieval-candidate-competition",
+    "title": "旧经验还在，也可能失去被使用的机会",
+    "byline": "Agent Memory Study editors",
+    "updated": "2026-09-21",
+    "status": "proposed-transfer",
+    "questionIds": [
+      "experience-to-capability"
+    ],
+    "materialIds": [
+      "continual-learning-experience-reuse"
+    ],
+    "triggers": [
+      "重复",
+      "候选",
+      "挤占",
+      "占满",
+      "去重",
+      "检索",
+      "旧经验",
+      "duplicate",
+      "retrieval",
+      "top-k",
+      "candidate"
+    ],
+    "claim": "保存、进入候选、排进返回结果和进入 active context 是不同环节。有限返回名额可能被重复候选占满；只按 key 合并又可能丢掉不同的适用条件。",
+    "when": "候选池增长后，结果越来越相似，原本可用的经验却很难取到；或准备给记忆检索加去重时。",
+    "action": "先检查必要条目是否还在、是否进入候选、排名与最终 context。把“相同内容的重复”和“相同主题、不同条件的经验”分开，再选择去重粒度或检索组织。",
+    "avoid": "不要只凭 key 相同合并经验，也不要把返回条目命中当作任务成功。扩大 top-k 可能只推迟挤占发生。",
+    "validation": "在目标检索器固定查询与返回预算，分别加入完全重复、同义改写、无关增长和同 key 不同条件；保存候选排名与实际 context，再做任务完成与旧任务回测。",
+    "limit": "这是由有限反例支持的诊断建议。没有证明某个通用去重器、embedding retriever 或整个 memory 系统更好；目标侧收益待检验。",
+    "evidence": [
+      {
+        "label": "经验检索竞争：4 个原创场景、108 次 SQLite BM25 选择",
+        "url": "research/experience-reuse-retrieval-study/README.md",
+        "observation": "重复候选让必要清洗经验从第 2 位退到第 4、6 位；按 key 去重又会漏掉同 key 下上锁房间所需的方法。无关增长控制保持目标排名。",
+        "limit": "有限 synthetic witnesses；108 次选择共享四个场景。返回预算是记录条数，不是等 token 或等计算预算；没有运行 agent 任务。"
+      },
+      {
+        "label": "逐次排名与选择 receipt",
+        "url": "research/experience-reuse-retrieval-study/results.json",
+        "observation": "保存原始排名、各策略选择与 hit，允许逐场景检查。",
+        "limit": "同一组构造场景的详细记录，不是另一份独立证据。"
+      }
+    ],
+    "applications": [
+      {
+        "title": "AMS 的实践 brief：先决定什么占一个返回名额",
+        "status": "adopted",
+        "date": "2026-09-21",
+        "url": "docs/practice-brief-use.md",
+        "decision": "一个 finding 是一个候选，它的多份 evidence 不展开成多个候选；不同适用条件的 finding 保留独立 ID，不按标题或主题合并。",
+        "observation": "此决定已用于本次本地查询与导出实现；具体重复证据、同主题不同条件的合同由可运行测试检查。",
+        "limit": "工程采用记录。测试检查名额与候选行为，不证明真实开发效率、检索质量或 agent 能力得到提升。"
+      }
+    ]
+  },
+  "claim": "保存、进入候选、排进返回结果和进入 active context 是不同环节。有限返回名额可能被重复候选占满；只按 key 合并又可能丢掉不同的适用条件。",
+  "scope": "{\"avoid\": \"不要只凭 key 相同合并经验，也不要把返回条目命中当作任务成功。扩大 top-k 可能只推迟挤占发生。\", \"limit\": \"这是由有限反例支持的诊断建议。没有证明某个通用去重器、embedding retriever 或整个 memory 系统更好；目标侧收益待检验。\", \"when\": \"候选池增长后，结果越来越相似，原本可用的经验却很难取到；或准备给记忆检索加去重时。\"}",
+  "scope_binding": "Published editorial transfer; applicability remains the explicit when/avoid/limit text. No formal support is inferred.",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "8db79c5643424ce85923a95467e146dd19b95c9a062ae742988b9cf9346733bd",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "byline",
+      "claim",
+      "payload",
+      "scope",
+      "scope_binding",
+      "title"
+    ]
+  },
+  "revision": "rev:claim_revision-sha256:8db79c5643424ce85923a95467e146dd19b95c9a062ae742988b9cf9346733bd",
+  "state_revision": "rev:claim_revision-sha256:8db79c5643424ce85923a95467e146dd19b95c9a062ae742988b9cf9346733bd"
+}

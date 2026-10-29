@@ -1,0 +1,29 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:midca-dual-cycle",
+  "revision": "rev:sha256:368b1148807ef3f64",
+  "state_revision": "rev:sha256:368b1148807ef3f64",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:midca-dual-cycle",
+    "revision": "rev:work-sha256:368b1148807ef3f64"
+  },
+  "identity": {
+    "mode": "observed-snapshot",
+    "observed_at": null,
+    "source_locator": "https://ojs.aaai.org/index.php/AAAI/article/view/9886",
+    "observation_basis": "Legacy public locator does not prove a distinct publisher version; this is the reviewed source identity, not a stored byte snapshot.",
+    "publisher_version_known": false,
+    "snapshot_captured": false
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "c9ad9e7ac6269c8d42ecf20285264ece2dc6e1c2c0c7329a55f56bbec797f57f",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

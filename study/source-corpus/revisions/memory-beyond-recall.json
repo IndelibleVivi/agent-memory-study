@@ -1,0 +1,29 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:memory-beyond-recall",
+  "revision": "rev:sha256:6761bcb4571af223d",
+  "state_revision": "rev:sha256:6761bcb4571af223d",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:memory-beyond-recall",
+    "revision": "rev:work-sha256:6761bcb4571af223d"
+  },
+  "identity": {
+    "mode": "observed-snapshot",
+    "observed_at": null,
+    "source_locator": "https://arxiv.org/abs/2606.09483",
+    "observation_basis": "Legacy public locator does not prove a distinct publisher version; this is the reviewed source identity, not a stored byte snapshot.",
+    "publisher_version_known": false,
+    "snapshot_captured": false
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "28aaba65cdf38d199b5a87bfc19b3b17dfa772854a1ceab15e5b99e7d5cdf0cc",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

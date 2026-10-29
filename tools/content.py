@@ -21,9 +21,18 @@ from urllib.parse import urlparse, urlsplit, urlunsplit
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+try:
+    from tools import content_corpus, content_public
+except ModuleNotFoundError:  # Support `python3 tools/...` from the repo root.
+    import content_corpus
+    import content_public
+
 CONTENT_ROOT = ROOT / "study"
 DATA_OUTPUT = ROOT / "data" / "materials.json"
 JS_OUTPUT = ROOT / "assets" / "materials-data.js"
+PUBLIC_MANIFEST_OUTPUT = ROOT / "data" / "public-corpus.manifest.json"
+ROUTE_INVENTORY_OUTPUT = ROOT / "data" / "route-inventory.json"
 STUDY_KINDS = {
     "learning-note",
     "research-essay",
@@ -49,6 +58,9 @@ FORBIDDEN_SCHEME = re.compile(r"^(?:javascript|vbscript|file|data):", re.IGNOREC
 ROOM_FIELDS = {"heroTitle", "edition", "thesis", "intro", "invitation", "domains", "directions",
                "starts", "changes"}
 REFERENCE_FIELDS = ("studyIds", "questionIds", "materialIds")
+CONTRACT_VERSION = content_corpus.CONTRACT_VERSION
+COMPILER_VERSION = content_corpus.COMPILER_VERSION
+PUBLIC_MANIFEST_VERSION = content_corpus.PUBLIC_MANIFEST_VERSION
 PRIVATE_TEXT = (
     re.compile(r"/Users/"),
     re.compile(r"file://", re.IGNORECASE),
@@ -93,12 +105,70 @@ def _browser_bytes(data: dict[str, Any]) -> bytes:
 def write_projection(data: dict[str, Any], output: Path = DATA_OUTPUT) -> None:
     """Write one deterministic compatibility JSON projection."""
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_bytes(_json_bytes(data))
+    legacy = copy.deepcopy(data)
+    legacy.pop("corpus", None)
+    legacy.pop("public_manifest", None)
+    output.write_bytes(_json_bytes(legacy))
 
 
 def write_browser_projection(data: dict[str, Any], output: Path = JS_OUTPUT) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_bytes(_browser_bytes(data))
+    legacy = copy.deepcopy(data)
+    legacy.pop("corpus", None)
+    legacy.pop("public_manifest", None)
+    output.write_bytes(_browser_bytes(legacy))
+
+
+def write_public_corpus(data: dict[str, Any], root: Path = ROOT) -> list[str]:
+    from tools import content_public
+    manifest = copy.deepcopy(data["public_manifest"])
+    files = content_public.material_entity_files(data, manifest)
+    _include_public_history(root, files, manifest)
+    # Check every immutable address before changing any projection.
+    for relative, value in files.items():
+        target = root / relative
+        if relative.startswith("data/corpus/revisions/") and target.exists() and target.read_bytes() != _json_bytes(value):
+            raise ValueError(f"immutable public revision changed: {relative}; create a new revision")
+    for relative, value in files.items():
+        target = root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(_json_bytes(value))
+    (root / "data/public-corpus.manifest.json").write_bytes(_json_bytes(manifest))
+    inventory = {
+        "schema": "ams-route-inventory/1",
+        **manifest["routes"],
+        "object_count": len(manifest["objects"]),
+        "page_count": 1 + len(manifest["objects"]),
+    }
+    (root / "data/route-inventory.json").write_bytes(_json_bytes(inventory))
+    return sorted(files)
+
+
+def _include_public_history(root, files, manifest):
+    """Retain only previously indexed public snapshots, never arbitrary files."""
+    from schemas.validate import validate_graph
+    snapshots = {path: value for path, value in files.items() if path.startswith("data/corpus/revisions/")}
+    previous = root / "data/public-corpus.manifest.json"
+    if previous.is_file():
+        old = json.loads(previous.read_text(encoding="utf-8"))
+        if old.get("schema") != manifest["schema"] or not isinstance(old.get("record_shards"), list):
+            raise ValueError("previous public manifest has an unsupported contract")
+        directory = (root / "data/corpus/revisions").resolve()
+        allowed = {"source_work", "source_revision", "source_note", "entry", "inquiry", "claim_revision"}
+        for relative in old["record_shards"]:
+            if not isinstance(relative, str) or not relative.startswith("data/corpus/revisions/"):
+                raise ValueError("historical public snapshot path is outside the corpus")
+            path = (root / relative).resolve()
+            if not path.is_relative_to(directory):
+                raise ValueError("historical public snapshot path is outside the corpus")
+            if relative not in snapshots:
+                value = json.loads(path.read_text(encoding="utf-8"))
+                if value.get("kind") not in allowed or value.get("visibility", "public") != "public":
+                    raise ValueError("private or unsupported record in public snapshot history")
+                assert_public_content(value)
+                snapshots[relative] = value
+    validate_graph(list(snapshots.values()))
+    manifest["record_shards"] = sorted(snapshots)
 
 
 def _walk_strings(value: Any, where: str = "content"):
@@ -199,8 +269,11 @@ def _content_path(base: Path, relative: Any, where: str) -> Path:
     return candidate
 
 
-def _strict_markdown(source: str, where: str, *, source_path: str = "", link_map: dict[str, str] | None = None) -> tuple[str, str, list[dict[str, str]]]:
-    """Parse Markdown with maintained markdown-it-py; HTML is disabled."""
+def _strict_markdown(
+    source: str, where: str, *, source_path: str = "",
+    link_map: dict[str, str] | None = None,
+) -> tuple[str, str, list[dict[str, str]], dict[str, Any]]:
+    """Parse Markdown once; return legacy fields plus AST evidence."""
     try:
         from markdown_it import MarkdownIt
     except ModuleNotFoundError as exc:
@@ -260,7 +333,8 @@ def _strict_markdown(source: str, where: str, *, source_path: str = "", link_map
 
     parser.core.ruler.after("normalize", "ams_reject_html", reject_html)
     parser.core.ruler.after("linkify", "ams_safe_links", safe_links)
-    body_html = parser.render(normalized).strip()
+    tokens = parser.parse(normalized)
+    body_html = parser.renderer.render(tokens, parser.options, {}).strip()
     if not body_html:
         raise _error(where, "Markdown body is empty")
 
@@ -284,7 +358,41 @@ def _strict_markdown(source: str, where: str, *, source_path: str = "", link_map
         sections = [{"title": "正文", "text": normalized.strip()}]
     # A brief learning note need not have headings. Empty headings are harmless
     # to search and are not a reason to require a research template.
-    return normalized, body_html, sections
+    compiled_ast = _markdown_ast(tokens)
+    return normalized, body_html, sections, compiled_ast
+
+
+def _markdown_ast(tokens) -> dict[str, Any]:
+    anchors: list[dict[str, Any]] = []
+    references: list[dict[str, str]] = []
+    headings: list[dict[str, Any]] = []
+    current_heading = None
+    for index, token in enumerate(tokens):
+        if token.type == "heading_open":
+            label = ""
+            if index + 1 < len(tokens) and tokens[index + 1].type == "inline":
+                label = tokens[index + 1].content.strip()
+            anchor = f"section-{len(headings) + 1}"
+            current_heading = {"id": anchor, "label": label, "level": int(token.tag[1:])}
+            anchors.append(current_heading)
+            headings.append(current_heading)
+        if token.type == "inline":
+            for child in token.children or []:
+                if child.type != "link_open":
+                    continue
+                href = child.attrGet("href") or ""
+                match = re.match(r"^\?([a-z]+)=([a-z0-9-]+)(?:#(.*))?$", href)
+                if match and match.group(1) in {"study", "material", "question", "finding"}:
+                    references.append({
+                        "kind": {
+                            "study": "entry", "material": "source_note",
+                            "question": "thread", "finding": "claim_revision",
+                        }[match.group(1)],
+                        "id": match.group(2),
+                        "anchor": "#" + match.group(3) if match.group(3) else "",
+                        "heading": current_heading["id"] if current_heading else "",
+                    })
+    return {"anchors": anchors, "references": references}
 
 
 def _study_number(value: Any, where: str) -> str:
@@ -317,8 +425,8 @@ def _validate_optional_study_fields(study: dict[str, Any], material_ids: set[str
         for index, change in enumerate(changes):
             if not DATE.fullmatch(change["date"]):
                 raise _error(f"{where}.changes[{index}].date", "must be YYYY-MM-DD")
-    if "exercise" in study and study["exercise"] != "retrieval-sets":
-        raise _error(f"{where}.exercise", "currently supports only 'retrieval-sets'")
+    if "exercise" in study and study["exercise"] not in ("retrieval-sets", "ordered-index"):
+        raise _error(f"{where}.exercise", "supports 'retrieval-sets' or 'ordered-index'")
 
 
 def _optionally_empty_list(study: dict[str, Any], field: str, where: str) -> list[Any]:
@@ -408,7 +516,10 @@ def _validate_study(study: dict[str, Any], base: Path, material_ids: set[str],
 
     body_path = _content_path(base.parent, study["bodyFile"], f"{where}.bodyFile")
     body_source = body_path.read_text(encoding="utf-8")
-    body_markdown, body_html, sections = _strict_markdown(body_source, f"{where}.bodyFile", source_path="study/" + study["bodyFile"], link_map=link_map)
+    body_markdown, body_html, sections, ast = _strict_markdown(
+        body_source, f"{where}.bodyFile",
+        source_path="study/" + study["bodyFile"], link_map=link_map,
+    )
     compiled = copy.deepcopy(study)
     compiled.setdefault("readings", [])
     compiled.setdefault("externalReadings", [])
@@ -421,6 +532,7 @@ def _validate_study(study: dict[str, Any], base: Path, material_ids: set[str],
     compiled["bodyMarkdown"] = body_markdown
     compiled["bodyHtml"] = body_html
     compiled["sections"] = sections
+    compiled["ast"] = ast
     # bodyFile is a build input, not a deployed/public asset.
     compiled.pop("bodyFile", None)
     return compiled
@@ -556,6 +668,49 @@ def _ordered(items: list[dict[str, Any]], order_value: Any, order_key: str,
     return [by_id[item_id] for item_id in order] + tail
 
 
+def _material_aliases(corpus: dict[str, Any]) -> list[dict[str, Any]]:
+    """Project the Work + AMS Note combination into the old material view.
+
+    This is the only compatibility bridge. It is not an authored source shape
+    and is never copied back into the corpus.
+    """
+    materials: list[dict[str, Any]] = []
+    for alias, (work, revision, note) in corpus["by_alias"].items():
+        source_url = next(
+            (item["value"] for item in work["identifiers"] if item["role"] == "source-locator"),
+            None,
+        )
+        pdfs = [item for item in work["manifestations"] if item["media_type"] == "application/pdf"]
+        pdf = None
+        if pdfs:
+            item = pdfs[0]
+            pdf = {
+                "delivery": "bundled" if item["delivery"] == "bundled" else "official",
+                "url": item["locator"],
+            }
+            if item["delivery"] == "bundled":
+                pdf["originalUrl"] = item.get("original_locator", item["locator"])
+            if item.get("access_note"):
+                pdf["accessNote"] = item["access_note"]
+            if item.get("license"):
+                pdf["license"] = item["license"]
+            if item.get("license_url"):
+                pdf["licenseUrl"] = item["license_url"]
+        material = {
+            "id": alias, "title": work["title"], "authors": work["authors"],
+            "shortAuthor": work.get("short_author"),
+            "year": work["year"], "noteDepth": note["note_depth"],
+            "readingScope": note["reading_scope"], "intro": note["intro"],
+            "categories": note["navigation"].get("categories", []),
+            "failureSurfaces": note["navigation"].get("failure_surfaces", []),
+            "sourceUrl": source_url,
+            "pdf": pdf,
+        }
+        material.update(copy.deepcopy(note["payload"]))
+        materials.append(material)
+    return materials
+
+
 def compile_content(content_root: Path = CONTENT_ROOT) -> dict[str, Any]:
     """Compile authored content without writing generated projections."""
     catalog = _read_json(content_root / "catalog.json")
@@ -582,10 +737,13 @@ def compile_content(content_root: Path = CONTENT_ROOT) -> dict[str, Any]:
             records.append(record)
         return records
 
-    materials = load_family("sources")
+    corpus = content_corpus.load(content_root / "source-corpus")
+    materials = _material_aliases(corpus)
+    material_count = len(materials)
     studies = load_family("entries")
     questions = load_family("inquiries")
     findings = load_family("transfers")
+    materials = _ordered(materials, catalog["sourceOrder"], "sourceOrder", "source")
     material_by_id = _unique_records(materials, "material")
     question_by_id = _unique_records(questions, "question")
     finding_by_id = _unique_records(findings, "finding")
@@ -593,7 +751,6 @@ def compile_content(content_root: Path = CONTENT_ROOT) -> dict[str, Any]:
     material_ids, question_ids = set(material_by_id), set(question_by_id)
     finding_ids, study_ids = set(finding_by_id), set(study_by_id)
 
-    materials = _ordered(materials, catalog["sourceOrder"], "sourceOrder", "source")
     questions = _ordered(questions, catalog["inquiryOrder"], "inquiryOrder", "inquiry")
     findings = _ordered(findings, catalog["transferOrder"], "transferOrder", "transfer")
     studies = _ordered(studies, catalog["entryOrder"], "entryOrder", "entry")
@@ -642,6 +799,7 @@ def compile_content(content_root: Path = CONTENT_ROOT) -> dict[str, Any]:
         ],
         "questions": questions,
         "findings": findings,
+        "corpus": corpus,
     }
     for question in questions:
         _validate_question(question, material_ids, study_ids, finding_ids)
@@ -668,6 +826,7 @@ def compile_content(content_root: Path = CONTENT_ROOT) -> dict[str, Any]:
             known = {x["id"] for x in compiled["room"][collection]}
             for study in studies:
                 _ref_list(study.get(field, []), known, f"study {study['id']}.{field}")
+    compiled["public_manifest"] = content_public.build(compiled)
     assert_public_content(compiled)
     return compiled
 
@@ -676,9 +835,12 @@ def check_projection(data: dict[str, Any], json_output: Path = DATA_OUTPUT,
                      js_output: Path = JS_OUTPUT) -> list[str]:
     """Return descriptions of generated drift; never rewrite files."""
     drift = []
-    expected_json = _json_bytes(data)
+    legacy = copy.deepcopy(data)
+    legacy.pop("corpus", None)
+    legacy.pop("public_manifest", None)
+    expected_json = _json_bytes(legacy)
     from tools import build
-    expected_js = _browser_bytes(build.browser_projection(data))
+    expected_js = _browser_bytes(build.browser_projection(legacy))
     for path, expected in ((json_output, expected_json), (js_output, expected_js)):
         try:
             actual = path.read_bytes()
@@ -690,11 +852,35 @@ def check_projection(data: dict[str, Any], json_output: Path = DATA_OUTPUT,
     return drift
 
 
+def check_public_corpus(data: dict[str, Any], root: Path = ROOT) -> list[str]:
+    from tools import content_public
+    manifest = copy.deepcopy(data["public_manifest"])
+    expected = content_public.material_entity_files(data, manifest)
+    _include_public_history(root, expected, manifest)
+    expected["data/public-corpus.manifest.json"] = manifest
+    expected["data/route-inventory.json"] = {
+        "schema": "ams-route-inventory/1", **manifest["routes"],
+        "object_count": len(manifest["objects"]),
+        "page_count": 1 + len(manifest["objects"]),
+    }
+    drift = []
+    for relative, value in sorted(expected.items()):
+        path = root / relative
+        if not path.is_file():
+            drift.append(f"missing public corpus file: {relative}")
+        elif path.read_bytes() != _json_bytes(value):
+            drift.append(f"public corpus drift: {relative}")
+    return drift
+
+
 def write_all(data: dict[str, Any], *, json_output: Path = DATA_OUTPUT,
-              js_output: Path = JS_OUTPUT) -> None:
+              js_output: Path = JS_OUTPUT,
+              public_root: Path | None = None) -> None:
     write_projection(data, json_output)
     from tools import build
     write_browser_projection(build.browser_projection(data), js_output)
+    if public_root is not None:
+        write_public_corpus(data, public_root)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -711,6 +897,7 @@ def main(argv: list[str] | None = None) -> int:
         from tools import build
         data = build.validate_data(compile_content(args.content.resolve()))
         drift = check_projection(data, args.json_output, args.js_output)
+        drift += check_public_corpus(data)
         if args.check:
             if drift:
                 raise ContentError("; ".join(drift) +
@@ -719,6 +906,7 @@ def main(argv: list[str] | None = None) -> int:
             if args.write_json:
                 write_projection(data, args.json_output)
             write_browser_projection(build.browser_projection(data), args.js_output)
+            write_public_corpus(data)
         print(
             f"compiled {len(data['materials'])} materials, {len(data['studies'])} studies, "
             f"{len(data['questions'])} questions, {len(data['findings'])} findings"

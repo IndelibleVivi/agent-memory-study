@@ -1,0 +1,29 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:a-tma-state-aware-memory",
+  "revision": "rev:sha256:01b4dafafbe058dd2",
+  "state_revision": "rev:sha256:01b4dafafbe058dd2",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:a-tma-state-aware-memory",
+    "revision": "rev:work-sha256:01b4dafafbe058dd2"
+  },
+  "identity": {
+    "mode": "observed-snapshot",
+    "observed_at": null,
+    "source_locator": "https://arxiv.org/abs/2607.01935",
+    "observation_basis": "Legacy public locator does not prove a distinct publisher version; this is the reviewed source identity, not a stored byte snapshot.",
+    "publisher_version_known": false,
+    "snapshot_captured": false
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "cbe6b440f007a6e49073fb21c4f22f92865f6675fd249dc961acd4b461def6d5",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

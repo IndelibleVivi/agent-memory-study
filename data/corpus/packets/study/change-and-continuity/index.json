@@ -1,0 +1,126 @@
+{
+  "schema": "ams-study-packet/2",
+  "contract_version": "ams-core/2",
+  "compiler_version": "ams-content-compiler/2",
+  "kind": "study",
+  "id": "change-and-continuity",
+  "title": "系统怎样改变，同时保留值得继承的东西",
+  "entity_refs": [
+    {
+      "kind": "entry",
+      "id": "entry:change-and-continuity",
+      "revision": "rev:entry-sha256:0bdc8f0b28d6f9c52dd1a6a72353cbca59f685bac2965f39c5eadb183c995550"
+    }
+  ],
+  "attribution": {
+    "byline": "Agent Memory Study editors",
+    "date": "2026-10-18"
+  },
+  "content": {
+    "id": "change-and-continuity",
+    "title": "系统怎样改变，同时保留值得继承的东西",
+    "kind": "research-essay",
+    "date": "2026-10-18",
+    "byline": "Agent Memory Study editors",
+    "intro": "写入、修订、学习与撤回分别改变什么状态？哪些关系应该在更新之后继续成立？",
+    "subtitle": "长期方向 03 · 改变、依赖与保留",
+    "number": "09",
+    "domains": [
+      "data",
+      "memory",
+      "learning",
+      "control"
+    ],
+    "directionIds": [
+      "change"
+    ],
+    "readings": [],
+    "externalReadings": [],
+    "takeaways": [],
+    "boundary": "这是 AMS 的编者论述。来源、原创推演与既有研究的边界在正文分别说明；不包含私人共学记录或新的模型实验。",
+    "closing": "",
+    "sourcePath": "study/programme/directions/change-and-continuity.md",
+    "bodyMarkdown": "# 系统怎样改变，同时保留值得继承的东西\n\n新信息可以写进一条记录，修订一个信念，改变一次选择，也可以通过学习改变后续处理。这个方向关心变化作用于什么状态、沿哪些依赖传播，以及什么需要在变化之后继续成立。\n\n## 改变有不同的对象\n\n删除一条记录，改变的是记录集合；重新计算受它影响的状态，改变的是依赖它的结果；调整参数，改变的是某种输入到输出的映射。这些操作可能协同，也可能彼此留下未处理的影响。\n\nAMS 的[缓存撤回观察](../../../research/c2c-cache-retraction-study/README.md)在固定的单模型条件下追踪了来源与保留状态之间的依赖。它使“移除来源位置”和“重算派生影响”成为两个明确对象。这个结论不能自动迁移到数据库、文本摘要或参数遗忘；每一种迁移都需要重新建立依赖证据。\n\n## 更正同时提出两个要求\n\n一个系统收到“新版改用 B”，需要改变新版情境下的选择，也可能需要保持旧版情境下的 A。这样的要求可以通过规则、结构或学习实现。无论哪一种，都应该分别观察应该改变的范围与应该保持的范围。\n\n[一条更正之后](../../entries/after-a-correction.md)用给定的版本与来源条件比较规则。[经验怎样长成判断习惯](../../entries/experience-becomes-policy.md)进一步观察结构化分类器的学习和局部纠正。前者不能证明模型理解范围，后者不能证明自然语言任务获得了收益；它们已经让“更新以后看什么”变得更具体。\n\n## 保留怎样成为积极能力\n\n保留不只是防止回退。系统可能需要同时保存多个条件下成立的判断，识别何时应该调用哪一个，并在条件改变时调整作用范围。可靠的延续因此可能依赖可区分的状态，也可能依赖能够重新获得细节的外部记录。\n\n这个方向可以进入持续学习、模型编辑、信念修订、数据版本与时间语义。每个领域都有自己的问题：不能仅因为都谈“更新”，就把结构维护、推理规则与参数优化画成同一种算法。\n\n## 当前判断与未解处\n\n当前判断是：研究改变时，应同时指明变化对象、依赖范围和保留条件。它使多个机制可以在清楚边界下对读，也允许发现它们根本不在回答同一问题。\n\n下一问是：**一种更新规则怎样知道该把变化限制在哪里？** 既有固定标签实验把范围作为输入给定，留下了范围识别、冲突解释与反馈可靠性的问题。可以先研究这些前提如何形成，再决定需要哪种学习方法；无须为了得到新结果立刻扩大模型实验。\n",
+    "bodyHtml": "<h1>系统怎样改变，同时保留值得继承的东西</h1>\n<p>新信息可以写进一条记录，修订一个信念，改变一次选择，也可以通过学习改变后续处理。这个方向关心变化作用于什么状态、沿哪些依赖传播，以及什么需要在变化之后继续成立。</p>\n<h2>改变有不同的对象</h2>\n<p>删除一条记录，改变的是记录集合；重新计算受它影响的状态，改变的是依赖它的结果；调整参数，改变的是某种输入到输出的映射。这些操作可能协同，也可能彼此留下未处理的影响。</p>\n<p>AMS 的<a href=\"research/c2c-cache-retraction-study/README.md\" rel=\"noreferrer noopener\">缓存撤回观察</a>在固定的单模型条件下追踪了来源与保留状态之间的依赖。它使“移除来源位置”和“重算派生影响”成为两个明确对象。这个结论不能自动迁移到数据库、文本摘要或参数遗忘；每一种迁移都需要重新建立依赖证据。</p>\n<h2>更正同时提出两个要求</h2>\n<p>一个系统收到“新版改用 B”，需要改变新版情境下的选择，也可能需要保持旧版情境下的 A。这样的要求可以通过规则、结构或学习实现。无论哪一种，都应该分别观察应该改变的范围与应该保持的范围。</p>\n<p><a href=\"?study=after-a-correction\" rel=\"noreferrer noopener\">一条更正之后</a>用给定的版本与来源条件比较规则。<a href=\"?study=experience-becomes-policy\" rel=\"noreferrer noopener\">经验怎样长成判断习惯</a>进一步观察结构化分类器的学习和局部纠正。前者不能证明模型理解范围，后者不能证明自然语言任务获得了收益；它们已经让“更新以后看什么”变得更具体。</p>\n<h2>保留怎样成为积极能力</h2>\n<p>保留不只是防止回退。系统可能需要同时保存多个条件下成立的判断，识别何时应该调用哪一个，并在条件改变时调整作用范围。可靠的延续因此可能依赖可区分的状态，也可能依赖能够重新获得细节的外部记录。</p>\n<p>这个方向可以进入持续学习、模型编辑、信念修订、数据版本与时间语义。每个领域都有自己的问题：不能仅因为都谈“更新”，就把结构维护、推理规则与参数优化画成同一种算法。</p>\n<h2>当前判断与未解处</h2>\n<p>当前判断是：研究改变时，应同时指明变化对象、依赖范围和保留条件。它使多个机制可以在清楚边界下对读，也允许发现它们根本不在回答同一问题。</p>\n<p>下一问是：<strong>一种更新规则怎样知道该把变化限制在哪里？</strong> 既有固定标签实验把范围作为输入给定，留下了范围识别、冲突解释与反馈可靠性的问题。可以先研究这些前提如何形成，再决定需要哪种学习方法；无须为了得到新结果立刻扩大模型实验。</p>",
+    "sections": [
+      {
+        "title": "改变有不同的对象",
+        "text": "删除一条记录，改变的是记录集合；重新计算受它影响的状态，改变的是依赖它的结果；调整参数，改变的是某种输入到输出的映射。这些操作可能协同，也可能彼此留下未处理的影响。\n\nAMS 的[缓存撤回观察](../../../research/c2c-cache-retraction-study/README.md)在固定的单模型条件下追踪了来源与保留状态之间的依赖。它使“移除来源位置”和“重算派生影响”成为两个明确对象。这个结论不能自动迁移到数据库、文本摘要或参数遗忘；每一种迁移都需要重新建立依赖证据。"
+      },
+      {
+        "title": "更正同时提出两个要求",
+        "text": "一个系统收到“新版改用 B”，需要改变新版情境下的选择，也可能需要保持旧版情境下的 A。这样的要求可以通过规则、结构或学习实现。无论哪一种，都应该分别观察应该改变的范围与应该保持的范围。\n\n[一条更正之后](../../entries/after-a-correction.md)用给定的版本与来源条件比较规则。[经验怎样长成判断习惯](../../entries/experience-becomes-policy.md)进一步观察结构化分类器的学习和局部纠正。前者不能证明模型理解范围，后者不能证明自然语言任务获得了收益；它们已经让“更新以后看什么”变得更具体。"
+      },
+      {
+        "title": "保留怎样成为积极能力",
+        "text": "保留不只是防止回退。系统可能需要同时保存多个条件下成立的判断，识别何时应该调用哪一个，并在条件改变时调整作用范围。可靠的延续因此可能依赖可区分的状态，也可能依赖能够重新获得细节的外部记录。\n\n这个方向可以进入持续学习、模型编辑、信念修订、数据版本与时间语义。每个领域都有自己的问题：不能仅因为都谈“更新”，就把结构维护、推理规则与参数优化画成同一种算法。"
+      },
+      {
+        "title": "当前判断与未解处",
+        "text": "当前判断是：研究改变时，应同时指明变化对象、依赖范围和保留条件。它使多个机制可以在清楚边界下对读，也允许发现它们根本不在回答同一问题。\n\n下一问是：**一种更新规则怎样知道该把变化限制在哪里？** 既有固定标签实验把范围作为输入给定，留下了范围识别、冲突解释与反馈可靠性的问题。可以先研究这些前提如何形成，再决定需要哪种学习方法；无须为了得到新结果立刻扩大模型实验。"
+      }
+    ],
+    "ast": {
+      "anchors": [
+        {
+          "id": "section-1",
+          "label": "系统怎样改变，同时保留值得继承的东西",
+          "level": 1
+        },
+        {
+          "id": "section-2",
+          "label": "改变有不同的对象",
+          "level": 2
+        },
+        {
+          "id": "section-3",
+          "label": "更正同时提出两个要求",
+          "level": 2
+        },
+        {
+          "id": "section-4",
+          "label": "保留怎样成为积极能力",
+          "level": 2
+        },
+        {
+          "id": "section-5",
+          "label": "当前判断与未解处",
+          "level": 2
+        }
+      ],
+      "references": [
+        {
+          "kind": "entry",
+          "id": "after-a-correction",
+          "anchor": "",
+          "heading": "section-3"
+        },
+        {
+          "kind": "entry",
+          "id": "experience-becomes-policy",
+          "anchor": "",
+          "heading": "section-3"
+        }
+      ]
+    }
+  },
+  "manifest_policy": "Current public object plus bounded direct references; no linked full texts, private workflow, or inferred support.",
+  "manifest": [
+    {
+      "kind": "study",
+      "id": "after-a-correction",
+      "revision": "rev:entry-sha256:2e2b94a04b65c78eb8b2e3c0f545d07f58ac5598e6175ca26b7761071f6844a1",
+      "publicKind": "study",
+      "title": "一条更正之后",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/study/after-a-correction/"
+    },
+    {
+      "kind": "study",
+      "id": "experience-becomes-policy",
+      "revision": "rev:entry-sha256:cd193ffcfa26d2de6f6cf279e0181576c2e62cbb99a5329988302ff462d707df",
+      "publicKind": "study",
+      "title": "没有再读那段往事，它为什么还是改变了选择？",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/study/experience-becomes-policy/"
+    }
+  ]
+}

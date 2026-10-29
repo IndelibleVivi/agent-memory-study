@@ -8,6 +8,7 @@ import unittest
 from pathlib import Path
 
 from tools import content
+from tools.migrate_sources import migrate
 
 
 class MarkdownCompilerTests(unittest.TestCase):
@@ -33,7 +34,7 @@ class MarkdownCompilerTests(unittest.TestCase):
         "markdown-it-py not installed in this isolated test environment",
     )
     def test_markdown_renders_safe_https_links(self):
-        _, body_html, sections = content._strict_markdown(
+        _, body_html, sections, ast = content._strict_markdown(
             "# Title\n\n## Heading\n\nA [safe](https://example.org) body.\n",
             "fixture.md",
         )
@@ -42,17 +43,22 @@ class MarkdownCompilerTests(unittest.TestCase):
 
 
 def _fixture_catalog(root: Path) -> None:
-    (root / "sources").mkdir()
+    corpus = root / "source-corpus"
+    for family in ("works", "revisions", "notes"):
+        (corpus / family).mkdir(parents=True)
     (root / "entries").mkdir()
     (root / "inquiries").mkdir()
     (root / "transfers").mkdir()
-    (root / "sources" / "source-a.json").write_text(json.dumps({
+    source = {
         "id": "source-a", "number": 1, "title": "A source", "authors": ["Example"],
         "year": 2026, "noteDepth": "abstract", "readingScope": "Abstract only",
         "intro": "A source.", "keyPoints": ["A point."], "editorialQuestion": "What next?",
         "categories": ["Reliability"], "failureSurfaces": [], "sourceUrl": "https://example.org/a",
         "pdf": {"delivery": "official", "url": "https://example.org/a.pdf"},
-    }), encoding="utf-8")
+    }
+    work, revision, note = migrate(source)
+    for family, record in (("works", work), ("revisions", revision), ("notes", note)):
+        (corpus / family / "source-a.json").write_text(json.dumps(record), encoding="utf-8")
     (root / "entries" / "note-b.md").write_text(
         "# A note\n\n## What is being learned?\n\nA concrete note, not a form.\n", encoding="utf-8"
     )
@@ -83,6 +89,23 @@ def _fixture_catalog(root: Path) -> None:
     "markdown-it-py not installed in this isolated test environment",
 )
 class SparseAuthoringTests(unittest.TestCase):
+    def test_teaching_exercises_are_explicit_and_do_not_require_experiment_metadata(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            _fixture_catalog(root)
+            path = root / "entries/note-b.json"
+            record = json.loads(path.read_text())
+            for kind in ("retrieval-sets", "ordered-index"):
+                record["exercise"] = kind
+                path.write_text(json.dumps(record))
+                note = next(s for s in content.compile_content(root)["studies"] if s["id"] == "note-b")
+                self.assertEqual(note["exercise"], kind)
+                self.assertNotIn("resultsUrl", note)
+            record["exercise"] = "arbitrary-script"
+            path.write_text(json.dumps(record))
+            with self.assertRaisesRegex(content.ContentError, "exercise"):
+                content.compile_content(root)
+
     def test_external_output_paths_report_drift_and_can_be_written(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -139,12 +162,13 @@ class SparseAuthoringTests(unittest.TestCase):
                 content.compile_content(root)
 
     def test_body_links_and_tables_compile_for_the_reader(self):
-        _, html, _ = content._strict_markdown(
+        _, html, _, ast = content._strict_markdown(
             "[Continue](../programme/method.md)\n\n| A | B |\n| --- | --- |\n| 1 | 2 |\n",
             "fixture.md", source_path="study/entries/fixture.md",
             link_map={"study/programme/method.md": "how-we-study"})
         self.assertIn('href="?study=how-we-study"', html)
         self.assertIn("<table>", html)
+        self.assertEqual(ast["references"][0]["kind"], "entry")
         with self.assertRaisesRegex(content.ContentError, "escapes repository"):
             content._strict_markdown("[Private](../../../outside.md)", "fixture.md",
                                      source_path="study/entries/fixture.md")
@@ -200,7 +224,7 @@ class LegacyMigrationTests(unittest.TestCase):
         projection = json.loads(content.DATA_OUTPUT.read_text(encoding="utf-8"))
         authored = [
             json.loads(path.read_text(encoding="utf-8"))
-            for path in sorted((content.CONTENT_ROOT / "sources").glob("*.json"))
+            for path in sorted((content.ROOT / "tests/fixtures/legacy-sources").glob("*.json"))
         ]
         by_id = {source["id"]: source for source in authored}
         self.assertEqual([source["id"] for source in projection["materials"]],

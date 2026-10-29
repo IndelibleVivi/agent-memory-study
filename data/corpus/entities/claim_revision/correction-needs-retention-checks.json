@@ -1,0 +1,74 @@
+{
+  "schema": "ams-core/2",
+  "kind": "claim_revision",
+  "id": "claim:correction-needs-retention-checks",
+  "title": "改对更正项，还要检查原本正确的范围",
+  "byline": "Agent Memory Study editors",
+  "payload": {
+    "id": "correction-needs-retention-checks",
+    "title": "改对更正项，还要检查原本正确的范围",
+    "byline": "Agent Memory Study editors",
+    "updated": "2026-09-22",
+    "status": "proposed-transfer",
+    "questionIds": [
+      "experience-becomes-policy"
+    ],
+    "materialIds": [
+      "mistake-notebook-learning",
+      "agentic-memory"
+    ],
+    "triggers": [
+      "纠正",
+      "增量更新",
+      "保留范围",
+      "边界退化",
+      "旧能力",
+      "更正样本",
+      "完整重训",
+      "correction",
+      "incremental",
+      "retention",
+      "replay",
+      "refit"
+    ],
+    "claim": "接受一次学习更新时，需要同时检查应改变的范围、应保留的范围，以及与更正条件相邻的有效边界。更正项全部预测正确，仍可能伴随范围外退化。",
+    "when": "将少量纠正反馈用于继续训练分类器或其他决策部件，而此前仍有有效的任务、候选或适用条件需要保留时。",
+    "action": "在更新前明确哪些条件真的变了，保留旧参数作为参照；用未参加这次拟合的输入，分别检查应改变项、应保留项和仍有效的边界。所有分支按修订后的目标评分，同时记录纠正成功和旧范围损伤，再决定是否接受该更新。",
+    "avoid": "不要只验收纠正样本或用总体正确率遮住边界退化；也不要从这次无 replay 的增量失败，推导所有增量学习必然失败，或未经对照就认定加入 replay 能解决问题。完整重训同样需要检查保留范围。",
+    "validation": "在目标系统固定同一份纠正反馈，比较保留旧参数、当前更新方法和适用的重训参照；分别报告留出的纠正范围、其余有效范围和相邻边界上的遗漏、误选及任务结果。先约定可接受的损伤和运行成本；若加入 replay，将它作为另一个待测处理，不复用这里的结果。",
+    "limit": "本站只执行了固定特征、合成标签和固定训练预算下的小型分类器对照；测试特征全部在训练支持内，多个行不是独立真实任务。这是验收设计建议，尚无目标系统采用或收益证据，不推荐某种更新方法普遍优胜。",
+    "evidence": [
+      {
+        "label": "学习与纠正实验：按范围保存的结果",
+        "url": "research/decision-learning-study/results.json",
+        "observation": "after.metrics 分开保存 changed、preserved 和 boundary；增量与完整重训都改对了目标范围，但对仍有效范围的损伤不同。cases 与 after.predictions 可以逐行核对。boundary 是 preserved 的子集，不能相加为独立总数。",
+        "limit": "这些是生成标签下的分类观察；结构化特征已给定，不是自然语言 agent 的纠错成功率。"
+      },
+      {
+        "label": "纠正路径与比较条件",
+        "url": "research/decision-learning-study/protocol.md",
+        "observation": "incremental 从原始最终参数继续拟合、只使用改标签的训练行且不做 replay；refit 使用完整修订训练集从零拟合。各处理对同一 test 按新标签评价。",
+        "limit": "方法的信息量、更新步数与训练输入不同；结果不识别 replay、预算或某一种更新机制的独立因果效果。"
+      }
+    ],
+    "applications": []
+  },
+  "claim": "接受一次学习更新时，需要同时检查应改变的范围、应保留的范围，以及与更正条件相邻的有效边界。更正项全部预测正确，仍可能伴随范围外退化。",
+  "scope": "{\"avoid\": \"不要只验收纠正样本或用总体正确率遮住边界退化；也不要从这次无 replay 的增量失败，推导所有增量学习必然失败，或未经对照就认定加入 replay 能解决问题。完整重训同样需要检查保留范围。\", \"limit\": \"本站只执行了固定特征、合成标签和固定训练预算下的小型分类器对照；测试特征全部在训练支持内，多个行不是独立真实任务。这是验收设计建议，尚无目标系统采用或收益证据，不推荐某种更新方法普遍优胜。\", \"when\": \"将少量纠正反馈用于继续训练分类器或其他决策部件，而此前仍有有效的任务、候选或适用条件需要保留时。\"}",
+  "scope_binding": "Published editorial transfer; applicability remains the explicit when/avoid/limit text. No formal support is inferred.",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "37f27ca3cd005789df20a410160276ccc3dae89c9737c96769aa41caa48fc0cb",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "byline",
+      "claim",
+      "payload",
+      "scope",
+      "scope_binding",
+      "title"
+    ]
+  },
+  "revision": "rev:claim_revision-sha256:37f27ca3cd005789df20a410160276ccc3dae89c9737c96769aa41caa48fc0cb",
+  "state_revision": "rev:claim_revision-sha256:37f27ca3cd005789df20a410160276ccc3dae89c9737c96769aa41caa48fc0cb"
+}

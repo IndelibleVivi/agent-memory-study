@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:verifiable-memory",
+  "revision": "rev:sha256:6124706337a3a3133",
+  "state_revision": "rev:sha256:6124706337a3a3133",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:verifiable-memory",
+    "revision": "rev:work-sha256:6124706337a3a3133"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2608.03137v1",
+    "source_locator": "https://arxiv.org/abs/2608.03137v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "890ad9c8afc02e3b1360233e76dc9acc9d0abbebc66a327f0842e50f4b3377d0",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

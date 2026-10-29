@@ -1,211 +1,77 @@
 #!/usr/bin/env python3
-"""Verify initial HTML, hydration and navigation of an already-built Pages artifact."""
+"""Verify every public route, no-JS text, hydration, local links and file reader."""
 import argparse
-from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
-import re
-import tempfile
-import threading
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse,unquote
 from xml.etree import ElementTree as ET
-from playwright.sync_api import sync_playwright, expect
-
-ROOT = Path(__file__).resolve().parents[1]
+from playwright.sync_api import sync_playwright,expect
+from reader_browser_support import ROOT,serve,observe,ready,fits,download,import_file
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--site-root', type=Path, default=ROOT / 'dist/site')
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--site-root',type=Path,default=ROOT/'dist/site')
+    parser.add_argument('--output-dir',type=Path,default=ROOT/'dist/static-reader-check')
     parser.add_argument('--browser-executable')
-    parser.add_argument('--output-dir', type=Path, default=ROOT / 'dist/static-reader-check')
-    args = parser.parse_args()
-    site = args.site_root.resolve()
-    urls = [n.text for n in ET.parse(site / 'sitemap.xml').iter('{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
-    data = json.loads((ROOT / 'data/materials.json').read_text())
-    assert len(urls) == 1 + sum(len(data[k]) for k in ('materials','studies','questions','findings'))
-    assert len(set(urls)) == len(urls)
-    assert not any(urlparse(u).query or urlparse(u).fragment for u in urls)
-    checks, errors = [], []
-    with tempfile.TemporaryDirectory() as directory:
-        (Path(directory) / 'agent-memory-study').symlink_to(site, target_is_directory=True)
-        class Handler(SimpleHTTPRequestHandler):
-            def log_message(self, *_): pass
-            def send_error(self, code, message=None, explain=None):
-                if code != 404: return super().send_error(code, message, explain)
-                content = (site / '404.html').read_bytes()
-                self.send_response(404); self.send_header('Content-Type','text/html'); self.end_headers(); self.wfile.write(content)
-        server = ThreadingHTTPServer(('127.0.0.1',0),partial(Handler,directory=directory))
-        thread = threading.Thread(target=server.serve_forever,daemon=True); thread.start()
-        origin = f'http://127.0.0.1:{server.server_port}'
-        base = origin + '/agent-memory-study/'
-        try:
-            with sync_playwright() as p:
-                browser = p.chromium.launch(executable_path=args.browser_executable)
-                try:
-                    for enabled in (False, True):
-                        context = browser.new_context(java_script_enabled=enabled,viewport={'width':1440,'height':1000},reduced_motion='reduce',accept_downloads=True)
-                        context.route('**/*',lambda r:r.continue_() if r.request.url.startswith(origin+'/') or r.request.url.startswith('file:') else r.abort())
-                        page = context.new_page(); page.on('pageerror',lambda e:errors.append(str(e)))
-                        for canonical in urls:
-                            response = page.goto(origin + urlparse(canonical).path,wait_until='load'); assert response.status == 200
-                            expect(page.locator('h1:visible')).to_have_count(1)
-                            assert len(page.locator('main').inner_text()) > 500
-                            expect(page.locator('link[rel=canonical]')).to_have_attribute('href',canonical)
-                            expect(page.locator('meta[name=description]')).to_have_count(1)
-                            assert page.title() == page.locator('meta[property="og:title"]').get_attribute('content')
-                            initial_title = page.locator('h1:visible').inner_text()
-                            if not enabled:
-                                if canonical.rstrip('/').endswith('agent-memory-study'):
-                                    expect(page.locator('.sculpture-fallback')).to_be_visible()
-                                    expect(page.locator('[data-js-control]')).to_have_count(0)
-                                    expect(page.locator('.sculpture-labels')).to_have_count(0)
-                                    expect(page.locator('#constellation-plot svg a[href]')).to_have_count(sum(len(data[k]) for k in ('materials','studies','questions','findings')))
-                                    expect(page.locator('.map-related button')).to_have_count(0)
-                                    page.evaluate('document.fonts.ready')
-                                    assert all(page.evaluate('Array.from(document.fonts).map(face=>face.status==="loaded")'))
-                                    assert all(page.locator('#constellation-plot svg a').evaluate_all("nodes=>nodes.map(n=>n.getAttribute('href').includes('/agent-memory-study/'))"))
-                                    app_version=urlparse(page.locator('script[src*="/app.js"]').get_attribute('src')).query
-                                    shell_version=urlparse(page.locator('script[src*="/reader-shell.js"]').get_attribute('src')).query
-                                    assert app_version and app_version == shell_version
-                                else:
-                                    expect(page.locator('#atlas-view')).to_have_count(0)
-                                    expect(page.locator('.packet-actions a')).to_have_count(2)
-                                    expect(page.locator('.private-continuation')).to_have_count(0)
-                                refs = page.locator('a[href], link[href], script[src]').evaluate_all("nodes => nodes.map(n => n.href?.baseVal ? new URL(n.href.baseVal,document.baseURI).href : n.href || n.src).filter(Boolean)")
-                                for ref in refs:
-                                    u = urlparse(ref)
-                                    if u.netloc != urlparse(origin).netloc: continue
-                                    assert u.path.startswith('/agent-memory-study/'), ref
-                                    target = site / u.path.removeprefix('/agent-memory-study/')
-                                    assert target.is_file() or (target / 'index.html').is_file(),ref
-                                # Check the new finding's claim and limit on its own
-                                # sitemap visit; no JavaScript or duplicate navigation.
-                                for item in data['findings']:
-                                    if (item['id'] in ('correction-needs-retention-checks',
-                                                       'output-guard-is-not-unlearning')
-                                            and urlparse(canonical).path.endswith(f'/finding/{item["id"]}/')):
-                                        expect(page.locator('h1:visible')).to_have_text(item['title'])
-                                        body = page.locator('main').inner_text()
-                                        assert item['claim'] in body and item['limit'] in body, item['id']
-                                        checks.append({'finding_static_body':item['id'],'javascript':False})
-                            checks.append({'url':canonical,'javascript':enabled,'heading':initial_title})
-                        if enabled:
-                            for width in (1440,390,320):
-                                page.set_viewport_size({'width':width,'height':900})
-                                page.goto(base+'?study=after-a-correction&scenario=legacy&phase=after',wait_until='load')
-                                assert urlparse(page.url).path.endswith('/study/after-a-correction/')
-                                expect(page.locator('#study-scenario')).to_have_value('legacy')
-                                expect(page.locator('#study-phase-after')).to_have_attribute('aria-pressed','true')
-                                page.locator('#study-phase-before').click(); page.go_back()
-                                expect(page.locator('#study-phase-after')).to_have_attribute('aria-pressed','true')
-                                page.reload(); expect(page.locator('#study-scenario')).to_have_value('legacy')
-                                page.goto(base+'study/experience-becomes-policy/?scenario=export-sensitive-base&phase=after',wait_until='load')
-                                expect(page.locator('#decision-summary')).to_contain_text('96/276')
-                                page.locator('#study-phase-before').click(); page.go_back()
-                                expect(page.locator('#study-phase-after')).to_have_attribute('aria-pressed','true')
-                                page.locator('#study-scenario').select_option('export-ordinary-all-known')
-                                page.reload()
-                                expect(page.locator('#study-scenario')).to_have_value('export-ordinary-all-known')
-                                expect(page.locator('#decision-cases tbody tr')).to_have_count(12)
-                                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
-                                checks.append({'width':width,'recorded_learning_history_reload':True})
-                                jev = json.loads((ROOT/'research/jev-memory-contract-study/results.json').read_text())
-                                case = jev['cases'][-1]
-                                page.goto(base+'study/who-controls-memory/?scenario='+case['id']+'&phase=after',wait_until='load')
-                                expect(page.locator('#study-scenario')).to_have_value(case['id'])
-                                expect(page.locator('#contract-state h3')).to_have_text('调用后的快照')
-                                expect(page.locator('link[rel=canonical]')).to_have_attribute('href',base.replace(origin, 'https://indeliblevivi.github.io')+'study/who-controls-memory/')
-                                page.locator('#study-phase-before').click(); page.go_back()
-                                expect(page.locator('#study-phase-after')).to_have_attribute('aria-pressed','true')
-                                page.reload(); expect(page.locator('#study-scenario')).to_have_value(case['id'])
-                                with page.expect_download() as event:
-                                    page.locator('#contract-download').click()
-                                assert json.loads(Path(event.value.path()).read_text()) == jev
-                                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
-                                checks.append({'width':width,'jev_source_history_reload_export':True})
-                                page.goto(base+'study/representation-and-use/',wait_until='load')
-                                expect(page.locator('#study-lab')).to_contain_text('研究方案尚未执行')
-                                expect(page.locator('#study-lab select, #study-lab button, #study-lab table')).to_have_count(0)
-                                protocol_url = page.locator('#study-lab a').evaluate('(a) => a.href')
-                                assert context.request.get(protocol_url).status == 200
-                                page.reload()
-                                expect(page.locator('#study-title')).to_have_text('概括之后，往事还记得准吗？')
-                                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
-                                checks.append({'width':width,'proposed_study_status_protocol_reload':True})
-                                page.goto(base+'question/experience-to-capability/',wait_until='load')
-                                page.locator('#inquiry-practice a[data-route=finding]').first.click()
-                                expect(page.locator('#inquiry-title')).to_have_text(data['findings'][0]['title'])
-                                page.reload(); expect(page.locator('#inquiry-title')).to_have_text(data['findings'][0]['title'])
-                                page.goto(base+'material/a-tma-state-aware-memory/',wait_until='load')
-                                toc = page.locator('#article-toc a').last
-                                if toc.is_visible():
-                                    target_hash = urlparse(toc.get_attribute('href')).fragment
-                                    toc.click()
-                                    assert urlparse(page.url).path.endswith('/material/a-tma-state-aware-memory/')
-                                    assert urlparse(page.url).fragment == target_hash
-                                    assert page.locator('#'+target_hash).evaluate('e=>Math.abs(e.getBoundingClientRect().top)<250'), target_hash
-                                page.locator('a.site-mark').click()
-                                expect(page.locator('#atlas-view')).to_be_visible()
-                                assert urlparse(page.url).path == '/agent-memory-study/'
-                                page.goto(base+'?practice=重复候选#practice',wait_until='load')
-                                assert parse_qs(urlparse(page.url).query)['practice'] == ['重复候选']
-                                page.reload(); expect(page.locator('#practice-query')).to_have_value('重复候选')
-                                expect(page.locator('link[rel=canonical]')).to_have_attribute('href',urls[0])
-                                with page.expect_download() as event:
-                                    page.locator('#practice-export').get_by_role('button',name='下载 JSON',exact=True).click()
-                                brief = json.loads(Path(event.value.path()).read_text())
-                                assert brief['findings'][0]['id'] == 'retrieval-candidate-competition'
-                                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
-                                checks.append({'width':width,'legacy_study_history_reload_toc_home_practice_download':True})
-                                # With JS on, the practice desk must find each newer
-                                # finding by its keyword sample; the no-JS static body
-                                # check lives in the disabled-JS loop above.
-                                for query, finding_id, expected_title in [
-                                        ('纠正 增量 保留范围', 'correction-needs-retention-checks',
-                                         next(f['title'] for f in data['findings'] if f['id'] == 'correction-needs-retention-checks')),
-                                        ('输出约束 参数 遗忘', 'output-guard-is-not-unlearning',
-                                         next(f['title'] for f in data['findings'] if f['id'] == 'output-guard-is-not-unlearning'))]:
-                                    page.goto(base,wait_until='load')
-                                    page.locator('.practice-disclosure > summary').click()
-                                    page.locator('#practice-query').fill(query)
-                                    page.locator('#practice-query').press('Enter')
-                                    expect(page.locator('#practice-results a[data-route=finding]').first).to_contain_text(expected_title)
-                                    with page.expect_download() as event:
-                                        page.locator('#practice-export').get_by_role('button',name='下载 JSON',exact=True).click()
-                                    brief = json.loads(Path(event.value.path()).read_text())
-                                    assert brief['findings'][0]['id'] == finding_id, brief['findings'][0]['id']
-                                    page.goto(base+'question/experience-becomes-policy/',wait_until='load')
-                                    expect(page.locator('#inquiry-practice')).to_contain_text(expected_title)
-                                checks.append({'width':width,'new_findings_practice_and_question_hop':True})
-                                page.goto(base+'?practice=纠正 增量 保留范围#practice',wait_until='load')
-                                assert parse_qs(urlparse(page.url).query)['practice'] == ['纠正 增量 保留范围']
-                                page.reload()
-                                expect(page.locator('#practice-query')).to_have_value('纠正 增量 保留范围')
-                                retention = next(f for f in data['findings']
-                                                 if f['id'] == 'correction-needs-retention-checks')
-                                expect(page.locator('#practice-results a[data-route=finding]').first).to_have_attribute(
-                                    'href',re.compile(r'correction-needs-retention-checks'))
-                                expect(page.locator('#practice-results a[data-route=finding]').first).to_contain_text(retention['title'])
-                                checks.append({'width':width,'new_finding_practice_deep_link':True})
-                            page.goto((ROOT/'index.html').as_uri()+'?material=pm-bench',wait_until='load')
-                            expect(page.locator('#material-title')).to_contain_text('PM-bench')
-                            page.goto((ROOT/'index.html').as_uri()+'?study=experience-becomes-policy&phase=after',wait_until='load')
-                            expect(page.locator('#decision-summary')).to_contain_text('96/276')
-                            with page.expect_download() as event:
-                                page.locator('#decision-download').click()
-                            assert json.loads(Path(event.value.path()).read_text()) == json.loads((ROOT/'research/decision-learning-study/results.json').read_text())
-                            checks.append({'source_file_mode':True})
-                        response=page.goto(base+'material/does-not-exist/',wait_until='load');assert response.status==404
-                        expect(page.locator('meta[name=robots]')).to_have_attribute('content','noindex')
-                        expect(page.locator('h1')).to_have_text('这里没有这篇内容。')
-                        context.close()
-                    assert not errors, errors
-                finally: browser.close()
-        finally: server.shutdown();server.server_close();thread.join()
-    args.output_dir.mkdir(parents=True,exist_ok=True)
-    (args.output_dir/'results.json').write_text(json.dumps({'passed':True,'checks':checks,'errors':errors},ensure_ascii=False,indent=2)+'\n')
-    print(f'PASS: {len(urls)} initial HTML pages + hydration, 3 viewports, legacy routes/history, TOC, practice export, new finding pages/query hop, source file mode and 404')
+    args=parser.parse_args();site=args.site_root.resolve();args.output_dir.mkdir(parents=True,exist_ok=True)
+    data=json.loads((ROOT/'data/materials.json').read_text());receipt=json.loads((site/'build-receipt.json').read_text())
+    rows=[(kind,item) for kind,field in [('material','materials'),('study','studies'),('question','questions'),('finding','findings')] for item in data[field]]
+    urls=[n.text for n in ET.parse(site/'sitemap.xml').iter('{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+    assert len(urls)==len(rows)+1==len(set(urls))==len(receipt['routes'])
+    assert all(not urlparse(url).query and not urlparse(url).fragment for url in urls)
+    report={'errors':[],'external':[],'routes':[],'portable':[],'missing_links':[]}
+    try:
+        with serve(site) as base,sync_playwright() as p:
+            browser=p.chromium.launch(executable_path=args.browser_executable)
+            nojs=browser.new_context(java_script_enabled=False,viewport={'width':1440,'height':1000});static=nojs.new_page();observe(static,base,report)
+            live=browser.new_page(viewport={'width':1440,'height':1000});observe(live,base,report)
+            static.goto(base);expect(static.locator('h1')).to_have_count(1)
+            for kind,item in rows:
+                assert static.locator(f'a[href$="/{kind}/{item["id"]}/"]').count(),item['id']
+            for kind,item in rows:
+                route=f'{kind}/{item["id"]}/';response=static.goto(base+route);assert response.status==200
+                expect(static.locator('article h1')).to_have_text(item['title']);initial=static.locator('article').inner_text();semantic=static.locator('article').evaluate("node=>{const copy=node.cloneNode(true);copy.querySelectorAll('[data-interactive],button,input,select,textarea').forEach(n=>n.remove());return copy.textContent.replace(/\\s+/g,' ').trim()}");headings=static.locator('article h2').all_text_contents();assert len(initial)>80
+                expect(static.locator('button:visible,input:visible,select:visible,textarea:visible')).to_have_count(0)
+                expect(static.get_by_role('link',name='研究包 JSON ↓')).to_be_visible()
+                for href in static.locator('a[href],link[href],script[src]').evaluate_all('(nodes)=>nodes.map(n=>n.href||n.src).filter(Boolean)'):
+                    if not href.startswith(base):continue
+                    target=site/unquote(urlparse(href).path.removeprefix('/agent-memory-study/'))
+                    if not target.is_file() and not (target/'index.html').is_file():report['missing_links'].append({'route':route,'href':href})
+                live.goto(base+route);ready(live);expect(live.locator('article h1')).to_have_text(item['title'])
+                assert live.locator('article h2').all_text_contents()==headings,route
+                assert live.locator('article').evaluate("node=>{const copy=node.cloneNode(true);copy.querySelectorAll('[data-interactive],button,input,select,textarea').forEach(n=>n.remove());return copy.textContent.replace(/\\s+/g,' ').trim()}")==semantic,route
+                assert live.title()==live.locator('meta[property="og:title"]').get_attribute('content')
+                assert live.locator('link[rel=canonical]').get_attribute('href') in urls
+                if kind=='material':assert '来源作者' in initial and item['readingScope'] in initial
+                if kind=='finding':assert item['claim'] in initial and item['limit'] in initial
+                packet=json.loads((site/route/'index.json').read_text());assert packet['schema']=='ams-study-packet/2' and packet['id']==item['id']
+                assert (site/route/'index.md').stat().st_size>100
+                report['routes'].append(route)
+            response=live.goto(base+'does-not-exist/');assert response.status==404;expect(live.locator('h1')).to_contain_text('没有')
+            expect(live.locator('meta[name=robots]')).to_have_attribute('content','noindex')
+            static.goto((site/'portable/index.html').as_uri());expect(static.locator('.offline-book article')).to_have_count(len(rows))
+            expect(static.locator('button:visible,input:visible,select:visible,textarea:visible')).to_have_count(0)
+            static.locator('#root a[href="#offline-study-ams-thesis"]').first.click();assert static.url.endswith('#offline-study-ams-thesis')
+            for mode,url in [('http',base),('file',(site/'portable/index.html').as_uri())]:
+                page=browser.new_page(viewport={'width':390,'height':844});observe(page,base,report);page.goto(url);ready(page)
+                page.get_by_role('button',name='＋ 带进来').click();page.get_by_label('遇见了什么？').fill('SYNTHETIC_PRIVATE_CANARY');page.get_by_role('button',name='留在案头 →').click();expect(page.locator('dialog')).to_have_count(0)
+                page.get_by_role('link',name='探索 Explore',exact=True).click();page.get_by_role('button',name='再展开 30 项',exact=True).click();page.get_by_role('link',name='找到一样的，还是找到相关的？',exact=True).first.click()
+                expect(page.locator('#study-title')).to_be_visible();page.get_by_role('button',name='＋ 留在案头',exact=True).click();page.get_by_role('link',name='打开案头 →').click()
+                saved=download(page,lambda:page.get_by_role('button',name='下载私人案头',exact=True).click());pack=json.loads(saved);assert pack['public_records'] and b'SYNTHETIC_PRIVATE_CANARY' in saved
+                page.reload();expect(page.locator('.desk-items')).to_have_count(0);import_file(page,saved);expect(page.locator('.desk-items')).to_contain_text('找到一样的')
+                page.locator('.public-selection summary').click()
+                for format in ('JSON','Markdown'):
+                    public=download(page,lambda:page.get_by_role('button',name=f'公开选材 {format} ↓',exact=True).click());assert b'SYNTHETIC_PRIVATE_CANARY' not in public
+                fits(page);assert 'SYNTHETIC' not in page.url;assert page.evaluate('localStorage.length')==0
+                page.screenshot(path=str(args.output_dir/f'{mode}-desk-390.png'));report['portable'].append({'mode':mode,'fixed_basis_restored':True,'private_canary_filtered':True});page.close()
+            browser.close()
+        # Scan actual public files, not just the bootstrap used above.
+        for file in site.rglob('*'):
+            if file.is_file() and file.suffix in ('.json','.js','.html','.md','.xml','.css'):
+                assert b'SYNTHETIC_PRIVATE_CANARY' not in file.read_bytes(),file
+        assert not report['missing_links'] and not report['errors'] and not report['external'],report
+    finally:(args.output_dir/'results.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+    print(f'PASS: {len(rows)} routes, no-JS/hydration parity, links, packets, 404, portable file and public/private separation')
 
-if __name__ == '__main__': main()
+if __name__=='__main__':main()

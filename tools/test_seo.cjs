@@ -58,3 +58,16 @@ test('research groups and the original exercise preserve state without entering 
   const other=new URL(seo.routeUrl({...state,study:'ams-thesis'},url,base,true),base);
   assert.equal(other.searchParams.get('k'),null);
 });
+
+test('ordered index routes retain zero and isolate exercise state from other articles and metadata', () => {
+  const state = {study:'what-an-index-learns',dataset:'clustered',mutation:'insert',repair:'rebound',query:0,k:8,ranking:'contrast'};
+  for (const physical of [false,true]) {
+    const url = new URL(seo.routeUrl(state,base,base,physical,'#study-lab'),base);
+    for (const key of ['dataset','mutation','repair','query']) assert.equal(url.searchParams.get(key),String(state[key]));
+    assert.equal(url.searchParams.get('k'),null);
+    const other = new URL(seo.routeUrl({...state,study:'retrieval-and-relevance'},url,base,physical),base);
+    for (const key of ['dataset','mutation','repair','query']) assert.equal(other.searchParams.get(key),null);
+    assert.equal(other.searchParams.get('k'),'8');
+  }
+  assert.equal(seo.metadata(data,state).canonical,seo.site+'study/what-an-index-learns/');
+});

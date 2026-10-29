@@ -1,0 +1,3240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ams:core:2",
+  "title": "Agent Memory Study core entities",
+  "description": "AMS core contract 2. Immutable snapshots use EntityRef. Source content, artifact bytes, extraction, reading, AMS authorship, navigation, references and accepted argument structure are distinct.",
+  "type": "object",
+  "$defs": {
+    "EntityKind": {
+      "enum": [
+        "capture",
+        "source_work",
+        "source_revision",
+        "source_note",
+        "artifact",
+        "extraction",
+        "read_activity",
+        "excerpt",
+        "entry",
+        "claim_revision",
+        "thread",
+        "session",
+        "relation_proposal",
+        "evidence_relation",
+        "support_bundle",
+        "observation",
+        "design",
+        "run",
+        "analysis",
+        "changeset",
+        "publication_manifest"
+      ]
+    },
+    "EntityRef": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/EntityKind"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "CurrentRef": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/EntityKind"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "selection": {
+          "const": "current"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "selection"
+      ],
+      "additionalProperties": false
+    },
+    "Actor": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "human",
+            "agent",
+            "service"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^actor:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "Digest": {
+      "type": "object",
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "canonicalization": {
+          "const": "ams-json-canonical/1"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "algorithm",
+        "value",
+        "canonicalization",
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "Review": {
+      "type": "object",
+      "properties": {
+        "actor": {
+          "$ref": "#/$defs/Actor"
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "delegation_ref": {
+          "$ref": "#/$defs/EntityRef"
+        }
+      },
+      "required": [
+        "actor",
+        "at",
+        "rationale"
+      ],
+      "additionalProperties": false
+    },
+    "Identifier": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "enum": [
+            "doi",
+            "arxiv",
+            "github-repository",
+            "url",
+            "publisher"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "candidate",
+            "confirmed"
+          ]
+        },
+        "role": {
+          "enum": [
+            "work-identity",
+            "version-identity",
+            "source-locator"
+          ]
+        }
+      },
+      "required": [
+        "namespace",
+        "value",
+        "status",
+        "role"
+      ],
+      "additionalProperties": false
+    },
+    "Manifestation": {
+      "type": "object",
+      "properties": {
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "original_locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "delivery": {
+          "enum": [
+            "bundled",
+            "official-link"
+          ]
+        },
+        "artifact_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "access_note": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        },
+        "license_url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "media_type",
+        "locator",
+        "delivery"
+      ],
+      "additionalProperties": false
+    },
+    "Capture": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "capture"
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "actor": {
+          "$ref": "#/$defs/Actor"
+        },
+        "channel": {
+          "enum": [
+            "manual",
+            "web",
+            "cli",
+            "zotero",
+            "github",
+            "agent",
+            "run"
+          ]
+        },
+        "input": {
+          "type": "string",
+          "minLength": 1
+        },
+        "why_now": {
+          "type": "string"
+        },
+        "attention": {
+          "enum": [
+            "resting",
+            "active",
+            "waiting",
+            "closed"
+          ]
+        },
+        "visibility": {
+          "const": "private"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "captured_at",
+        "actor",
+        "channel",
+        "input",
+        "attention",
+        "visibility"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "actor",
+        "attention",
+        "captured_at",
+        "channel",
+        "input",
+        "visibility",
+        "why_now"
+      ]
+    },
+    "SourceWork": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "source_work"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "work_type": {
+          "enum": [
+            "paper",
+            "code",
+            "data",
+            "mathematics",
+            "theory",
+            "other"
+          ]
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "year": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "short_author": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "identifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "uniqueItems": true
+        },
+        "manifestations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Manifestation"
+          },
+          "uniqueItems": true
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "uniqueItems": true
+        },
+        "visibility": {
+          "enum": [
+            "public",
+            "public-candidate",
+            "private"
+          ]
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "title",
+        "work_type",
+        "authors",
+        "year",
+        "identifiers",
+        "manifestations",
+        "aliases",
+        "visibility"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "aliases",
+        "authors",
+        "identifiers",
+        "manifestations",
+        "short_author",
+        "title",
+        "visibility",
+        "work_type",
+        "year"
+      ]
+    },
+    "PublisherIdentity": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "const": "publisher-version"
+        },
+        "namespace": {
+          "enum": [
+            "arxiv",
+            "doi",
+            "git",
+            "publisher"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "identity_basis": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "mode",
+        "namespace",
+        "value",
+        "source_locator",
+        "identity_basis"
+      ],
+      "additionalProperties": false
+    },
+    "ObservedIdentity": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "const": "observed-snapshot"
+        },
+        "observed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "source_locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observation_basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publisher_version_known": {
+          "const": false
+        },
+        "snapshot_captured": {
+          "type": "boolean"
+        },
+        "artifact_ref": {
+          "$ref": "#/$defs/EntityRef"
+        }
+      },
+      "required": [
+        "mode",
+        "observed_at",
+        "source_locator",
+        "observation_basis",
+        "publisher_version_known",
+        "snapshot_captured"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "snapshot_captured": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "artifact_ref"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "SourceRevision": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "source_revision"
+        },
+        "work_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "identity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/PublisherIdentity"
+            },
+            {
+              "$ref": "#/$defs/ObservedIdentity"
+            }
+          ]
+        },
+        "predecessor_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "work_ref",
+        "identity"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "identity",
+        "predecessor_ref",
+        "work_ref"
+      ]
+    },
+    "Artifact": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "artifact"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "storage": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": [
+                "bundled",
+                "external",
+                "blob"
+              ]
+            },
+            "locator": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "locator"
+          ],
+          "additionalProperties": false
+        },
+        "role": {
+          "enum": [
+            "source-manifestation",
+            "extracted-text",
+            "authored",
+            "receipt",
+            "dataset",
+            "config",
+            "code",
+            "other"
+          ]
+        },
+        "visibility": {
+          "enum": [
+            "private",
+            "public-candidate",
+            "public"
+          ]
+        },
+        "source_revision_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "obtained_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "representation_of": {
+          "$ref": "#/$defs/EntityRef"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "media_type",
+        "byte_length",
+        "artifact_digest",
+        "storage",
+        "role",
+        "visibility",
+        "obtained_at"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "artifact_digest",
+        "byte_length",
+        "media_type",
+        "obtained_at",
+        "representation_of",
+        "role",
+        "source_revision_ref",
+        "storage",
+        "visibility"
+      ]
+    },
+    "Extraction": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "extraction"
+        },
+        "input_artifact_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "source_revision_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "output_artifact_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "extractor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "extractor_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "config_digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "coverage": {
+          "enum": [
+            "fulltext",
+            "abstract-only",
+            "partial",
+            "unknown"
+          ]
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "input_artifact_ref",
+        "source_revision_ref",
+        "output_artifact_ref",
+        "extractor",
+        "extractor_version",
+        "config_digest",
+        "coverage"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "config_digest",
+        "coverage",
+        "extractor",
+        "extractor_version",
+        "input_artifact_ref",
+        "output_artifact_ref",
+        "source_revision_ref"
+      ]
+    },
+    "ReadActivity": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "read_activity"
+        },
+        "actor": {
+          "$ref": "#/$defs/Actor"
+        },
+        "target_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "representation_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "extent": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "method": {
+          "enum": [
+            "human-selected",
+            "agent-delivered",
+            "manual-declaration"
+          ]
+        },
+        "occurred_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "receipt_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "actor",
+        "target_ref",
+        "representation_ref",
+        "extent",
+        "method",
+        "occurred_at"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "agent-delivered"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "receipt_ref"
+            ]
+          }
+        }
+      ],
+      "x-ams-content-fields": [
+        "actor",
+        "extent",
+        "method",
+        "occurred_at",
+        "receipt_ref",
+        "representation_ref",
+        "target_ref"
+      ]
+    },
+    "Excerpt": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "excerpt"
+        },
+        "target_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "representation_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "selector": {
+          "type": "string",
+          "minLength": 1
+        },
+        "comment": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "target_ref",
+        "representation_ref",
+        "selector"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "comment",
+        "representation_ref",
+        "selector",
+        "target_ref"
+      ]
+    },
+    "SourceNote": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "source_note"
+        },
+        "alias": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "work_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "source_revision_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "byline": {
+          "type": "string",
+          "minLength": 1
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "intro": {
+          "type": "string",
+          "minLength": 1
+        },
+        "note_depth": {
+          "enum": [
+            "abstract",
+            "skim",
+            "read",
+            "worked"
+          ]
+        },
+        "reading_scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "navigation": {
+          "type": "object"
+        },
+        "payload": {
+          "type": "object"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "alias",
+        "work_ref",
+        "source_revision_ref",
+        "title",
+        "byline",
+        "date",
+        "intro",
+        "note_depth",
+        "reading_scope",
+        "navigation",
+        "payload"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "alias",
+        "byline",
+        "date",
+        "intro",
+        "navigation",
+        "note_depth",
+        "payload",
+        "reading_scope",
+        "source_revision_ref",
+        "title",
+        "work_ref"
+      ]
+    },
+    "Entry": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "entry"
+        },
+        "entry_type": {
+          "enum": [
+            "learning-note",
+            "research-essay",
+            "editorial-synthesis"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "byline": {
+          "type": "string",
+          "minLength": 1
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "intro": {
+          "type": "string",
+          "minLength": 1
+        },
+        "body_file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "payload": {
+          "type": "object"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "uniqueItems": true
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "entry_type",
+        "title",
+        "byline",
+        "date",
+        "intro",
+        "body_file",
+        "payload"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "body_file",
+        "byline",
+        "date",
+        "entry_type",
+        "intro",
+        "payload",
+        "references",
+        "title"
+      ]
+    },
+    "ClaimRevision": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "claim_revision"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "byline": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope_binding": {
+          "type": "string",
+          "minLength": 1
+        },
+        "payload": {
+          "type": "object"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "title",
+        "byline",
+        "claim",
+        "scope",
+        "scope_binding",
+        "payload"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "byline",
+        "claim",
+        "payload",
+        "scope",
+        "scope_binding",
+        "title"
+      ]
+    },
+    "Thread": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "thread"
+        },
+        "title": {
+          "type": "string"
+        },
+        "byline": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "open",
+            "closed"
+          ]
+        },
+        "payload": {
+          "type": "object"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "title",
+        "byline",
+        "status",
+        "payload"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "byline",
+        "payload",
+        "status",
+        "title"
+      ]
+    },
+    "Session": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "session"
+        },
+        "thread_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "visibility": {
+          "enum": [
+            "private",
+            "public"
+          ]
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "payload": {
+          "type": "object"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "thread_ref",
+        "visibility",
+        "started_at",
+        "payload"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "payload",
+        "started_at",
+        "thread_ref",
+        "visibility"
+      ]
+    },
+    "RelationProposal": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "relation_proposal"
+        },
+        "from_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "to_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "relation": {
+          "enum": [
+            "background",
+            "analogy",
+            "supports",
+            "limits",
+            "challenges",
+            "derives"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope_binding": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generated_by": {
+          "$ref": "#/$defs/Actor"
+        },
+        "method_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "const": "proposal"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "from_ref",
+        "to_ref",
+        "relation",
+        "scope",
+        "scope_binding",
+        "locator",
+        "rationale",
+        "generated_by",
+        "method_version",
+        "status"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "from_ref",
+        "generated_by",
+        "locator",
+        "method_version",
+        "rationale",
+        "relation",
+        "scope",
+        "scope_binding",
+        "status",
+        "to_ref"
+      ]
+    },
+    "EvidenceRelation": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "evidence_relation"
+        },
+        "from_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "to_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "relation": {
+          "enum": [
+            "background",
+            "analogy",
+            "supports",
+            "limits",
+            "challenges",
+            "derives"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope_binding": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "proposal_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "review": {
+          "$ref": "#/$defs/Review"
+        },
+        "status": {
+          "const": "accepted"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "from_ref",
+        "to_ref",
+        "relation",
+        "scope",
+        "scope_binding",
+        "locator",
+        "rationale",
+        "proposal_ref",
+        "review",
+        "status"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "from_ref",
+        "locator",
+        "proposal_ref",
+        "rationale",
+        "relation",
+        "review",
+        "scope",
+        "scope_binding",
+        "status",
+        "to_ref"
+      ]
+    },
+    "SupportBundle": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "support_bundle"
+        },
+        "conclusion_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope_binding": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review": {
+          "$ref": "#/$defs/Review"
+        },
+        "combination": {
+          "enum": [
+            "all-premises",
+            "alternative-warrants"
+          ]
+        },
+        "premise_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "uniqueItems": true
+        },
+        "relation_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "uniqueItems": true
+        },
+        "warrant_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "uniqueItems": true
+        },
+        "independence": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "enum": [
+                "not-assessed",
+                "dependent",
+                "argued-independent"
+              ]
+            },
+            "argument": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status"
+          ],
+          "additionalProperties": false
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "conclusion_ref",
+        "scope",
+        "scope_binding",
+        "rationale",
+        "review",
+        "combination",
+        "independence"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "combination",
+        "conclusion_ref",
+        "independence",
+        "premise_refs",
+        "rationale",
+        "relation_refs",
+        "review",
+        "scope",
+        "scope_binding",
+        "warrant_refs"
+      ]
+    },
+    "Observation": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "observation"
+        },
+        "run_ref": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/EntityRef"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "run"
+                }
+              }
+            }
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "uniqueItems": true
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "scope",
+        "statement",
+        "basis_refs"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "basis_refs",
+        "run_ref",
+        "scope",
+        "statement"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "run_ref"
+          ]
+        },
+        {
+          "properties": {
+            "basis_refs": {
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "Design": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "design"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "proposed-not-run",
+            "running",
+            "completed",
+            "abandoned"
+          ]
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "title",
+        "body",
+        "status"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "body",
+        "status",
+        "title"
+      ]
+    },
+    "Run": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "run"
+        },
+        "protocol_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "code_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "config_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "dataset_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "uniqueItems": true
+        },
+        "rubric_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "executor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "running",
+            "complete",
+            "failed",
+            "interrupted"
+          ]
+        },
+        "result_artifact_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "uniqueItems": true
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "protocol_ref",
+        "code_ref",
+        "config_ref",
+        "dataset_refs",
+        "rubric_ref",
+        "executor",
+        "started_at",
+        "status"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "code_ref",
+        "config_ref",
+        "dataset_refs",
+        "executor",
+        "protocol_ref",
+        "result_artifact_refs",
+        "rubric_ref",
+        "started_at",
+        "status"
+      ]
+    },
+    "Analysis": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "analysis"
+        },
+        "run_refs": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/EntityRef"
+              },
+              {
+                "properties": {
+                  "kind": {
+                    "const": "run"
+                  }
+                }
+              }
+            ]
+          },
+          "uniqueItems": true
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "result": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observation_refs": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/EntityRef"
+              },
+              {
+                "properties": {
+                  "kind": {
+                    "const": "observation"
+                  }
+                }
+              }
+            ]
+          },
+          "uniqueItems": true
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "run_refs",
+        "method",
+        "scope",
+        "result"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "method",
+        "observation_refs",
+        "result",
+        "run_refs",
+        "scope"
+      ],
+      "anyOf": [
+        {
+          "properties": {
+            "run_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "required": [
+            "observation_refs"
+          ],
+          "properties": {
+            "observation_refs": {
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "ChangeSet": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core/2"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "changeset"
+        },
+        "review_state": {
+          "enum": [
+            "proposed",
+            "reviewing",
+            "accepted",
+            "paused",
+            "rejected",
+            "superseded"
+          ]
+        },
+        "application_state": {
+          "enum": [
+            "not-applied",
+            "applied",
+            "conflict",
+            "checked-unchanged"
+          ]
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "target": {
+                "enum": [
+                  "private-thread",
+                  "canonical-draft",
+                  "public-corpus"
+                ]
+              },
+              "base_ref": {
+                "$ref": "#/$defs/EntityRef"
+              },
+              "change": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "mode": {
+                        "const": "no-change"
+                      },
+                      "reason": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "mode",
+                      "reason"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "mode": {
+                        "const": "replace-fields"
+                      },
+                      "fields": {
+                        "type": "object",
+                        "minProperties": 1
+                      }
+                    },
+                    "required": [
+                      "mode",
+                      "fields"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "review_state": {
+                "enum": [
+                  "proposed",
+                  "reviewing",
+                  "accepted",
+                  "paused",
+                  "rejected",
+                  "superseded"
+                ]
+              },
+              "application_state": {
+                "enum": [
+                  "not-applied",
+                  "applied",
+                  "conflict",
+                  "checked-unchanged"
+                ]
+              },
+              "result_ref": {
+                "$ref": "#/$defs/EntityRef"
+              }
+            },
+            "required": [
+              "id",
+              "target",
+              "base_ref",
+              "change",
+              "review_state",
+              "application_state"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "publication_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "uniqueItems": true
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "review_state",
+        "application_state",
+        "items",
+        "publication_refs"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "application_state",
+        "items",
+        "publication_refs",
+        "review_state"
+      ]
+    },
+    "PublicationManifest": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-publication-manifest/1"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "kind": {
+          "const": "publication_manifest"
+        },
+        "base_git_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "selected_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "uniqueItems": true
+        },
+        "visibility": {
+          "const": "private"
+        },
+        "prepared_by": {
+          "$ref": "#/$defs/Actor"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "state_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "id",
+        "revision",
+        "state_revision",
+        "content_digest",
+        "base_git_commit",
+        "selected_refs",
+        "visibility",
+        "prepared_by"
+      ],
+      "additionalProperties": false,
+      "x-ams-content-fields": [
+        "base_git_commit",
+        "prepared_by",
+        "selected_refs",
+        "visibility"
+      ]
+    },
+    "EntityRecord": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Capture"
+        },
+        {
+          "$ref": "#/$defs/SourceWork"
+        },
+        {
+          "$ref": "#/$defs/SourceRevision"
+        },
+        {
+          "$ref": "#/$defs/SourceNote"
+        },
+        {
+          "$ref": "#/$defs/Artifact"
+        },
+        {
+          "$ref": "#/$defs/Extraction"
+        },
+        {
+          "$ref": "#/$defs/ReadActivity"
+        },
+        {
+          "$ref": "#/$defs/Excerpt"
+        },
+        {
+          "$ref": "#/$defs/Entry"
+        },
+        {
+          "$ref": "#/$defs/ClaimRevision"
+        },
+        {
+          "$ref": "#/$defs/Thread"
+        },
+        {
+          "$ref": "#/$defs/Session"
+        },
+        {
+          "$ref": "#/$defs/RelationProposal"
+        },
+        {
+          "$ref": "#/$defs/EvidenceRelation"
+        },
+        {
+          "$ref": "#/$defs/SupportBundle"
+        },
+        {
+          "$ref": "#/$defs/Observation"
+        },
+        {
+          "$ref": "#/$defs/Design"
+        },
+        {
+          "$ref": "#/$defs/Run"
+        },
+        {
+          "$ref": "#/$defs/Analysis"
+        },
+        {
+          "$ref": "#/$defs/ChangeSet"
+        },
+        {
+          "$ref": "#/$defs/PublicationManifest"
+        }
+      ]
+    },
+    "Command": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-command/1"
+        },
+        "kind": {
+          "const": "command"
+        },
+        "command_id": {
+          "type": "string",
+          "pattern": "^command:[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operation": {
+          "enum": [
+            "create",
+            "update"
+          ]
+        },
+        "target": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "$ref": "#/$defs/EntityKind"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 3
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "expected_revision": {
+          "type": "string",
+          "pattern": "^rev:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "actor": {
+          "$ref": "#/$defs/Actor"
+        },
+        "record": {
+          "$ref": "#/$defs/EntityRecord"
+        }
+      },
+      "required": [
+        "schema",
+        "kind",
+        "command_id",
+        "idempotency_key",
+        "operation",
+        "target",
+        "actor",
+        "record"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "create"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "expected_revision"
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "expected_revision"
+            ]
+          }
+        }
+      ],
+      "x-ams-content-fields": [
+        "actor",
+        "command_id",
+        "expected_revision",
+        "idempotency_key",
+        "operation",
+        "record",
+        "target"
+      ]
+    },
+    "PublicObject": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "public_kind": {
+          "enum": [
+            "material",
+            "study",
+            "question",
+            "finding"
+          ]
+        },
+        "public_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "description": "Reader-visible alias distinct from the core EntityRef id."
+        },
+        "route": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "shard": {
+          "type": "string",
+          "pattern": "^(?!\\.\\.?/)"
+        },
+        "revision_shard": {
+          "type": "string",
+          "pattern": "^(?!\\.\\.?/)"
+        },
+        "packet_v2": {
+          "type": "string",
+          "pattern": "^(?!\\.\\.?/)",
+          "description": "Relative path from the public corpus root to the object packet (contains current content).",
+          "x-ams-path-kind": "packet"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "revision",
+        "public_kind",
+        "route",
+        "shard",
+        "revision_shard",
+        "packet_v2",
+        "public_id"
+      ],
+      "additionalProperties": false
+    },
+    "PublicCorpusManifest": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-public-corpus-manifest/1"
+        },
+        "contract_version": {
+          "const": "ams-core/2"
+        },
+        "compiler_version": {
+          "const": "ams-content-compiler/2"
+        },
+        "canonicalization": {
+          "const": "ams-json-canonical/1"
+        },
+        "objects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PublicObject"
+          },
+          "uniqueItems": true
+        },
+        "routes": {
+          "type": "object",
+          "properties": {
+            "home": {
+              "type": "string",
+              "pattern": "^/"
+            },
+            "material": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "study": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "question": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "finding": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "home",
+            "material",
+            "study",
+            "question",
+            "finding"
+          ],
+          "additionalProperties": false
+        },
+        "graphs": {
+          "type": "object",
+          "properties": {
+            "navigation_memberships": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "references": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "arguments": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          },
+          "required": [
+            "navigation_memberships",
+            "references",
+            "arguments"
+          ],
+          "additionalProperties": false
+        },
+        "record_shards": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^data/corpus/revisions/[a-z_]+/[a-z0-9-]+/[A-Za-z0-9._-]+\\.json$"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema",
+        "contract_version",
+        "compiler_version",
+        "canonicalization",
+        "objects",
+        "routes",
+        "graphs",
+        "record_shards"
+      ],
+      "additionalProperties": false,
+      "description": "Public index only: objects, route inventory, and graph projections. Content is resolved from packet_v2 and entity shards, never embedded here."
+    },
+    "Corpus": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-core-corpus/2"
+        },
+        "contract_version": {
+          "const": "ams-core/2"
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRecord"
+          },
+          "uniqueItems": true
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRelation"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema",
+        "contract_version",
+        "records",
+        "relations"
+      ],
+      "additionalProperties": false
+    },
+    "OperationalApplyUnit": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-operational-apply-unit/1"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^unit:[A-Za-z0-9._-]+$"
+        },
+        "request": {
+          "type": "object",
+          "properties": {
+            "changeset_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "item_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            },
+            "expected_revision": {
+              "type": "string",
+              "minLength": 1
+            },
+            "owner": {
+              "enum": [
+                "db",
+                "git"
+              ]
+            },
+            "actor": {
+              "$ref": "#/$defs/Actor"
+            },
+            "delegation_ref": {
+              "$ref": "#/$defs/EntityRef"
+            },
+            "changeset_ref": {
+              "$ref": "#/$defs/EntityRef"
+            },
+            "base_commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "patches": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "before": {
+                    "type": "string"
+                  },
+                  "after": {
+                    "type": "string"
+                  },
+                  "before_digest": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "after_digest": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                },
+                "required": [
+                  "path",
+                  "before",
+                  "after",
+                  "before_digest",
+                  "after_digest"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "changeset_id",
+            "item_ids",
+            "expected_revision",
+            "owner",
+            "actor"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "owner": {
+                    "const": "git"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "base_commit",
+                  "patches",
+                  "changeset_ref"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "actor": {
+                    "properties": {
+                      "kind": {
+                        "enum": [
+                          "agent",
+                          "service"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "delegation_ref"
+                ]
+              }
+            }
+          ]
+        },
+        "changeset_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "base_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "schema",
+        "id",
+        "request",
+        "changeset_ref",
+        "base_refs",
+        "created_at",
+        "idempotency_key"
+      ],
+      "additionalProperties": false
+    },
+    "OperationalApplyReceipt": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-operational-apply-receipt/1"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^unit:[A-Za-z0-9._-]+$"
+        },
+        "changeset_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner": {
+          "enum": [
+            "db",
+            "git"
+          ]
+        },
+        "state": {
+          "enum": [
+            "applied",
+            "conflict",
+            "checked-unchanged"
+          ]
+        },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "applied_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "uniqueItems": true
+        },
+        "changeset_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "item_results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "state": {
+                "enum": [
+                  "not-applied",
+                  "applied",
+                  "conflict",
+                  "checked-unchanged"
+                ]
+              },
+              "result_ref": {
+                "$ref": "#/$defs/EntityRef"
+              }
+            },
+            "required": [
+              "item_id",
+              "state"
+            ],
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "const": "checked-unchanged"
+                    }
+                  }
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "result_ref"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "minItems": 1
+        },
+        "authorization": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Review"
+            },
+            {
+              "if": {
+                "properties": {
+                  "actor": {
+                    "properties": {
+                      "kind": {
+                        "enum": [
+                          "agent",
+                          "service"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "delegation_ref"
+                ]
+              }
+            }
+          ]
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "base_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "result_refs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/EntityRef"
+          }
+        }
+      },
+      "required": [
+        "schema",
+        "id",
+        "changeset_id",
+        "owner",
+        "state",
+        "conflicts",
+        "applied_refs",
+        "changeset_ref",
+        "item_results",
+        "authorization",
+        "recorded_at"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "owner": {
+                "const": "git"
+              },
+              "state": {
+                "const": "applied"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "commit",
+              "base_commit"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "applied"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "applied_refs": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "checked-unchanged",
+                  "conflict"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "applied_refs": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "PublicationDelivery": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "ams-publication-delivery/1"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^delivery:[A-Za-z0-9._-]+$"
+        },
+        "manifest_ref": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "delivery": {
+          "type": "object",
+          "properties": {
+            "local_commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "repository": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "not-pushed",
+                    "visible"
+                  ]
+                },
+                "commit": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "observed_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "state"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "visible"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "commit",
+                      "url",
+                      "observed_at"
+                    ]
+                  }
+                }
+              ]
+            },
+            "build": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "not-built",
+                    "failed",
+                    "succeeded"
+                  ]
+                },
+                "source_commit": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "artifact_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                },
+                "receipt": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "state"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "succeeded"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "source_commit",
+                      "artifact_digest"
+                    ]
+                  }
+                }
+              ]
+            },
+            "site": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "not-requested",
+                    "pending",
+                    "failed",
+                    "active"
+                  ]
+                },
+                "source_commit": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "artifact_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                },
+                "deployment_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "verified_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "receipt": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "state"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "state": {
+                        "const": "active"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "source_commit",
+                      "artifact_digest",
+                      "deployment_id",
+                      "url",
+                      "verified_at"
+                    ]
+                  }
+                }
+              ]
+            },
+            "receipt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "observed_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "repository",
+            "build",
+            "site"
+          ],
+          "additionalProperties": false
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "authorization": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Review"
+            },
+            {
+              "if": {
+                "properties": {
+                  "actor": {
+                    "properties": {
+                      "kind": {
+                        "enum": [
+                          "agent",
+                          "service"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "delegation_ref"
+                ]
+              }
+            }
+          ]
+        },
+        "evidence_status": {
+          "const": "operator-supplied-observation; not independently network-verified"
+        }
+      },
+      "required": [
+        "schema",
+        "id",
+        "manifest_ref",
+        "delivery",
+        "recorded_at",
+        "authorization",
+        "evidence_status"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "delivery": {
+                "properties": {
+                  "site": {
+                    "properties": {
+                      "state": {
+                        "const": "active"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "delivery": {
+                "properties": {
+                  "repository": {
+                    "properties": {
+                      "state": {
+                        "const": "visible"
+                      }
+                    }
+                  },
+                  "build": {
+                    "properties": {
+                      "state": {
+                        "const": "succeeded"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,1571 @@
+{
+  "schema": "ams-public-corpus-manifest/1",
+  "contract_version": "ams-core/2",
+  "compiler_version": "ams-content-compiler/2",
+  "canonicalization": "ams-json-canonical/1",
+  "objects": [
+    {
+      "kind": "source_note",
+      "id": "note:a-tma-state-aware-memory",
+      "revision": "rev:note-sha256:01b4dafafbe058dd2",
+      "public_kind": "material",
+      "public_id": "a-tma-state-aware-memory",
+      "route": "/material/a-tma-state-aware-memory/",
+      "shard": "data/corpus/entities/source_note/a-tma-state-aware-memory.json",
+      "revision_shard": "data/corpus/revisions/source_note/a-tma-state-aware-memory/rev-note-sha256-01b4dafafbe058dd2.json",
+      "packet_v2": "data/corpus/packets/material/a-tma-state-aware-memory/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:trustmem-consolidation",
+      "revision": "rev:note-sha256:6cb6cb2f463bf894e",
+      "public_kind": "material",
+      "public_id": "trustmem-consolidation",
+      "route": "/material/trustmem-consolidation/",
+      "shard": "data/corpus/entities/source_note/trustmem-consolidation.json",
+      "revision_shard": "data/corpus/revisions/source_note/trustmem-consolidation/rev-note-sha256-6cb6cb2f463bf894e.json",
+      "packet_v2": "data/corpus/packets/material/trustmem-consolidation/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:verifiable-memory",
+      "revision": "rev:note-sha256:6124706337a3a3133",
+      "public_kind": "material",
+      "public_id": "verifiable-memory",
+      "route": "/material/verifiable-memory/",
+      "shard": "data/corpus/entities/source_note/verifiable-memory.json",
+      "revision_shard": "data/corpus/revisions/source_note/verifiable-memory/rev-note-sha256-6124706337a3a3133.json",
+      "packet_v2": "data/corpus/packets/material/verifiable-memory/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:mosaic-long-term-memory",
+      "revision": "rev:note-sha256:56a908bcc1267e449",
+      "public_kind": "material",
+      "public_id": "mosaic-long-term-memory",
+      "route": "/material/mosaic-long-term-memory/",
+      "shard": "data/corpus/entities/source_note/mosaic-long-term-memory.json",
+      "revision_shard": "data/corpus/revisions/source_note/mosaic-long-term-memory/rev-note-sha256-56a908bcc1267e449.json",
+      "packet_v2": "data/corpus/packets/material/mosaic-long-term-memory/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:proactive-wake-anchor",
+      "revision": "rev:note-sha256:e7c864e33ff0a2d4f",
+      "public_kind": "material",
+      "public_id": "proactive-wake-anchor",
+      "route": "/material/proactive-wake-anchor/",
+      "shard": "data/corpus/entities/source_note/proactive-wake-anchor.json",
+      "revision_shard": "data/corpus/revisions/source_note/proactive-wake-anchor/rev-note-sha256-e7c864e33ff0a2d4f.json",
+      "packet_v2": "data/corpus/packets/material/proactive-wake-anchor/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:pm-bench",
+      "revision": "rev:note-sha256:947a3754a55029925",
+      "public_kind": "material",
+      "public_id": "pm-bench",
+      "route": "/material/pm-bench/",
+      "shard": "data/corpus/entities/source_note/pm-bench.json",
+      "revision_shard": "data/corpus/revisions/source_note/pm-bench/rev-note-sha256-947a3754a55029925.json",
+      "packet_v2": "data/corpus/packets/material/pm-bench/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:mistake-notebook-learning",
+      "revision": "rev:note-sha256:7432aa554ec28430c",
+      "public_kind": "material",
+      "public_id": "mistake-notebook-learning",
+      "route": "/material/mistake-notebook-learning/",
+      "shard": "data/corpus/entities/source_note/mistake-notebook-learning.json",
+      "revision_shard": "data/corpus/revisions/source_note/mistake-notebook-learning/rev-note-sha256-7432aa554ec28430c.json",
+      "packet_v2": "data/corpus/packets/material/mistake-notebook-learning/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:coala-cognitive-architecture",
+      "revision": "rev:note-sha256:f3bbf0987f273e0a9",
+      "public_kind": "material",
+      "public_id": "coala-cognitive-architecture",
+      "route": "/material/coala-cognitive-architecture/",
+      "shard": "data/corpus/entities/source_note/coala-cognitive-architecture.json",
+      "revision_shard": "data/corpus/revisions/source_note/coala-cognitive-architecture/rev-note-sha256-f3bbf0987f273e0a9.json",
+      "packet_v2": "data/corpus/packets/material/coala-cognitive-architecture/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:storage-to-experience",
+      "revision": "rev:note-sha256:4eddf8c3cc7b4ba97",
+      "public_kind": "material",
+      "public_id": "storage-to-experience",
+      "route": "/material/storage-to-experience/",
+      "shard": "data/corpus/entities/source_note/storage-to-experience.json",
+      "revision_shard": "data/corpus/revisions/source_note/storage-to-experience/rev-note-sha256-4eddf8c3cc7b4ba97.json",
+      "packet_v2": "data/corpus/packets/material/storage-to-experience/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:continual-learning-experience-reuse",
+      "revision": "rev:note-sha256:0c4ef3c7e30450a76",
+      "public_kind": "material",
+      "public_id": "continual-learning-experience-reuse",
+      "route": "/material/continual-learning-experience-reuse/",
+      "shard": "data/corpus/entities/source_note/continual-learning-experience-reuse.json",
+      "revision_shard": "data/corpus/revisions/source_note/continual-learning-experience-reuse/rev-note-sha256-0c4ef3c7e30450a76.json",
+      "packet_v2": "data/corpus/packets/material/continual-learning-experience-reuse/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:agentic-memory",
+      "revision": "rev:note-sha256:394c516b806b03516",
+      "public_kind": "material",
+      "public_id": "agentic-memory",
+      "route": "/material/agentic-memory/",
+      "shard": "data/corpus/entities/source_note/agentic-memory.json",
+      "revision_shard": "data/corpus/revisions/source_note/agentic-memory/rev-note-sha256-394c516b806b03516.json",
+      "packet_v2": "data/corpus/packets/material/agentic-memory/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:midca-dual-cycle",
+      "revision": "rev:note-sha256:368b1148807ef3f64",
+      "public_kind": "material",
+      "public_id": "midca-dual-cycle",
+      "route": "/material/midca-dual-cycle/",
+      "shard": "data/corpus/entities/source_note/midca-dual-cycle.json",
+      "revision_shard": "data/corpus/revisions/source_note/midca-dual-cycle/rev-note-sha256-368b1148807ef3f64.json",
+      "packet_v2": "data/corpus/packets/material/midca-dual-cycle/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:truth-maintenance-system",
+      "revision": "rev:note-sha256:abb4561fdbe7c2e4c",
+      "public_kind": "material",
+      "public_id": "truth-maintenance-system",
+      "route": "/material/truth-maintenance-system/",
+      "shard": "data/corpus/entities/source_note/truth-maintenance-system.json",
+      "revision_shard": "data/corpus/revisions/source_note/truth-maintenance-system/rev-note-sha256-abb4561fdbe7c2e4c.json",
+      "packet_v2": "data/corpus/packets/material/truth-maintenance-system/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:agm-theory-change",
+      "revision": "rev:note-sha256:acb97c6dd14f3fb30",
+      "public_kind": "material",
+      "public_id": "agm-theory-change",
+      "route": "/material/agm-theory-change/",
+      "shard": "data/corpus/entities/source_note/agm-theory-change.json",
+      "revision_shard": "data/corpus/revisions/source_note/agm-theory-change/rev-note-sha256-acb97c6dd14f3fb30.json",
+      "packet_v2": "data/corpus/packets/material/agm-theory-change/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:memory-beyond-recall",
+      "revision": "rev:note-sha256:6761bcb4571af223d",
+      "public_kind": "material",
+      "public_id": "memory-beyond-recall",
+      "route": "/material/memory-beyond-recall/",
+      "shard": "data/corpus/entities/source_note/memory-beyond-recall.json",
+      "revision_shard": "data/corpus/revisions/source_note/memory-beyond-recall/rev-note-sha256-6761bcb4571af223d.json",
+      "packet_v2": "data/corpus/packets/material/memory-beyond-recall/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:insightemb-action-intent-retrieval",
+      "revision": "rev:note-sha256:f458c5b374038ed21",
+      "public_kind": "material",
+      "public_id": "insightemb-action-intent-retrieval",
+      "route": "/material/insightemb-action-intent-retrieval/",
+      "shard": "data/corpus/entities/source_note/insightemb-action-intent-retrieval.json",
+      "revision_shard": "data/corpus/revisions/source_note/insightemb-action-intent-retrieval/rev-note-sha256-f458c5b374038ed21.json",
+      "packet_v2": "data/corpus/packets/material/insightemb-action-intent-retrieval/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:longmemeval-v2-experienced-colleague",
+      "revision": "rev:note-sha256:2ef34aafef7e101c9",
+      "public_kind": "material",
+      "public_id": "longmemeval-v2-experienced-colleague",
+      "route": "/material/longmemeval-v2-experienced-colleague/",
+      "shard": "data/corpus/entities/source_note/longmemeval-v2-experienced-colleague.json",
+      "revision_shard": "data/corpus/revisions/source_note/longmemeval-v2-experienced-colleague/rev-note-sha256-2ef34aafef7e101c9.json",
+      "packet_v2": "data/corpus/packets/material/longmemeval-v2-experienced-colleague/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:statefuse-conflict-preserving-memory",
+      "revision": "rev:note-sha256:ae013071e2d5b4c39",
+      "public_kind": "material",
+      "public_id": "statefuse-conflict-preserving-memory",
+      "route": "/material/statefuse-conflict-preserving-memory/",
+      "shard": "data/corpus/entities/source_note/statefuse-conflict-preserving-memory.json",
+      "revision_shard": "data/corpus/revisions/source_note/statefuse-conflict-preserving-memory/rev-note-sha256-ae013071e2d5b4c39.json",
+      "packet_v2": "data/corpus/packets/material/statefuse-conflict-preserving-memory/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:fluctlightdb-observation-binding",
+      "revision": "rev:note-sha256:33819337cbcf42bad",
+      "public_kind": "material",
+      "public_id": "fluctlightdb-observation-binding",
+      "route": "/material/fluctlightdb-observation-binding/",
+      "shard": "data/corpus/entities/source_note/fluctlightdb-observation-binding.json",
+      "revision_shard": "data/corpus/revisions/source_note/fluctlightdb-observation-binding/rev-note-sha256-33819337cbcf42bad.json",
+      "packet_v2": "data/corpus/packets/material/fluctlightdb-observation-binding/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:memora-from-recall-to-forgetting",
+      "revision": "rev:note-sha256:c432d63796b905846",
+      "public_kind": "material",
+      "public_id": "memora-from-recall-to-forgetting",
+      "route": "/material/memora-from-recall-to-forgetting/",
+      "shard": "data/corpus/entities/source_note/memora-from-recall-to-forgetting.json",
+      "revision_shard": "data/corpus/revisions/source_note/memora-from-recall-to-forgetting/rev-note-sha256-c432d63796b905846.json",
+      "packet_v2": "data/corpus/packets/material/memora-from-recall-to-forgetting/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:memprobe-hidden-user-state-recovery",
+      "revision": "rev:note-sha256:e14295ffaf40aeebf",
+      "public_kind": "material",
+      "public_id": "memprobe-hidden-user-state-recovery",
+      "route": "/material/memprobe-hidden-user-state-recovery/",
+      "shard": "data/corpus/entities/source_note/memprobe-hidden-user-state-recovery.json",
+      "revision_shard": "data/corpus/revisions/source_note/memprobe-hidden-user-state-recovery/rev-note-sha256-e14295ffaf40aeebf.json",
+      "packet_v2": "data/corpus/packets/material/memprobe-hidden-user-state-recovery/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:useful-memories-become-faulty",
+      "revision": "rev:note-sha256:704b163b88b823801",
+      "public_kind": "material",
+      "public_id": "useful-memories-become-faulty",
+      "route": "/material/useful-memories-become-faulty/",
+      "shard": "data/corpus/entities/source_note/useful-memories-become-faulty.json",
+      "revision_shard": "data/corpus/revisions/source_note/useful-memories-become-faulty/rev-note-sha256-704b163b88b823801.json",
+      "packet_v2": "data/corpus/packets/material/useful-memories-become-faulty/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:recuris-memory-evolution",
+      "revision": "rev:note-sha256:d0cb5216864b4d810",
+      "public_kind": "material",
+      "public_id": "recuris-memory-evolution",
+      "route": "/material/recuris-memory-evolution/",
+      "shard": "data/corpus/entities/source_note/recuris-memory-evolution.json",
+      "revision_shard": "data/corpus/revisions/source_note/recuris-memory-evolution/rev-note-sha256-d0cb5216864b4d810.json",
+      "packet_v2": "data/corpus/packets/material/recuris-memory-evolution/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:cache-to-cache",
+      "revision": "rev:note-sha256:5c57aefab5d081274",
+      "public_kind": "material",
+      "public_id": "cache-to-cache",
+      "route": "/material/cache-to-cache/",
+      "shard": "data/corpus/entities/source_note/cache-to-cache.json",
+      "revision_shard": "data/corpus/revisions/source_note/cache-to-cache/rev-note-sha256-5c57aefab5d081274.json",
+      "packet_v2": "data/corpus/packets/material/cache-to-cache/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:cross-model-kv-prefill-reuse",
+      "revision": "rev:note-sha256:89527263ef5be2f8d",
+      "public_kind": "material",
+      "public_id": "cross-model-kv-prefill-reuse",
+      "route": "/material/cross-model-kv-prefill-reuse/",
+      "shard": "data/corpus/entities/source_note/cross-model-kv-prefill-reuse.json",
+      "revision_shard": "data/corpus/revisions/source_note/cross-model-kv-prefill-reuse/rev-note-sha256-89527263ef5be2f8d.json",
+      "packet_v2": "data/corpus/packets/material/cross-model-kv-prefill-reuse/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:pain-axis",
+      "revision": "rev:note-sha256:696f4b975d571611e",
+      "public_kind": "material",
+      "public_id": "pain-axis",
+      "route": "/material/pain-axis/",
+      "shard": "data/corpus/entities/source_note/pain-axis.json",
+      "revision_shard": "data/corpus/revisions/source_note/pain-axis/rev-note-sha256-696f4b975d571611e.json",
+      "packet_v2": "data/corpus/packets/material/pain-axis/index.json"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:jev-mem-system-one-control",
+      "revision": "rev:note-sha256:7d260b82114e5466f",
+      "public_kind": "material",
+      "public_id": "jev-mem-system-one-control",
+      "route": "/material/jev-mem-system-one-control/",
+      "shard": "data/corpus/entities/source_note/jev-mem-system-one-control.json",
+      "revision_shard": "data/corpus/revisions/source_note/jev-mem-system-one-control/rev-note-sha256-7d260b82114e5466f.json",
+      "packet_v2": "data/corpus/packets/material/jev-mem-system-one-control/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:after-a-correction",
+      "revision": "rev:entry-sha256:2e2b94a04b65c78eb8b2e3c0f545d07f58ac5598e6175ca26b7761071f6844a1",
+      "public_kind": "study",
+      "public_id": "after-a-correction",
+      "route": "/study/after-a-correction/",
+      "shard": "data/corpus/entities/entry/after-a-correction.json",
+      "revision_shard": "data/corpus/revisions/entry/after-a-correction/rev-entry-sha256-2e2b94a04b65c78eb8b2e3c0f545d07f58ac5598e6175ca26b7761071f6844a1.json",
+      "packet_v2": "data/corpus/packets/study/after-a-correction/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:experience-becomes-policy",
+      "revision": "rev:entry-sha256:cd193ffcfa26d2de6f6cf279e0181576c2e62cbb99a5329988302ff462d707df",
+      "public_kind": "study",
+      "public_id": "experience-becomes-policy",
+      "route": "/study/experience-becomes-policy/",
+      "shard": "data/corpus/entities/entry/experience-becomes-policy.json",
+      "revision_shard": "data/corpus/revisions/entry/experience-becomes-policy/rev-entry-sha256-cd193ffcfa26d2de6f6cf279e0181576c2e62cbb99a5329988302ff462d707df.json",
+      "packet_v2": "data/corpus/packets/study/experience-becomes-policy/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:who-controls-memory",
+      "revision": "rev:entry-sha256:c499f7914e348a657a36d40b46bb94ebe562dec4fc7e86cccef48863f7a23579",
+      "public_kind": "study",
+      "public_id": "who-controls-memory",
+      "route": "/study/who-controls-memory/",
+      "shard": "data/corpus/entities/entry/who-controls-memory.json",
+      "revision_shard": "data/corpus/revisions/entry/who-controls-memory/rev-entry-sha256-c499f7914e348a657a36d40b46bb94ebe562dec4fc7e86cccef48863f7a23579.json",
+      "packet_v2": "data/corpus/packets/study/who-controls-memory/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:representation-and-use",
+      "revision": "rev:entry-sha256:25a2b6bd04ea14966d311a94dd891dec57ddc1df00adf6ed65a4315d454dad11",
+      "public_kind": "study",
+      "public_id": "representation-and-use",
+      "route": "/study/representation-and-use/",
+      "shard": "data/corpus/entities/entry/representation-and-use.json",
+      "revision_shard": "data/corpus/revisions/entry/representation-and-use/rev-entry-sha256-25a2b6bd04ea14966d311a94dd891dec57ddc1df00adf6ed65a4315d454dad11.json",
+      "packet_v2": "data/corpus/packets/study/representation-and-use/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:change-and-continuity",
+      "revision": "rev:entry-sha256:0bdc8f0b28d6f9c52dd1a6a72353cbca59f685bac2965f39c5eadb183c995550",
+      "public_kind": "study",
+      "public_id": "change-and-continuity",
+      "route": "/study/change-and-continuity/",
+      "shard": "data/corpus/entities/entry/change-and-continuity.json",
+      "revision_shard": "data/corpus/revisions/entry/change-and-continuity/rev-entry-sha256-0bdc8f0b28d6f9c52dd1a6a72353cbca59f685bac2965f39c5eadb183c995550.json",
+      "packet_v2": "data/corpus/packets/study/change-and-continuity/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:forms-of-experience",
+      "revision": "rev:entry-sha256:95f45d0e1d690df4160704a2e06d15cadcaf645f9415124dadae1903b8a8dd30",
+      "public_kind": "study",
+      "public_id": "forms-of-experience",
+      "route": "/study/forms-of-experience/",
+      "shard": "data/corpus/entities/entry/forms-of-experience.json",
+      "revision_shard": "data/corpus/revisions/entry/forms-of-experience/rev-entry-sha256-95f45d0e1d690df4160704a2e06d15cadcaf645f9415124dadae1903b8a8dd30.json",
+      "packet_v2": "data/corpus/packets/study/forms-of-experience/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:records-representations-systems",
+      "revision": "rev:entry-sha256:a2a11a7655d5ab032d84b61e08e900db4ade1eafc3cbf520c3e8b41b25bcc30c",
+      "public_kind": "study",
+      "public_id": "records-representations-systems",
+      "route": "/study/records-representations-systems/",
+      "shard": "data/corpus/entities/entry/records-representations-systems.json",
+      "revision_shard": "data/corpus/revisions/entry/records-representations-systems/rev-entry-sha256-a2a11a7655d5ab032d84b61e08e900db4ade1eafc3cbf520c3e8b41b25bcc30c.json",
+      "packet_v2": "data/corpus/packets/study/records-representations-systems/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:relevance-in-context",
+      "revision": "rev:entry-sha256:5f7bc5c0bd12c09ddc8579b0dcea205360ac1a4e825820629fd7dad07f32ed70",
+      "public_kind": "study",
+      "public_id": "relevance-in-context",
+      "route": "/study/relevance-in-context/",
+      "shard": "data/corpus/entities/entry/relevance-in-context.json",
+      "revision_shard": "data/corpus/revisions/entry/relevance-in-context/rev-entry-sha256-5f7bc5c0bd12c09ddc8579b0dcea205360ac1a4e825820629fd7dad07f32ed70.json",
+      "packet_v2": "data/corpus/packets/study/relevance-in-context/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:future-questions-and-memory",
+      "revision": "rev:entry-sha256:92e429ba5f46fb8857d5652856b27815b643bc42ecd3532942659d61b53ec2fe",
+      "public_kind": "study",
+      "public_id": "future-questions-and-memory",
+      "route": "/study/future-questions-and-memory/",
+      "shard": "data/corpus/entities/entry/future-questions-and-memory.json",
+      "revision_shard": "data/corpus/revisions/entry/future-questions-and-memory/rev-entry-sha256-92e429ba5f46fb8857d5652856b27815b643bc42ecd3532942659d61b53ec2fe.json",
+      "packet_v2": "data/corpus/packets/study/future-questions-and-memory/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:ams-thesis",
+      "revision": "rev:entry-sha256:b8963fc7805bd58417df79805dcc067b2217337d28d478d17d9fea88c5b461f0",
+      "public_kind": "study",
+      "public_id": "ams-thesis",
+      "route": "/study/ams-thesis/",
+      "shard": "data/corpus/entities/entry/ams-thesis.json",
+      "revision_shard": "data/corpus/revisions/entry/ams-thesis/rev-entry-sha256-b8963fc7805bd58417df79805dcc067b2217337d28d478d17d9fea88c5b461f0.json",
+      "packet_v2": "data/corpus/packets/study/ams-thesis/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:how-we-study",
+      "revision": "rev:entry-sha256:2f519601a954aecf2c6d702070eb74f5cbb157eb1572addb7e5d1e08ceb31204",
+      "public_kind": "study",
+      "public_id": "how-we-study",
+      "route": "/study/how-we-study/",
+      "shard": "data/corpus/entities/entry/how-we-study.json",
+      "revision_shard": "data/corpus/revisions/entry/how-we-study/rev-entry-sha256-2f519601a954aecf2c6d702070eb74f5cbb157eb1572addb7e5d1e08ceb31204.json",
+      "packet_v2": "data/corpus/packets/study/how-we-study/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:retrieval-and-relevance",
+      "revision": "rev:entry-sha256:c59b2187a7d258ce99952405d550bcb920913796b3286d977fff15f4f5833bd3",
+      "public_kind": "study",
+      "public_id": "retrieval-and-relevance",
+      "route": "/study/retrieval-and-relevance/",
+      "shard": "data/corpus/entities/entry/retrieval-and-relevance.json",
+      "revision_shard": "data/corpus/revisions/entry/retrieval-and-relevance/rev-entry-sha256-c59b2187a7d258ce99952405d550bcb920913796b3286d977fff15f4f5833bd3.json",
+      "packet_v2": "data/corpus/packets/study/retrieval-and-relevance/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:what-an-index-learns",
+      "revision": "rev:entry-sha256:e15c109c4fedd0420549236f361a3fa111c5f4164cbdc23b51e7d35718bda541",
+      "public_kind": "study",
+      "public_id": "what-an-index-learns",
+      "route": "/study/what-an-index-learns/",
+      "shard": "data/corpus/entities/entry/what-an-index-learns.json",
+      "revision_shard": "data/corpus/revisions/entry/what-an-index-learns/rev-entry-sha256-e15c109c4fedd0420549236f361a3fa111c5f4164cbdc23b51e7d35718bda541.json",
+      "packet_v2": "data/corpus/packets/study/what-an-index-learns/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:conditional-information-and-use",
+      "revision": "rev:entry-sha256:0cac23a3dc3f3172c5c56c7b5a5551e912a414d1c9f053ec33fada8f59859373",
+      "public_kind": "study",
+      "public_id": "conditional-information-and-use",
+      "route": "/study/conditional-information-and-use/",
+      "shard": "data/corpus/entities/entry/conditional-information-and-use.json",
+      "revision_shard": "data/corpus/revisions/entry/conditional-information-and-use/rev-entry-sha256-0cac23a3dc3f3172c5c56c7b5a5551e912a414d1c9f053ec33fada8f59859373.json",
+      "packet_v2": "data/corpus/packets/study/conditional-information-and-use/index.json"
+    },
+    {
+      "kind": "entry",
+      "id": "entry:distinguishability-and-observation",
+      "revision": "rev:entry-sha256:14008c7c4595225a8a036132e28ea84433951e0ad34b1a2e33c2171d98d8b9fb",
+      "public_kind": "study",
+      "public_id": "distinguishability-and-observation",
+      "route": "/study/distinguishability-and-observation/",
+      "shard": "data/corpus/entities/entry/distinguishability-and-observation.json",
+      "revision_shard": "data/corpus/revisions/entry/distinguishability-and-observation/rev-entry-sha256-14008c7c4595225a8a036132e28ea84433951e0ad34b1a2e33c2171d98d8b9fb.json",
+      "packet_v2": "data/corpus/packets/study/distinguishability-and-observation/index.json"
+    },
+    {
+      "kind": "thread",
+      "id": "thread:experience-to-capability",
+      "revision": "rev:thread-sha256:a71896cd405c5086c4175fcab185547ba44fcd68af0c037cd0e542aaf103553f",
+      "public_kind": "question",
+      "public_id": "experience-to-capability",
+      "route": "/question/experience-to-capability/",
+      "shard": "data/corpus/entities/thread/experience-to-capability.json",
+      "revision_shard": "data/corpus/revisions/thread/experience-to-capability/rev-thread-sha256-a71896cd405c5086c4175fcab185547ba44fcd68af0c037cd0e542aaf103553f.json",
+      "packet_v2": "data/corpus/packets/question/experience-to-capability/index.json"
+    },
+    {
+      "kind": "thread",
+      "id": "thread:experience-becomes-policy",
+      "revision": "rev:thread-sha256:0a230c6d95496ae0925c7fb9f76605cd47d2c337e2858b90b6fb22e5cfeccbdb",
+      "public_kind": "question",
+      "public_id": "experience-becomes-policy",
+      "route": "/question/experience-becomes-policy/",
+      "shard": "data/corpus/entities/thread/experience-becomes-policy.json",
+      "revision_shard": "data/corpus/revisions/thread/experience-becomes-policy/rev-thread-sha256-0a230c6d95496ae0925c7fb9f76605cd47d2c337e2858b90b6fb22e5cfeccbdb.json",
+      "packet_v2": "data/corpus/packets/question/experience-becomes-policy/index.json"
+    },
+    {
+      "kind": "claim_revision",
+      "id": "claim:retrieval-candidate-competition",
+      "revision": "rev:claim_revision-sha256:8db79c5643424ce85923a95467e146dd19b95c9a062ae742988b9cf9346733bd",
+      "public_kind": "finding",
+      "public_id": "retrieval-candidate-competition",
+      "route": "/finding/retrieval-candidate-competition/",
+      "shard": "data/corpus/entities/claim_revision/retrieval-candidate-competition.json",
+      "revision_shard": "data/corpus/revisions/claim_revision/retrieval-candidate-competition/rev-claim_revision-sha256-8db79c5643424ce85923a95467e146dd19b95c9a062ae742988b9cf9346733bd.json",
+      "packet_v2": "data/corpus/packets/finding/retrieval-candidate-competition/index.json"
+    },
+    {
+      "kind": "claim_revision",
+      "id": "claim:revision-needs-scope",
+      "revision": "rev:claim_revision-sha256:e5eaa7b1b094d698bed2b16c4357abd23d8ca6250f2b3ca620277d13cd9e880f",
+      "public_kind": "finding",
+      "public_id": "revision-needs-scope",
+      "route": "/finding/revision-needs-scope/",
+      "shard": "data/corpus/entities/claim_revision/revision-needs-scope.json",
+      "revision_shard": "data/corpus/revisions/claim_revision/revision-needs-scope/rev-claim_revision-sha256-e5eaa7b1b094d698bed2b16c4357abd23d8ca6250f2b3ca620277d13cd9e880f.json",
+      "packet_v2": "data/corpus/packets/finding/revision-needs-scope/index.json"
+    },
+    {
+      "kind": "claim_revision",
+      "id": "claim:retraction-needs-recomputation",
+      "revision": "rev:claim_revision-sha256:663691f5fe25d8fd5e816ec89193c655504fe3e32db0af7ca0dc054dd3e54193",
+      "public_kind": "finding",
+      "public_id": "retraction-needs-recomputation",
+      "route": "/finding/retraction-needs-recomputation/",
+      "shard": "data/corpus/entities/claim_revision/retraction-needs-recomputation.json",
+      "revision_shard": "data/corpus/revisions/claim_revision/retraction-needs-recomputation/rev-claim_revision-sha256-663691f5fe25d8fd5e816ec89193c655504fe3e32db0af7ca0dc054dd3e54193.json",
+      "packet_v2": "data/corpus/packets/finding/retraction-needs-recomputation/index.json"
+    },
+    {
+      "kind": "claim_revision",
+      "id": "claim:correction-needs-retention-checks",
+      "revision": "rev:claim_revision-sha256:37f27ca3cd005789df20a410160276ccc3dae89c9737c96769aa41caa48fc0cb",
+      "public_kind": "finding",
+      "public_id": "correction-needs-retention-checks",
+      "route": "/finding/correction-needs-retention-checks/",
+      "shard": "data/corpus/entities/claim_revision/correction-needs-retention-checks.json",
+      "revision_shard": "data/corpus/revisions/claim_revision/correction-needs-retention-checks/rev-claim_revision-sha256-37f27ca3cd005789df20a410160276ccc3dae89c9737c96769aa41caa48fc0cb.json",
+      "packet_v2": "data/corpus/packets/finding/correction-needs-retention-checks/index.json"
+    },
+    {
+      "kind": "claim_revision",
+      "id": "claim:output-guard-is-not-unlearning",
+      "revision": "rev:claim_revision-sha256:cad47a560025a1551189c4ebee4c6840f163c68f11e56001e9dc970fa7a9f80d",
+      "public_kind": "finding",
+      "public_id": "output-guard-is-not-unlearning",
+      "route": "/finding/output-guard-is-not-unlearning/",
+      "shard": "data/corpus/entities/claim_revision/output-guard-is-not-unlearning.json",
+      "revision_shard": "data/corpus/revisions/claim_revision/output-guard-is-not-unlearning/rev-claim_revision-sha256-cad47a560025a1551189c4ebee4c6840f163c68f11e56001e9dc970fa7a9f80d.json",
+      "packet_v2": "data/corpus/packets/finding/output-guard-is-not-unlearning/index.json"
+    }
+  ],
+  "routes": {
+    "home": "/",
+    "material": [
+      "/material/a-tma-state-aware-memory/",
+      "/material/trustmem-consolidation/",
+      "/material/verifiable-memory/",
+      "/material/mosaic-long-term-memory/",
+      "/material/proactive-wake-anchor/",
+      "/material/pm-bench/",
+      "/material/mistake-notebook-learning/",
+      "/material/coala-cognitive-architecture/",
+      "/material/storage-to-experience/",
+      "/material/continual-learning-experience-reuse/",
+      "/material/agentic-memory/",
+      "/material/midca-dual-cycle/",
+      "/material/truth-maintenance-system/",
+      "/material/agm-theory-change/",
+      "/material/memory-beyond-recall/",
+      "/material/insightemb-action-intent-retrieval/",
+      "/material/longmemeval-v2-experienced-colleague/",
+      "/material/statefuse-conflict-preserving-memory/",
+      "/material/fluctlightdb-observation-binding/",
+      "/material/memora-from-recall-to-forgetting/",
+      "/material/memprobe-hidden-user-state-recovery/",
+      "/material/useful-memories-become-faulty/",
+      "/material/recuris-memory-evolution/",
+      "/material/cache-to-cache/",
+      "/material/cross-model-kv-prefill-reuse/",
+      "/material/pain-axis/",
+      "/material/jev-mem-system-one-control/"
+    ],
+    "study": [
+      "/study/after-a-correction/",
+      "/study/experience-becomes-policy/",
+      "/study/who-controls-memory/",
+      "/study/representation-and-use/",
+      "/study/change-and-continuity/",
+      "/study/forms-of-experience/",
+      "/study/records-representations-systems/",
+      "/study/relevance-in-context/",
+      "/study/future-questions-and-memory/",
+      "/study/ams-thesis/",
+      "/study/how-we-study/",
+      "/study/retrieval-and-relevance/",
+      "/study/what-an-index-learns/",
+      "/study/conditional-information-and-use/",
+      "/study/distinguishability-and-observation/"
+    ],
+    "question": [
+      "/question/experience-to-capability/",
+      "/question/experience-becomes-policy/"
+    ],
+    "finding": [
+      "/finding/retrieval-candidate-competition/",
+      "/finding/revision-needs-scope/",
+      "/finding/retraction-needs-recomputation/",
+      "/finding/correction-needs-retention-checks/",
+      "/finding/output-guard-is-not-unlearning/"
+    ]
+  },
+  "graphs": {
+    "navigation_memberships": [
+      {
+        "kind": "domain",
+        "id": "data",
+        "member": "material/fluctlightdb-observation-binding",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "data",
+        "member": "material/statefuse-conflict-preserving-memory",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "data",
+        "member": "study/records-representations-systems",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "data",
+        "member": "study/what-an-index-learns",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "representation",
+        "member": "material/a-tma-state-aware-memory",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "representation",
+        "member": "material/storage-to-experience",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "representation",
+        "member": "material/insightemb-action-intent-retrieval",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "representation",
+        "member": "material/memory-beyond-recall",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "representation",
+        "member": "study/forms-of-experience",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "representation",
+        "member": "study/retrieval-and-relevance",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "representation",
+        "member": "study/representation-and-use",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "representation",
+        "member": "study/future-questions-and-memory",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "representation",
+        "member": "study/distinguishability-and-observation",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "representation",
+        "member": "study/conditional-information-and-use",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "indexing",
+        "member": "study/what-an-index-learns",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "indexing",
+        "member": "study/records-representations-systems",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "indexing",
+        "member": "study/retrieval-and-relevance",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "retrieval",
+        "member": "material/continual-learning-experience-reuse",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "retrieval",
+        "member": "material/insightemb-action-intent-retrieval",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "retrieval",
+        "member": "material/mosaic-long-term-memory",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "retrieval",
+        "member": "study/retrieval-and-relevance",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "retrieval",
+        "member": "study/relevance-in-context",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "retrieval",
+        "member": "question/experience-to-capability",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "material/coala-cognitive-architecture",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "material/agentic-memory",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "material/memory-beyond-recall",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "material/jev-mem-system-one-control",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "material/memprobe-hidden-user-state-recovery",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "material/pain-axis",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "study/records-representations-systems",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "study/representation-and-use",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "study/who-controls-memory",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "study/future-questions-and-memory",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "study/distinguishability-and-observation",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "memory",
+        "member": "study/conditional-information-and-use",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "learning",
+        "member": "material/mistake-notebook-learning",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "learning",
+        "member": "material/trustmem-consolidation",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "learning",
+        "member": "material/recuris-memory-evolution",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "learning",
+        "member": "material/cross-model-kv-prefill-reuse",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "learning",
+        "member": "material/cache-to-cache",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "learning",
+        "member": "study/experience-becomes-policy",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "learning",
+        "member": "study/what-an-index-learns",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "learning",
+        "member": "study/change-and-continuity",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "learning",
+        "member": "question/experience-becomes-policy",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "control",
+        "member": "material/midca-dual-cycle",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "control",
+        "member": "material/proactive-wake-anchor",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "control",
+        "member": "material/pm-bench",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "control",
+        "member": "material/verifiable-memory",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "control",
+        "member": "material/jev-mem-system-one-control",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "control",
+        "member": "study/who-controls-memory",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "control",
+        "member": "study/after-a-correction",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "control",
+        "member": "study/relevance-in-context",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "material/longmemeval-v2-experienced-colleague",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "material/memora-from-recall-to-forgetting",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "material/memprobe-hidden-user-state-recovery",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "material/useful-memories-become-faulty",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "material/truth-maintenance-system",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "material/agm-theory-change",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "study/how-we-study",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "study/retrieval-and-relevance",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "study/change-and-continuity",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "study/future-questions-and-memory",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "study/distinguishability-and-observation",
+        "relation": "navigation"
+      },
+      {
+        "kind": "domain",
+        "id": "evaluation",
+        "member": "study/conditional-information-and-use",
+        "relation": "navigation"
+      }
+    ],
+    "references": [
+      {
+        "from": "study/after-a-correction",
+        "to": "material/truth-maintenance-system",
+        "relation": "reading",
+        "locator": "readings[0].materialId"
+      },
+      {
+        "from": "study/after-a-correction",
+        "to": "material/statefuse-conflict-preserving-memory",
+        "relation": "reading",
+        "locator": "readings[1].materialId"
+      },
+      {
+        "from": "study/after-a-correction",
+        "to": "material/useful-memories-become-faulty",
+        "relation": "reading",
+        "locator": "readings[2].materialId"
+      },
+      {
+        "from": "study/after-a-correction",
+        "to": "material/recuris-memory-evolution",
+        "relation": "reading",
+        "locator": "readings[3].materialId"
+      },
+      {
+        "from": "study/experience-becomes-policy",
+        "to": "material/coala-cognitive-architecture",
+        "relation": "reading",
+        "locator": "readings[0].materialId"
+      },
+      {
+        "from": "study/experience-becomes-policy",
+        "to": "material/mistake-notebook-learning",
+        "relation": "reading",
+        "locator": "readings[1].materialId"
+      },
+      {
+        "from": "study/experience-becomes-policy",
+        "to": "material/agentic-memory",
+        "relation": "reading",
+        "locator": "readings[2].materialId"
+      },
+      {
+        "from": "study/experience-becomes-policy",
+        "to": "material/insightemb-action-intent-retrieval",
+        "relation": "reading",
+        "locator": "readings[3].materialId"
+      },
+      {
+        "from": "study/experience-becomes-policy",
+        "to": "material/proactive-wake-anchor",
+        "relation": "reading",
+        "locator": "readings[4].materialId"
+      },
+      {
+        "from": "study/who-controls-memory",
+        "to": "material/jev-mem-system-one-control",
+        "relation": "reading",
+        "locator": "readings[0].materialId"
+      },
+      {
+        "from": "study/who-controls-memory",
+        "to": "material/agentic-memory",
+        "relation": "reading",
+        "locator": "readings[1].materialId"
+      },
+      {
+        "from": "study/who-controls-memory",
+        "to": "material/continual-learning-experience-reuse",
+        "relation": "reading",
+        "locator": "readings[2].materialId"
+      },
+      {
+        "from": "study/who-controls-memory",
+        "to": "material/memora-from-recall-to-forgetting",
+        "relation": "reading",
+        "locator": "readings[3].materialId"
+      },
+      {
+        "from": "study/representation-and-use",
+        "to": "material/jev-mem-system-one-control",
+        "relation": "reading",
+        "locator": "readings[0].materialId"
+      },
+      {
+        "from": "study/representation-and-use",
+        "to": "material/continual-learning-experience-reuse",
+        "relation": "reading",
+        "locator": "readings[1].materialId"
+      },
+      {
+        "from": "study/representation-and-use",
+        "to": "material/coala-cognitive-architecture",
+        "relation": "reading",
+        "locator": "readings[2].materialId"
+      },
+      {
+        "from": "study/change-and-continuity",
+        "to": "study/after-a-correction",
+        "relation": "body-link",
+        "locator": "ast.references[0]"
+      },
+      {
+        "from": "study/change-and-continuity",
+        "to": "study/experience-becomes-policy",
+        "relation": "body-link",
+        "locator": "ast.references[1]"
+      },
+      {
+        "from": "study/forms-of-experience",
+        "to": "study/representation-and-use",
+        "relation": "body-link",
+        "locator": "ast.references[0]"
+      },
+      {
+        "from": "study/forms-of-experience",
+        "to": "study/retrieval-and-relevance",
+        "relation": "body-link",
+        "locator": "ast.references[1]"
+      },
+      {
+        "from": "study/forms-of-experience",
+        "to": "study/records-representations-systems",
+        "relation": "body-link",
+        "locator": "ast.references[2]"
+      },
+      {
+        "from": "study/forms-of-experience",
+        "to": "study/representation-and-use",
+        "relation": "body-link",
+        "locator": "ast.references[3]"
+      },
+      {
+        "from": "study/forms-of-experience",
+        "to": "study/future-questions-and-memory",
+        "relation": "body-link",
+        "locator": "ast.references[4]"
+      },
+      {
+        "from": "study/records-representations-systems",
+        "to": "study/what-an-index-learns",
+        "relation": "body-link",
+        "locator": "ast.references[0]"
+      },
+      {
+        "from": "study/relevance-in-context",
+        "to": "study/retrieval-and-relevance",
+        "relation": "body-link",
+        "locator": "ast.references[0]"
+      },
+      {
+        "from": "study/ams-thesis",
+        "to": "study/future-questions-and-memory",
+        "relation": "body-link",
+        "locator": "ast.references[0]"
+      },
+      {
+        "from": "study/ams-thesis",
+        "to": "study/forms-of-experience",
+        "relation": "body-link",
+        "locator": "ast.references[1]"
+      },
+      {
+        "from": "study/ams-thesis",
+        "to": "study/relevance-in-context",
+        "relation": "body-link",
+        "locator": "ast.references[2]"
+      },
+      {
+        "from": "study/ams-thesis",
+        "to": "study/change-and-continuity",
+        "relation": "body-link",
+        "locator": "ast.references[3]"
+      },
+      {
+        "from": "study/ams-thesis",
+        "to": "study/how-we-study",
+        "relation": "body-link",
+        "locator": "ast.references[4]"
+      },
+      {
+        "from": "study/how-we-study",
+        "to": "study/retrieval-and-relevance",
+        "relation": "body-link",
+        "locator": "ast.references[0]"
+      },
+      {
+        "from": "study/how-we-study",
+        "to": "study/experience-becomes-policy",
+        "relation": "body-link",
+        "locator": "ast.references[1]"
+      },
+      {
+        "from": "study/how-we-study",
+        "to": "study/what-an-index-learns",
+        "relation": "body-link",
+        "locator": "ast.references[2]"
+      },
+      {
+        "from": "study/how-we-study",
+        "to": "study/what-an-index-learns",
+        "relation": "body-link",
+        "locator": "ast.references[3]"
+      },
+      {
+        "from": "study/retrieval-and-relevance",
+        "to": "study/records-representations-systems",
+        "relation": "body-link",
+        "locator": "ast.references[0]"
+      },
+      {
+        "from": "study/retrieval-and-relevance",
+        "to": "study/what-an-index-learns",
+        "relation": "body-link",
+        "locator": "ast.references[1]"
+      },
+      {
+        "from": "study/what-an-index-learns",
+        "to": "study/records-representations-systems",
+        "relation": "body-link",
+        "locator": "ast.references[0]"
+      },
+      {
+        "from": "study/what-an-index-learns",
+        "to": "study/retrieval-and-relevance",
+        "relation": "body-link",
+        "locator": "ast.references[1]"
+      },
+      {
+        "from": "study/conditional-information-and-use",
+        "to": "study/distinguishability-and-observation",
+        "relation": "body-link",
+        "locator": "ast.references[0]"
+      },
+      {
+        "from": "study/conditional-information-and-use",
+        "to": "study/ams-thesis",
+        "relation": "body-link",
+        "locator": "ast.references[1]"
+      },
+      {
+        "from": "study/distinguishability-and-observation",
+        "to": "study/future-questions-and-memory",
+        "relation": "body-link",
+        "locator": "ast.references[0]"
+      },
+      {
+        "from": "study/distinguishability-and-observation",
+        "to": "study/ams-thesis",
+        "relation": "body-link",
+        "locator": "ast.references[1]"
+      },
+      {
+        "from": "question/experience-to-capability",
+        "to": "material/continual-learning-experience-reuse",
+        "relation": "reference",
+        "locator": "materialIds[0]"
+      },
+      {
+        "from": "question/experience-to-capability",
+        "to": "material/truth-maintenance-system",
+        "relation": "reference",
+        "locator": "materialIds[1]"
+      },
+      {
+        "from": "question/experience-to-capability",
+        "to": "material/statefuse-conflict-preserving-memory",
+        "relation": "reference",
+        "locator": "materialIds[2]"
+      },
+      {
+        "from": "question/experience-to-capability",
+        "to": "material/useful-memories-become-faulty",
+        "relation": "reference",
+        "locator": "materialIds[3]"
+      },
+      {
+        "from": "question/experience-to-capability",
+        "to": "material/recuris-memory-evolution",
+        "relation": "reference",
+        "locator": "materialIds[4]"
+      },
+      {
+        "from": "question/experience-to-capability",
+        "to": "material/cache-to-cache",
+        "relation": "reference",
+        "locator": "materialIds[5]"
+      },
+      {
+        "from": "question/experience-to-capability",
+        "to": "study/after-a-correction",
+        "relation": "reference",
+        "locator": "studyIds[0]"
+      },
+      {
+        "from": "question/experience-to-capability",
+        "to": "study/representation-and-use",
+        "relation": "reference",
+        "locator": "studyIds[1]"
+      },
+      {
+        "from": "question/experience-to-capability",
+        "to": "finding/retrieval-candidate-competition",
+        "relation": "reference",
+        "locator": "findingIds[0]"
+      },
+      {
+        "from": "question/experience-to-capability",
+        "to": "finding/revision-needs-scope",
+        "relation": "reference",
+        "locator": "findingIds[1]"
+      },
+      {
+        "from": "question/experience-to-capability",
+        "to": "finding/retraction-needs-recomputation",
+        "relation": "reference",
+        "locator": "findingIds[2]"
+      },
+      {
+        "from": "question/experience-becomes-policy",
+        "to": "material/coala-cognitive-architecture",
+        "relation": "reference",
+        "locator": "materialIds[0]"
+      },
+      {
+        "from": "question/experience-becomes-policy",
+        "to": "material/mistake-notebook-learning",
+        "relation": "reference",
+        "locator": "materialIds[1]"
+      },
+      {
+        "from": "question/experience-becomes-policy",
+        "to": "material/agentic-memory",
+        "relation": "reference",
+        "locator": "materialIds[2]"
+      },
+      {
+        "from": "question/experience-becomes-policy",
+        "to": "material/insightemb-action-intent-retrieval",
+        "relation": "reference",
+        "locator": "materialIds[3]"
+      },
+      {
+        "from": "question/experience-becomes-policy",
+        "to": "material/proactive-wake-anchor",
+        "relation": "reference",
+        "locator": "materialIds[4]"
+      },
+      {
+        "from": "question/experience-becomes-policy",
+        "to": "study/experience-becomes-policy",
+        "relation": "reference",
+        "locator": "studyIds[0]"
+      },
+      {
+        "from": "question/experience-becomes-policy",
+        "to": "study/who-controls-memory",
+        "relation": "reference",
+        "locator": "studyIds[1]"
+      },
+      {
+        "from": "question/experience-becomes-policy",
+        "to": "study/representation-and-use",
+        "relation": "reference",
+        "locator": "studyIds[2]"
+      },
+      {
+        "from": "question/experience-becomes-policy",
+        "to": "finding/correction-needs-retention-checks",
+        "relation": "reference",
+        "locator": "findingIds[0]"
+      },
+      {
+        "from": "question/experience-becomes-policy",
+        "to": "finding/output-guard-is-not-unlearning",
+        "relation": "reference",
+        "locator": "findingIds[1]"
+      },
+      {
+        "from": "finding/retrieval-candidate-competition",
+        "to": "material/continual-learning-experience-reuse",
+        "relation": "reference",
+        "locator": "materialIds[0]"
+      },
+      {
+        "from": "finding/retrieval-candidate-competition",
+        "to": "question/experience-to-capability",
+        "relation": "reference",
+        "locator": "questionIds[0]"
+      },
+      {
+        "from": "finding/revision-needs-scope",
+        "to": "material/truth-maintenance-system",
+        "relation": "reference",
+        "locator": "materialIds[0]"
+      },
+      {
+        "from": "finding/revision-needs-scope",
+        "to": "material/statefuse-conflict-preserving-memory",
+        "relation": "reference",
+        "locator": "materialIds[1]"
+      },
+      {
+        "from": "finding/revision-needs-scope",
+        "to": "material/useful-memories-become-faulty",
+        "relation": "reference",
+        "locator": "materialIds[2]"
+      },
+      {
+        "from": "finding/revision-needs-scope",
+        "to": "material/recuris-memory-evolution",
+        "relation": "reference",
+        "locator": "materialIds[3]"
+      },
+      {
+        "from": "finding/revision-needs-scope",
+        "to": "question/experience-to-capability",
+        "relation": "reference",
+        "locator": "questionIds[0]"
+      },
+      {
+        "from": "finding/retraction-needs-recomputation",
+        "to": "material/cache-to-cache",
+        "relation": "reference",
+        "locator": "materialIds[0]"
+      },
+      {
+        "from": "finding/retraction-needs-recomputation",
+        "to": "question/experience-to-capability",
+        "relation": "reference",
+        "locator": "questionIds[0]"
+      },
+      {
+        "from": "finding/correction-needs-retention-checks",
+        "to": "material/mistake-notebook-learning",
+        "relation": "reference",
+        "locator": "materialIds[0]"
+      },
+      {
+        "from": "finding/correction-needs-retention-checks",
+        "to": "material/agentic-memory",
+        "relation": "reference",
+        "locator": "materialIds[1]"
+      },
+      {
+        "from": "finding/correction-needs-retention-checks",
+        "to": "question/experience-becomes-policy",
+        "relation": "reference",
+        "locator": "questionIds[0]"
+      },
+      {
+        "from": "finding/output-guard-is-not-unlearning",
+        "to": "material/coala-cognitive-architecture",
+        "relation": "reference",
+        "locator": "materialIds[0]"
+      },
+      {
+        "from": "finding/output-guard-is-not-unlearning",
+        "to": "material/cache-to-cache",
+        "relation": "reference",
+        "locator": "materialIds[1]"
+      },
+      {
+        "from": "finding/output-guard-is-not-unlearning",
+        "to": "question/experience-becomes-policy",
+        "relation": "reference",
+        "locator": "questionIds[0]"
+      }
+    ],
+    "arguments": []
+  },
+  "record_shards": [
+    "data/corpus/revisions/claim_revision/correction-needs-retention-checks/rev-claim_revision-sha256-37f27ca3cd005789df20a410160276ccc3dae89c9737c96769aa41caa48fc0cb.json",
+    "data/corpus/revisions/claim_revision/output-guard-is-not-unlearning/rev-claim_revision-sha256-cad47a560025a1551189c4ebee4c6840f163c68f11e56001e9dc970fa7a9f80d.json",
+    "data/corpus/revisions/claim_revision/retraction-needs-recomputation/rev-claim_revision-sha256-663691f5fe25d8fd5e816ec89193c655504fe3e32db0af7ca0dc054dd3e54193.json",
+    "data/corpus/revisions/claim_revision/retrieval-candidate-competition/rev-claim_revision-sha256-8db79c5643424ce85923a95467e146dd19b95c9a062ae742988b9cf9346733bd.json",
+    "data/corpus/revisions/claim_revision/revision-needs-scope/rev-claim_revision-sha256-e5eaa7b1b094d698bed2b16c4357abd23d8ca6250f2b3ca620277d13cd9e880f.json",
+    "data/corpus/revisions/entry/after-a-correction/rev-entry-sha256-2e2b94a04b65c78eb8b2e3c0f545d07f58ac5598e6175ca26b7761071f6844a1.json",
+    "data/corpus/revisions/entry/ams-thesis/rev-entry-sha256-b8963fc7805bd58417df79805dcc067b2217337d28d478d17d9fea88c5b461f0.json",
+    "data/corpus/revisions/entry/change-and-continuity/rev-entry-sha256-0bdc8f0b28d6f9c52dd1a6a72353cbca59f685bac2965f39c5eadb183c995550.json",
+    "data/corpus/revisions/entry/conditional-information-and-use/rev-entry-sha256-0cac23a3dc3f3172c5c56c7b5a5551e912a414d1c9f053ec33fada8f59859373.json",
+    "data/corpus/revisions/entry/distinguishability-and-observation/rev-entry-sha256-14008c7c4595225a8a036132e28ea84433951e0ad34b1a2e33c2171d98d8b9fb.json",
+    "data/corpus/revisions/entry/experience-becomes-policy/rev-entry-sha256-cd193ffcfa26d2de6f6cf279e0181576c2e62cbb99a5329988302ff462d707df.json",
+    "data/corpus/revisions/entry/forms-of-experience/rev-entry-sha256-95f45d0e1d690df4160704a2e06d15cadcaf645f9415124dadae1903b8a8dd30.json",
+    "data/corpus/revisions/entry/future-questions-and-memory/rev-entry-sha256-92e429ba5f46fb8857d5652856b27815b643bc42ecd3532942659d61b53ec2fe.json",
+    "data/corpus/revisions/entry/how-we-study/rev-entry-sha256-2f519601a954aecf2c6d702070eb74f5cbb157eb1572addb7e5d1e08ceb31204.json",
+    "data/corpus/revisions/entry/records-representations-systems/rev-entry-sha256-a2a11a7655d5ab032d84b61e08e900db4ade1eafc3cbf520c3e8b41b25bcc30c.json",
+    "data/corpus/revisions/entry/relevance-in-context/rev-entry-sha256-5f7bc5c0bd12c09ddc8579b0dcea205360ac1a4e825820629fd7dad07f32ed70.json",
+    "data/corpus/revisions/entry/representation-and-use/rev-entry-sha256-25a2b6bd04ea14966d311a94dd891dec57ddc1df00adf6ed65a4315d454dad11.json",
+    "data/corpus/revisions/entry/retrieval-and-relevance/rev-entry-sha256-c59b2187a7d258ce99952405d550bcb920913796b3286d977fff15f4f5833bd3.json",
+    "data/corpus/revisions/entry/what-an-index-learns/rev-entry-sha256-e15c109c4fedd0420549236f361a3fa111c5f4164cbdc23b51e7d35718bda541.json",
+    "data/corpus/revisions/entry/who-controls-memory/rev-entry-sha256-c499f7914e348a657a36d40b46bb94ebe562dec4fc7e86cccef48863f7a23579.json",
+    "data/corpus/revisions/source_note/a-tma-state-aware-memory/rev-note-sha256-01b4dafafbe058dd2.json",
+    "data/corpus/revisions/source_note/agentic-memory/rev-note-sha256-394c516b806b03516.json",
+    "data/corpus/revisions/source_note/agm-theory-change/rev-note-sha256-acb97c6dd14f3fb30.json",
+    "data/corpus/revisions/source_note/cache-to-cache/rev-note-sha256-5c57aefab5d081274.json",
+    "data/corpus/revisions/source_note/coala-cognitive-architecture/rev-note-sha256-f3bbf0987f273e0a9.json",
+    "data/corpus/revisions/source_note/continual-learning-experience-reuse/rev-note-sha256-0c4ef3c7e30450a76.json",
+    "data/corpus/revisions/source_note/cross-model-kv-prefill-reuse/rev-note-sha256-89527263ef5be2f8d.json",
+    "data/corpus/revisions/source_note/fluctlightdb-observation-binding/rev-note-sha256-33819337cbcf42bad.json",
+    "data/corpus/revisions/source_note/insightemb-action-intent-retrieval/rev-note-sha256-f458c5b374038ed21.json",
+    "data/corpus/revisions/source_note/jev-mem-system-one-control/rev-note-sha256-7d260b82114e5466f.json",
+    "data/corpus/revisions/source_note/longmemeval-v2-experienced-colleague/rev-note-sha256-2ef34aafef7e101c9.json",
+    "data/corpus/revisions/source_note/memora-from-recall-to-forgetting/rev-note-sha256-c432d63796b905846.json",
+    "data/corpus/revisions/source_note/memory-beyond-recall/rev-note-sha256-6761bcb4571af223d.json",
+    "data/corpus/revisions/source_note/memprobe-hidden-user-state-recovery/rev-note-sha256-e14295ffaf40aeebf.json",
+    "data/corpus/revisions/source_note/midca-dual-cycle/rev-note-sha256-368b1148807ef3f64.json",
+    "data/corpus/revisions/source_note/mistake-notebook-learning/rev-note-sha256-7432aa554ec28430c.json",
+    "data/corpus/revisions/source_note/mosaic-long-term-memory/rev-note-sha256-56a908bcc1267e449.json",
+    "data/corpus/revisions/source_note/pain-axis/rev-note-sha256-696f4b975d571611e.json",
+    "data/corpus/revisions/source_note/pm-bench/rev-note-sha256-947a3754a55029925.json",
+    "data/corpus/revisions/source_note/proactive-wake-anchor/rev-note-sha256-e7c864e33ff0a2d4f.json",
+    "data/corpus/revisions/source_note/recuris-memory-evolution/rev-note-sha256-d0cb5216864b4d810.json",
+    "data/corpus/revisions/source_note/statefuse-conflict-preserving-memory/rev-note-sha256-ae013071e2d5b4c39.json",
+    "data/corpus/revisions/source_note/storage-to-experience/rev-note-sha256-4eddf8c3cc7b4ba97.json",
+    "data/corpus/revisions/source_note/trustmem-consolidation/rev-note-sha256-6cb6cb2f463bf894e.json",
+    "data/corpus/revisions/source_note/truth-maintenance-system/rev-note-sha256-abb4561fdbe7c2e4c.json",
+    "data/corpus/revisions/source_note/useful-memories-become-faulty/rev-note-sha256-704b163b88b823801.json",
+    "data/corpus/revisions/source_note/verifiable-memory/rev-note-sha256-6124706337a3a3133.json",
+    "data/corpus/revisions/source_revision/a-tma-state-aware-memory/rev-sha256-01b4dafafbe058dd2.json",
+    "data/corpus/revisions/source_revision/agentic-memory/rev-sha256-394c516b806b03516.json",
+    "data/corpus/revisions/source_revision/agm-theory-change/rev-sha256-acb97c6dd14f3fb30.json",
+    "data/corpus/revisions/source_revision/cache-to-cache/rev-sha256-5c57aefab5d081274.json",
+    "data/corpus/revisions/source_revision/coala-cognitive-architecture/rev-sha256-f3bbf0987f273e0a9.json",
+    "data/corpus/revisions/source_revision/continual-learning-experience-reuse/rev-sha256-0c4ef3c7e30450a76.json",
+    "data/corpus/revisions/source_revision/cross-model-kv-prefill-reuse/rev-sha256-89527263ef5be2f8d.json",
+    "data/corpus/revisions/source_revision/fluctlightdb-observation-binding/rev-sha256-33819337cbcf42bad.json",
+    "data/corpus/revisions/source_revision/insightemb-action-intent-retrieval/rev-sha256-f458c5b374038ed21.json",
+    "data/corpus/revisions/source_revision/jev-mem-system-one-control/rev-sha256-7d260b82114e5466f.json",
+    "data/corpus/revisions/source_revision/longmemeval-v2-experienced-colleague/rev-sha256-2ef34aafef7e101c9.json",
+    "data/corpus/revisions/source_revision/memora-from-recall-to-forgetting/rev-sha256-c432d63796b905846.json",
+    "data/corpus/revisions/source_revision/memory-beyond-recall/rev-sha256-6761bcb4571af223d.json",
+    "data/corpus/revisions/source_revision/memprobe-hidden-user-state-recovery/rev-sha256-e14295ffaf40aeebf.json",
+    "data/corpus/revisions/source_revision/midca-dual-cycle/rev-sha256-368b1148807ef3f64.json",
+    "data/corpus/revisions/source_revision/mistake-notebook-learning/rev-sha256-7432aa554ec28430c.json",
+    "data/corpus/revisions/source_revision/mosaic-long-term-memory/rev-sha256-56a908bcc1267e449.json",
+    "data/corpus/revisions/source_revision/pain-axis/rev-sha256-696f4b975d571611e.json",
+    "data/corpus/revisions/source_revision/pm-bench/rev-sha256-947a3754a55029925.json",
+    "data/corpus/revisions/source_revision/proactive-wake-anchor/rev-sha256-e7c864e33ff0a2d4f.json",
+    "data/corpus/revisions/source_revision/recuris-memory-evolution/rev-sha256-d0cb5216864b4d810.json",
+    "data/corpus/revisions/source_revision/statefuse-conflict-preserving-memory/rev-sha256-ae013071e2d5b4c39.json",
+    "data/corpus/revisions/source_revision/storage-to-experience/rev-sha256-4eddf8c3cc7b4ba97.json",
+    "data/corpus/revisions/source_revision/trustmem-consolidation/rev-sha256-6cb6cb2f463bf894e.json",
+    "data/corpus/revisions/source_revision/truth-maintenance-system/rev-sha256-abb4561fdbe7c2e4c.json",
+    "data/corpus/revisions/source_revision/useful-memories-become-faulty/rev-sha256-704b163b88b823801.json",
+    "data/corpus/revisions/source_revision/verifiable-memory/rev-sha256-6124706337a3a3133.json",
+    "data/corpus/revisions/source_work/a-tma-state-aware-memory/rev-work-sha256-01b4dafafbe058dd2.json",
+    "data/corpus/revisions/source_work/agentic-memory/rev-work-sha256-394c516b806b03516.json",
+    "data/corpus/revisions/source_work/agm-theory-change/rev-work-sha256-acb97c6dd14f3fb30.json",
+    "data/corpus/revisions/source_work/cache-to-cache/rev-work-sha256-5c57aefab5d081274.json",
+    "data/corpus/revisions/source_work/coala-cognitive-architecture/rev-work-sha256-f3bbf0987f273e0a9.json",
+    "data/corpus/revisions/source_work/continual-learning-experience-reuse/rev-work-sha256-0c4ef3c7e30450a76.json",
+    "data/corpus/revisions/source_work/cross-model-kv-prefill-reuse/rev-work-sha256-89527263ef5be2f8d.json",
+    "data/corpus/revisions/source_work/fluctlightdb-observation-binding/rev-work-sha256-33819337cbcf42bad.json",
+    "data/corpus/revisions/source_work/insightemb-action-intent-retrieval/rev-work-sha256-f458c5b374038ed21.json",
+    "data/corpus/revisions/source_work/jev-mem-system-one-control/rev-work-sha256-7d260b82114e5466f.json",
+    "data/corpus/revisions/source_work/longmemeval-v2-experienced-colleague/rev-work-sha256-2ef34aafef7e101c9.json",
+    "data/corpus/revisions/source_work/memora-from-recall-to-forgetting/rev-work-sha256-c432d63796b905846.json",
+    "data/corpus/revisions/source_work/memory-beyond-recall/rev-work-sha256-6761bcb4571af223d.json",
+    "data/corpus/revisions/source_work/memprobe-hidden-user-state-recovery/rev-work-sha256-e14295ffaf40aeebf.json",
+    "data/corpus/revisions/source_work/midca-dual-cycle/rev-work-sha256-368b1148807ef3f64.json",
+    "data/corpus/revisions/source_work/mistake-notebook-learning/rev-work-sha256-7432aa554ec28430c.json",
+    "data/corpus/revisions/source_work/mosaic-long-term-memory/rev-work-sha256-56a908bcc1267e449.json",
+    "data/corpus/revisions/source_work/pain-axis/rev-work-sha256-696f4b975d571611e.json",
+    "data/corpus/revisions/source_work/pm-bench/rev-work-sha256-947a3754a55029925.json",
+    "data/corpus/revisions/source_work/proactive-wake-anchor/rev-work-sha256-e7c864e33ff0a2d4f.json",
+    "data/corpus/revisions/source_work/recuris-memory-evolution/rev-work-sha256-d0cb5216864b4d810.json",
+    "data/corpus/revisions/source_work/statefuse-conflict-preserving-memory/rev-work-sha256-ae013071e2d5b4c39.json",
+    "data/corpus/revisions/source_work/storage-to-experience/rev-work-sha256-4eddf8c3cc7b4ba97.json",
+    "data/corpus/revisions/source_work/trustmem-consolidation/rev-work-sha256-6cb6cb2f463bf894e.json",
+    "data/corpus/revisions/source_work/truth-maintenance-system/rev-work-sha256-abb4561fdbe7c2e4c.json",
+    "data/corpus/revisions/source_work/useful-memories-become-faulty/rev-work-sha256-704b163b88b823801.json",
+    "data/corpus/revisions/source_work/verifiable-memory/rev-work-sha256-6124706337a3a3133.json",
+    "data/corpus/revisions/thread/experience-becomes-policy/rev-thread-sha256-0a230c6d95496ae0925c7fb9f76605cd47d2c337e2858b90b6fb22e5cfeccbdb.json",
+    "data/corpus/revisions/thread/experience-to-capability/rev-thread-sha256-a71896cd405c5086c4175fcab185547ba44fcd68af0c037cd0e542aaf103553f.json"
+  ]
+}

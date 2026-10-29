@@ -1,0 +1,100 @@
+{
+  "id": "future-questions-and-memory",
+  "title": "记忆需要为尚未出现的问题保留什么？",
+  "kind": "research-essay",
+  "date": "2026-10-22",
+  "byline": "Agent Memory Study editors",
+  "intro": "用有限历史的观察类、全局答案交集和源文重访，研究同一份表示如何在未来用途改变后显露边界；保留可压缩且仍充分的正对照。",
+  "subtitle": "任务与表示 · 一项推导及其可复跑的有限见证",
+  "bodyFile": "entries/future-questions-and-memory.md",
+  "domains": [
+    "representation",
+    "memory",
+    "evaluation"
+  ],
+  "directionIds": [
+    "forms",
+    "change"
+  ],
+  "readings": [],
+  "externalReadings": [
+    {
+      "label": "LazyMem",
+      "kind": "论文 · 方法与归因段落实读",
+      "url": "https://arxiv.org/html/2607.22690v2",
+      "locator": "v2；§3、§4.5 与 Appendix F；2026-10-22 核验",
+      "takeaway": "查询已知后的编辑与压缩，及 retrieval miss、editing loss、QA reasoning 的区分，构成提交时机与观察边界的具体参照。",
+      "limit": "未复跑；本文不继承其效果数字，也不将归因标签当作已识别的普遍因果机制。"
+    },
+    {
+      "label": "Test-Time Memory Construction",
+      "kind": "论文 · 方法段落实读",
+      "url": "https://arxiv.org/html/2610.13348v1",
+      "locator": "v1；Introduction 与 §3；2026-10-22 核验",
+      "takeaway": "轻量 metadata 与原文连接、推理时迭代检索，使源文重访与初始候选边界可以分别提问。",
+      "limit": "未执行其系统或 benchmark；ReadRaw 依赖已见 metadata，原文连接存在不等于能够发现。"
+    },
+    {
+      "label": "Librarian Agents",
+      "kind": "论文 · 方法与来源恢复段落实读",
+      "url": "https://arxiv.org/html/2610.22273",
+      "locator": "2026-10-15 稿；§2 与 Appendix A.6；2026-10-22 核验",
+      "takeaway": "预先组织的层次文件系统与来源恢复说明未来用途可以同时影响组织和后续访问。",
+      "limit": "未复跑，不跨论文直接比较效果；其静态 QA 语料评价未检验动态长期记忆。"
+    },
+    {
+      "label": "MemRefine",
+      "kind": "论文 · 目标与实现方法段落实读",
+      "url": "https://arxiv.org/html/2606.13177v1",
+      "locator": "v1；§3.1 及方法中 pairwise judge surrogate；2026-10-22 核验",
+      "takeaway": "未知查询下的形式目标、预算与实际替代判断需要分别辨认。",
+      "limit": "未复跑；目标函数不等于对全部未来任务的已证保证。"
+    },
+    {
+      "label": "The Information Bottleneck Method",
+      "kind": "原始论文 · 定义与目标段落实读",
+      "url": "https://arxiv.org/pdf/physics/0004057",
+      "locator": "Tishby, Pereira & Bialek；§3，pp.8–9，Eq.14–15；2026-10-22 核验",
+      "takeaway": "给定 p(x,y) 后，I(X;Z) − βI(Z;Y) 连接压缩与指定相关目标；目标变量本身是问题前提。",
+      "limit": "本文未估计互信息、概率或率失真曲线；有限兼容性不是新的 Information Bottleneck 定理。"
+    },
+    {
+      "label": "LLMLingua-2",
+      "kind": "论文 · 问题设定与相关工作实读",
+      "url": "https://arxiv.org/html/2403.12968v2",
+      "locator": "v2；§1–2 的 task-aware / task-agnostic 区分；2026-10-22 核验",
+      "takeaway": "查询是否已知改变压缩器可用信息，是比较条件的一部分。",
+      "limit": "未复跑或评价其压缩器；本文只借用问题设定区别。"
+    },
+    {
+      "label": "LongMemEval",
+      "kind": "论文 · 记忆管线与结果段落实读",
+      "url": "https://arxiv.org/html/2410.10813v2",
+      "locator": "v2；§4.2 CP1/CP2，§5.2–5.3；2026-10-22 核验",
+      "takeaway": "检索 key 的表示与送达 value 可以不同；源值替换与事实扩展检索分别改变可用信息。",
+      "limit": "聚合与多 session 条件有差异；未复跑，不能外推原文或概括在全部任务上占优。"
+    }
+  ],
+  "boundary": "AMS 编者原创有限推导与 32 个合成历史的精确枚举；另有三历史多答案控制。有限兼容性不等于语义解码器、模型效用或真实人机连续性效果。无私人材料，无真实源访问，无新许可或新理论原创性主张；相邻模型协议仍未执行。",
+  "continuation": {
+    "question": "固定历史只改变用途，与加入新事件或更正，怎样分别改变表示兼容性和真实消费？",
+    "why": "先隔离任务变化与世界变化，才能判断失败来自信息丢失、源文未到场还是到场后未使用。",
+    "studyIds": [
+      "representation-and-use",
+      "forms-of-experience",
+      "change-and-continuity"
+    ],
+    "materialIds": [
+      "fluctlightdb-observation-binding",
+      "continual-learning-experience-reuse"
+    ]
+  },
+  "changes": [
+    {
+      "date": "2026-10-22",
+      "before": "以表示是否保留任务相关区别描述充分性，尚缺少整体观察类的可检验条件。",
+      "after": "以完整观察类的全局可接受答案交集检查有限兼容性，并分开用途扩展、确定性扩写与新增源证据。",
+      "basis": "文章中的有限推导与 research/task-relative-sufficiency 的完整精确枚举；未推到模型或人类效果。"
+    }
+  ]
+}

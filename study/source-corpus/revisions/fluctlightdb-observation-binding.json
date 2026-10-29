@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:fluctlightdb-observation-binding",
+  "revision": "rev:sha256:33819337cbcf42bad",
+  "state_revision": "rev:sha256:33819337cbcf42bad",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:fluctlightdb-observation-binding",
+    "revision": "rev:work-sha256:33819337cbcf42bad"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2608.12365v1",
+    "source_locator": "https://arxiv.org/abs/2608.12365v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "d6f19d810075f69fb242e55fdeb2c106ef37ba52c2737d9c003e2d2e6d55ccf0",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

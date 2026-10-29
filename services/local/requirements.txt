@@ -1,0 +1,3 @@
+# Local application runtime; install into the project virtual environment.
+-r ../../tools/content-requirements.txt
+pypdf==6.21.4

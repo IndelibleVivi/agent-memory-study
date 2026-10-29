@@ -1,0 +1,67 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:mistake-notebook-learning",
+  "revision": "rev:work-sha256:7432aa554ec28430c",
+  "state_revision": "rev:work-sha256:7432aa554ec28430c",
+  "title": "Mistake notebook learning: Batch-clustered failures for training-free agent adaptation",
+  "work_type": "paper",
+  "authors": [
+    "Xuanbo Su",
+    "Yingfang Zhang",
+    "Hao Luo",
+    "Xiaoteng Liu",
+    "Leo Huang"
+  ],
+  "year": 2026,
+  "short_author": "Su 等",
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.18653/v1/2026.findings-acl.719",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "url",
+      "value": "https://aclanthology.org/2026.findings-acl.719/",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://aclanthology.org/2026.findings-acl.719/",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "papers/07-su-2026-mistake-notebook-learning.pdf",
+      "delivery": "bundled",
+      "original_locator": "https://aclanthology.org/2026.findings-acl.719.pdf",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "aliases": [
+    "mistake-notebook-learning"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "8ebeb0bf97da93950ed8dca82df1535a5f4b1b7f7d42e3676caa295b02b5c7b3",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:continual-learning-experience-reuse",
+  "revision": "rev:work-sha256:0c4ef3c7e30450a76",
+  "state_revision": "rev:work-sha256:0c4ef3c7e30450a76",
+  "title": "When continual learning moves to memory: a study of experience reuse in LLM agents",
+  "work_type": "paper",
+  "authors": [
+    "Qisheng Hu",
+    "Quanyu Long",
+    "Wenya Wang"
+  ],
+  "year": 2026,
+  "short_author": "Hu 等",
+  "identifiers": [
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2604.27003",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2604.27003",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "papers/10-hu-2026-continual-learning-to-memory.pdf",
+      "delivery": "bundled",
+      "original_locator": "https://arxiv.org/pdf/2604.27003v1",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    }
+  ],
+  "aliases": [
+    "continual-learning-experience-reuse"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "73a42e361afd0a4db402c0888d86325fba3a311b71161b1d43ca95a43622a1ef",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:cross-model-kv-prefill-reuse",
+  "revision": "rev:work-sha256:89527263ef5be2f8d",
+  "state_revision": "rev:work-sha256:89527263ef5be2f8d",
+  "title": "Cross-Model KV Cache Transfer in LLM Families: A Closed-Form Linear Mapping for Prefill Reuse",
+  "work_type": "paper",
+  "authors": [
+    "Taekyung Heo",
+    "Rasoul Shafipour",
+    "Ritchie Zhao",
+    "Maximilian Golub",
+    "Mohammad Mahdi Kamani",
+    "Ritika Borkar",
+    "Makesh Tarun Chandran",
+    "Pantea Zardoshti",
+    "Bita Darvish Rouhani"
+  ],
+  "year": 2026,
+  "short_author": null,
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.48550/arXiv.2608.03893",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2608.03893v1",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2608.03893v1",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://arxiv.org/pdf/2608.03893v1",
+      "delivery": "official-link",
+      "original_locator": "https://arxiv.org/pdf/2608.03893v1"
+    }
+  ],
+  "aliases": [
+    "cross-model-kv-prefill-reuse"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "7b71fe78fa8e7bf6d5558ae96e432716881782bceea70de5da5ab47cdc349f24",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

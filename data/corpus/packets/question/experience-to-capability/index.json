@@ -1,0 +1,192 @@
+{
+  "schema": "ams-study-packet/2",
+  "contract_version": "ams-core/2",
+  "compiler_version": "ams-content-compiler/2",
+  "kind": "question",
+  "id": "experience-to-capability",
+  "title": "旧经验，怎样继续帮助当前任务？",
+  "entity_refs": [
+    {
+      "kind": "thread",
+      "id": "thread:experience-to-capability",
+      "revision": "rev:thread-sha256:a71896cd405c5086c4175fcab185547ba44fcd68af0c037cd0e542aaf103553f"
+    }
+  ],
+  "attribution": {
+    "byline": "Agent Memory Study editors",
+    "date": "2026-10-23"
+  },
+  "content": {
+    "id": "experience-to-capability",
+    "title": "旧经验，怎样继续帮助当前任务？",
+    "question": "经验在什么条件下能够提高当前能力？环境、版本或适用范围改变以后，怎样继续受益，又不被过去误导？",
+    "intro": "一条经验从被保存到参与行动，中间经过候选、选择、理解与适用判断。检索竞争、更正与范围、纵向修订传播提供了不同层次的已执行控制；cache 撤回则提醒我们，跨层借鉴必须重新建立依赖证据。",
+    "judgment": "目前能说明的是：经验还在不保证取得到，较新的说明不保证适用于当前范围，派生状态的撤回还可能需要单独处理。我们尚未证明，把条件与修订关系加入 memory 就能提高真实 agent 的任务完成率。",
+    "byline": "Agent Memory Study editors",
+    "updated": "2026-10-23",
+    "status": "open",
+    "explanations": [
+      {
+        "title": "也许先卡在“取不到”",
+        "text": "检索竞争的构造场景把失败定位到有限名额：重复候选排在必要经验之前。这个解释支持先检查候选与 context，但无法解释“证据已经在面前，模型仍然用错”的情况。"
+      },
+      {
+        "title": "也许取到了，却用错范围",
+        "text": "共读演示中，全局最新在旧版任务上会出错；按范围处理能避开这个反例，却依赖正确标签。需要把检索不到、条件识别错误和选择策略错误分别测量，不能统一归因于 memory 不够多。"
+      },
+      {
+        "title": "也许已修好，却又写回了旧影响",
+        "text": "修订传播的配对控制中，当前答案先被修好，预设重访早期输出时又出现旧答案；关闭写回的同前缀分支没有这次回流。这定位了该构造里的输出反馈路径，不估计现实系统的发生率，也不证明所有错误都来自再写入。"
+      },
+      {
+        "title": "也许结构并没有带来净收益",
+        "text": "更丰富的记录可能增加解析负担、工具调用或暂缓。真实模型也可能本来就能靠先验与工具完成任务。因此比较必须有 no-memory 与现有注入基线，记录完成率、误用、暂缓及成本，允许候选方案没有收益。"
+      },
+      {
+        "title": "另一个层次：被删掉的是什么",
+        "text": "单模型 cache 实验提示，删除来源 slots 与消除来源对保留状态的计算影响是两件事。这是相邻机制的证据，不支持把文本经验和神经状态混为一谈；迁移时必须重新建立目标系统的依赖证据。"
+      }
+    ],
+    "evidence": [
+      {
+        "label": "经验检索竞争：4 个原创场景、108 次 SQLite BM25 选择",
+        "url": "research/experience-reuse-retrieval-study/README.md",
+        "observation": "重复候选让必要清洗经验从第 2 位退到第 4、6 位；按 key 去重又会漏掉同 key 下上锁房间所需的方法。无关增长控制保持目标排名。",
+        "limit": "有限 synthetic witnesses；108 次选择共享四个场景。返回预算是记录条数，不是等 token 或等计算预算；没有运行 agent 任务。"
+      },
+      {
+        "label": "一条更正之后：7 个场景、56 个确定性规则输出",
+        "url": "research/correction-scope-study/README.md",
+        "observation": "新版说明与旧版任务可以共存；全局最新会误导旧版任务。按范围规则保留旧建议，却也会受错误版本标签误导。",
+        "limit": "scope、来源有效性和工具 contract 由 fixture 给定；规则不理解自然语言，也没有模型先验。暂缓不等于完成任务。"
+      },
+      {
+        "label": "修订传播：多层快照、单层干预与写回对照",
+        "url": "research/revision-propagation-study/README.md",
+        "observation": "事实追溯更正的 versions/delay=1/tombstone 对照在第 1 次任务答错、第 2 次修好；预设第 5、8 次重访早期 write 时旧答案再现。关闭写回后，第 2 次起保持正确。另行检查未受影响的事实、范围外任务和双时间历史。",
+        "limit": "9 个公开原创 event families 上的 scripted/oracle controls；5/8 重访是事先设计的压力条件。分支、重复任务与 probe rows 不构成新增独立样本；没有自然语言模型、真实错误率或隐私删除结论。"
+      },
+      {
+        "label": "来源撤回：200 个单模型 cache 干预输出",
+        "url": "research/c2c-cache-retraction-study/README.md",
+        "observation": "固定 SmolLM2-135M-Instruct 的 20/20 来源配对在裁去来源 slots 后仍有分布差异，3/20 首个 greedy token 改变；重算与屏蔽控制通过。",
+        "limit": "原创单模型机制实验，不是 C2C benchmark 复现。残余依赖不等于正确恢复事实，亦未验证文本摘要、向量索引或权重遗忘。"
+      }
+    ],
+    "materialIds": [
+      "continual-learning-experience-reuse",
+      "truth-maintenance-system",
+      "statefuse-conflict-preserving-memory",
+      "useful-memories-become-faulty",
+      "recuris-memory-evolution",
+      "cache-to-cache"
+    ],
+    "studyIds": [
+      "after-a-correction",
+      "representation-and-use"
+    ],
+    "findingIds": [
+      "retrieval-candidate-competition",
+      "revision-needs-scope",
+      "retraction-needs-recomputation"
+    ],
+    "nextTest": {
+      "question": "携带适用条件与修订关系的经验，能否改善版本变化中的可执行工具任务？",
+      "comparison": "后续 pilot 可比较不注入经验、现有朴素检索／摘要、条件化候选方案，并用正确证据分支诊断“取不到”与“用不好”。第一轮只改变一个主要机制；若比较整套方案，就把结论限定为整套方案。",
+      "success": "任务实际完成是主要结果；另报旧范围误用、暂缓、延迟与 token。注入分支对齐预算，任务族作为样本单位，不把同一场景的许多改写计成独立任务。",
+      "reviseWhen": "如果证据可得时现有方法同样完成任务，或候选方案的收益被误用、暂缓与成本抵消，就缩小或撤回“条件化处理值得采用”的建议；若失败集中在条件识别，研究重点转向这一环节。",
+      "boundary": "研究方向，尚未运行真实模型 pilot；没有冻结未查看任务族，也没有效果或显著性结论。现有 deterministic 场景不充当真实 no-memory agent。"
+    }
+  },
+  "manifest_policy": "Current public object plus bounded direct references; no linked full texts, private workflow, or inferred support.",
+  "manifest": [
+    {
+      "kind": "material",
+      "id": "continual-learning-experience-reuse",
+      "revision": "rev:note-sha256:0c4ef3c7e30450a76",
+      "publicKind": "material",
+      "title": "When continual learning moves to memory: a study of experience reuse in LLM agents",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/continual-learning-experience-reuse/"
+    },
+    {
+      "kind": "material",
+      "id": "truth-maintenance-system",
+      "revision": "rev:note-sha256:abb4561fdbe7c2e4c",
+      "publicKind": "material",
+      "title": "A truth maintenance system",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/truth-maintenance-system/"
+    },
+    {
+      "kind": "material",
+      "id": "statefuse-conflict-preserving-memory",
+      "revision": "rev:note-sha256:ae013071e2d5b4c39",
+      "publicKind": "material",
+      "title": "StateFuse: Deterministic Conflict-Preserving Memory for Multi-Agent Systems",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/statefuse-conflict-preserving-memory/"
+    },
+    {
+      "kind": "material",
+      "id": "useful-memories-become-faulty",
+      "revision": "rev:note-sha256:704b163b88b823801",
+      "publicKind": "material",
+      "title": "Useful Memories Become Faulty When Continuously Updated by LLMs",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/useful-memories-become-faulty/"
+    },
+    {
+      "kind": "material",
+      "id": "recuris-memory-evolution",
+      "revision": "rev:note-sha256:d0cb5216864b4d810",
+      "publicKind": "material",
+      "title": "Recursive Experiential–Working Memory Evolution for Long-Horizon Agent Harnesses",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/recuris-memory-evolution/"
+    },
+    {
+      "kind": "material",
+      "id": "cache-to-cache",
+      "revision": "rev:note-sha256:5c57aefab5d081274",
+      "publicKind": "material",
+      "title": "Cache-to-Cache: Direct Semantic Communication Between Large Language Models",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/cache-to-cache/"
+    },
+    {
+      "kind": "study",
+      "id": "after-a-correction",
+      "revision": "rev:entry-sha256:2e2b94a04b65c78eb8b2e3c0f545d07f58ac5598e6175ca26b7761071f6844a1",
+      "publicKind": "study",
+      "title": "一条更正之后",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/study/after-a-correction/"
+    },
+    {
+      "kind": "study",
+      "id": "representation-and-use",
+      "revision": "rev:entry-sha256:25a2b6bd04ea14966d311a94dd891dec57ddc1df00adf6ed65a4315d454dad11",
+      "publicKind": "study",
+      "title": "概括之后，往事还记得准吗？",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/study/representation-and-use/"
+    },
+    {
+      "kind": "finding",
+      "id": "retrieval-candidate-competition",
+      "revision": "rev:claim_revision-sha256:8db79c5643424ce85923a95467e146dd19b95c9a062ae742988b9cf9346733bd",
+      "publicKind": "finding",
+      "title": "旧经验还在，也可能失去被使用的机会",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/finding/retrieval-candidate-competition/"
+    },
+    {
+      "kind": "finding",
+      "id": "revision-needs-scope",
+      "revision": "rev:claim_revision-sha256:e5eaa7b1b094d698bed2b16c4357abd23d8ca6250f2b3ca620277d13cd9e880f",
+      "publicKind": "finding",
+      "title": "新说明出现，不代表旧范围已经失效",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/finding/revision-needs-scope/"
+    },
+    {
+      "kind": "finding",
+      "id": "retraction-needs-recomputation",
+      "revision": "rev:claim_revision-sha256:663691f5fe25d8fd5e816ec89193c655504fe3e32db0af7ca0dc054dd3e54193",
+      "publicKind": "finding",
+      "title": "来源对象消失，不保证派生影响消失",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/finding/retraction-needs-recomputation/"
+    }
+  ]
+}

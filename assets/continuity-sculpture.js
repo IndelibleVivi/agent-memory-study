@@ -72,14 +72,18 @@
     }
     return surface||nearest;
   }
-  function mount(data) {
-    const stage=document.querySelector("#continuity-sculpture");
+  /** @param {any} data @param {{root?: Document|HTMLElement, model?: any, routeHref?: (kind:string,id:string)=>string}} options */
+  function mount(data,{root=document,model:providedModel,routeHref=(kind,id)=>`?${kind}=${encodeURIComponent(id)}`}={}) {
+    const cleanup=[];let disposed=false;
+    const listen=(target,event,handler)=>{target.addEventListener(event,handler);cleanup.push(()=>target.removeEventListener(event,handler));};
+    const stage=root.querySelector("#continuity-sculpture");
     if(!stage || !data)return;
-    const model=graph(data); if(!model.nodes.length)return;
+    const sculpture=stage.closest(".room-hero");
+    const model=providedModel||graph(data); if(!model.nodes.length)return;
     const canvas=stage.querySelector("canvas"), motion=matchMedia("(prefers-reduced-motion: reduce)");
     const labelLayer=document.createElement("div");labelLayer.className="sculpture-labels";stage.append(labelLayer);
-    const controls=[...document.querySelectorAll("[data-sculpture-view]")];
-    const toggle=document.querySelector(".sculpture-toggle"), selector=document.querySelector("#sculpture-record");
+    const controls=[...root.querySelectorAll("[data-sculpture-view]")];
+    const toggle=root.querySelector(".sculpture-toggle"), selector=root.querySelector("#sculpture-record");
     let selected=Math.max(0,model.nodes.findIndex(x=>x.id==="ams-thesis")), mode="field";
     let current=layout(model,mode,selected), target=current.map(x=>x.slice());
     let yaw=-.35,pitch=.52,frame=0,previous=0,visible=false,paused=motion.matches,lost=false,drag=null;
@@ -87,18 +91,18 @@
     selector.replaceChildren(...model.nodes.map((node,i)=>{
       const option=document.createElement("option");option.value=i;option.textContent=`${labels[node.kind]} / ${node.title}`;return option;
     }));
-    document.querySelectorAll("[data-research-count]").forEach(el=>el.textContent=String(model.nodes.length).padStart(2,"0"));
+    root.querySelectorAll("[data-research-count]").forEach(el=>el.textContent=String(model.nodes.length).padStart(2,"0"));
     function describe() {
       const node=model.nodes[selected], links=neighbors(model,selected);
       selector.value=selected;
-      document.querySelector("#sculpture-ordinal").textContent=`${String(selected+1).padStart(2,"0")} / ${String(model.nodes.length).padStart(2,"0")}`;
-      document.querySelector("#sculpture-kind").textContent=labels[node.kind];
-      document.querySelector("#sculpture-title").textContent=node.title;
-      document.querySelector("#sculpture-summary").textContent=node.summary;
-      document.querySelector(".sculpture-source summary").textContent=`{ ${node.key} }`;
-      document.querySelector("#sculpture-code").textContent=`{\n  type: "${node.kind}",\n  id: "${node.id}",\n  links: ${links.size},\n  view: "${mode}"\n}`;
-      const link=document.querySelector("#sculpture-open");
-      link.href=`?${node.kind}=${encodeURIComponent(node.id)}`;link.dataset.route=node.kind;link.dataset.routeId=node.id;
+      root.querySelector("#sculpture-ordinal").textContent=`${String(selected+1).padStart(2,"0")} / ${String(model.nodes.length).padStart(2,"0")}`;
+      root.querySelector("#sculpture-kind").textContent=labels[node.kind];
+      root.querySelector("#sculpture-title").textContent=node.title;
+      root.querySelector("#sculpture-summary").textContent=node.summary;
+      root.querySelector(".sculpture-source summary").textContent=`{ ${node.key} }`;
+      root.querySelector("#sculpture-code").textContent=`{\n  type: "${node.kind}",\n  id: "${node.id}",\n  links: ${links.size},\n  view: "${mode}"\n}`;
+      const link=root.querySelector("#sculpture-open");
+      link.href=routeHref(node.kind,node.id);link.dataset.route=node.kind;link.dataset.routeId=node.id;
       link.setAttribute("aria-label",`阅读：${node.title}`);
       stage.dataset.view=mode;stage.closest(".room-hero").dataset.view=mode;stage.dataset.selection=node.key;
       controls.forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.sculptureView===mode)));
@@ -133,6 +137,7 @@
       else previous=0;
     }
     function refresh() {
+      if(disposed)return;
       if(frame)cancelAnimationFrame(frame);frame=0;previous=0;
       const running=active&&visible&&!document.hidden&&!paused&&!lost;
       stage.dataset.motion=running?"running":"still";
@@ -143,19 +148,19 @@
     }
     function choose(index) { selected=(index+model.nodes.length)%model.nodes.length;target=layout(model,mode,selected);describe();refresh(); }
     selector.addEventListener("change",()=>choose(Number(selector.value)));
-    document.querySelectorAll("[data-sculpture-step]").forEach(button=>button.addEventListener("click",()=>choose(selected+Number(button.dataset.sculptureStep))));
+    root.querySelectorAll("[data-sculpture-step]").forEach(button=>button.addEventListener("click",()=>choose(selected+Number(button.dataset.sculptureStep))));
     controls.forEach(button=>button.addEventListener("click",()=>{mode=button.dataset.sculptureView;target=layout(model,mode,selected);describe();refresh();}));
-    document.querySelector("#sculpture-reset").addEventListener("click",()=>{yaw=-.35;pitch=.52;refresh();});
+    root.querySelector("#sculpture-reset").addEventListener("click",()=>{yaw=-.35;pitch=.52;refresh();});
     toggle.addEventListener("click",()=>{paused=!paused;refresh();});
-    motion.addEventListener("change",()=>{paused=motion.matches;refresh();});
-    document.addEventListener("visibilitychange",refresh);
+    listen(motion,"change",()=>{paused=motion.matches;refresh();});
+    listen(document,"visibilitychange",refresh);
     describe();
     // The typographic reveals carry no hidden-only information; touch and keyboard expose the same copy.
     if("IntersectionObserver" in window) {
       const reveal=new IntersectionObserver(entries=>entries.forEach(entry=>entry.target.classList.toggle("is-in-view",entry.isIntersecting)),{threshold:.12});
-      document.querySelectorAll(".section-heading,.room-changes,.about").forEach(node=>reveal.observe(node));
+      root.querySelectorAll(".section-heading,.room-changes,.about").forEach(node=>reveal.observe(node));cleanup.push(()=>reveal.disconnect());
     }
-    document.querySelectorAll("[data-js-control]").forEach(node=>node.hidden=false);
+    sculpture.querySelectorAll("[data-sculpture-control]").forEach(node=>node.hidden=false);
     gl=canvas.getContext("webgl",{alpha:true,antialias:true,powerPreference:"low-power",premultipliedAlpha:false});
     function drawFallback() {
       const svg=stage.querySelector('.sculpture-fallback'),NS='http://www.w3.org/2000/svg';
@@ -167,9 +172,9 @@
         path.setAttribute('fill','none');path.setAttribute('stroke',i===selected?'#a9550f':'#718a91');path.setAttribute('stroke-width',i===selected?'3':'1');path.setAttribute('opacity',String(pose[6]));svg.append(path);
       });
     }
-    function fallback() {active=false;lost=true;drag=null;stage.classList.remove("is-dragging");labelLayer.replaceChildren();stage.dataset.renderer="fallback";stage.removeAttribute("tabindex");stage.setAttribute("role","img");stage.setAttribute("aria-label","公开研究的环形视图");controls.forEach(button=>button.disabled=true);toggle.hidden=true;document.querySelector("#sculpture-reset").hidden=true;paint=drawFallback;refresh();}
+    function fallback() {active=false;lost=true;drag=null;stage.classList.remove("is-dragging");labelLayer.replaceChildren();stage.dataset.renderer="fallback";stage.removeAttribute("tabindex");stage.setAttribute("role","img");stage.setAttribute("aria-label","公开研究的环形视图");controls.forEach(button=>button.disabled=true);toggle.hidden=true;root.querySelector("#sculpture-reset").hidden=true;paint=drawFallback;refresh();}
     drawFallback();
-    if(!gl){fallback();return;}
+    if(!gl){fallback();return {destroy};}
     const vertex=`attribute vec3 position;attribute vec3 normal;attribute vec4 color;
       uniform float yaw;uniform float pitch;uniform float aspect;uniform float fit;uniform float focal;varying vec3 n;varying vec3 p;varying vec4 c;
       mat3 ry(float a){float c=cos(a),s=sin(a);return mat3(c,0.,-s,0.,1.,0.,s,0.,c);}
@@ -180,9 +185,9 @@
       float rim=pow(1.-abs(dot(nn,normalize(vec3(0.,0.,7.)-p))),3.);vec3 base=c.rgb*light+rim*.18;
       gl_FragColor=vec4(mix(base,c.rgb,wire),c.a);}`;
     function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);return gl.getShaderParameter(s,gl.COMPILE_STATUS)?s:null;}
-    const vs=shader(gl.VERTEX_SHADER,vertex),fs=shader(gl.FRAGMENT_SHADER,fragment);if(!vs||!fs){fallback();return;}
+    const vs=shader(gl.VERTEX_SHADER,vertex),fs=shader(gl.FRAGMENT_SHADER,fragment);if(!vs||!fs){fallback();return {destroy};}
     const program=gl.createProgram();gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);gl.deleteShader(vs);gl.deleteShader(fs);
-    if(!gl.getProgramParameter(program,gl.LINK_STATUS)){fallback();return;}gl.useProgram(program);
+    if(!gl.getProgramParameter(program,gl.LINK_STATUS)){fallback();return {destroy};}gl.useProgram(program);
     const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
     for(const [name,size,offset] of [["position",3,0],["normal",3,12],["color",4,24]]){const loc=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,size,gl.FLOAT,false,40,offset);}
     const uniforms=Object.fromEntries(["yaw","pitch","aspect","fit","focal","wire"].map(name=>[name,gl.getUniformLocation(program,name)]));
@@ -257,10 +262,12 @@
       if(keys[event.key]){event.preventDefault();yaw+=keys[event.key][0];pitch=Math.max(-1.2,Math.min(1.2,pitch+keys[event.key][1]));paint();}
       if(event.key==="Enter"){event.preventDefault();choose(selected+1);}
     });
-    canvas.addEventListener("webglcontextlost",event=>{event.preventDefault();fallback();});
-    new ResizeObserver(()=>paint()).observe(stage);
-    new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;refresh();},{threshold:.05}).observe(stage);
+    listen(canvas,"webglcontextlost",event=>{event.preventDefault();fallback();});
+    const resize=new ResizeObserver(()=>{if(!disposed)paint();});resize.observe(stage);cleanup.push(()=>resize.disconnect());
+    const visibility=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;refresh();},{threshold:.05});visibility.observe(stage);cleanup.push(()=>visibility.disconnect());
     active=true;stage.dataset.renderer="webgl";refresh();
+    return {destroy};
+    function destroy(){disposed=true;active=false;cancelAnimationFrame(frame);cleanup.forEach(fn=>fn());labelLayer.remove();gl?.getExtension("WEBGL_lose_context")?.loseContext();}
   }
   return {graph,neighbors,layout,ribbonPoint,rotate,project,pickObject,mount};
 });

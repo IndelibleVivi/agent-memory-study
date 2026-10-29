@@ -8,7 +8,7 @@
   const site = "https://indeliblevivi.github.io/agent-memory-study/";
   const kinds = ["material", "study", "question", "finding"];
   const collections = { material: "materials", study: "studies", question: "questions", finding: "findings" };
-  const routeKeys = [...kinds, "practice", "scenario", "phase", "thread", "path", "q", "topic", "surface", "depth", "domain", "direction", "k", "ranking", "need"];
+  const routeKeys = [...kinds, "practice", "scenario", "phase", "thread", "path", "q", "topic", "surface", "depth", "domain", "direction", "k", "ranking", "need", "dataset", "mutation", "repair", "query"];
 
   function pathFor(route) {
     const kind = kinds.find(key => route[key]);
@@ -34,6 +34,11 @@
     if (route.study && route.phase === "after") url.searchParams.set("phase", "after");
     if(route.study === "retrieval-and-relevance") {
       for(const key of ["k","ranking","need"]) if(route[key]) url.searchParams.set(key,route[key]);
+    }
+    if (route.study === "what-an-index-learns") {
+      for (const key of ["dataset", "mutation", "repair", "query"]) {
+        if (route[key] !== undefined && route[key] !== null) url.searchParams.set(key, route[key]);
+      }
     }
     url.hash = hash;
     return `${url.pathname}${url.search}${url.hash}`;

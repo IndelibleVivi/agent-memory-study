@@ -1,0 +1,89 @@
+{
+  "schema": "ams-study-packet/2",
+  "contract_version": "ams-core/2",
+  "compiler_version": "ams-content-compiler/2",
+  "kind": "material",
+  "id": "agm-theory-change",
+  "title": "On the logic of theory change: Partial meet contraction and revision functions",
+  "entity_refs": [
+    {
+      "kind": "source_work",
+      "id": "work:agm-theory-change",
+      "revision": "rev:work-sha256:acb97c6dd14f3fb30"
+    },
+    {
+      "kind": "source_revision",
+      "id": "work:agm-theory-change",
+      "revision": "rev:sha256:acb97c6dd14f3fb30"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:agm-theory-change",
+      "revision": "rev:note-sha256:acb97c6dd14f3fb30"
+    }
+  ],
+  "attribution": {
+    "source_authors": [
+      "Carlos E. Alchourrón",
+      "Peter Gärdenfors",
+      "David Makinson"
+    ],
+    "note_byline": "Agent Memory Study editors",
+    "source_revision_mode": "observed-snapshot",
+    "note_depth": "skim",
+    "reading_scope": "Abstract、§1–§4、§6–§7；未逐行复核全部证明，§5 connectivity 细节未读。"
+  },
+  "content": {
+    "id": "agm-theory-change",
+    "title": "On the logic of theory change: Partial meet contraction and revision functions",
+    "authors": [
+      "Carlos E. Alchourrón",
+      "Peter Gärdenfors",
+      "David Makinson"
+    ],
+    "shortAuthor": "Alchourrón 等",
+    "year": 1985,
+    "noteDepth": "skim",
+    "readingScope": "Abstract、§1–§4、§6–§7；未逐行复核全部证明，§5 connectivity 细节未读。",
+    "intro": "用 expansion、contraction 与 revision 的形式区分新增、放弃和在冲突后恢复一致性，并刻画哪些操作可由 partial meet 表示。",
+    "categories": [
+      "信念修正"
+    ],
+    "failureSurfaces": [
+      "justification-revision"
+    ],
+    "sourceUrl": "https://www.cambridge.org/core/journals/journal-of-symbolic-logic/article/on-the-logic-of-theory-change-partial-meet-contraction-and-revision-functions/7ED837BAD5FB6D9A7C77906D73527F9C",
+    "pdf": {
+      "delivery": "official",
+      "url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/7ED837BAD5FB6D9A7C77906D73527F9C/S0022481200032849a.pdf/div-class-title-on-the-logic-of-theory-change-partial-meet-contraction-and-revision-functions-div.pdf",
+      "accessNote": "可能需要机构访问"
+    },
+    "number": 14,
+    "kind": "paper",
+    "doi": "10.2307/2274239",
+    "keyPoints": [
+      "contraction 从 deductively closed theory 中放弃命题及维持 closure 所必须一并放弃的内容；Levi identity 把 revision 表成先 contraction 掉新命题的否定，再加入新命题。（§1）",
+      "A ⟂ x 是 A 中所有不推出 x 的 maximal subsets；partial meet 由 selection function 选一组 remainders 后取交集，并把 maxichoice 与 full meet 作为极端情况。（§1–§2）",
+      "closure、inclusion、vacuity、success、preservation、recovery 六条基本 postulates 与 partial meet contraction 之间给出双向 representation result。（§2）"
+    ],
+    "keywords": [
+      "belief revision",
+      "partial meet contraction",
+      "formal logic"
+    ],
+    "editorialQuestion": "selection function 可以在形式上挑选“最佳” remainders，但重要性从何而来？若选择由 opaque model 作出，逻辑 postulates 如何与 provenance 和授权结合？",
+    "sourceNote": "",
+    "designTransfer": {
+      "byline": "Agent Memory Study editors",
+      "date": "2026-09-08",
+      "when": "遇到新旧说法冲突，需要讲清楚系统做的是添加、放弃还是接受新说法后的调整。",
+      "move": "先用 expansion / contraction / revision 区分变更意图，并把选择保留哪些理由的规则写出来。",
+      "check": "在一个可手工检查的小命题集里加入冲突，比较两个不同保留策略会丢掉什么；检查选择依据能否向读者说明。",
+      "boundary": "这是 skim 范围下的形式化思考线索，尚未逐行复核证明或执行对照。postulates 不会替你决定何种来源、偏好或主体具有权威。",
+      "basis": "既有札记 “关键抓手”：§§1–2；“继续追问”：selection function 的依据。",
+      "status": "proposed-not-run"
+    }
+  },
+  "manifest": [],
+  "manifest_policy": "Current public object plus bounded direct references; no linked full texts, private workflow, or inferred support."
+}

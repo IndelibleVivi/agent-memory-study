@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:memprobe-hidden-user-state-recovery",
+  "revision": "rev:sha256:e14295ffaf40aeebf",
+  "state_revision": "rev:sha256:e14295ffaf40aeebf",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:memprobe-hidden-user-state-recovery",
+    "revision": "rev:work-sha256:e14295ffaf40aeebf"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2606.24595v1",
+    "source_locator": "https://arxiv.org/abs/2606.24595v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "c2b4967a0a931557832c1ce308bb3645efad5b2c2ce70489c2f3e106999baa16",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

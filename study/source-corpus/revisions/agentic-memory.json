@@ -1,0 +1,29 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:agentic-memory",
+  "revision": "rev:sha256:394c516b806b03516",
+  "state_revision": "rev:sha256:394c516b806b03516",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:agentic-memory",
+    "revision": "rev:work-sha256:394c516b806b03516"
+  },
+  "identity": {
+    "mode": "observed-snapshot",
+    "observed_at": null,
+    "source_locator": "https://aclanthology.org/2026.acl-long.981.pdf",
+    "observation_basis": "Legacy public locator does not prove a distinct publisher version; this is the reviewed source identity, not a stored byte snapshot.",
+    "publisher_version_known": false,
+    "snapshot_captured": false
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "cd2bf4dd1db0ddbedfa5d380348de353766fa57abd08f3928d23ef0b3f0b4a48",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

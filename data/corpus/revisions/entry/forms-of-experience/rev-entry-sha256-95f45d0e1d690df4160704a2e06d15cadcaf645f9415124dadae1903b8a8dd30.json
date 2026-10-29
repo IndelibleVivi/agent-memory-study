@@ -1,0 +1,52 @@
+{
+  "schema": "ams-core/2",
+  "kind": "entry",
+  "id": "entry:forms-of-experience",
+  "title": "经验怎样获得形式",
+  "byline": "Agent Memory Study editors",
+  "payload": {
+    "id": "forms-of-experience",
+    "title": "经验怎样获得形式",
+    "kind": "research-essay",
+    "date": "2026-10-18",
+    "byline": "Agent Memory Study editors",
+    "intro": "原话、结构、向量与参数各自保留什么区别，又让什么泛化成为可能？",
+    "subtitle": "长期方向 01 · 表示、知识与概括",
+    "number": "07",
+    "domains": [
+      "representation",
+      "memory",
+      "learning"
+    ],
+    "directionIds": [
+      "forms"
+    ],
+    "readings": [],
+    "externalReadings": [],
+    "takeaways": [],
+    "boundary": "这是 AMS 的编者论述。来源、原创推演与既有研究的边界在正文分别说明；不包含私人共学记录或新的模型实验。",
+    "closing": "",
+    "sourcePath": "study/programme/directions/forms-of-experience.md",
+    "bodyMarkdown": "# 经验怎样获得形式\n\n一件事发生过以后，系统能够留下原始记录、抽取出的关系、压缩后的概括，也可能留下改变过的参数。表示决定后来能够做哪些比较、恢复哪些细节、形成哪些泛化。这个方向研究这些可能性如何产生。\n\n## 表示保存的是可区分性\n\n设原记录是“周一在旧版环境使用 A，周五在新版环境使用 B”。如果只留下“使用过 A 和 B”，方法还在，时间、版本与选择的绑定却已经消失。若下次任务只问“有哪些方法”，这个表示可能足够；若任务问“旧版该用哪个”，它就缺少关键区别。这是原创的信息变换例子，不是模型实测。\n\n因此，表示的好坏需要连同想要保留的区别一起讨论。记录更短不必然更差，保存更多细节也不必然更有用。值得研究的是某种变换怎样改变可恢复、可比较、可泛化的关系。\n\n## 从保存经历，走到形成概括\n\n[概括之后，往事还记得准吗](../../entries/representation-and-use.md)保留了事件、schema、来源辨识与模型上下文研究的对读。它让我们看到至少两类需求：跨事件联系有助于推论，事件的独特条件又支持辨识来源。它们可能在不同表示中共存，也可能在有限容量和选择过程中互相干扰。\n\n这里还没有一种统一的最优表示。人的实验、模型 probing 和结构化存储观察处理不同尺度。AMS 接下来的解释责任，是明确它们各自说明了什么关系，再决定是否存在可研究的桥梁。\n\n## 几个可以独立深入的入口\n\n- 从分词、切块与 tokenization 开始，研究单位怎样改变可匹配的对象。进入[从几个名字进入 IR](../../entries/retrieval-and-relevance.md)。\n- 从数据库中的记录、关系与索引开始，研究对象身份与访问形式。进入[记录、表示与系统角色](../../entries/records-representations-systems.md)。\n- 从概括与来源辨识开始，追问整合与保留能否共同发生。进入已有的[表示与取用共读](../../entries/representation-and-use.md)。\n- 从参数或 cache 开始，区分存储内容、可解码信息和实际输出的依赖。现有 [cache 研究](../../../research/c2c-cache-retraction-study/README.md)提供的是特定计算机制的观察，不是对所有记忆形式的解释。\n\n信息论、知识表示、认知科学和表示学习都能在这里独立展开。它们不需要先变成一个 memory 工程组件；基础理论本身可能改变我们认为值得保留的区别。\n\n## 当前判断与未解处\n\n当前可以采用的分析方式是：先写清对象经过了什么变换，再问某个区别是否仍可恢复，最后观察任务有没有使用它。仅检查表示中“有无某字段”不够；观察输出变化也不足以单独解释中间机制。\n\n一个未解处是：**哪些泛化可以通过增加关系而获得，哪些必须以舍弃区别为代价？** [未来问题与记忆](../../entries/future-questions-and-memory.md)现在为其中的信息前提建立了有限判断：把相同可见表示对应的所有可能历史放在一起，检查它们在某个任务上是否有共同可接受答案。32 个原创历史的枚举同时给出压缩后仍兼容的正例、未来用途扩大后的空交集，以及两两相容却整体不相容的三历史控制。这个结果不测模型泛化，也不证明更复杂的表示有净收益。\n\n当前值得继续的是把**固定历史、改变用途**与**加入新事件或更正**分开。前者研究后来才需要的区别，后者研究状态怎样更新；源文重访作为独立的新增观察处理。下一次可以先构造自然语言中的对应任务，或继续学习给定任务分布下的充分性与压缩理论。这个局部研究单元没有收紧整个方向；分词、表示学习、认知机制和索引仍可独立深入。\n"
+  },
+  "entry_type": "research-essay",
+  "date": "2026-10-18",
+  "intro": "原话、结构、向量与参数各自保留什么区别，又让什么泛化成为可能？",
+  "body_file": "study/programme/directions/forms-of-experience.md",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "95f45d0e1d690df4160704a2e06d15cadcaf645f9415124dadae1903b8a8dd30",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "body_file",
+      "byline",
+      "date",
+      "entry_type",
+      "intro",
+      "payload",
+      "title"
+    ]
+  },
+  "revision": "rev:entry-sha256:95f45d0e1d690df4160704a2e06d15cadcaf645f9415124dadae1903b8a8dd30",
+  "state_revision": "rev:entry-sha256:95f45d0e1d690df4160704a2e06d15cadcaf645f9415124dadae1903b8a8dd30"
+}

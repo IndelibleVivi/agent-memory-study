@@ -1,0 +1,79 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_note",
+  "id": "note:agm-theory-change",
+  "revision": "rev:note-sha256:acb97c6dd14f3fb30",
+  "state_revision": "rev:note-sha256:acb97c6dd14f3fb30",
+  "alias": "agm-theory-change",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:agm-theory-change",
+    "revision": "rev:work-sha256:acb97c6dd14f3fb30"
+  },
+  "source_revision_ref": {
+    "kind": "source_revision",
+    "id": "work:agm-theory-change",
+    "revision": "rev:sha256:acb97c6dd14f3fb30"
+  },
+  "title": "On the logic of theory change: Partial meet contraction and revision functions",
+  "byline": "Agent Memory Study editors",
+  "date": "2026-09-08",
+  "intro": "用 expansion、contraction 与 revision 的形式区分新增、放弃和在冲突后恢复一致性，并刻画哪些操作可由 partial meet 表示。",
+  "note_depth": "skim",
+  "reading_scope": "Abstract、§1–§4、§6–§7；未逐行复核全部证明，§5 connectivity 细节未读。",
+  "navigation": {
+    "categories": [
+      "信念修正"
+    ],
+    "failure_surfaces": [
+      "justification-revision"
+    ],
+    "domains": []
+  },
+  "payload": {
+    "number": 14,
+    "id": "agm-theory-change",
+    "kind": "paper",
+    "doi": "10.2307/2274239",
+    "keyPoints": [
+      "contraction 从 deductively closed theory 中放弃命题及维持 closure 所必须一并放弃的内容；Levi identity 把 revision 表成先 contraction 掉新命题的否定，再加入新命题。（§1）",
+      "A ⟂ x 是 A 中所有不推出 x 的 maximal subsets；partial meet 由 selection function 选一组 remainders 后取交集，并把 maxichoice 与 full meet 作为极端情况。（§1–§2）",
+      "closure、inclusion、vacuity、success、preservation、recovery 六条基本 postulates 与 partial meet contraction 之间给出双向 representation result。（§2）"
+    ],
+    "keywords": [
+      "belief revision",
+      "partial meet contraction",
+      "formal logic"
+    ],
+    "editorialQuestion": "selection function 可以在形式上挑选“最佳” remainders，但重要性从何而来？若选择由 opaque model 作出，逻辑 postulates 如何与 provenance 和授权结合？",
+    "sourceNote": "",
+    "designTransfer": {
+      "byline": "Agent Memory Study editors",
+      "date": "2026-09-08",
+      "when": "遇到新旧说法冲突，需要讲清楚系统做的是添加、放弃还是接受新说法后的调整。",
+      "move": "先用 expansion / contraction / revision 区分变更意图，并把选择保留哪些理由的规则写出来。",
+      "check": "在一个可手工检查的小命题集里加入冲突，比较两个不同保留策略会丢掉什么；检查选择依据能否向读者说明。",
+      "boundary": "这是 skim 范围下的形式化思考线索，尚未逐行复核证明或执行对照。postulates 不会替你决定何种来源、偏好或主体具有权威。",
+      "basis": "既有札记 “关键抓手”：§§1–2；“继续追问”：selection function 的依据。",
+      "status": "proposed-not-run"
+    }
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "1686a0dd1d23141c4fdee817a607ea04437a14e626b09c7fb49f8c30b2da141e",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "alias",
+      "byline",
+      "date",
+      "intro",
+      "navigation",
+      "note_depth",
+      "payload",
+      "reading_scope",
+      "source_revision_ref",
+      "title",
+      "work_ref"
+    ]
+  }
+}

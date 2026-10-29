@@ -1,0 +1,58 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:verifiable-memory",
+  "revision": "rev:work-sha256:6124706337a3a3133",
+  "state_revision": "rev:work-sha256:6124706337a3a3133",
+  "title": "Verifiable memory: Learning unified memory management with local and global verifiers for large language model agents",
+  "work_type": "paper",
+  "authors": [
+    "Xiaolong Sun",
+    "Qichao Wang",
+    "Hangyu Li",
+    "Liang Chen"
+  ],
+  "year": 2026,
+  "short_author": "Sun 等",
+  "identifiers": [
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2608.03137v1",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2608.03137v1",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://arxiv.org/pdf/2608.03137v1",
+      "delivery": "official-link",
+      "original_locator": "https://arxiv.org/pdf/2608.03137v1"
+    }
+  ],
+  "aliases": [
+    "verifiable-memory"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "6e85e7ac7abedf5781949c05e0d6d73fa044065bafa2f84ddcbbc328749a9c73",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

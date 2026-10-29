@@ -1,0 +1,22 @@
+{
+  "id": "conditional-information-and-use",
+  "title": "新材料的价值，为什么要连同已有材料一起问？",
+  "kind": "research-essay",
+  "date": "2026-10-29",
+  "byline": "Agent Memory Study editors",
+  "intro": "以真实SQLite FTS5、四个原创有限家族和完整请求重放，区分信息互补、重复、检索选择、实际送达与消费者输出；原生检索已执行，真实provider仍待绑定与授权。",
+  "subtitle": "条件信息贡献、固定预算与实际送达的一项本地研究",
+  "bodyFile": "entries/conditional-information-and-use.md",
+  "domains": [
+    "representation",
+    "memory",
+    "evaluation"
+  ],
+  "directionIds": [
+    "forms",
+    "change"
+  ],
+  "readings": [],
+  "externalReadings": [],
+  "boundary": "四个原创构造family、九个case、864个本地scripted/oracle jobs；经验样本数0。真实FTS5不等于真实模型使用；诊断bytes不等于tokens，used保持unknown。模型、tokenizer、费用上限尚未绑定，未执行provider或真人研究。"
+}

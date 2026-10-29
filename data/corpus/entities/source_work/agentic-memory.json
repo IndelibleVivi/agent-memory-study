@@ -1,0 +1,69 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:agentic-memory",
+  "revision": "rev:work-sha256:394c516b806b03516",
+  "state_revision": "rev:work-sha256:394c516b806b03516",
+  "title": "Agentic memory: Learning unified long-term and short-term memory management for large language model agents",
+  "work_type": "paper",
+  "authors": [
+    "Yi Yu",
+    "Liuyi Yao",
+    "Yuexiang Xie",
+    "Qingquan Tan",
+    "Jiaqi Feng",
+    "Yaliang Li",
+    "Libing Wu"
+  ],
+  "year": 2026,
+  "short_author": "Yu 等",
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.18653/v1/2026.acl-long.981",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "url",
+      "value": "https://aclanthology.org/2026.acl-long.981/",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://aclanthology.org/2026.acl-long.981/",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "papers/11-yu-2026-agentic-memory.pdf",
+      "delivery": "bundled",
+      "original_locator": "https://aclanthology.org/2026.acl-long.981.pdf",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "aliases": [
+    "agentic-memory"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "2f1b7eb5034956348985d500244c68b883c281e47737372386e6a52ba5e3bf08",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

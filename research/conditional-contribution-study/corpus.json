@@ -1,0 +1,360 @@
+{
+  "schema": "ams-conditional-corpus/1",
+  "family_splits": {
+    "complement": "development",
+    "redundancy": "development",
+    "revision": "diagnostic",
+    "methods": "diagnostic"
+  },
+  "provenance": "AMS editors original synthetic finite cases; all splits exposed to designer.",
+  "cases": [
+    {
+      "id": "xor-00",
+      "family": "complement",
+      "split": "development",
+      "question": {
+        "kind": "xor",
+        "query": "signal",
+        "text": "Return XOR of explicitly supplied x and y, or abstain if either is missing."
+      },
+      "B": [
+        {
+          "id": "b",
+          "key": "signal",
+          "value": {
+            "kind": "bit",
+            "name": "x",
+            "value": "0",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "S": [
+        {
+          "id": "s",
+          "key": "signal",
+          "value": {
+            "kind": "bit",
+            "name": "y",
+            "value": "0",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "world": {
+        "x": 0,
+        "y": 0
+      },
+      "variant": "baseline"
+    },
+    {
+      "id": "xor-01",
+      "family": "complement",
+      "split": "development",
+      "question": {
+        "kind": "xor",
+        "query": "signal",
+        "text": "Return XOR of explicitly supplied x and y, or abstain if either is missing."
+      },
+      "B": [
+        {
+          "id": "b",
+          "key": "signal",
+          "value": {
+            "kind": "bit",
+            "name": "x",
+            "value": "0",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "S": [
+        {
+          "id": "s",
+          "key": "signal",
+          "value": {
+            "kind": "bit",
+            "name": "y",
+            "value": "1",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "world": {
+        "x": 0,
+        "y": 1
+      },
+      "variant": "baseline"
+    },
+    {
+      "id": "xor-10",
+      "family": "complement",
+      "split": "development",
+      "question": {
+        "kind": "xor",
+        "query": "signal",
+        "text": "Return XOR of explicitly supplied x and y, or abstain if either is missing."
+      },
+      "B": [
+        {
+          "id": "b",
+          "key": "signal",
+          "value": {
+            "kind": "bit",
+            "name": "x",
+            "value": "1",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "S": [
+        {
+          "id": "s",
+          "key": "signal",
+          "value": {
+            "kind": "bit",
+            "name": "y",
+            "value": "0",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "world": {
+        "x": 1,
+        "y": 0
+      },
+      "variant": "baseline"
+    },
+    {
+      "id": "xor-11",
+      "family": "complement",
+      "split": "development",
+      "question": {
+        "kind": "xor",
+        "query": "signal",
+        "text": "Return XOR of explicitly supplied x and y, or abstain if either is missing."
+      },
+      "B": [
+        {
+          "id": "b",
+          "key": "signal",
+          "value": {
+            "kind": "bit",
+            "name": "x",
+            "value": "1",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "S": [
+        {
+          "id": "s",
+          "key": "signal",
+          "value": {
+            "kind": "bit",
+            "name": "y",
+            "value": "1",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "world": {
+        "x": 1,
+        "y": 1
+      },
+      "variant": "baseline"
+    },
+    {
+      "id": "redundant",
+      "family": "redundancy",
+      "split": "development",
+      "question": {
+        "kind": "fact",
+        "query": "badge",
+        "text": "Return the badge color explicitly recorded, or abstain."
+      },
+      "B": [
+        {
+          "id": "b",
+          "key": "badge",
+          "value": {
+            "kind": "fact",
+            "value": "amber",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "S": [
+        {
+          "id": "s",
+          "key": "badge",
+          "value": {
+            "kind": "fact",
+            "value": "amber",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "world": {
+        "value": "amber"
+      },
+      "variant": "baseline"
+    },
+    {
+      "id": "revision-baseline",
+      "family": "revision",
+      "split": "diagnostic",
+      "question": {
+        "kind": "revision",
+        "query": "meeting",
+        "at": 2,
+        "text": "Return the latest meeting day effective no later than day 2, or abstain."
+      },
+      "B": [
+        {
+          "id": "b",
+          "key": "meeting",
+          "value": {
+            "kind": "revision",
+            "at": 1,
+            "value": "Thursday",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "S": [
+        {
+          "id": "s",
+          "key": "meeting",
+          "value": {
+            "kind": "revision",
+            "at": 2,
+            "value": "Friday",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "world": {
+        "value": "Friday"
+      },
+      "variant": "baseline"
+    },
+    {
+      "id": "revision-world-change",
+      "family": "revision",
+      "split": "diagnostic",
+      "question": {
+        "kind": "revision",
+        "query": "meeting",
+        "at": 2,
+        "text": "Return the latest meeting day effective no later than day 2, or abstain."
+      },
+      "B": [
+        {
+          "id": "b",
+          "key": "meeting",
+          "value": {
+            "kind": "revision",
+            "at": 1,
+            "value": "Thursday",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "S": [
+        {
+          "id": "s",
+          "key": "meeting",
+          "value": {
+            "kind": "revision",
+            "at": 2,
+            "value": "Saturday",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "world": {
+        "value": "Saturday"
+      },
+      "variant": "world-change"
+    },
+    {
+      "id": "revision-evidence-corruption",
+      "family": "revision",
+      "split": "diagnostic",
+      "question": {
+        "kind": "revision",
+        "query": "meeting",
+        "at": 2,
+        "text": "Return the latest meeting day effective no later than day 2, or abstain."
+      },
+      "B": [
+        {
+          "id": "b",
+          "key": "meeting",
+          "value": {
+            "kind": "revision",
+            "at": 1,
+            "value": "Thursday",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "S": [
+        {
+          "id": "s",
+          "key": "meeting",
+          "value": {
+            "kind": "revision",
+            "at": 2,
+            "value": "Saturday",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "world": {
+        "value": "Friday"
+      },
+      "variant": "evidence-corruption"
+    },
+    {
+      "id": "same-key-methods",
+      "family": "methods",
+      "split": "diagnostic",
+      "question": {
+        "kind": "method",
+        "query": "entry",
+        "condition": "locked",
+        "text": "Return the action for condition locked. Same key may contain different methods."
+      },
+      "B": [
+        {
+          "id": "b",
+          "key": "entry",
+          "value": {
+            "kind": "method",
+            "condition": "open",
+            "value": "enter",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "S": [
+        {
+          "id": "s",
+          "key": "entry",
+          "value": {
+            "kind": "method",
+            "condition": "locked",
+            "value": "unlock",
+            "prose": "Original synthetic research material; no private source."
+          }
+        }
+      ],
+      "world": {
+        "value": "unlock"
+      },
+      "variant": "baseline"
+    }
+  ]
+}

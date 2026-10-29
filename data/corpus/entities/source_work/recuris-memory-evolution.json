@@ -1,0 +1,69 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:recuris-memory-evolution",
+  "revision": "rev:work-sha256:d0cb5216864b4d810",
+  "state_revision": "rev:work-sha256:d0cb5216864b4d810",
+  "title": "Recursive Experiential–Working Memory Evolution for Long-Horizon Agent Harnesses",
+  "work_type": "paper",
+  "authors": [
+    "Zhaochen Yu",
+    "Yingcheng Wu",
+    "Zhenfei Yin",
+    "Kaiyuan Chen",
+    "Zhe Zhao",
+    "Mengdi Wang",
+    "Shuicheng Yan",
+    "Ling Yang"
+  ],
+  "year": 2026,
+  "short_author": null,
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.48550/arXiv.2608.24876",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2608.24876v1",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2608.24876v1",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://arxiv.org/pdf/2608.24876v1",
+      "delivery": "official-link",
+      "original_locator": "https://arxiv.org/pdf/2608.24876v1",
+      "access_note": "arXiv v1 official PDF；本站不重新分发。"
+    }
+  ],
+  "aliases": [
+    "recuris-memory-evolution"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "05cce5899deeed88dc996e713351a8d9ec9e21432b7b676cb97db43d28abc88e",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

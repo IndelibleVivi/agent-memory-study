@@ -1,12 +1,14 @@
 # Contributing
 
-Agent Memory Study 是一个开放的研究体。贡献可以让一个概念更可理解、一段推导更清楚、一项判断更可定位，也可以带来尚未收束的新问题。公开修改通过 pull request 提交；网页的个人接续笔记只供本地保存，不自动成为公开贡献。
+Agent Memory Study 是一个开放的研究体。贡献可以让一个概念更可理解、一段推导更清楚、一项判断更可定位，也可以带来尚未收束的新问题。公开修改通过 pull request 提交；网页的个人接续与案头笔记只供本地保存，不自动成为公开贡献。跨材料整理、文件恢复和公私导出见[案头说明](docs/study-workspace.md)。
+
+普通学习文章也可以声明已支持的 `exercise`：`retrieval-sets` 或 `ordered-index`。索引演算由 `assets/index-study.js` 单独拥有计算，renderer 不复制算法；固定数据、拟合、误差界、局部核对与回退均需可检查，不能把它标为论文效果。新的演算状态要贯通 URL、单篇接续与案头，并验证无 JavaScript 的默认结果及移除控件。统一验证含 `tools/test_index_study.cjs`；真实交互由 source/static tests 共用 `tools/index_browser_checks.py`。
 
 ## 可以贡献什么
 
 ### 学习记录与研究论述
 
-先写真实内容。`learning-note` 和 `research-essay` 的 Markdown 可以从名字、例子、定义或推导开始，无需先有实验或论文清单。最小 metadata、草稿与编译步骤见[作者指南](docs/authoring.md)。新材料可以补基础、修订解释、提出反例或开启旁支；不要仅为了填满领域或统一外观而创建文章。
+先写真实内容。`learning-note` 和 `research-essay` 的 Markdown 可以从名字、例子、定义或推导开始，无需先有实验或论文清单。最小 metadata、草稿与编译步骤见[作者指南](docs/authoring.md)；`draft-from-workspace` 可将主动选择的本地案头接到 repo 外的私人草稿，须逐段核对后才主动采用，不能把整个案头或 draft 放进 Git。修订可用任意公开对象的 `impact --kind` 查看直接／间接引用路径；这不代替论证检查。新材料可以补基础、修订解释、提出反例或开启旁支；不要仅为了填满领域或统一外观而创建文章。
 
 ### 1. Source correction / version watch
 
@@ -131,27 +133,51 @@ A `worked` entry must have an attributed `public-test` artifact. Moving an exist
 result between sections does not change its reading depth or historical receipts.
 
 The reader verification entry also checks the offline casebook's source/context and
-review-sidecar contracts with original synthetic fixtures. Private casebooks, generated
+content/rubric-bound review-sidecar contracts with original synthetic fixtures. Reviews use
+`ams-memory-reviews/2`; legacy or changed-material sidecars require the explicit
+`rebind-reviews` command documented in the [casebook guide](research/multilingual-use-policy/README.md).
+Rebinding preserves prior review provenance and requires fresh confirmation; it does not certify labels.
+Private casebooks, generated
 review HTML and labels stay outside the repository. This is contract validation, not
 a multilingual scorer or answerer experiment; the study remains proposed-not-run.
 
-Reader changes should pass:
+The [representation-use runner](research/representation-use-study/README.md) adds an offline
+execution contract with original event families, independent gold, three representation arms,
+actual delivered payloads and bound request/response/score receipts. Its scripted and oracle
+controls are development diagnostics. Keep family counts separate from question, language,
+position and repeat counts; expose the actual budget unit, and retain `used=unknown` unless
+a declared intervention supports a narrower influence claim. The local validation entry
+tests run identity, corruption rejection, write interruption, retries and replay without
+provider/model calls. Publish complete artifacts atomically without replacing existing files;
+preserve interrupted evidence and retry in a new attempt. A damaged published artifact must
+still fail validation. Source/protocol identity changes require a fresh sample run and raw replay.
+Do not promote these controls into model effectiveness, human validation or a paper benchmark.
+
+The [revision-propagation study](research/revision-propagation-study/README.md) owns a separate
+longitudinal experiment: canonical/index/summary/context snapshots, delayed updates, isolated
+branches and output writeback. Keep interventions on one declared layer, preserve the common
+pre-revision checkpoint and exogenous task schedule, and treat later branch outputs as mediators.
+Report persistent error separately from recurrence after an observed correction. Read-only
+history/preserved/boundary probes must not write into the main trajectory. Event families, episodes
+and repeated tasks have separate denominators; scheduled replay of early output is a synthetic
+pressure condition, not a measured frequency in real systems. Tombstone/delete comparisons do not
+establish privacy erasure. Changes require its unittest suite, saved-summary check and a fresh
+raw run/replay when experiment semantics change; run directories stay outside Git.
+
+Reader changes use the same source and browser entry as CI:
 
 ```bash
-python3 -B tools/verify_reader.py
-python3 -m pip install -r tools/browser-requirements.txt
+python3 -m pip install -r services/local/requirements.txt -r tools/browser-requirements.txt
+npm --prefix apps/reader ci
 python3 -m playwright install chromium
-python3 -B tools/test_reader_browser.py --output-dir dist/browser-check
-python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebook
+python3 -B tools/build.py --write-json
+python3 -B tools/verify_reader.py --browser
 ```
 
-The first command uses only local public/synthetic data, including actual fitting of a
-small stdlib classifier; it downloads no pretrained models or external data. It
-checks both generated projections without rewriting them, validates authoring, study packets, local continuation, shared constellation/sculpture relations and domain layout and question/finding
-references, lexical query and portable brief contracts, and the existing
-RDF, freshly reruns the five small deterministic studies and the decision-learning
-experiment (including classifier fitting and correction), and checks the saved
-AgeMem reward, C2C cache-retraction and Jev source-contract receipts for fixture binding and internal consistency.
+Use Python 3.13+, Node 26+ and a local SQLite build with the required WAL fix and FTS5, as described in the [local guide](docs/local-workspace.md). `--browser` builds a fresh artifact and checks public routes, portable files, the actual local service, restart recovery and the casebook. For another run choose fresh `--site-root` and `--evidence-root` directories. Omit `--browser` for source contracts only; that does not establish UI acceptance.
+
+The source entry uses local public/synthetic data, including actual stdlib classifier fitting and FTS5 retrieval controls. It validates canonical/projection drift, schema/identity parity, graph closure, persistence, jobs, scoped revision/publication, private recovery and public-only export. It also retains the native finite and deterministic studies and checks saved AgeMem, C2C and Jev receipts. It downloads no pretrained model or private data and makes no provider call.
+
 The [Jev source experiment](research/jev-memory-contract-study/README.md) requires a
 pinned external checkout for fresh execution; the reader command verifies the saved receipt only.
 C2C receipt checks do not load model weights or perform inference; see its
@@ -163,21 +189,9 @@ PyTorch and pinned-upstream tests. It is not part of this local command;
 random-model checks and the saved single-target native-cache control do not
 establish pretrained transfer quality or reading depth. The native control and
 chunk-length diagnostic have their own commands and receipt in that guide.
-The command does not rerun all external-source audits or any paper benchmark. The second test path serves
-this checkout under `/agent-memory-study/` and checks real browser navigation,
-search, question/finding links, practice query and Markdown/JSON downloads, shared scenario state, reload and back/forward on desktop and mobile
-viewports. All third-party browser requests, including analytics, are blocked.
+The command does not rerun all external-source audits or a paper benchmark. Browser checks use the built artifact under `/agent-memory-study/`, verify real navigation and downloads on five viewport widths, and block third-party requests including analytics. The casebook uses only original synthetic fixtures and checks content/rubric invalidation, export/reload and explicit reconfirmation; it does not certify human acceptance of labels.
 
-The casebook browser check uses only original synthetic fixtures and opens generated
-HTML directly as a local file. It checks editing, explicit confirmation, invalidation after
-edits, JSON download/reload, filters, text escaping, keyboard use and three viewport
-sizes. It does not read private material or certify human acceptance of labels.
-
-On hosts that prohibit browser navigation, `--offline-render` is an explicitly
-labelled DOM/interaction fallback. Its receipt lists HTTP, reload and history as
-unverified; CI never uses that flag. CI validates on PRs without deployment. The existing main workflow deploys the exact
-verified artifact through GitHub Pages; it does not change account settings. Repository
-settings still determine whether its status is a required merge check.
+CI validates PRs without deployment. The existing main workflow deploys the exact verified artifact through GitHub Pages; it does not change account settings. Repository settings determine required merge checks. Offline source assertions cannot stand in for browser evidence.
 
 Search indexes selected reader-visible fields from materials, studies, questions and findings, never
 arbitrary JSON keys or URLs. Space-separated terms use AND matching across fields;
@@ -193,7 +207,7 @@ by the browser and its Node tests, rather than adding a second search truth.
 Routing and rendering changes also need `node --test tools/test_seo.cjs`, a fresh
 `python3 -B tools/seo_build.py` artifact and `python3 -B tools/test_static_reader.py`.
 These checks cover initial HTML, hydration, nested links, legacy query URLs,
-scenario/history, table-of-contents anchors, practice export and source file mode.
+scenario/history, table-of-contents anchors, practice export and the portable file reader.
 Use the existing pinned browser dependency; see [website operations](docs/website.md)
 for build, preview and the separate Pages activation boundary. Generated pages are
 not hand-edited or committed.

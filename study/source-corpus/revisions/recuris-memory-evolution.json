@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:recuris-memory-evolution",
+  "revision": "rev:sha256:d0cb5216864b4d810",
+  "state_revision": "rev:sha256:d0cb5216864b4d810",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:recuris-memory-evolution",
+    "revision": "rev:work-sha256:d0cb5216864b4d810"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2608.24876v1",
+    "source_locator": "https://arxiv.org/abs/2608.24876v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "f445a55887cde4d9a1df51ab4d0db75c27708193b826edf523c1fb31df635834",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}
