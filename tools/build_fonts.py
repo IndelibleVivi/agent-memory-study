@@ -10,12 +10,15 @@ from fontTools.ttLib import TTFont
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def build(source: Path):
+def build(source: Path, selected: str | None = None):
     destination = ROOT / "assets/fonts"
     destination.mkdir(exist_ok=True)
     public_text = "".join(p.read_text() for p in [
-        ROOT / "data/materials.json", ROOT / "index.html",
+        ROOT / "data/materials.json",
         *sorted((ROOT / "assets").glob("*.js")),
+        *sorted((ROOT / "apps/reader/src").glob("*.tsx")),
+        *sorted((ROOT / "apps/reader/src").glob("*.ts")),
+        *sorted((ROOT / "services/local").glob("*.py")),
     ])
     latin = set(range(0x20, 0x0250)) | set(range(0x2000, 0x2070))
     faces = [
@@ -23,8 +26,11 @@ def build(source: Path):
         ("newsreader-Newsreader-Italic[opsz,wght].ttf", "ams-display-italic", "AMS Display", latin),
         ("instrumentsans-InstrumentSans[wdth,wght].ttf", "ams-sans", "AMS Sans", latin),
         ("notoserifsc-NotoSerifSC[wght].ttf", "ams-text", "AMS Text", set(map(ord, public_text)) | latin),
+        ("notosanssc-NotoSansSC[wght].ttf", "ams-ui", "AMS UI", set(map(ord, public_text)) | latin),
     ]
     for filename, output, family, unicodes in faces:
+        if selected and selected != output:
+            continue
         font = TTFont(source / filename, recalcTimestamp=False)
         options = subset.Options()
         options.name_IDs = [0, 1, 2, 3, 4, 5, 6, 13, 14, 16, 17]
@@ -46,7 +52,8 @@ def build(source: Path):
         path = destination / f"{output}.woff2"
         font.save(path)
         print(f"{path.relative_to(ROOT)}: {path.stat().st_size:,} bytes")
-    for name in ("newsreader", "notoserifsc", "instrumentsans"):
+    licenses = {filename.split("-", 1)[0] for filename, output, _, _ in faces if not selected or output == selected}
+    for name in sorted(licenses):
         (destination / f"{name}-OFL.txt").write_text("\n".join(
             line.rstrip() for line in (source / f"{name}-OFL.txt").read_text().splitlines()
         ) + "\n")
@@ -55,4 +62,6 @@ def build(source: Path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", type=Path)
-    build(parser.parse_args().source)
+    parser.add_argument("--face", choices=["ams-display", "ams-display-italic", "ams-sans", "ams-text", "ams-ui"])
+    args = parser.parse_args()
+    build(args.source, args.face)

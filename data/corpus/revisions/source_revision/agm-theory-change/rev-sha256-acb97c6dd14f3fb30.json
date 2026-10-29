@@ -1,0 +1,29 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:agm-theory-change",
+  "revision": "rev:sha256:acb97c6dd14f3fb30",
+  "state_revision": "rev:sha256:acb97c6dd14f3fb30",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:agm-theory-change",
+    "revision": "rev:work-sha256:acb97c6dd14f3fb30"
+  },
+  "identity": {
+    "mode": "observed-snapshot",
+    "observed_at": null,
+    "source_locator": "https://www.cambridge.org/core/journals/journal-of-symbolic-logic/article/on-the-logic-of-theory-change-partial-meet-contraction-and-revision-functions/7ED837BAD5FB6D9A7C77906D73527F9C",
+    "observation_basis": "Legacy public locator does not prove a distinct publisher version; this is the reviewed source identity, not a stored byte snapshot.",
+    "publisher_version_known": false,
+    "snapshot_captured": false
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "33c1dddf520bb0fe0f9571fc3e0ea6d2542f0c162117d08768aa717c42156920",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

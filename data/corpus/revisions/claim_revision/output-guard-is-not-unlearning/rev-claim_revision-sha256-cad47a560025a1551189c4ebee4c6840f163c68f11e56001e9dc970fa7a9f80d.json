@@ -1,0 +1,73 @@
+{
+  "schema": "ams-core/2",
+  "kind": "claim_revision",
+  "id": "claim:output-guard-is-not-unlearning",
+  "title": "输出被挡住，不等于参数已纠正或来源已遗忘",
+  "byline": "Agent Memory Study editors",
+  "payload": {
+    "id": "output-guard-is-not-unlearning",
+    "title": "输出被挡住，不等于参数已纠正或来源已遗忘",
+    "byline": "Agent Memory Study editors",
+    "updated": "2026-09-22",
+    "status": "proposed-transfer",
+    "questionIds": [
+      "experience-becomes-policy"
+    ],
+    "materialIds": [
+      "coala-cognitive-architecture",
+      "cache-to-cache"
+    ],
+    "triggers": [
+      "输出约束",
+      "运行时约束",
+      "参数更新",
+      "权重遗忘",
+      "来源影响",
+      "撤回",
+      "guard",
+      "unlearning",
+      "parameters",
+      "weights",
+      "suppression"
+    ],
+    "claim": "运行时约束可以使当前输出符合新条件，同时继续使用原参数。输出合规、参数更新和来源影响被撤回需要分别举证，不能用其中一项替代其余两项。",
+    "when": "通过输出过滤、规则覆盖或候选拦截处理过时经验，并需要判断系统究竟改了当前行为、训练参数，还是某条来源的后续影响时。",
+    "action": "先明确要改变的对象与成功条件，记录约束前后的预测及实际加载的参数版本。若目标只是当前路径合规，就检查约束覆盖范围与误拦截；若目标涉及参数纠正或来源遗忘，再为该目标设计独立对照，不把 guard 的验收结论沿用过去。",
+    "avoid": "不要把“这次没有输出”写成“模型不再知道”，也不要仅凭参数数值发生变化就宣称已遗忘。精确规则覆盖输出可作为有条件的工程处理，但它得到的规则信息不能当成其他学习分支也拥有的信息。",
+    "validation": "在隔离的目标侧测试中，对相同输入记录原始预测与约束后预测，覆盖应拦截和应放行的条件；在允许的测试环境中移除约束，检查改变是否依赖它。若主张来源影响撤回，另选与该主张对应的参照，例如可执行的排除该来源后重新训练，并声明探针及输入覆盖的限制。",
+    "limit": "本站 guard 使用精确已知的新范围规则，并直接处理旧分类器输出；未测试规则识别错误、其他调用路径或权重 unlearning。移除 guard 的测试仅能定位对约束的依赖；有限探针未见影响，也不能证明来源影响在所有输入上消失。上述目标侧检查尚未执行。",
+    "evidence": [
+      {
+        "label": "学习与纠正实验：guard 的实际实现",
+        "url": "research/decision-learning-study/study.py",
+        "observation": "report 中 guard 从 frozen 的预测生成：仅在预测 useful 且满足 in_scope 时改成 harmful。它未调用 fit，也没有创建一组 guard 参数；refit 与 incremental 则各自实际拟合并保存参数。",
+        "limit": "源码与保存结果支持此实现的作用位置，不能推广为其他系统中所有 guard 的覆盖保证。"
+      },
+      {
+        "label": "已执行结果与机制边界",
+        "url": "research/decision-learning-study/README.md",
+        "observation": "精确运行时约束在本组输入上同时满足纠正与保留范围；实验同时公开它获得已知规则、参数保持不变，以及未测量来源影响彻底撤回的限制。",
+        "limit": "这是已知结构化条件下的输出干预，不是自然语言判断、参数纠正或机器遗忘的效果证据。"
+      }
+    ],
+    "applications": []
+  },
+  "claim": "运行时约束可以使当前输出符合新条件，同时继续使用原参数。输出合规、参数更新和来源影响被撤回需要分别举证，不能用其中一项替代其余两项。",
+  "scope": "{\"avoid\": \"不要把“这次没有输出”写成“模型不再知道”，也不要仅凭参数数值发生变化就宣称已遗忘。精确规则覆盖输出可作为有条件的工程处理，但它得到的规则信息不能当成其他学习分支也拥有的信息。\", \"limit\": \"本站 guard 使用精确已知的新范围规则，并直接处理旧分类器输出；未测试规则识别错误、其他调用路径或权重 unlearning。移除 guard 的测试仅能定位对约束的依赖；有限探针未见影响，也不能证明来源影响在所有输入上消失。上述目标侧检查尚未执行。\", \"when\": \"通过输出过滤、规则覆盖或候选拦截处理过时经验，并需要判断系统究竟改了当前行为、训练参数，还是某条来源的后续影响时。\"}",
+  "scope_binding": "Published editorial transfer; applicability remains the explicit when/avoid/limit text. No formal support is inferred.",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "cad47a560025a1551189c4ebee4c6840f163c68f11e56001e9dc970fa7a9f80d",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "byline",
+      "claim",
+      "payload",
+      "scope",
+      "scope_binding",
+      "title"
+    ]
+  },
+  "revision": "rev:claim_revision-sha256:cad47a560025a1551189c4ebee4c6840f163c68f11e56001e9dc970fa7a9f80d",
+  "state_revision": "rev:claim_revision-sha256:cad47a560025a1551189c4ebee4c6840f163c68f11e56001e9dc970fa7a9f80d"
+}

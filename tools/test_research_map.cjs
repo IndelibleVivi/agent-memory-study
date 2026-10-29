@@ -52,13 +52,10 @@ test('graph follows typed references and compiler anchors, with no dangling, sel
         questionIds: ['question'], findingIds: ['finding'],
         continuation: {studyIds: ['two'], materialIds: ['continued-source']},
         readings: [{materialId: 'source'}, {materialId: 'missing'}],
-        bodyHtml: '<a href="?study=body%2Dlinked&amp;phase=after#section">Internal</a>' +
-          '<a href="?study=one">Self</a><a href="?study=missing">Dangling</a>' +
-          '<a href="https://example.org/?study=external">External</a>' +
-          '<a href="//example.org/?study=external">External</a>' +
-          '<a href="/study/external/">A non-compiler route</a>' +
-          '<span data-href="?study=external">Not an anchor</span>' +
-          '<a data-href="?study=external" href="https://example.org/">Not href</a>'
+        ast: {references: [
+          {kind: 'entry', id: 'body-linked', anchor: '#section', heading: 'section-1'},
+          {kind: 'entry', id: 'one'}, {kind: 'entry', id: 'missing'}
+        ]}
       },
       {id: 'two', title: 'Two', continuation: {studyIds: ['one']}},
       {id: 'body-linked', title: 'Body linked'},
@@ -77,7 +74,7 @@ test('graph follows typed references and compiler anchors, with no dangling, sel
   ].map(edge => edge.sort().join(' | ')).sort();
   assert.deepEqual(edgeKeys(model), expected);
   assert.deepEqual([...researchMap.neighbors(model, 0)].sort((a, b) => a - b), [1, 2, 4, 5, 6, 7]);
-  assert.equal(researchMap.neighbors(model, 3).size, 0, 'matching titles and external links create no relationship');
+  assert.equal(researchMap.neighbors(model, 3).size, 0, 'matching titles and unrelated objects create no relationship');
   assert.equal(researchMap.neighbors(model, -1).size, 0);
 });
 
@@ -88,7 +85,7 @@ test('referenceGraph keeps directed evidence, field locators, and distinct dupli
         id: 'one', title: 'One', materialIds: ['source'], studyIds: ['two'],
         continuation: {materialIds: ['source'], studyIds: ['three']},
         readings: [{materialId: 'source'}],
-        bodyHtml: '<a href="?question=q">q</a><a href="?study=two">two</a>'
+        ast: {references: [{kind: 'thread', id: 'q'}, {kind: 'entry', id: 'two'}]}
       },
       {id: 'two', title: 'Two'},
       {id: 'three', title: 'Three'}
@@ -105,8 +102,8 @@ test('referenceGraph keeps directed evidence, field locators, and distinct dupli
     {from: 'study/one', to: 'material/source', relation: 'reading', locator: 'readings[0].materialId'},
   ]);
   assert.deepEqual(model.references.filter(ref => ref.relation === 'body-link'), [
-    {from: 'study/one', to: 'question/q', relation: 'body-link', locator: 'bodyHtml[0]'},
-    {from: 'study/one', to: 'study/two', relation: 'body-link', locator: 'bodyHtml[1]'},
+    {from: 'study/one', to: 'question/q', relation: 'body-link', locator: 'ast.references[0]'},
+    {from: 'study/one', to: 'study/two', relation: 'body-link', locator: 'ast.references[1]'},
   ]);
   assert.deepEqual(edgeKeys(researchMap.graph(input)), [
     'material/source | study/one',
@@ -194,9 +191,10 @@ test('impact chooses one stable shortest path in a true multi-level diamond', ()
 
 test('all current public objects retain their identity and representative explicit connections', () => {
   const model = researchMap.graph(data);
-  assert.equal(model.nodes.length, 47);
-  assert.deepEqual(Object.fromEntries(['study', 'material', 'question', 'finding'].map(kind =>
-    [kind, model.nodes.filter(node => node.kind === kind).length])), {study: 13, material: 27, question: 2, finding: 5});
+  const expected = Object.entries({study: data.studies, material: data.materials, question: data.questions, finding: data.findings}).flatMap(([kind, rows]) => rows.map(row => kind + '/' + row.id)).sort();
+  assert.deepEqual(model.nodes.map(node => node.key).sort(), expected);
+  assert.ok(expected.includes('study/conditional-information-and-use'));
+  assert.ok(expected.includes('study/distinguishability-and-observation'));
   assert.equal(new Set(model.nodes.map(node => node.key)).size, model.nodes.length);
   assert.equal(new Set(edgeKeys(model)).size, model.edges.length);
   model.edges.forEach(([from, to]) => {
@@ -341,7 +339,7 @@ test('the same pure API loads in a browser global without DOM, network, or stora
   vm.runInContext(source, context);
   assert.deepEqual(Object.keys(context.ResearchMap).sort(),
     ['clusterLayout', 'graph', 'impact', 'neighbors', 'referenceGraph']);
-  const model = context.ResearchMap.graph({studies: [{id: 'one', bodyHtml: '<a href="?material=source">Source</a>'}], materials: [{id: 'source'}]});
+  const model = context.ResearchMap.graph({studies: [{id: 'one', ast: {references: [{kind: 'source_note', id: 'source'}]}}], materials: [{id: 'source'}]});
   assert.equal(model.nodes.length, 2);
   assert.equal(model.edges.length, 1);
   checkGeometry(context.ResearchMap.clusterLayout(model, []), 2);

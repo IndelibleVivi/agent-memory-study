@@ -2,7 +2,11 @@
 
 ## Font software
 
-The reader includes modified, renamed WOFF2 subsets of Newsreader, Noto Serif SC and Instrument Sans, each distributed under SIL Open Font License 1.1. Complete copyright and license notices, upstream links, modifications and the offline rebuild method are in [assets/fonts/README.md](assets/fonts/README.md). These font terms apply only to the font software.
+The reader includes modified, renamed WOFF2 subsets of Newsreader, Noto Serif SC,
+Noto Sans SC and Instrument Sans, each distributed under SIL Open Font License
+1.1. Complete copyright and license notices, upstream links, modifications and
+the offline rebuild method are in [assets/fonts/README.md](assets/fonts/README.md).
+These font terms apply only to the font software.
 
 ## Bundled PDFs
 

@@ -164,24 +164,20 @@ pressure condition, not a measured frequency in real systems. Tombstone/delete c
 establish privacy erasure. Changes require its unittest suite, saved-summary check and a fresh
 raw run/replay when experiment semantics change; run directories stay outside Git.
 
-Reader changes should pass:
+Reader changes use the same source and browser entry as CI:
 
 ```bash
-python3 -B tools/verify_reader.py
-python3 -m pip install -r tools/browser-requirements.txt
+python3 -m pip install -r services/local/requirements.txt -r tools/browser-requirements.txt
+npm --prefix apps/reader ci
 python3 -m playwright install chromium
-python3 -B tools/test_reader_browser.py --output-dir dist/browser-check
-python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebook
+python3 -B tools/build.py --write-json
+python3 -B tools/verify_reader.py --browser
 ```
 
-The first command uses only local public/synthetic data, including actual fitting of a
-small stdlib classifier; it downloads no pretrained models or external data. It
-checks both generated projections without rewriting them, validates authoring and private draft boundaries, study packets, public selected collections, local continuation, workspace migration/excerpts/history, shared directed references and reverse impact, constellation/sculpture projections and domain layout and question/finding
-references, lexical query and portable brief contracts, and the existing
-RDF, freshly reruns the six small deterministic studies (including finite task-relative
-sufficiency) and the decision-learning
-experiment (including classifier fitting and correction), and checks the saved
-AgeMem reward, C2C cache-retraction and Jev source-contract receipts for fixture binding and internal consistency.
+Use Python 3.13+, Node 26+ and a local SQLite build with the required WAL fix and FTS5, as described in the [local guide](docs/local-workspace.md). `--browser` builds a fresh artifact and checks public routes, portable files, the actual local service, restart recovery and the casebook. For another run choose fresh `--site-root` and `--evidence-root` directories. Omit `--browser` for source contracts only; that does not establish UI acceptance.
+
+The source entry uses local public/synthetic data, including actual stdlib classifier fitting and FTS5 retrieval controls. It validates canonical/projection drift, schema/identity parity, graph closure, persistence, jobs, scoped revision/publication, private recovery and public-only export. It also retains the native finite and deterministic studies and checks saved AgeMem, C2C and Jev receipts. It downloads no pretrained model or private data and makes no provider call.
+
 The [Jev source experiment](research/jev-memory-contract-study/README.md) requires a
 pinned external checkout for fresh execution; the reader command verifies the saved receipt only.
 C2C receipt checks do not load model weights or perform inference; see its
@@ -193,22 +189,9 @@ PyTorch and pinned-upstream tests. It is not part of this local command;
 random-model checks and the saved single-target native-cache control do not
 establish pretrained transfer quality or reading depth. The native control and
 chunk-length diagnostic have their own commands and receipt in that guide.
-The command does not rerun all external-source audits or any paper benchmark. The second test path serves
-this checkout under `/agent-memory-study/` and checks real browser navigation,
-search, question/finding links, practice query and Markdown/JSON downloads, shared scenario state, reload and back/forward on desktop and mobile
-viewports. All third-party browser requests, including analytics, are blocked.
+The command does not rerun all external-source audits or a paper benchmark. Browser checks use the built artifact under `/agent-memory-study/`, verify real navigation and downloads on five viewport widths, and block third-party requests including analytics. The casebook uses only original synthetic fixtures and checks content/rubric invalidation, export/reload and explicit reconfirmation; it does not certify human acceptance of labels.
 
-The casebook browser check uses only original synthetic fixtures and opens generated
-HTML directly as a local file. It checks editing, explicit confirmation, invalidation after
-edits, JSON download/reload, filters, text escaping, keyboard use and three viewport
-sizes, including stale review migration, download and explicit reconfirmation. It does not
-read private material or certify human acceptance of labels.
-
-On hosts that prohibit browser navigation, `--offline-render` is an explicitly
-labelled DOM/interaction fallback. Its receipt lists HTTP, reload and history as
-unverified; CI never uses that flag. CI validates on PRs without deployment. The existing main workflow deploys the exact
-verified artifact through GitHub Pages; it does not change account settings. Repository
-settings still determine whether its status is a required merge check.
+CI validates PRs without deployment. The existing main workflow deploys the exact verified artifact through GitHub Pages; it does not change account settings. Repository settings determine required merge checks. Offline source assertions cannot stand in for browser evidence.
 
 Search indexes selected reader-visible fields from materials, studies, questions and findings, never
 arbitrary JSON keys or URLs. Space-separated terms use AND matching across fields;
@@ -224,7 +207,7 @@ by the browser and its Node tests, rather than adding a second search truth.
 Routing and rendering changes also need `node --test tools/test_seo.cjs`, a fresh
 `python3 -B tools/seo_build.py` artifact and `python3 -B tools/test_static_reader.py`.
 These checks cover initial HTML, hydration, nested links, legacy query URLs,
-scenario/history, table-of-contents anchors, practice export and source file mode.
+scenario/history, table-of-contents anchors, practice export and the portable file reader.
 Use the existing pinned browser dependency; see [website operations](docs/website.md)
 for build, preview and the separate Pages activation boundary. Generated pages are
 not hand-edited or committed.

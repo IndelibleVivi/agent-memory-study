@@ -16,18 +16,19 @@ AMS 从 agent memory 出发，研究信息、经验与智能的跨时间关系�
 | Database、Index、Retriever、Memory 怎样区分 | [一条记录、一种表示、一个记忆系统](study/entries/records-representations-systems.md)：从同一条工具版本记录看不同研究对象和功能角色。 |
 | 同一份记忆，后来换个问题还够用吗 | [记忆需要为尚未出现的问题保留什么？](study/entries/future-questions-and-memory.md)：推导完整观察类的答案交集，并运行 32 个原创历史的有限检查。 |
 | 新材料怎样改变已经形成的认识 | [索引也能学习——究竟学了什么？](study/entries/what-an-index-learns.md)：从指定章节追问监督与错误恢复；网页可插入记录，比较旧界、重新校准与重新拟合，并检查真实二分路径。 |
+| 相同输出下怎样辨别不同机制 | [观察相同以后，还能怎样把机制分开？](study/entries/distinguishability-and-observation.md)：全类答案交集、允许行动与有成本和长度界的最短区分。 |
 | 继续一项已有研究 | [经验怎样长成判断习惯](https://indeliblevivi.github.io/agent-memory-study/study/experience-becomes-policy/)：跨源论述、已保存的分类器学习与纠正结果，以及仍未回答的问题。 |
 | 运行表示研究的离线控制 | [原事件／概括／并存执行器](research/representation-use-study/README.md)：原创事件、可执行真值、实际送达材料与绑定的运行证据；scripted/oracle 控制不等于模型效果。 |
 | 检查更正怎样传到后续行动 | [修订传播与再写入实验](research/revision-propagation-study/README.md)：多层快照、延迟同步、单层干预与后续任务，区分持续错误和修好后的旧影响再现。 |
 | 看项目长期关心什么 | [经验的形式](study/programme/directions/forms-of-experience.md)、[当下的相关性](study/programme/directions/relevance-in-context.md)、[改变与继承](study/programme/directions/change-and-continuity.md)。 |
 
-这些新文章是基于公开来源与原创例子写成的研究内容，不是私人聊天的重建。当前有 13 篇学习／研究文章、27 份来源札记、2 个问题专题、5 条实践判断。领域与方向只是可改的阅读地图；数量、关联和阅读深度不代表个人掌握度。
+这些新文章是基于公开来源与原创例子写成的研究内容，不是私人聊天的重建。当前有 15 篇学习／研究文章、27 份来源札记、2 个问题专题、5 条实践判断。领域与方向只是可改的阅读地图；数量、关联和阅读深度不代表个人掌握度。
 
 ## Relata × AMS 交叉研究
 
 [交叉研究准备包](research/relata-ams-campaign/README.md)把未知未来用途、更正传播与原生操作的可观察边界接到现有实验。共享来源、family lineage 和实际交付证据；各自的 estimand、允许行动与研究结论保持独立。P1/P2 的独立出题流程和 operation map 是研究准备，不是新的自然语言模型结果。P3/P4/P6 保留各自设计，Relata 的人与互动研究独立进行；参数学习、cache 与跨模型 KV 研究也不以关系应用为前提。
 
-该准备包、当前研究案头／作者接续与索引演算变化位于 PR #8 研究分支，未由此合入 main 或部署。Relata 的固定 capture reader 后续另有具名执行包；既有 scripted/oracle 矩阵不冒充真实语义能力。
+当前下一代源码位于 `next/ams` 集成分支；它接续 PR #7/#8 的研究内容，尚未合入 main 或部署。具体状态见[当前状态](docs/current-state.md)。Relata 的固定 capture reader 后续另有具名执行包；既有 scripted/oracle 矩阵不冒充真实语义能力。
 
 ## 研究怎样生长
 
@@ -41,13 +42,13 @@ AMS 从 agent memory 出发，研究信息、经验与智能的跨时间关系�
 | --- | --- |
 | `study/programme/` | 工作 thesis、研究方法与长期方向的完整论述 |
 | `study/entries/*.md` + `*.json` | 正文与轻量 metadata；programme 的 metadata 也在这里 |
-| `study/sources/` | 来源身份、实际阅读范围、札记、独立 evidence 与有署名的编辑判断 |
+| `study/source-corpus/` | Work 身份、发布或观察 Revision，以及分别署名的 AMS 来源札记 |
 | `study/inquiries/` | 持续的问题、竞争解释与下一步 |
 | `study/transfers/` | 可选的实践判断、适用条件与公开取用记录 |
 | `study/map.json`、`catalog.json` | 研究导航、展示次序与旧 atlas 定义 |
 | `research/` | 各项研究自己的协议、runner、输入、结果与限制 |
 
-`tools/content.py` 把研究体编译为 `data/materials.json`；`tools/build.py` 生成 `assets/materials-data.js`。这两份文件是兼容原 reader／CLI 的 generated projections，不能手工编辑。原有 ID、材料深链接、27 份札记、4 篇共读与研究 receipts 均继续可查。旧 failure-surface 地图和阅读路径保留为可选入口；新版研究星图是主导航中的独立阅读视图；反向 membership 从 source 生成。
+`tools/content.py` 从 Work/Revision/Note 真源编译兼容的 `data/materials.json`，`tools/build.py` 生成 `assets/materials-data.js`，并生成不含全文的 `data/public-corpus.manifest.json`、按需读取的 `data/corpus/` shards 与 `data/route-inventory.json`。这些生成物不能手工编辑。原有 ID、材料深链接、27 份札记、4 篇共读与研究 receipts 均继续可查；旧 material ID 是 Work + AMS note 的组合 alias，不改变论文作者与札记作者的身份。
 
 ## 人与机怎样继续读
 
@@ -58,15 +59,15 @@ node tools/export_study.cjs --kind study --id retrieval-and-relevance --format m
 node tools/export_study.cjs --kind question --id experience-to-capability --format json
 ```
 
-网页详情底部可导出研究包。在发布构建中，对象目录下也有 `index.md` 与 `index.json`，不需要 JavaScript。`contentVersion` 是编辑日期／edition，不是不可变 commit；需要固定引用时同时保留 Git revision 或包文件。
+网页详情可导出研究包。构建中的对象目录也有 `index.md` 与 `index.json`，不需要 JavaScript。JSON v2 带固定记录 revision 和直接引用 manifest；编辑日期仍只是阅读信息，不替代内容身份。研究包不递归打包依赖全文；私人 workspace 则包含恢复所需的固定依据。
 
-读到一半，可以在详情页写一段自己的接续笔记，主动下载 JSON，之后从首页“打开接续文件”恢复公开对象、章节位置和支持的演算状态。笔记只在页面内存与自己保存的文件里；刷新前未下载的修改会丢失。导入不执行文件中的文字，也不加载任意 URL。它不是在线批注、账号服务或云同步。
+四个空间分别承接继续工作、探索文章、整理资料和执行本地实验。全局“带进来”先保存遇见的原话、文件和当次缘由，不要求先有标题或研究计划。公开书房的私人状态只留在页面，刷新前要下载；明确启动 `ams serve` 后，案头、原件、版本与任务才保存到自己指定的本地目录。
 
-研究案头把多份文章、来源、问题和判断组织成一次工作：选材、对读、带来源版本的摘录／批注、自己的问题与解释、回正文核对和整组保存相连。详情中的双向显式引用可以继续阅读和选材；修订检查范围保留引用路径，不把引用当作论证依赖。案头可以逐字段查看保存时与当前的内容；确认当前正文不会改写旧摘录的来源。
+案头连接多对象选材、对读、固定版本摘录／批注、自己的问题、解释、返回条件和演算位置。每个案头最多 24 个对象、每对象 12 条摘录，编辑 payload 限 2 MiB；v3 完整保存文件限 32 MiB / 512 个私有记录版本。所有接受的页面内状态都必须可下载。容量拒绝保留原工作和历史，仍能导航与导出；旧摘录保留独立依据，选择当前正文不会改写它。
 
-私人案头 JSON 先预览再打开，编辑、选材、摘录和导入共享有限撤销／重做。案头最多 24 个对象、每对象 12 条摘录、文件最多 2 MiB，仅在页面内存与用户主动保存的文件中。新文件使用 `ams-workspace/2`，仍兼读旧版案头；单篇接续继续可用，两者共享笔记状态。刷新前请保存文件，历史与离开提示都不替代备份。
+新文件使用 `ams-workspace/3`，显式预览后兼读 continuation v1 和 workspace v1/v2。旧文件若没有可靠的版本信息，保留为待核对的观察，不能把当前正文冒充旧依据。案头共享最多 20 步 / 8 MiB 的页面内撤销历史；历史不写入下载文件。私人 Markdown 供阅读，完整恢复用 JSON。断线或冲突时可带走尚未收到保存回执的输入，再比较恢复。
 
-案头达到容量上限时，无法自动记下的新阅读位置会明确提示，原有工作保留；仍可离开正文、下载单篇接续或保存已接受的案头。
+本地环境还提供原件取得和文本／PDF 提取、记录实际阅读范围、原生研究任务与 evidence 工作台，以及带 base 的修订和选择性发表 preview。正式论证关系与普通引用分开，修改审阅、私有应用和公开交付分别记录。默认服务不写 Git、不激活站点，也不运行付费或真实 provider 研究。
 
 “公开选材包”只导出选定的当前公开对象，案头名称、问题、私人笔记、摘录记录／用途／批注和旧快照不会混入。机器也能沿同源出口取用：
 
@@ -76,9 +77,9 @@ node tools/export_study.cjs --select study:retrieval-and-relevance \
 node tools/export_study.cjs --workspace /path/to/ams-workspace.json --format json
 ```
 
-索引演算的分布、插入状态、维护方式与查找键可以随单篇接续或案头 JSON 恢复，也保留在公开演算 URL 中。这里只能选择固定教学数据与有限整数键；个人笔记继续留在文件内。无 JavaScript 页面保留默认图解、结果与逐键表，移除操作控件。
+索引演算的分布、插入状态、维护方式与查找键可以随案头 JSON 恢复，也保留在公开演算 URL 中。这里只能选择固定教学数据与有限整数键；个人笔记继续留在文件内。无 JavaScript 页面保留默认图解、结果与逐键表，移除操作控件。
 
-私人案头也能经 `tools/author.py draft-from-workspace` 整理成 repo 外的 draft，保留问题、推敲、摘录与来源限制；不会自动发表或把选材升级为支持关系。作者影响检查 `impact ID --kind study` 与网页共享显式引用图，并从当前 canonical 编译，列出直接／间接检查路径。命令与正式采用步骤见[作者指南](docs/authoring.md)。
+旧 v1/v2 案头也能经 `tools/author.py draft-from-workspace` 整理成 repo 外的 draft；新 v3 在本地“整理成文”继续写作，保留问题、推敲、摘录与来源限制；不会自动发表或把选材升级为支持关系。作者影响检查 `impact ID --kind study` 与网页共享显式引用图，并从当前 canonical 编译，列出直接／间接检查路径。命令与正式采用步骤见[作者指南](docs/authoring.md)。
 
 [案头使用说明](docs/study-workspace.md)记录完整使用、恢复和公私导出边界；[研究系统与建设方向](docs/research-system.md)说明这些能力如何服务 thesis，以及仍需继续的内容、研究连接与可靠性交付。
 
@@ -93,29 +94,36 @@ node tools/export_practice.cjs --finding revision-needs-scope --format json
 
 ## 本地编辑与检查
 
-需要 Python 3.11+、Node.js，以及构建用的 Markdown parser。浏览器检查另需 Playwright 和专用 Chromium；运行站点无需 backend 或 npm runtime。
+开发与本地服务使用 Python 3.13+、Node.js 26+；本地 WAL 环境需要包含 WAL-reset 修复的 SQLite 及 FTS5；当前验证版本是 3.53.4（也接受 3.51.3+ 及已明确修复的维护分支）。公开静态产物无需 backend 或 npm runtime。
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python3 -m pip install -r tools/content-requirements.txt
+python3 -m pip install -r services/local/requirements.txt
+npm --prefix apps/reader ci
 python3 -B tools/build.py --write-json
 python3 -B tools/verify_reader.py
-python3 -m http.server 8080
+python3 -B tools/seo_build.py --base / --output dist/preview
+python3 -m http.server 8080 --directory dist/preview
 ```
 
-打开 `http://localhost:8080/`；也可直接打开源码 `index.html`，沿 `?study=` 等 query links 阅读。要构建 GitHub Pages 的真实路径与静态正文：
+打开 `http://localhost:8080/`。独立文件阅读使用构建出的 `dist/preview/portable/index.html`；源码 checkout 不再包含第二套 reader。持久研究环境另开终端明确启动：
+
+```bash
+python3 ams --data-root /path/to/private-ams serve --site-root dist/preview
+```
+
+数据目录须在 repo 外、位于同机文件系统。多案头、CLI、备份、升级和新目录恢复见[本地环境](docs/local-workspace.md)。Pages base 默认为 `/agent-memory-study/`，本地服务读取同一构建的 base，不需要维护第二份界面。
 
 ```bash
 python3 -m pip install -r tools/browser-requirements.txt
 python3 -m playwright install chromium
-python3 -B tools/test_reader_browser.py --output-dir dist/browser-check
-python3 -B tools/test_casebook_browser.py --output-dir dist/browser-check/casebook
-python3 -B tools/seo_build.py
-python3 -B tools/test_static_reader.py
+python3 -B tools/verify_reader.py --browser
 ```
 
-构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、原创索引演算的拟合／校准／查找与回退、星图与三维研究体共用的身份／引用关系、领域布局，以及六组确定性研究（包括任务相对充分性的有限枚举）和一组 stdlib 分类器学习／纠正实验；另检查表示与修订传播的离线执行合同、casebook 的内容／rubric 绑定和 AgeMem、C2C、Jev 已保存 receipts。修订传播的完整运行与 raw replay 使用其目录命令；统一入口中的 compact summary 检查不能替代它。验证不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
+这是 CI 与本地共用的验证入口。`--browser` 新建静态产物，再检查 public、portable、真实本地服务、重启恢复和 casebook。构建拒绝覆盖旧输出，重复执行指定新的 `--site-root` / `--evidence-root`；`dist/` 不进 Git。
+
+默认验证覆盖 canonical / generated drift、版本和 graph 合同、持久仓储与恢复、source-aware 接续、研究包、搜索、演算、正式修订与发表边界，以及各研究原生合同、有限检查、FTS5 检索控制和 stdlib 分类器。AgeMem、C2C、Jev 只检查已保存 receipts，不运行 pretrained inference 或论文 benchmark。修订传播的 compact summary 不替代完整 raw replay；各项额外依赖与复跑仍以 `research/*/README.md` 为准。
 
 表示执行器保存实际请求、送达材料、原始回答与评分身份，支持 dry-run、续跑和离线重放检查。
 运行文件完整写入后才原子发布，已有文件不覆写；中断尝试保留证据，续跑另建 attempt。
@@ -147,15 +155,13 @@ flowchart LR
 
 ## 发布、隐私与来源
 
-发布面继续是 **GitHub Pages**。唯一正文 renderer 是 `assets/app.js`；构建运行该 renderer，生成首页及四种详情页的初始 HTML、metadata 和 sitemap。旧 query URLs、场景、目录锚点、history 与源码 file mode 继续兼容。首屏把公开文章、来源、问题和实践判断呈现为可操作的三维研究体：拖动或方向键旋转，点击环带选择内容，切换环形／展开／关联后打开对应正文。关联只来自研究体的显式引用与内部链接，空间位置不表示语义相似度；展开的结构信息可直接检查。原生 WebGL 无额外 runtime dependency，reduced-motion 默认静止、离屏停帧，缺少 WebGL 时保留静态图形和文字选取入口。[网站运维说明](docs/website.md)记录构建与发布边界。
+发布面继续是 **GitHub Pages**。`apps/reader/src/` 是唯一 React/TypeScript 界面和正文 renderer；Node prerender 与浏览器共享组件，`tools/seo_build.py` 是构建入口。真实路径、旧 query URLs、场景、锚点、history、no-JS 正文和 portable file reader 保留。内容按需读取，首页 bootstrap 不内嵌全部正文。普通阅读不需要本地服务。[网站运维说明](docs/website.md)记录构建与发布边界。
 
-首屏与阅读页使用雾白、蓝灰墨和暖铜色；研究体按主领域分组，每道环带对应一个公开对象。
+页面使用雾白、蓝灰墨和暖铜色，文章先于图形。探索可切换浅色星图与三维研究体；手机星图先显示选中对象的局部引用，也能展开全图。两者共享 `research-map.js` 的真实身份与显式关系，位置不表示语义相似度。拖动、键盘、列表和正文入口并存；reduced-motion 默认静止，离屏停帧，缺少 WebGL 有静态替代。
 
-[研究星图](https://indeliblevivi.github.io/agent-memory-study/#constellation) 以深色全宽图面和浅色阅读区呈现札记、来源、问题与实践判断，按真实领域编排。全景保留领域标记和当前研究标题；悬停或键盘定位可预览其他标题，放大、筛选或聚焦时展开更多可见标题。可搜索、按类型／领域筛选、聚焦某对象的引用、拖动平移、缩放或切换目录，再打开正文。手机保留同一套 SVG 星图；动态可暂停，reduced-motion 默认静止。星图搜索与视图状态只在当前页面内存，不进入 URL 或存储；旧书架搜索的 URL 行为不变。
+Newsreader、Noto Serif SC、Instrument Sans 与 Noto Sans SC 的 OFL 子集由本站提供；图形用 SVG / WebGL 与数学代码绘制。字体来源和重建方法见[字体说明](assets/fonts/README.md)。
 
-Newsreader、Noto Serif SC 与 Instrument Sans 的 OFL 字体子集由本站提供；图形用 SVG / WebGL 与数学代码绘制。字体来源、修改范围和重建方法见 [字体说明](assets/fonts/README.md)。
-
-站点没有账号或访客档案。个人接续与研究案头文字不上传、不写 URL 或 localStorage，案头搜索也只在页面内存。书架搜索、阅读分组筛选和公开演算状态会进入可分享 URL 与浏览器历史，直接加载／刷新时 URL 会发送给托管服务；不要把私人内容输入公开搜索。既有 Cloudflare Web Analytics aggregate beacon 是唯一 analytics，不使用 cookie 或 localStorage 识别访客，无 custom events；它不记录 query string。外部来源链接在你打开时访问相应网站。构建与浏览器验收拦截非本机请求。
+公开书房没有账号或访客档案，不探测 localhost。私人接续不上传、不写 URL、localStorage 或 analytics；仅明确启动的本地服务把这些内容保存到指定目录。公开搜索、分组筛选和演算状态会进入可分享 URL 与浏览器历史，加载时发给托管服务；不要在公开搜索输入私人内容。既有 Cloudflare Web Analytics aggregate beacon 是唯一 analytics，不使用 cookie 或 localStorage，无 custom events；本地服务和 file reader 不发送该 beacon。外部来源链接在主动打开时访问相应网站，取得外部材料另需明确的 acquisition plan。构建与浏览器验收拦截非本机请求。
 
 来源札记明确区分原文主张、作者报告、AMS 观察与编辑推论，`noteDepth` 只表示来源阅读范围。未执行协议、教学例子、确定性实验、固定源码 receipts 与实际模型研究各自标明边界；不因文章变成熟或页面重做而提升结论。
 

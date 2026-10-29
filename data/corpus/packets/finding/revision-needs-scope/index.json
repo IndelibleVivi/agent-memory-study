@@ -1,0 +1,114 @@
+{
+  "schema": "ams-study-packet/2",
+  "contract_version": "ams-core/2",
+  "compiler_version": "ams-content-compiler/2",
+  "kind": "finding",
+  "id": "revision-needs-scope",
+  "title": "新说明出现，不代表旧范围已经失效",
+  "entity_refs": [
+    {
+      "kind": "claim_revision",
+      "id": "claim:revision-needs-scope",
+      "revision": "rev:claim_revision-sha256:e5eaa7b1b094d698bed2b16c4357abd23d8ca6250f2b3ca620277d13cd9e880f"
+    }
+  ],
+  "attribution": {
+    "byline": "Agent Memory Study editors",
+    "date": "2026-09-21"
+  },
+  "content": {
+    "id": "revision-needs-scope",
+    "title": "新说明出现，不代表旧范围已经失效",
+    "byline": "Agent Memory Study editors",
+    "updated": "2026-09-21",
+    "status": "proposed-transfer",
+    "questionIds": [
+      "experience-to-capability"
+    ],
+    "materialIds": [
+      "truth-maintenance-system",
+      "statefuse-conflict-preserving-memory",
+      "useful-memories-become-faulty",
+      "recuris-memory-evolution"
+    ],
+    "triggers": [
+      "新版",
+      "旧版",
+      "版本",
+      "更正",
+      "修订",
+      "覆盖",
+      "适用范围",
+      "条件",
+      "最新",
+      "revision",
+      "scope",
+      "version",
+      "latest"
+    ],
+    "claim": "修订应当改变有证据支持的适用范围。时间较新不自动撤回旧版本的有效说明；来源与条件标签也可能有误。",
+    "when": "工具参数、配置 schema 或工作经验随版本改变，但旧环境仍然在使用；或多个来源对同一范围给出不同建议时。",
+    "action": "保留适用条件、修订关系与支持来源。区分更正、状态变化和不同范围并存；当前范围有冲突时展示冲突，并用可独立检查的环境证据确认条件。",
+    "avoid": "不要用“最后写入”替代适用判断，不把所有历史顺手覆盖；也不要因为有 scope 字段就假定 scope 正确。只有暂缓，没有完成任务，仍不算能力收益。",
+    "validation": "在目标工具上同时保留旧版、新版、错误标签、独立替代支持和范围内冲突的任务；比较现有方法与候选方案的完成、误用和暂缓，工具答案在建议形成后才用于评分。",
+    "limit": "已有输出只支持给定条件下的规则差异。自然语言条件识别、真实模型先验与工具检查成本尚未测量；没有通用“带 scope 就更好”的结论。",
+    "evidence": [
+      {
+        "label": "一条更正之后：7 个场景、56 个确定性规则输出",
+        "url": "research/correction-scope-study/README.md",
+        "observation": "新版说明与旧版任务可以共存；全局最新会误导旧版任务。按范围规则保留旧建议，却也会受错误版本标签误导。",
+        "limit": "scope、来源有效性和工具 contract 由 fixture 给定；规则不理解自然语言，也没有模型先验。暂缓不等于完成任务。"
+      },
+      {
+        "label": "可亲手切换的共读",
+        "url": "https://indeliblevivi.github.io/agent-memory-study/?study=after-a-correction",
+        "observation": "浏览器与 Node runner 使用同一套规则，可比较事件前后、不同 scope 与撤回。",
+        "limit": "交互演示沿用原始 fixture，不能额外视为模型实验。"
+      }
+    ],
+    "applications": []
+  },
+  "manifest_policy": "Current public object plus bounded direct references; no linked full texts, private workflow, or inferred support.",
+  "manifest": [
+    {
+      "kind": "material",
+      "id": "truth-maintenance-system",
+      "revision": "rev:note-sha256:abb4561fdbe7c2e4c",
+      "publicKind": "material",
+      "title": "A truth maintenance system",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/truth-maintenance-system/"
+    },
+    {
+      "kind": "material",
+      "id": "statefuse-conflict-preserving-memory",
+      "revision": "rev:note-sha256:ae013071e2d5b4c39",
+      "publicKind": "material",
+      "title": "StateFuse: Deterministic Conflict-Preserving Memory for Multi-Agent Systems",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/statefuse-conflict-preserving-memory/"
+    },
+    {
+      "kind": "material",
+      "id": "useful-memories-become-faulty",
+      "revision": "rev:note-sha256:704b163b88b823801",
+      "publicKind": "material",
+      "title": "Useful Memories Become Faulty When Continuously Updated by LLMs",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/useful-memories-become-faulty/"
+    },
+    {
+      "kind": "material",
+      "id": "recuris-memory-evolution",
+      "revision": "rev:note-sha256:d0cb5216864b4d810",
+      "publicKind": "material",
+      "title": "Recursive Experiential–Working Memory Evolution for Long-Horizon Agent Harnesses",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/recuris-memory-evolution/"
+    },
+    {
+      "kind": "question",
+      "id": "experience-to-capability",
+      "revision": "rev:thread-sha256:a71896cd405c5086c4175fcab185547ba44fcd68af0c037cd0e542aaf103553f",
+      "publicKind": "question",
+      "title": "旧经验，怎样继续帮助当前任务？",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/question/experience-to-capability/"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "ams-core/2",
+  "kind": "entry",
+  "id": "entry:who-controls-memory",
+  "title": "谁在管理记忆？快判断、慢推理与旧信息的退场",
+  "byline": "Agent Memory Study editors",
+  "payload": {
+    "id": "who-controls-memory",
+    "number": "03",
+    "title": "谁在管理记忆？快判断、慢推理与旧信息的退场",
+    "subtitle": "Jev-Mem 专题 · 从写入、关联和检索，走到判断怎样变成状态变化",
+    "byline": "Agent Memory Study editors",
+    "date": "2026-09-22",
+    "kind": "editorial-synthesis-with-recorded-experiment",
+    "intro": "一句“这条信息已经过时”进入系统后，会发生什么？Jev 给了记忆管理一种有界判断接口；存储、关联、检索与生成仍由具体执行路径接起来。沿着这些接口读下去，可以把“有记忆”拆成可观察的能力，也能看清哪些能力尚未得到证明。",
+    "readings": [
+      {
+        "materialId": "jev-mem-system-one-control",
+        "label": "Jev-Mem：把记忆控制拆成有界判断",
+        "locator": "§§3.1–3.3、Appendix B；Tables 1–2；固定源码及本站实验",
+        "takeaway": "沿着 observation、关系候选、检索反馈与非破坏性维护，定位每个控制判断的执行去处。",
+        "limit": "论文结果未复现；源码执行只检验指定判断后的行为，不测试 Jev 预测准确率。"
+      },
+      {
+        "materialId": "agentic-memory",
+        "label": "AgeMem：判断策略怎样接受反馈",
+        "locator": "AMS 既有精读与 reward observation audit；本轮未重读全文",
+        "takeaway": "将策略收到的反馈、动作是否完成与结果是否正确分开，避免把一个反馈分数当成完整管理能力。",
+        "limit": "AgeMem 的训练机制不等于调用固定 Jev 接口；本站 reward audit 也不证明真正 mutation。"
+      },
+      {
+        "materialId": "continual-learning-experience-reuse",
+        "label": "Experience reuse：有记录，为什么仍读不到",
+        "locator": "AMS 既有检索竞争研究，4 场景、108 次 SQLite BM25 选择",
+        "takeaway": "候选池和排序会限制后续 controller 能看见什么；新增经历可能挤占旧证据。",
+        "limit": "BM25 教学实验不是 Jev-Mem 真实候选或语义检索评价。"
+      },
+      {
+        "materialId": "memora-from-recall-to-forgetting",
+        "label": "Memora：回忆与遗忘各自怎样验收",
+        "locator": "AMS 既有 Memora 精读与 forgetting contract audit",
+        "takeaway": "把需要保留的历史与需要撤回的当前作用分开，追踪变化是否传到实际使用位置。",
+        "limit": "不同实现拥有不同 contract；不能用 Memora 的结果代替 Jev-Mem 的证据。"
+      }
+    ],
+    "externalReadings": [
+      {
+        "label": "TypeSafe · Jev 接口与模型边界",
+        "kind": "官方模型文档",
+        "url": "https://docs.typesafe.ai/models",
+        "locator": "Models / Customizing Jev / Language support；并读 Introduction、Confidence 与 Noul；2026-09-22",
+        "takeaway": "固定模型通过 state、Choice / Score / Noul 给出有界输出；修改上下文与 criteria 不等于客户参数训练。",
+        "limit": "接口保证不等于目标任务正确率；官方说明英语最好，中英混合 memory 负载尚需评价。"
+      },
+      {
+        "label": "TypeSafe · Noul 与 confidence 怎样读",
+        "kind": "官方接口语义说明",
+        "url": "https://docs.typesafe.ai/primitives/noul",
+        "locator": "Reading a Noul；并读 https://docs.typesafe.ai/confidence；2026-09-22",
+        "takeaway": "命题成立的估计、价值大小和预测正确率是不同量；阈值需要目标侧评价。",
+        "limit": "没有测量这些输出在本专题任务上的校准误差，不能把示例概率直接转成成功率。"
+      },
+      {
+        "label": "Jev 1.13 · 官方已知弱项",
+        "kind": "官方模型限制说明",
+        "url": "https://docs.typesafe.ai/model-jaggedness/jev-1.13",
+        "locator": "日期比较、间接推理、噪声上下文与 adversarial input；2026-09-22",
+        "takeaway": "时间和一致性等 memory 要求仍需明确的执行规则与针对性评价。",
+        "limit": "官方举例不是本专题运行结果；不能据此推算本场景错误率。"
+      },
+      {
+        "label": "Jev-Mem · 固定实现与评价说明",
+        "kind": "官方开源实现",
+        "url": "https://github.com/libingzheren/Jev-Mem/blob/81574eb23f3fd8d1a6c4d54a1e7d6f2dd539e9bb/docs/evaluation.md",
+        "locator": "commit 81574eb；同时检查 config、builder、policies、retrieval、client 与 harness",
+        "takeaway": "复跑前先区分 active profile、单答案设置、fallback、停止原因和不同计时字段。",
+        "limit": "当前代码未与论文运行版本绑定；mock controller 也不会自动关闭 answerer / judge 的真实调用。"
+      }
+    ],
+    "takeaways": [
+      {
+        "title": "给判断一个可观察的去处",
+        "text": "本次高低 obsolete 对照都保留了原记录与向量成员。想让过时信息退出当前使用范围，需要指明哪个对象和哪条读取路径发生变化。"
+      },
+      {
+        "title": "保留原文，也检查当前适用性",
+        "text": "历史证据与当前选择可以有不同角色。观察派生摘要、旧节点及其来源关系，不把新增 summary 当成清除了旧记录。"
+      },
+      {
+        "title": "再做真正的 controller 比较",
+        "text": "冻结候选、图、answerer 和预算，分别比较规则、通用模型 typed output 与 Jev；同时测判断、执行和答案。这个实验尚未运行。"
+      }
+    ],
+    "boundary": "10 个 source-informed contract cases：指定 controller responses，执行固定 upstream 函数及真实 NetworkX/NumPy 内存后端，使用 MockEncoder 和拼接摘要回调。结果仅证明这些输入下的控制行为；不是 Jev 语义准确率、真实检索、持久化清除、模型遗忘或论文 benchmark 复现。",
+    "closing": "这里扩展的“记忆”包含经验如何被管理和投入使用。结构化语义判断提供一个可组合的部件；它的价值要由实际执行与后续任务继续回答。",
+    "labTitle": "判断给定以后，记忆实际怎样变化？",
+    "labIntro": "切换已执行的 synthetic case，比较调用前后的节点、向量成员和派生摘要，再展开完整判断与返回记录。页面展示保存的源码执行结果；不在浏览器调用 Jev 或重新运行实验。",
+    "artifactUrl": "research/jev-memory-contract-study/README.md",
+    "resultsUrl": "research/jev-memory-contract-study/results.json",
+    "sourcePath": "study/entries/who-controls-memory.md",
+    "bodyMarkdown": "## 先认清三个角色\n\nJev 是接收状态与问题的 hosted decision model；Jev-Mem 是使用它的 memory architecture；System Two 是最后组织答案或生成抽象的模型。官方 Jev 文档说明同一权重服务各账户，不提供客户 fine-tuning / LoRA。把更多经历放进 state，改变了这一次判断的输入，还不能叫模型学会了你的经历。 同一批问题共享 state，但彼此独立；需要前一步答案才能决定的问题，要由调用方分阶段组织。\n\n## 写入：先留下经历，之后再决定用途\n\n论文保留合法 observation，给它记忆类型、时间和来源。当前随附 profile 关闭 admission；可选的拒绝入口存在，却不是这个配置的默认行为。这样做保留了“现在看不出价值，未来才需要”的可能，同时也把筛选负担交给后续关联与检索。类型分数低不自动意味着条目该消失。\n\n## 关联：控制器只判断它见到的候选\n\n向量、实体、关键词和时间先圈出附近记录，Jev 再判断语义与因果等关系，代码按阈值建边。候选生成漏掉某段关键经历，后面的判断再精确也无从补救。AMS 既有候选竞争实验提醒我们：保存、进入候选、排进 context 是不同节点；它没有测 Jev 的 embedding 或关系质量。\n\n## 检索：停下来，不总是因为已经知道\n\nJev-Mem 按 query 分配图预算，从 anchors 开始，反复检查已有证据并扩展。充分回答、继续探索无益和预算耗尽都可能结束循环。把所有停止都算成“证据完整”，会掩盖缺证据但无路可找的状态。模型失败还会改变 routing、traversal 或 stopping 的处理，必须保留实际走过的路径。\n\n## 维护：过时的判断，先落在哪里\n\n当前 consolidation 询问重复、矛盾、obsolete 和表示选择；它记录判断、添加关系，在另有 summarizer 且门槛满足时增加派生节点。下面的源码实验给定判断值，观察执行路径怎样改变节点和索引。它刻意把“能否判断对”留给另一个实验，先回答“这个判断究竟能让代码做什么”。\n\n## 遗忘：要退出的是哪个范围\n\n设六月记录是“出差选靠窗”，九月说“这次受伤，选过道”。这是编者例子，未做模型测试。我们可能需要当前订票采用过道、保留六月的历史解释、让临时条件结束后原偏好仍有效。当前 context 不出现、以后不再检索、持久化副本清除、已训练参数影响撤回，各自需要机制；一个 obsolete 标量不能替它们完成工作。\n\n## 论文的速度与质量，先保留报告身份\n\nTable 1–2 报告 LoCoMo overall 0.777、build 158 s、query 0.93 s；本站未复现。v1 正文与表格若干数值不同，当前源码的默认 best-of-n 使用参考答案选择，计时字段也有不同边界。没有运行 manifest，不能用现有默认值反推论文一定怎样运行；也不能把整套系统的收益全归功于 Jev。\n\n## AMS 因而可以多问一层\n\nAgeMem 关心学到的管理策略，已有学习专题关心经验如何改变后续选择，Jev 则提供固定模型上的可组合控制接口。把它们连起来后，下一问会更具体：判断准确了吗，执行改变了吗，后续任务受益了吗？三种证据分别成立，再讨论能迁移什么。\n"
+  },
+  "entry_type": "editorial-synthesis",
+  "date": "2026-09-22",
+  "intro": "一句“这条信息已经过时”进入系统后，会发生什么？Jev 给了记忆管理一种有界判断接口；存储、关联、检索与生成仍由具体执行路径接起来。沿着这些接口读下去，可以把“有记忆”拆成可观察的能力，也能看清哪些能力尚未得到证明。",
+  "body_file": "study/entries/who-controls-memory.md",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "c499f7914e348a657a36d40b46bb94ebe562dec4fc7e86cccef48863f7a23579",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "body_file",
+      "byline",
+      "date",
+      "entry_type",
+      "intro",
+      "payload",
+      "title"
+    ]
+  },
+  "revision": "rev:entry-sha256:c499f7914e348a657a36d40b46bb94ebe562dec4fc7e86cccef48863f7a23579",
+  "state_revision": "rev:entry-sha256:c499f7914e348a657a36d40b46bb94ebe562dec4fc7e86cccef48863f7a23579"
+}

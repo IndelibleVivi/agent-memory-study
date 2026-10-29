@@ -1,0 +1,63 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:jev-mem-system-one-control",
+  "revision": "rev:work-sha256:7d260b82114e5466f",
+  "state_revision": "rev:work-sha256:7d260b82114e5466f",
+  "title": "Jev-Mem: System-One-Controlled Agentic Memory for Efficient AI Agents",
+  "work_type": "paper",
+  "authors": [
+    "Dongming Jiang",
+    "Yi Li",
+    "Bingzhe Li"
+  ],
+  "year": 2026,
+  "short_author": "Jiang 等",
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.48550/arXiv.2609.23986",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2609.23986v1",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2609.23986v1",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://arxiv.org/pdf/2609.23986v1",
+      "delivery": "official-link",
+      "original_locator": "https://arxiv.org/pdf/2609.23986v1"
+    }
+  ],
+  "aliases": [
+    "jev-mem-system-one-control"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "051cede143f5c66a5e71902a25cf983a62f748dbd582ca49c54f327b1b8d93e9",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

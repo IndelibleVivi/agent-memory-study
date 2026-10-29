@@ -119,28 +119,15 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             list(range(1, len(validated["materials"]) + 1)),
         )
 
-    def test_material_payload_cache_key_tracks_current_projection(self):
-        source = (build.ROOT / "index.html").read_text(encoding="utf-8")
-        self.assertEqual(
-            source.count('assets/materials-data.js?v=20261026-index-1'),
-            1,
-        )
-        self.assertNotIn('assets/materials-data.js?v=20260918-c2c-1', source)
-
-    def test_stylesheet_cache_key_tracks_current_reader(self):
-        source = (build.ROOT / "index.html").read_text(encoding="utf-8")
-        self.assertEqual(
-            source.count('assets/styles.css?v=20261026-index-1'),
-            1,
-        )
-        self.assertNotIn('assets/styles.css?v=20260909-evidence-discovery-1', source)
+    def test_reader_uses_content_named_browser_assets(self):
+        source=(build.ROOT / "apps/reader/build.mjs").read_text()
+        self.assertIn('entryNames:"reader-[hash]"',source)
+        self.assertIn('assetNames:"fonts/[name]-[hash]"',source)
+        self.assertNotIn('src="assets/materials-data.js',source)
 
     def test_article_copy_wraps_unbroken_evidence_tokens(self):
-        css = (build.ROOT / "assets" / "styles.css").read_text(encoding="utf-8")
-        self.assertRegex(
-            css,
-            r"(?s)\.article-main\s*\{[^}]*overflow-wrap:\s*anywhere;",
-        )
+        css=(build.ROOT / "apps/reader/src/style.css").read_text()
+        self.assertRegex(css,r"(?s)\.study-essay\s*\{[^}]*overflow-wrap:\s*anywhere")
 
     def test_icon_family_and_manifest_validate(self):
         build.validate_icon_assets()
@@ -150,15 +137,13 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
 
     def test_only_approved_cloudflare_web_analytics_beacon_is_present(self):
         build.validate_public_copy_files()
-        source = (build.ROOT / "index.html").read_text(encoding="utf-8")
-        self.assertEqual(source.count(build.CLOUDFLARE_WEB_ANALYTICS_SRC), 1)
-        self.assertEqual(source.count(build.CLOUDFLARE_WEB_ANALYTICS_TOKEN), 1)
-        self.assertIn('<script type="module"', source)
-
-    def test_landing_map_has_no_implicit_surface(self):
-        source = (build.ROOT / "assets" / "app.js").read_text(encoding="utf-8")
-        self.assertNotIn("defaultSurfaceId", source)
-        self.assertIn("refs.surfaceFocus.hidden = !selected", source)
+        config=json.loads((build.ROOT / "apps/reader/site-config.json").read_text())
+        self.assertEqual(config["analytics"]["source"],build.CLOUDFLARE_WEB_ANALYTICS_SRC)
+        self.assertEqual(config["analytics"]["token"],build.CLOUDFLARE_WEB_ANALYTICS_TOKEN)
+        client=(build.ROOT / "apps/reader/src/client.tsx").read_text()
+        self.assertIn('!data.portable',client)
+        self.assertIn('!document.getElementById("ams-local-bootstrap")',client)
+        self.assertIn('location.hostname===siteConfig.analytics.host',client)
 
     def test_pdf_delivery_counts_and_exact_allowlist(self):
         bundled = [
@@ -1747,9 +1732,11 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             root = Path(temp) / "study"
             shutil.copytree(build.ROOT / "study", root)
 
-            source_path = root / "sources" / f"{first}.json"
+            source_path = root / "source-corpus/notes" / f"{first}.json"
             source = json.loads(source_path.read_text(encoding="utf-8"))
-            source["failureSurfaces"] = []
+            source["navigation"]["failure_surfaces"] = []
+            from schemas.validate import content_digest
+            source["content_digest"] = content_digest(source)
             source_path.write_text(json.dumps(source, ensure_ascii=False), encoding="utf-8")
 
             validated = build.validate_data(content.compile_content(root))
@@ -2320,14 +2307,10 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
             with self.subTest(path=relative_path):
                 build.assert_public_text({relative_path: text})
 
-    def test_practice_cache_keys_track_the_current_release(self):
-        source = (build.ROOT / "index.html").read_text(encoding="utf-8")
-        for asset in ("materials-data.js", "styles.css", "practice.js", "reading-search.js", "seo.js", "app.js"):
-            with self.subTest(asset=asset):
-                self.assertEqual(
-                    source.count(f'assets/{asset}?v=20261026-index-1'),
-                    1,
-                )
+    def test_public_query_uses_the_existing_practice_owner(self):
+        source=(build.ROOT / "apps/reader/src/public-tools.tsx").read_text()
+        self.assertIn('import Practice from "../../../assets/practice.js"',source)
+        self.assertIn('Practice.brief(data,query)',source)
 
     def test_unknown_failure_surface_is_rejected(self):
         invalid = copy.deepcopy(self.data)

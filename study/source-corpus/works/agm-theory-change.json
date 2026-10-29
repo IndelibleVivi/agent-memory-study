@@ -1,0 +1,64 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:agm-theory-change",
+  "revision": "rev:work-sha256:acb97c6dd14f3fb30",
+  "state_revision": "rev:work-sha256:acb97c6dd14f3fb30",
+  "title": "On the logic of theory change: Partial meet contraction and revision functions",
+  "work_type": "paper",
+  "authors": [
+    "Carlos E. Alchourrón",
+    "Peter Gärdenfors",
+    "David Makinson"
+  ],
+  "year": 1985,
+  "short_author": "Alchourrón 等",
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.2307/2274239",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "url",
+      "value": "https://www.cambridge.org/core/journals/journal-of-symbolic-logic/article/on-the-logic-of-theory-change-partial-meet-contraction-and-revision-functions/7ED837BAD5FB6D9A7C77906D73527F9C",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://www.cambridge.org/core/journals/journal-of-symbolic-logic/article/on-the-logic-of-theory-change-partial-meet-contraction-and-revision-functions/7ED837BAD5FB6D9A7C77906D73527F9C",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/7ED837BAD5FB6D9A7C77906D73527F9C/S0022481200032849a.pdf/div-class-title-on-the-logic-of-theory-change-partial-meet-contraction-and-revision-functions-div.pdf",
+      "delivery": "official-link",
+      "original_locator": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/7ED837BAD5FB6D9A7C77906D73527F9C/S0022481200032849a.pdf/div-class-title-on-the-logic-of-theory-change-partial-meet-contraction-and-revision-functions-div.pdf",
+      "access_note": "可能需要机构访问"
+    }
+  ],
+  "aliases": [
+    "agm-theory-change"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "372260aa4488c48c5b1acc1c7894bd0f9487f913d6435f00eec86822f94639db",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

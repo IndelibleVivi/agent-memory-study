@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:jev-mem-system-one-control",
+  "revision": "rev:sha256:7d260b82114e5466f",
+  "state_revision": "rev:sha256:7d260b82114e5466f",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:jev-mem-system-one-control",
+    "revision": "rev:work-sha256:7d260b82114e5466f"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2609.23986v1",
+    "source_locator": "https://arxiv.org/abs/2609.23986v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "ad2313e5243aff194b3bd802e4b4873d3d62d073315126c59766b18ffea97768",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

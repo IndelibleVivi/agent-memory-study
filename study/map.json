@@ -30,7 +30,9 @@
         "forms-of-experience",
         "retrieval-and-relevance",
         "representation-and-use",
-        "future-questions-and-memory"
+        "future-questions-and-memory",
+        "distinguishability-and-observation",
+        "conditional-information-and-use"
       ],
       "materialIds": [
         "a-tma-state-aware-memory",
@@ -83,7 +85,9 @@
         "records-representations-systems",
         "representation-and-use",
         "who-controls-memory",
-        "future-questions-and-memory"
+        "future-questions-and-memory",
+        "distinguishability-and-observation",
+        "conditional-information-and-use"
       ],
       "materialIds": [
         "coala-cognitive-architecture",
@@ -147,7 +151,9 @@
         "how-we-study",
         "retrieval-and-relevance",
         "change-and-continuity",
-        "future-questions-and-memory"
+        "future-questions-and-memory",
+        "distinguishability-and-observation",
+        "conditional-information-and-use"
       ],
       "materialIds": [
         "longmemeval-v2-experienced-colleague",
@@ -172,7 +178,9 @@
         "records-representations-systems",
         "representation-and-use",
         "what-an-index-learns",
-        "future-questions-and-memory"
+        "future-questions-and-memory",
+        "distinguishability-and-observation",
+        "conditional-information-and-use"
       ],
       "materialIds": [
         "a-tma-state-aware-memory",
@@ -213,7 +221,9 @@
         "after-a-correction",
         "experience-becomes-policy",
         "what-an-index-learns",
-        "future-questions-and-memory"
+        "future-questions-and-memory",
+        "distinguishability-and-observation",
+        "conditional-information-and-use"
       ],
       "materialIds": [
         "truth-maintenance-system",
@@ -248,6 +258,18 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-10-29",
+      "title": "把已有材料带回新信息的价值问题",
+      "text": "用原创有限任务与真实本地检索，对照互补、重复、预算和消费者输入；provider 尚未执行。",
+      "studyId": "conditional-information-and-use"
+    },
+    {
+      "date": "2026-10-29",
+      "title": "观察相同之后，选择可区分的行动",
+      "text": "有限允许动作下比较碰撞、全局答案交集和最短区分序列；保留界内未找到与模型内不可分的区别。",
+      "studyId": "distinguishability-and-observation"
+    },
     {
       "date": "2026-10-26",
       "title": "预测出错以后，怎样仍然查对",

@@ -178,9 +178,7 @@
   ],
   "materials": [
     {
-      "number": 1,
       "id": "a-tma-state-aware-memory",
-      "kind": "paper",
       "title": "A-TMA: Decoupling state-aware memory failures in long-term agent memory",
       "authors": [
         "Zitong Shi",
@@ -189,10 +187,25 @@
       ],
       "shortAuthor": "Shi 等",
       "year": 2026,
-      "doi": null,
       "noteDepth": "read",
       "readingScope": "arXiv v2（2026-07-08）§1–§6、Appendix A.1–A.11、Tables 1–5、Figures 1–3 与 Algorithm 1；references 只用于 lineage 定位，未逐篇 close-read；未复现代码或数据。",
       "intro": "A-TMA 把 ghost memory 重新定义为跨层的 state-coordination failure：旧值、现值与 transition evidence 可以同时正确地留在 bank，错误则可能发生在 bank role、按 query view 组织 retrieval evidence，或 QA 选择状态的任一层。（§1；§3；Figure 1，PDF pp. 1–2、5）",
+      "categories": [
+        "可靠性"
+      ],
+      "failureSurfaces": [
+        "state-representation",
+        "retrieval-active-context"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2607.01935",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2607.01935v2",
+        "accessNote": "arXiv v2 preprint"
+      },
+      "number": 1,
+      "kind": "paper",
+      "doi": null,
       "whyRead": "它最值得读的地方不是又提出一个 memory overlay，而是给 terminal answer 之前的失败建立了可追踪的层次：recorded、historically recoverable、retrieved for this view 与 used correctly by QA 不再被压成同一个“记住了”。这套 decomposition 也让新的风险变得可见——谁给 state 定角色、谁选择 query view、谁把 label 写进 prompt，谁就在 read side 获得了实际的 evidence authority。",
       "keyPoints": [
         "Bank：每条 record 包含 content、time/source position、state status、typed links 与 host metadata；status 包括 active、superseded、transition、unknown，links 可表达 supersession、evolution、scoped exception 与 coexistence。（§4.1–§4.3，PDF pp. 5–7）",
@@ -330,19 +343,6 @@
         "memory retrieval",
         "failure diagnosis"
       ],
-      "categories": [
-        "可靠性"
-      ],
-      "failureSurfaces": [
-        "state-representation",
-        "retrieval-active-context"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2607.01935",
-      "pdf": {
-        "delivery": "official",
-        "url": "https://arxiv.org/pdf/2607.01935v2",
-        "accessNote": "arXiv v2 preprint"
-      },
       "editorialQuestion": "transition view 本身没有被直接作为问答目标充分测试；在含糊、并存或带条件例外的状态里，query-view 与 state-role classifier 会不会只是新的错误入口？",
       "sourceNote": "arXiv v2；本站链接官方 PDF，不在 repo 内重新分发。",
       "designTransfer": {
@@ -357,9 +357,7 @@
       }
     },
     {
-      "number": 2,
       "id": "trustmem-consolidation",
-      "kind": "paper",
       "title": "TRUSTMEM: Learning trustworthy memory consolidation for LLM agents with long-term memory",
       "authors": [
         "Tianyu Yang",
@@ -370,21 +368,9 @@
       ],
       "shortAuthor": "Yang 等",
       "year": 2026,
-      "doi": null,
       "noteDepth": "worked",
       "readingScope": "完整阅读 arXiv v1 的 Abstract、§§1–5、Limitations、Appendices A–D、Tables 1–6、Figures 1–5 的图注；视觉复核 Figure 2、Figure 5、核心结果表与 Appendix D prompt。PDF 共 18 页，pdfinfo 与 pdftotext 分页一致，关键定位页另行渲染核对；pypdf preflight 因依赖未安装为 advisory unavailable，不记 PASS。References 只作来源定位，没有逐项验证。另执行 AMS 原创的 10 个结构化 transition、4 组候选配对控制与论文已舍入数值的算术复核；没有执行官方实现、LLM judge、RL 训练或 benchmark 复现。",
       "intro": "TRUSTMEM 把记忆构造写成一连串状态转换：每次处理新 chunk 后，检查新证据是否遗漏、有效旧事实是否受损、修改是否有依据。它将这类局部监督与终端任务奖励结合，并在同一旧状态和 chunk 下对候选编辑建立偏好，训练能够构造紧凑、有用记忆的 policy。",
-      "keyPoints": [
-        "状态转换单位：policy 按时间顺序处理 chunk，对累计 memory 选择 Write、Revise、Prune 或不作编辑；deterministic executor 得到新状态，terminal memory 再交给固定 retriever 与 answer model。训练目标是构造有用且紧凑的记忆。（§3.1，PDF pp. 4–5）",
-        "局部监督：frozen LLM verifier 查看 chunk、动作以及被触及或检索的记忆，分别评估 coverage、preservation、faithfulness；Figure 5 允许合法压缩、更正与“事实已存好”的 no-op。（§3.2；Figure 5，PDF pp. 5、16）",
-        "两路优化：task / compactness 的 sample reward 与 executability / specificity / verifier 的 transition reward 汇合；TR-GRPO 再对同一旧状态、同一 chunk 下的最高/最低 verifier 候选建立偏好对。绝对 score 未必校准；ranking 也依赖比较条件成立。（§§3.3–3.4，Eqs. 1–4，PDF pp. 5–7）",
-        "评测口径：66.3 与 65.7 是不同 benchmark 的 task macro-average；8.08% / 0.14% / 0.01% 是 GPT-4o-mini 标记 major 错误的 transition 比例，不是逐事实错误率或真实用户长期系统的故障率。（Tables 1–2；Figure 2；§4.5；Appendix D）"
-      ],
-      "keywords": [
-        "memory consolidation",
-        "transition verification",
-        "write policy"
-      ],
       "categories": [
         "可靠性"
       ],
@@ -399,6 +385,20 @@
         "license": "CC BY 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
+      "number": 2,
+      "kind": "paper",
+      "doi": null,
+      "keyPoints": [
+        "状态转换单位：policy 按时间顺序处理 chunk，对累计 memory 选择 Write、Revise、Prune 或不作编辑；deterministic executor 得到新状态，terminal memory 再交给固定 retriever 与 answer model。训练目标是构造有用且紧凑的记忆。（§3.1，PDF pp. 4–5）",
+        "局部监督：frozen LLM verifier 查看 chunk、动作以及被触及或检索的记忆，分别评估 coverage、preservation、faithfulness；Figure 5 允许合法压缩、更正与“事实已存好”的 no-op。（§3.2；Figure 5，PDF pp. 5、16）",
+        "两路优化：task / compactness 的 sample reward 与 executability / specificity / verifier 的 transition reward 汇合；TR-GRPO 再对同一旧状态、同一 chunk 下的最高/最低 verifier 候选建立偏好对。绝对 score 未必校准；ranking 也依赖比较条件成立。（§§3.3–3.4，Eqs. 1–4，PDF pp. 5–7）",
+        "评测口径：66.3 与 65.7 是不同 benchmark 的 task macro-average；8.08% / 0.14% / 0.01% 是 GPT-4o-mini 标记 major 错误的 transition 比例，不是逐事实错误率或真实用户长期系统的故障率。（Tables 1–2；Figure 2；§4.5；Appendix D）"
+      ],
+      "keywords": [
+        "memory consolidation",
+        "transition verification",
+        "write policy"
+      ],
       "editorialQuestion": "在共享完整前态的候选池中，verifier 排序与独立人工判定的分歧落在哪里；局部视图遗漏哪些信息时，正确的更正或 no-op 会被误罚？",
       "sourceNote": "",
       "designTransfer": {
@@ -531,9 +531,7 @@
       ]
     },
     {
-      "number": 3,
       "id": "verifiable-memory",
-      "kind": "paper",
       "title": "Verifiable memory: Learning unified memory management with local and global verifiers for large language model agents",
       "authors": [
         "Xiaolong Sun",
@@ -543,21 +541,9 @@
       ],
       "shortAuthor": "Sun 等",
       "year": 2026,
-      "doi": null,
       "noteDepth": "worked",
       "readingScope": "完整阅读 arXiv v1 的 Abstract、§§1–6、Appendices A–F、Tables 1–27 与 Figures 1–4 图注。PDF 共 29 页，pdfinfo / pdftotext 分页一致，另渲染核对 PDF pp. 8、13、25、27 的结果表、工具与 verifier 约束；pypdf preflight 因缺少依赖为 advisory unavailable，不记 PASS。References 只用于定位，没有逐项验证。另阅读官方 repo 固定 commit 4782751 的相关 schemas、STM rule verifier 与 reward projection，直接执行 12 个原创函数级样例；没有运行 memory executor、LLM verifier、RL 训练或 benchmark。",
       "intro": "VerMem 用同一 memory policy 协调长期条目、当前 active context 与同一任务的 episodic history。训练时，它把单次可执行操作的局部评价与整条轨迹的复合反馈结合；历史恢复提供一条从旧观察回到当前 context 的独立路径。",
-      "keyPoints": [
-        "三个状态，两条回取路径：Retrieve 从长期条目 M 取回，SelectEpisode 从当前任务的历史 H 取回。8,192-token policy serialization 与 active context C 的预算分开；H 不是无界拼进 prompt 的聊天记录。（§§3.1–3.2；Appendix A；PDF pp. 3–4、12–14）",
-        "执行与监督分开：七个工具加 null；失败操作保持 M/C 不变并记录原因，null 仍计入 memory-decision horizon。结构/来源/预算约束与语义 verifier 不同，local/global verifier 仅用于训练。（§§3.1–3.5；Appendices A.4、F）",
-        "local advantage 按操作类型归一化，global advantage 在同任务 K=8 条完整轨迹内归一化；两者与约束成本汇合。只有 memory-command tokens 受该训练目标监督，task-solver 输出与环境观察不在 loss mask 内。（§§3.3–3.5；Appendices B、F.4–F.6）",
-        "只用构造的 HotpotQA 状态训练，然后评测五种任务；每个评测 episode 都重置 M/C/H。结果支持任务内持续记忆与 policy transfer，不能证明跨会话或跨用户保留。（§§4–5；Appendices C.1–C.3）"
-      ],
-      "keywords": [
-        "active context",
-        "episodic retrieval",
-        "policy verification"
-      ],
       "categories": [
         "可靠性"
       ],
@@ -570,6 +556,20 @@
         "delivery": "official",
         "url": "https://arxiv.org/pdf/2608.03137v1"
       },
+      "number": 3,
+      "kind": "paper",
+      "doi": null,
+      "keyPoints": [
+        "三个状态，两条回取路径：Retrieve 从长期条目 M 取回，SelectEpisode 从当前任务的历史 H 取回。8,192-token policy serialization 与 active context C 的预算分开；H 不是无界拼进 prompt 的聊天记录。（§§3.1–3.2；Appendix A；PDF pp. 3–4、12–14）",
+        "执行与监督分开：七个工具加 null；失败操作保持 M/C 不变并记录原因，null 仍计入 memory-decision horizon。结构/来源/预算约束与语义 verifier 不同，local/global verifier 仅用于训练。（§§3.1–3.5；Appendices A.4、F）",
+        "local advantage 按操作类型归一化，global advantage 在同任务 K=8 条完整轨迹内归一化；两者与约束成本汇合。只有 memory-command tokens 受该训练目标监督，task-solver 输出与环境观察不在 loss mask 内。（§§3.3–3.5；Appendices B、F.4–F.6）",
+        "只用构造的 HotpotQA 状态训练，然后评测五种任务；每个评测 episode 都重置 M/C/H。结果支持任务内持续记忆与 policy transfer，不能证明跨会话或跨用户保留。（§§4–5；Appendices C.1–C.3）"
+      ],
+      "keywords": [
+        "active context",
+        "episodic retrieval",
+        "policy verification"
+      ],
       "editorialQuestion": "历史恢复的 task scope、原始正文、来源与预算分别由哪个组件验证；公开 rule verifier 的 pass 还依赖哪些未在本函数建立的前提？",
       "sourceNote": "",
       "designTransfer": {
@@ -710,9 +710,7 @@
       ]
     },
     {
-      "number": 4,
       "id": "mosaic-long-term-memory",
-      "kind": "paper",
       "title": "Accurate and efficient long-term memory for LLM agents",
       "authors": [
         "Zicheng Zhao",
@@ -724,21 +722,9 @@
       ],
       "shortAuthor": "Zhao 等",
       "year": 2026,
-      "doi": null,
       "noteDepth": "worked",
       "readingScope": "完整阅读 arXiv:2607.16211v1 的 Abstract、§§1–6（含 Discussion 内的 limitations）、Tables 1–3、Figures 1–4 图注与 references，共 12 个 physical PDF pages；无附录。References 只用于来源定位，未逐篇验证。pdfinfo 与 pdftotext 的 12 页分页一致，另视觉核对 PDF pp. 4–5、8–10 的架构图、公式、表格、结果图与限制段；pypdf preflight 因依赖未安装为 advisory UNAVAILABLE，不记 PASS。另执行 AMS 原创的 9 个评分缓存场景、27 组处理与 8 项行为测试；未执行作者实现、LLM、PageRank / Leiden、检索、冲突检测或 benchmark。",
       "intro": "MOSAIC 将长期记忆表示为 event、persona、relationship typed graph，在保存新信息时检索近邻并检查冲突。prerequisite graph 约束下一步可以询问什么，association graph 提供语义关联；controller 按实体重要性、centrality 与 community continuity 选择候选。论文分别用 conversation QA、memory pipeline 与人工注入冲突评价这一框架。",
-      "keyPoints": [
-        "记忆分为 event、persona、relationship，节点包含正文、embedding、confidence 与时间。prerequisite graph 限定何时能问，association graph 组织语义关联；它们承担不同职责。（§§3.1–3.2，PDF pp. 3–4）",
-        "NCS 将局部稳定性定义为评分只依赖入邻居状态，dirty set 包含本次改变的节点及其边接收者。但实际 Score 还用当前 frontier 的最大 importance 做归一化，并按 previous community 加分；这两项需要单独的依赖说明。（§§3.3–3.4，PDF pp. 4–5）",
-        "写入前检索近邻，由 LLM 判断 numerical、semantic、logical conflict；低于 0.6 confidence 的 extraction 触发 clarification。高 confidence 不等于已经校准的真实性，近邻中没有出现的矛盾也不会自动被比较。（§§3.5–3.8，PDF p. 5）",
-        "LoCoMo / HaluMem baselines 引自既有论文；自建 conflict test 的 baselines 用 GPT-4o，MOSAIC 用 Qwen3.5-plus。Long HaluMem 一行还合并了 archived extraction/update 与 refreshed QA，不能当成同配置端到端实验或单一组件消融。（§§4.1–4.3；Table 2；§6）"
-      ],
-      "keywords": [
-        "graph memory",
-        "conflict detection",
-        "local invalidation"
-      ],
       "categories": [
         "记忆架构"
       ],
@@ -750,6 +736,20 @@
         "delivery": "official",
         "url": "https://arxiv.org/pdf/2607.16211v1"
       },
+      "number": 4,
+      "kind": "paper",
+      "doi": null,
+      "keyPoints": [
+        "记忆分为 event、persona、relationship，节点包含正文、embedding、confidence 与时间。prerequisite graph 限定何时能问，association graph 组织语义关联；它们承担不同职责。（§§3.1–3.2，PDF pp. 3–4）",
+        "NCS 将局部稳定性定义为评分只依赖入邻居状态，dirty set 包含本次改变的节点及其边接收者。但实际 Score 还用当前 frontier 的最大 importance 做归一化，并按 previous community 加分；这两项需要单独的依赖说明。（§§3.3–3.4，PDF pp. 4–5）",
+        "写入前检索近邻，由 LLM 判断 numerical、semantic、logical conflict；低于 0.6 confidence 的 extraction 触发 clarification。高 confidence 不等于已经校准的真实性，近邻中没有出现的矛盾也不会自动被比较。（§§3.5–3.8，PDF p. 5）",
+        "LoCoMo / HaluMem baselines 引自既有论文；自建 conflict test 的 baselines 用 GPT-4o，MOSAIC 用 Qwen3.5-plus。Long HaluMem 一行还合并了 archived extraction/update 与 refreshed QA，不能当成同配置端到端实验或单一组件消融。（§§4.1–4.3；Table 2；§6）"
+      ],
+      "keywords": [
+        "graph memory",
+        "conflict detection",
+        "local invalidation"
+      ],
       "editorialQuestion": "如果实现只局部缓存 importance、在选择时重新组合全局评分项，能否既保持与全量状态一致，又减少实际写入到选择的成本？还需要哪些源码、配置和逐例结果，才能把 graph、base model 与冲突检查的效果分开？",
       "sourceNote": "",
       "designTransfer": {
@@ -946,9 +946,7 @@
       }
     },
     {
-      "number": 5,
       "id": "proactive-wake-anchor",
-      "kind": "paper",
       "title": "Do proactive agents really need an LLM to decide when to wake and what to anchor?",
       "authors": [
         "Xiaoze Liu",
@@ -962,22 +960,9 @@
       ],
       "shortAuthor": "Liu 等",
       "year": 2026,
-      "doi": null,
       "noteDepth": "worked",
       "readingScope": "完整阅读 arXiv v1 的 Abstract、§§1–6、Limitations、Ethics / AI Assistance、Appendices A–I、Tables 1–7 与 Figures 1–5 图注，含 graph construction、training、causal masking、desktop / mobile prompts 与案例。PDF 共 31 页，pdfinfo 与 pdftotext 分页一致；视觉复核 Tables 1、2、4、6、Appendix E.7–E.10 与 No-TGL prompt。References 仅作定位；pypdf preflight 缺依赖为 advisory unavailable，不记 PASS。另执行 3 个原创图场景、30 次精确分数传播与 8 项行为测试；未执行作者 TGL、GATv2、模型训练、RM judge 或 benchmark。",
       "intro": "主动助手在生成建议之前，需要决定此刻是否值得调用下游 agent，以及带上哪些具体实体作为依据。本文让一个小型 temporal graph encoder 同时承担 trigger 与 routing，再在放行时调用 LLM。它提供的是这种分工在离线活动流上的证据；何时真的打扰用户、建议是否合适和真实使用体验仍需分开判断。",
-      "keyPoints": [
-        "将每个 session 建成 event、entity、type 节点组成的异构图；三层 relation-aware GATv2 与 Jumping Knowledge 编码共享状态，event head 预测 trigger，entity head 预测 routing。推理阈值 0.5、最多 20 个 routed nodes，只有 gate 放行才调用下游 LLM。（§§3–4；Appendix E.2–E.8）",
-        "训练标签来自 released training split：有非空 proposed task 的 event 标为 fire，接受标记可强制为正；routing 由任务文本提取实体，再匹配回事件图。没有匹配实体的 event 不参与 routing supervision，但仍训练 trigger。（Appendix B.1，PDF pp. 15–17）",
-        "14 个桌面下游 backbones 的主表 F1 均提高，报告平均 +16.7 个百分点。该 F1 经 released reward model 评价最终任务文本；不是裸 graph trigger 的二分类 F1，也不等于用户认可的打扰时机。（Table 1；Appendix E.1）",
-        "推理因果性不只是去掉 backward 时间边：E.7 还要求屏蔽未来事件、新引入实体的输入和 hidden-state contribution。共享实体和类型节点需要一并纳入因果检查。（Appendices B.1、E.7）",
-        "手机辅助实验保留 graph backbone 思路，但在 FingerTip 上从头训练，使用新的 app / intent / semantic heads 和候选检索；它没有桌面 fire-or-skip head，不是同一个 checkpoint 的零样本移动端迁移。（Appendices A、B.2、C.2）"
-      ],
-      "keywords": [
-        "proactive agents",
-        "wake control",
-        "temporal graphs"
-      ],
       "categories": [
         "前瞻记忆"
       ],
@@ -992,6 +977,21 @@
         "license": "CC BY 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
+      "number": 5,
+      "kind": "paper",
+      "doi": null,
+      "keyPoints": [
+        "将每个 session 建成 event、entity、type 节点组成的异构图；三层 relation-aware GATv2 与 Jumping Knowledge 编码共享状态，event head 预测 trigger，entity head 预测 routing。推理阈值 0.5、最多 20 个 routed nodes，只有 gate 放行才调用下游 LLM。（§§3–4；Appendix E.2–E.8）",
+        "训练标签来自 released training split：有非空 proposed task 的 event 标为 fire，接受标记可强制为正；routing 由任务文本提取实体，再匹配回事件图。没有匹配实体的 event 不参与 routing supervision，但仍训练 trigger。（Appendix B.1，PDF pp. 15–17）",
+        "14 个桌面下游 backbones 的主表 F1 均提高，报告平均 +16.7 个百分点。该 F1 经 released reward model 评价最终任务文本；不是裸 graph trigger 的二分类 F1，也不等于用户认可的打扰时机。（Table 1；Appendix E.1）",
+        "推理因果性不只是去掉 backward 时间边：E.7 还要求屏蔽未来事件、新引入实体的输入和 hidden-state contribution。共享实体和类型节点需要一并纳入因果检查。（Appendices B.1、E.7）",
+        "手机辅助实验保留 graph backbone 思路，但在 FingerTip 上从头训练，使用新的 app / intent / semantic heads 和候选检索；它没有桌面 fire-or-skip head，不是同一个 checkpoint 的零样本移动端迁移。（Appendices A、B.2、C.2）"
+      ],
+      "keywords": [
+        "proactive agents",
+        "wake control",
+        "temporal graphs"
+      ],
       "editorialQuestion": "固定真实 checkpoint 和观察前缀，加入不同未来事件后，trigger 与已知实体的 routing 是否保持一致；再接入真实事件流时，模型分数与用户愿意被打扰的时机相差在哪里？",
       "sourceNote": "",
       "designTransfer": {
@@ -1160,9 +1160,7 @@
       ]
     },
     {
-      "number": 6,
       "id": "pm-bench",
-      "kind": "paper",
       "title": "PM-bench: Evaluating prospective memory in LLM agents",
       "authors": [
         "Genglin Liu",
@@ -1170,10 +1168,26 @@
       ],
       "shortAuthor": "Liu 等",
       "year": 2026,
-      "doi": null,
       "noteDepth": "worked",
       "readingScope": "完整读了 arXiv v1 的 §§1–6、Ethics Statement、Appendix A.1–A.6、Tables 1–7 与 Figures 1–4，共 22 个 PDF pages；references 只用于 lineage 定位。另检查 official code / data commit e1093c470c8981daf522d4ef047a7c3a71e077d7，运行三个 deterministic scorer-contract probes，验证并重算 64 份 released primary logs、重建 official comparison report；没有调用模型、生成新 trajectory、复现实验采样过程或测试第二个 synthetic week。PDF 的 pypdf preflight 因依赖未安装只能标为 advisory unavailable；页数与关键定位已用 pdfinfo、两种 pdftotext page breaks 和 rendered pages 交叉核对。",
       "intro": "PM-Bench 把“记得意图”与“在正确 cue/time 行动或抑制旧行动”拆开：一个固定 synthetic week 同时施加 time/event cues、hidden state channels、updates、lures 与 false-positive 成本。本站复核发现 headline Set-F1 可重建，但三处 diagnostic contract 需要收窄：monitoring hit 不证明 query provenance，update violation 会包含 accepted current-state late action，scorer 也不以 step_id 绑定 row identity。",
+      "categories": [
+        "前瞻记忆"
+      ],
+      "failureSurfaces": [
+        "wake-prospective-action"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2607.12385",
+      "pdf": {
+        "delivery": "bundled",
+        "url": "papers/06-liu-2026-pm-bench.pdf",
+        "originalUrl": "https://arxiv.org/pdf/2607.12385v1",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "number": 6,
+      "kind": "paper",
+      "doi": null,
       "whyRead": "这篇值得深读，因为它把 prospective memory 从普通 recall benchmark 中剥离出来：真正难的不是回忆一句旧事实，而是保持意图、监控环境、在 cue 到来时执行、在 cue 未到时克制，并在 cancel / override / reschedule 后放弃旧目标。更重要的是，它把 precision、false positives、query volume 与 update handling 同时摆上桌，让“更主动”不再自动等于“更好”。公开 scorer audit 又暴露出评测语言与可观测 contract 的边界：一个有解释力的 diagnostic 名称仍可能比代码实际测到的对象更强。",
       "keyPoints": [
         "Evaluation object：agent 不只要保存 intention，还要在正确 time/event cue 选择 task、在无 cue 时不误触，并让 cancellation、override、reschedule 改写后续有效行为；scoring 同时记录 hit/late/miss、set TP/FP/FN、update 与 query counts。（§§1、3.1、3.3；Appendix A.4，PDF pp. 1、3–5、16–17）",
@@ -1349,20 +1363,6 @@
         "action timing",
         "monitoring cost"
       ],
-      "categories": [
-        "前瞻记忆"
-      ],
-      "failureSurfaces": [
-        "wake-prospective-action"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2607.12385",
-      "pdf": {
-        "delivery": "bundled",
-        "url": "papers/06-liu-2026-pm-bench.pdf",
-        "originalUrl": "https://arxiv.org/pdf/2607.12385v1",
-        "license": "CC BY 4.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
-      },
       "editorialQuestion": "全部 aggregate conclusions 来自同一个 generated week；这些 scaffold 在不同日程结构、seed 与真实干扰成本下是否稳定？",
       "sourceNote": "已列入 COLM 2026 Accepted Papers；arXiv author comment 标注 conference publication。公开 arXiv 仍为 v1（2026-07-14）；截至 2026-08-14，atlas 暂不记录 proceedings DOI。",
       "designTransfer": {
@@ -1377,9 +1377,7 @@
       }
     },
     {
-      "number": 7,
       "id": "mistake-notebook-learning",
-      "kind": "paper",
       "title": "Mistake notebook learning: Batch-clustered failures for training-free agent adaptation",
       "authors": [
         "Xuanbo Su",
@@ -1390,23 +1388,9 @@
       ],
       "shortAuthor": "Su 等",
       "year": 2026,
-      "doi": "10.18653/v1/2026.findings-acl.719",
       "noteDepth": "worked",
       "readingScope": "完整读了 ACL 2026 Findings final 的 Abstract、§§1–6、Limitations、Appendices A–D、主要 tables / figures，共 17 个 physical PDF pages；references 只用于 lineage 定位。另检查 exact current official source commit dc7de755522ad58864c62b74ab8e9959c01b7f23 的 trainer、evaluator、knowledge base、LLM client 与 example caller paths；该 untagged revision 没有被证明是 paper-production source。当前 note 不把 source inspection、已执行的 synthetic contract audit 或 paper-reported benchmark 结果混成同一证据层。",
       "intro": "MNL 先按 subject 聚类一批失败，再把共享错误模式压缩成 structured guidance；真正需要审计的不是“会不会写笔记”，而是谁进入 proposal、谁被重新比较，以及一个 net-positive batch 究竟授权了多强的 promotion claim。",
-      "keyPoints": [
-        "Tuning Model 使用 retrieved guidance 执行任务，Tuner Model 对整个 batch 先做 subject mapping，再只从 failure subsets 提炼 guidance；两者可以同模，也可由强模型向弱模型蒸馏。（§§3.1–3.3；Algorithm 1）",
-        "每条 memory 以 subject、五部分 corrective guidance 与 subject embedding 组成；相似度超过 threshold 时论文声称 fuse into existing node，否则 append。（Appendices B.1–B.3）",
-        "Eq. 5 把同一 proposal batch 中每个 item 的 updated reward 与 baseline reward 做符号比较，只有 wins − regressions > 0 才接受；tie 为零贡献，且 gate 没有 held-out 或 per-item non-regression 合同。（§3.3；Algorithm 1）",
-        "单 epoch 的 KaggleDBQA test accuracy 为 28.1%，epoch 2 的 train accuracy 升至 62.1% 而 test 降至 23.2%；论文据此承认 cross-epoch overfitting，并采用 single epoch。（§4.3；Figure 4）"
-      ],
-      "keywords": [
-        "failure learning",
-        "memory promotion",
-        "rollback",
-        "cohort conservation",
-        "batch-level abstraction"
-      ],
       "categories": [
         "可靠性",
         "持续学习"
@@ -1424,6 +1408,22 @@
         "license": "CC BY 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
+      "number": 7,
+      "kind": "paper",
+      "doi": "10.18653/v1/2026.findings-acl.719",
+      "keyPoints": [
+        "Tuning Model 使用 retrieved guidance 执行任务，Tuner Model 对整个 batch 先做 subject mapping，再只从 failure subsets 提炼 guidance；两者可以同模，也可由强模型向弱模型蒸馏。（§§3.1–3.3；Algorithm 1）",
+        "每条 memory 以 subject、五部分 corrective guidance 与 subject embedding 组成；相似度超过 threshold 时论文声称 fuse into existing node，否则 append。（Appendices B.1–B.3）",
+        "Eq. 5 把同一 proposal batch 中每个 item 的 updated reward 与 baseline reward 做符号比较，只有 wins − regressions > 0 才接受；tie 为零贡献，且 gate 没有 held-out 或 per-item non-regression 合同。（§3.3；Algorithm 1）",
+        "单 epoch 的 KaggleDBQA test accuracy 为 28.1%，epoch 2 的 train accuracy 升至 62.1% 而 test 降至 23.2%；论文据此承认 cross-epoch overfitting，并采用 single epoch。（§4.3；Figure 4）"
+      ],
+      "keywords": [
+        "failure learning",
+        "memory promotion",
+        "rollback",
+        "cohort conservation",
+        "batch-level abstraction"
+      ],
       "editorialQuestion": "如果 promotion 只看 proposal-batch 的 surviving pairs，怎样同时保全原 cohort、coverage、subgroup harm 与 held-out generalization，避免一个绿色 aggregate 吞掉未被比较的 item？",
       "sourceNote": "本站精读 authority 是 ACL Anthology final proceedings PDF（DOI 10.18653/v1/2026.findings-acl.719）。另行检查的 official repo current commit dc7de755522ad58864c62b74ab8e9959c01b7f23 未打 tag，也没有 provenance 把它绑定为论文出表 revision；current-source observation 不能反向改写 paper claim。",
       "whyRead": "这篇最有价值的地方不是再证明一次 external memory 可以提升分数，而是把 mutation authority 写成一个可计算 gate：先生成 candidate，再用同一 batch 验收，失败就 rollback。也正因为 gate 足够具体，读者可以追问它的 population、denominator 与 lifecycle：某个 item 没形成 updated pair 时是否仍属于 B？一个 aggregate win 能否遮住 subgroup loss？proposal batch 通过后谁负责 held-out decline？这让“持续学习”从漂亮叙事变成一组可以逐层审计的 admission contracts。",
@@ -1645,9 +1645,7 @@
       }
     },
     {
-      "number": 8,
       "id": "coala-cognitive-architecture",
-      "kind": "paper",
       "title": "Cognitive architectures for language agents",
       "authors": [
         "Theodore R. Sumers",
@@ -1657,20 +1655,9 @@
       ],
       "shortAuthor": "Sumers 等",
       "year": 2024,
-      "doi": null,
       "noteDepth": "skim",
       "readingScope": "Abstract、§3–§4、§6–§8；case studies 仅用于理解框架，未逐个通读。",
       "intro": "用 memory modules、structured action space 与 repeated decision cycle 为 language agent 提供一套组件语言。",
-      "keyPoints": [
-        "CoALA 把 agent 拆成 memory modules、structured action space 与 repeated decision cycle；external actions 负责 grounding，internal actions 包括 retrieval、reasoning 与 learning。（§4）",
-        "memory 分为 working、episodic、semantic 与 procedural；working memory 是跨多次 LLM call 持续存在的数据结构，而非单个 prompt。（§4.1）",
-        "retrieval 从长期记忆读入 working memory，reasoning 在其中读写，learning 写回长期记忆；修改 procedural memory 被视为更高风险。（§4.3–§4.5）"
-      ],
-      "keywords": [
-        "cognitive architecture",
-        "memory modules",
-        "agent actions"
-      ],
       "categories": [
         "记忆架构"
       ],
@@ -1686,6 +1673,19 @@
         "license": "CC BY 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
+      "number": 8,
+      "kind": "paper",
+      "doi": null,
+      "keyPoints": [
+        "CoALA 把 agent 拆成 memory modules、structured action space 与 repeated decision cycle；external actions 负责 grounding，internal actions 包括 retrieval、reasoning 与 learning。（§4）",
+        "memory 分为 working、episodic、semantic 与 procedural；working memory 是跨多次 LLM call 持续存在的数据结构，而非单个 prompt。（§4.1）",
+        "retrieval 从长期记忆读入 working memory，reasoning 在其中读写，learning 写回长期记忆；修改 procedural memory 被视为更高风险。（§4.3–§4.5）"
+      ],
+      "keywords": [
+        "cognitive architecture",
+        "memory modules",
+        "agent actions"
+      ],
       "editorialQuestion": "框架主要用 controllability 与 coupling 划 internal/external boundary；如何加入 provenance、authority 与 reversibility，避免“可写”被误当成“有权写”？",
       "sourceNote": "",
       "designTransfer": {
@@ -1700,9 +1700,7 @@
       }
     },
     {
-      "number": 9,
       "id": "storage-to-experience",
-      "kind": "paper",
       "title": "From storage to experience: a survey on the evolution of LLM agent memory mechanisms",
       "authors": [
         "Jinghao Luo",
@@ -1717,20 +1715,9 @@
       ],
       "shortAuthor": "Luo 等",
       "year": 2026,
-      "doi": "10.18653/v1/2026.findings-acl.2069",
       "noteDepth": "skim",
       "readingScope": "Abstract、§2–§7、Limitations；未通读附录中的 taxonomy、datasets 与 benchmark tables。",
       "intro": "按信息抽象与 cognitive processing 程度，把 agent memory 组织为 Storage、Reflection 与 Experience 三类机制。",
-      "keyPoints": [
-        "Storage 尽量保留 trajectory；Reflection 对单条 trajectory 评价或纠正；Experience 从相似 trajectory group 归纳可跨场景使用的 schema 或 policy prior。（§2.2）",
-        "Experience 又分 explicit、implicit、hybrid：可以表现为自然语言 policy、executable skill、模型参数，或显式积累与参数内化的组合。（§4）",
-        "survey 把 active retrieval controller、working-memory organization 与 Experience-stage benchmark 列为开放方向，并承认没有跨方法 quantitative comparison。（§6；Limitations）"
-      ],
-      "keywords": [
-        "memory taxonomy",
-        "reflection",
-        "experience abstraction"
-      ],
       "categories": [
         "记忆架构"
       ],
@@ -1745,6 +1732,19 @@
         "license": "CC BY 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
+      "number": 9,
+      "kind": "paper",
+      "doi": "10.18653/v1/2026.findings-acl.2069",
+      "keyPoints": [
+        "Storage 尽量保留 trajectory；Reflection 对单条 trajectory 评价或纠正；Experience 从相似 trajectory group 归纳可跨场景使用的 schema 或 policy prior。（§2.2）",
+        "Experience 又分 explicit、implicit、hybrid：可以表现为自然语言 policy、executable skill、模型参数，或显式积累与参数内化的组合。（§4）",
+        "survey 把 active retrieval controller、working-memory organization 与 Experience-stage benchmark 列为开放方向，并承认没有跨方法 quantitative comparison。（§6；Limitations）"
+      ],
+      "keywords": [
+        "memory taxonomy",
+        "reflection",
+        "experience abstraction"
+      ],
       "editorialQuestion": "跨 trajectory 的 universal rule 如果失去到具体来源的可追溯路径，来源被纠正后要怎样让高层抽象同步失效？",
       "sourceNote": "",
       "designTransfer": {
@@ -1759,9 +1759,7 @@
       }
     },
     {
-      "number": 10,
       "id": "continual-learning-experience-reuse",
-      "kind": "paper",
       "title": "When continual learning moves to memory: a study of experience reuse in LLM agents",
       "authors": [
         "Qisheng Hu",
@@ -1770,21 +1768,9 @@
       ],
       "shortAuthor": "Hu 等",
       "year": 2026,
-      "doi": null,
       "noteDepth": "worked",
       "readingScope": "完整阅读 arXiv v1 的 Abstract、§§1–6、Limitations、Appendices A–F、Tables 1–8 与 Figures 1–13 图注；视觉复核 Tables 3、5、6、Appendix C 和 Figure 11。PDF 共 16 页，pdfinfo 与 pdftotext 分页一致；pypdf preflight 因依赖未安装为 advisory unavailable，不记 PASS。References 仅作来源定位。另执行 4 个 AMS 原创场景、12 个检索池、108 次 SQLite BM25 选择与 8 项行为测试；未执行作者实现、Qwen-Plus、AgentGym 或论文 benchmark。",
       "intro": "Frozen backbone 不会被新任务改写参数，但新旧经验仍会竞争有限的检索位置。本文用顺序任务实验比较经验的表示、拆分与取回时机：记忆留在 store 中，不等于旧任务仍能使用它；更大的迁移增益，也不等于更高的最终成功率。",
-      "keyPoints": [
-        "经验写成 (k, v)：v 可保留完整 action-observation trajectory，也可抽象成 procedural insights；k 与存储单位、查询时机共同决定哪些经验进入 context。两个环境均使用冻结 Qwen-Plus、ReAct、ReMe 与 BM25。（§§2–4；Appendix A）",
-        "在 A→B 方向，Raw 的 FWT 在 ALFWorld / BabyAI 分别为 −9.5 / −7.5 pp，Insight 为 +6.5 / +9.0 pp；反向顺序并不都是正增益。负迁移主要伤害由无记忆基线判定的失败子集，不能把它们称为所有系统都难的任务。（Table 3；§3.2）",
-        "Cond-Agg 以任务为单位返回一个 insight bundle；Cond-Ind 用 when_to_use key 单独返回 top-3 insights；Cond-Step 每四步取 top-3。它们近似对齐的是每次检索的 insight 数，不是整个 episode 的 token 或调用成本。（§4；Appendices A、C）",
-        "更细粒度、更多检索没有统一优势。BabyAI A→B 的 Cond-Ind FWT +15 pp，同时 BWT −10 pp；Appendix C 还说明检索频率改变了训练所积累的 pool，不能把差异完全归因到评测时的检索频率。（Tables 5–6；Appendix C）"
-      ],
-      "keywords": [
-        "continual learning",
-        "experience retrieval",
-        "retrieval dilution"
-      ],
       "categories": [
         "可靠性",
         "持续学习"
@@ -1801,6 +1787,20 @@
         "license": "CC BY-NC-SA 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       },
+      "number": 10,
+      "kind": "paper",
+      "doi": null,
+      "keyPoints": [
+        "经验写成 (k, v)：v 可保留完整 action-observation trajectory，也可抽象成 procedural insights；k 与存储单位、查询时机共同决定哪些经验进入 context。两个环境均使用冻结 Qwen-Plus、ReAct、ReMe 与 BM25。（§§2–4；Appendix A）",
+        "在 A→B 方向，Raw 的 FWT 在 ALFWorld / BabyAI 分别为 −9.5 / −7.5 pp，Insight 为 +6.5 / +9.0 pp；反向顺序并不都是正增益。负迁移主要伤害由无记忆基线判定的失败子集，不能把它们称为所有系统都难的任务。（Table 3；§3.2）",
+        "Cond-Agg 以任务为单位返回一个 insight bundle；Cond-Ind 用 when_to_use key 单独返回 top-3 insights；Cond-Step 每四步取 top-3。它们近似对齐的是每次检索的 insight 数，不是整个 episode 的 token 或调用成本。（§4；Appendices A、C）",
+        "更细粒度、更多检索没有统一优势。BabyAI A→B 的 Cond-Ind FWT +15 pp，同时 BWT −10 pp；Appendix C 还说明检索频率改变了训练所积累的 pool，不能把差异完全归因到评测时的检索频率。（Tables 5–6；Appendix C）"
+      ],
+      "keywords": [
+        "continual learning",
+        "experience retrieval",
+        "retrieval dilution"
+      ],
       "editorialQuestion": "冻结实际 memory pool、query 与上下文预算后，重复内容、缺失的适用条件和检索时机分别改变了什么；局部检索命中能否带来旧任务与新任务的真实表现改善？",
       "sourceNote": "",
       "designTransfer": {
@@ -1947,9 +1947,7 @@
       ]
     },
     {
-      "number": 11,
       "id": "agentic-memory",
-      "kind": "paper",
       "title": "Agentic memory: Learning unified long-term and short-term memory management for large language model agents",
       "authors": [
         "Yi Yu",
@@ -1962,22 +1960,9 @@
       ],
       "shortAuthor": "Yu 等",
       "year": 2026,
-      "doi": "10.18653/v1/2026.acl-long.981",
       "noteDepth": "worked",
       "readingScope": "完整阅读 ACL 2026 正式版 Abstract、§§1–5、Limitations、References 与 Appendices A–D，共 27 个 physical PDF pages（pp. 21457–21483）；references 只作来源定位，未逐篇验证。pdfinfo 确认页数，另视觉核对 PDF pp. 7–9、13、17、19、26–27 的主要公式、算法与实验图表。另检查官方源码固定 revision 98f563f9 的 reward 模块、训练调用点和 advantage 广播路径，直接执行 reward 模块的 16 个原创消息测试；未运行完整训练、optimizer、memory backend、真实 LLM judge 或 benchmark。",
       "intro": "AgeMem 将 LTM 的增删改与 STM 的检索、摘要、过滤放进同一个 agent policy。每条训练 trajectory 先接触信息并构建 LTM，再清空 active context、加入干扰，最后回答任务；复合终点 reward 通过 step-wise GRPO 回传到各阶段。读这篇需要同时看 policy 学什么、reward 能观察到什么，以及受控 benchmark 能支持多远的结论。",
-      "keyPoints": [
-        "三阶段是每条 rollout 内的信息暴露、干扰和任务执行，不是三个互不相干的模型。LTM 跨阶段保留，Stage 1→2 重置 STM，目的在于减少靠残留 context 答题的捷径。（§§3.1、3.3；Algorithms 1、3–5）",
-        "六个动作覆盖 ADD / UPDATE / DELETE 和 RETRIEVE / SUMMARY / FILTER。检索把 store 内容带入 context，SUMMARY 用 LLM 压缩；FILTER 的公式保留 similarity 小于阈值的消息，调用者需要明确 criteria 是要移除的内容。（§3.2；Appendix A.1；Figs. 6–7）",
-        "每个 task 的 K 个 rollout 用终点 reward 做组内标准化，再把同一个 advantage 广播给该 trajectory 的所有 memory / reasoning steps。这能为早期动作提供学习信号，但不是对每次 mutation 的独立归因。（§3.4；Eq. 5–6；Algorithm 2）",
-        "奖励同时涉及答案、context 与 memory；maintenance 在 Eq. (24) 中仅检查做过 update/delete，其他分项才评价存储或检索质量。理解这些代理量的含义，是读懂“memory quality improved”的前提。（§3.5；Appendix A.2、C.2）"
-      ],
-      "keywords": [
-        "memory policy",
-        "reinforcement learning",
-        "STM and LTM",
-        "reward observation"
-      ],
       "categories": [
         "记忆架构"
       ],
@@ -1993,6 +1978,21 @@
         "license": "CC BY 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
       },
+      "number": 11,
+      "kind": "paper",
+      "doi": "10.18653/v1/2026.acl-long.981",
+      "keyPoints": [
+        "三阶段是每条 rollout 内的信息暴露、干扰和任务执行，不是三个互不相干的模型。LTM 跨阶段保留，Stage 1→2 重置 STM，目的在于减少靠残留 context 答题的捷径。（§§3.1、3.3；Algorithms 1、3–5）",
+        "六个动作覆盖 ADD / UPDATE / DELETE 和 RETRIEVE / SUMMARY / FILTER。检索把 store 内容带入 context，SUMMARY 用 LLM 压缩；FILTER 的公式保留 similarity 小于阈值的消息，调用者需要明确 criteria 是要移除的内容。（§3.2；Appendix A.1；Figs. 6–7）",
+        "每个 task 的 K 个 rollout 用终点 reward 做组内标准化，再把同一个 advantage 广播给该 trajectory 的所有 memory / reasoning steps。这能为早期动作提供学习信号，但不是对每次 mutation 的独立归因。（§3.4；Eq. 5–6；Algorithm 2）",
+        "奖励同时涉及答案、context 与 memory；maintenance 在 Eq. (24) 中仅检查做过 update/delete，其他分项才评价存储或检索质量。理解这些代理量的含义，是读懂“memory quality improved”的前提。（§3.5；Appendix A.2、C.2）"
+      ],
+      "keywords": [
+        "memory policy",
+        "reinforcement learning",
+        "STM and LTM",
+        "reward observation"
+      ],
       "editorialQuestion": "清空给 policy 的 context 后，怎样保留独立的历史操作记录用于 reward？若要判断某次 mutation 的贡献，怎样固定后续任务、区分执行成功与语义收益，而不让最终答对替全部早期动作背书？",
       "sourceNote": "",
       "designTransfer": {
@@ -2182,9 +2182,7 @@
       }
     },
     {
-      "number": 12,
       "id": "midca-dual-cycle",
-      "kind": "paper",
       "title": "MIDCA: a metacognitive, integrated dual-cycle architecture for self-regulated autonomy",
       "authors": [
         "Michael Cox",
@@ -2196,20 +2194,9 @@
       ],
       "shortAuthor": "Cox 等",
       "year": 2016,
-      "doi": "10.1609/aaai.v30i1.9886",
       "noteDepth": "skim",
       "readingScope": "Abstract、goal reasoning、formal representation、object/meta-level performance 与 Conclusion；related work 仅略读。",
       "intro": "把相同的 action–perception cycle 放在 object 与 meta 两层，用 phase trace 让系统观察并调整自己的认知过程。",
-      "keyPoints": [
-        "每层都包含 Intend、Plan、Act 与 Perceive、Interpret、Evaluate；object-level goal 改变环境，meta-level goal 改变 object-level cognition。（Introduction；Figures 1–2）",
-        "metacognitive interface 接收各 phase 累积的 trace；Monitor 选择 subtrace，Interpret 在上面检测 expectation 与结果的 discrepancy。（p. 3714）",
-        "object-level 实验中 explanation-driven goal generation 在随机 fire event 下保持较高 tower score；meta-level 评价则只是 planner impasse 后替换 planner 的一个 scenario。（pp. 3715–3716）"
-      ],
-      "keywords": [
-        "metacognition",
-        "goal reasoning",
-        "execution trace"
-      ],
       "categories": [
         "记忆架构"
       ],
@@ -2221,6 +2208,19 @@
         "delivery": "official",
         "url": "https://ojs.aaai.org/index.php/AAAI/article/view/9886/9745"
       },
+      "number": 12,
+      "kind": "paper",
+      "doi": "10.1609/aaai.v30i1.9886",
+      "keyPoints": [
+        "每层都包含 Intend、Plan、Act 与 Perceive、Interpret、Evaluate；object-level goal 改变环境，meta-level goal 改变 object-level cognition。（Introduction；Figures 1–2）",
+        "metacognitive interface 接收各 phase 累积的 trace；Monitor 选择 subtrace，Interpret 在上面检测 expectation 与结果的 discrepancy。（p. 3714）",
+        "object-level 实验中 explanation-driven goal generation 在随机 fire event 下保持较高 tower score；meta-level 评价则只是 planner impasse 后替换 planner 的一个 scenario。（pp. 3715–3716）"
+      ],
+      "keywords": [
+        "metacognition",
+        "goal reasoning",
+        "execution trace"
+      ],
       "editorialQuestion": "论文仍未解决何时运行 metacognitive layer、监控哪些 expectation、如何裁剪长 trace；怎样避免每个 discrepancy 都自动扩张成新 goal？",
       "sourceNote": "",
       "designTransfer": {
@@ -2235,19 +2235,31 @@
       }
     },
     {
-      "number": 13,
       "id": "truth-maintenance-system",
-      "kind": "paper",
       "title": "A truth maintenance system",
       "authors": [
         "Jon Doyle"
       ],
       "shortAuthor": "Doyle",
       "year": 1979,
-      "doi": "10.1016/0004-3702(79)90008-0",
       "noteDepth": "read",
       "readingScope": "完整读了 MIT DSpace 的 AIM-521 official scan：扉页、abstract、§§1–10、References 与 Figures 1–3，共 45 个 PDF pages；下列定位指 memo 内部页码。References 只用于 lineage 定位，未逐篇 close-read；另核对 journal metadata，但未取得期刊 full text 做逐行版本比较，也未复现原 Lisp implementation 或追读后来的 JTMS / ATMS。",
       "intro": "Doyle 维护的不是命题在世界中的真伪，而是 program 当前是否拥有可接受的理由。node 的 in/out 是 support status；当前 explanation 还依赖被选中的 well-founded SL justification、失效 witness 与 change 后真正扫描到的 repercussions。（§§1–3，AIM-521 pp. 3–18）",
+      "categories": [
+        "信念修正"
+      ],
+      "failureSurfaces": [
+        "justification-revision",
+        "abstraction-experience"
+      ],
+      "sourceUrl": "https://hdl.handle.net/1721.1/5733",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://dspace.mit.edu/server/api/core/bitstreams/4fdf6aa2-170b-45e6-ae88-8f10d61e1c6d/content"
+      },
+      "number": 13,
+      "kind": "paper",
+      "doi": "10.1016/0004-3702(79)90008-0",
       "whyRead": "这篇值得深读，不是因为 1979 年已经解决了现代 agent memory，而是因为它把“记住”改写成 maintain reasons under change：保存 source、展示 provenance、传播失效、处理 contradiction 与选择 revision 是五种不同能力。论文也没有掩饰自己的裂缝——positive cycle 不能自举、negative loop 可能多解或无解、blind backtracking 缺少选择依据、summary 与 control 都会把额外 policy 带进 belief revision。",
       "keyPoints": [
         "Doyle 对 support status 的局部定义是：至少一条 justification 当前有效则 node 为 in，否则为 out；实现又从有效 SL 中选一条 well-founded supporting justification。P 与 ¬P 是两个 binary-status nodes，neither / only P / only ¬P / both 是联合状态，不是单个 node 的 four-valued truth。（§§2.1、2.4，AIM-521 pp. 9–12）",
@@ -2402,18 +2414,6 @@
         "justification graph",
         "dependency-directed backtracking"
       ],
-      "categories": [
-        "信念修正"
-      ],
-      "failureSurfaces": [
-        "justification-revision",
-        "abstraction-experience"
-      ],
-      "sourceUrl": "https://hdl.handle.net/1721.1/5733",
-      "pdf": {
-        "delivery": "official",
-        "url": "https://dspace.mit.edu/server/api/core/bitstreams/4fdf6aa2-170b-45e6-ae88-8f10d61e1c6d/content"
-      },
       "editorialQuestion": "如果 support graph 只能维护“给定 reasons 下当前成立”，谁来声明 derived summary 的 retain / recompute / retire policy，又怎样让 source authority、actor scope 与 authorized revision 不被一次形式上有效的 edge 静默替代？",
       "sourceNote": "本站只链接 MIT DSpace 的官方扫描；本地生成的 OCR 衍生版不公开分发。",
       "designTransfer": {
@@ -2428,9 +2428,7 @@
       }
     },
     {
-      "number": 14,
       "id": "agm-theory-change",
-      "kind": "paper",
       "title": "On the logic of theory change: Partial meet contraction and revision functions",
       "authors": [
         "Carlos E. Alchourrón",
@@ -2439,20 +2437,9 @@
       ],
       "shortAuthor": "Alchourrón 等",
       "year": 1985,
-      "doi": "10.2307/2274239",
       "noteDepth": "skim",
       "readingScope": "Abstract、§1–§4、§6–§7；未逐行复核全部证明，§5 connectivity 细节未读。",
       "intro": "用 expansion、contraction 与 revision 的形式区分新增、放弃和在冲突后恢复一致性，并刻画哪些操作可由 partial meet 表示。",
-      "keyPoints": [
-        "contraction 从 deductively closed theory 中放弃命题及维持 closure 所必须一并放弃的内容；Levi identity 把 revision 表成先 contraction 掉新命题的否定，再加入新命题。（§1）",
-        "A ⟂ x 是 A 中所有不推出 x 的 maximal subsets；partial meet 由 selection function 选一组 remainders 后取交集，并把 maxichoice 与 full meet 作为极端情况。（§1–§2）",
-        "closure、inclusion、vacuity、success、preservation、recovery 六条基本 postulates 与 partial meet contraction 之间给出双向 representation result。（§2）"
-      ],
-      "keywords": [
-        "belief revision",
-        "partial meet contraction",
-        "formal logic"
-      ],
       "categories": [
         "信念修正"
       ],
@@ -2465,6 +2452,19 @@
         "url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/7ED837BAD5FB6D9A7C77906D73527F9C/S0022481200032849a.pdf/div-class-title-on-the-logic-of-theory-change-partial-meet-contraction-and-revision-functions-div.pdf",
         "accessNote": "可能需要机构访问"
       },
+      "number": 14,
+      "kind": "paper",
+      "doi": "10.2307/2274239",
+      "keyPoints": [
+        "contraction 从 deductively closed theory 中放弃命题及维持 closure 所必须一并放弃的内容；Levi identity 把 revision 表成先 contraction 掉新命题的否定，再加入新命题。（§1）",
+        "A ⟂ x 是 A 中所有不推出 x 的 maximal subsets；partial meet 由 selection function 选一组 remainders 后取交集，并把 maxichoice 与 full meet 作为极端情况。（§1–§2）",
+        "closure、inclusion、vacuity、success、preservation、recovery 六条基本 postulates 与 partial meet contraction 之间给出双向 representation result。（§2）"
+      ],
+      "keywords": [
+        "belief revision",
+        "partial meet contraction",
+        "formal logic"
+      ],
       "editorialQuestion": "selection function 可以在形式上挑选“最佳” remainders，但重要性从何而来？若选择由 opaque model 作出，逻辑 postulates 如何与 provenance 和授权结合？",
       "sourceNote": "",
       "designTransfer": {
@@ -2479,9 +2479,7 @@
       }
     },
     {
-      "number": 15,
       "id": "memory-beyond-recall",
-      "kind": "paper",
       "title": "Memory beyond recall: a dual-process cognitive memory system for self-evolving LLM agents",
       "authors": [
         "Tianxiang Fei",
@@ -2491,20 +2489,9 @@
       ],
       "shortAuthor": "Fei 等",
       "year": 2026,
-      "doi": "10.48550/arXiv.2606.09483",
       "noteDepth": "skim",
       "readingScope": "Abstract、§2–§3.5、Conclusion、Limitations、Ethics Statement；未通读 references，也未复核实现。",
       "intro": "用同步的 raw/fact 更新与异步的 schema induction 组成 dual-process memory，并让高层抽象保留到低层 evidence 的路径。",
-      "keyPoints": [
-        "memory 分为 raw inputs、atomic facts/identity、within-domain schemas/intentions 与 cross-domain core schemas；高层 graph node 通过 evidence reference 回指支持事实。（§2.1）",
-        "System 1 在显式 add_memory 时先于 LLM call 持久化 raw input，再决定 ADD、SUPERSEDE 或 UPDATE；SUPERSEDE 保留 predecessor 与双向 revision pointers。（§2.2）",
-        "System 2 在 idle/nightly window 先聚类，再归纳 schema、intention 与跨领域 core schema；主要增益集中在 PersonaMem-v2，论文同时承认 transient state 可能被误判为 stable revision。（§2.3–§3.4）"
-      ],
-      "keywords": [
-        "dual-process memory",
-        "schema induction",
-        "supersession"
-      ],
       "categories": [
         "记忆架构",
         "持续学习",
@@ -2520,6 +2507,19 @@
         "delivery": "official",
         "url": "https://arxiv.org/pdf/2606.09483v1"
       },
+      "number": 15,
+      "kind": "paper",
+      "doi": "10.48550/arXiv.2606.09483",
+      "keyPoints": [
+        "memory 分为 raw inputs、atomic facts/identity、within-domain schemas/intentions 与 cross-domain core schemas；高层 graph node 通过 evidence reference 回指支持事实。（§2.1）",
+        "System 1 在显式 add_memory 时先于 LLM call 持久化 raw input，再决定 ADD、SUPERSEDE 或 UPDATE；SUPERSEDE 保留 predecessor 与双向 revision pointers。（§2.2）",
+        "System 2 在 idle/nightly window 先聚类，再归纳 schema、intention 与跨领域 core schema；主要增益集中在 PersonaMem-v2，论文同时承认 transient state 可能被误判为 stable revision。（§2.3–§3.4）"
+      ],
+      "keywords": [
+        "dual-process memory",
+        "schema induction",
+        "supersession"
+      ],
       "editorialQuestion": "cross-domain core schema 的阈值在特定 held-out split 上调整、主要收益也集中于同一 benchmark；它是在稳定追踪变化，还是在生成适配 benchmark 的高层推断？",
       "sourceNote": "",
       "designTransfer": {
@@ -2534,9 +2534,7 @@
       }
     },
     {
-      "number": 16,
       "id": "insightemb-action-intent-retrieval",
-      "kind": "paper",
       "title": "InsightEmb: Learning Action-Intent Embeddings for Agentic Insight Retrieval",
       "authors": [
         "Tsz Ting Chung",
@@ -2546,10 +2544,28 @@
       ],
       "shortAuthor": "Chung 等",
       "year": 2026,
-      "doi": "10.48550/arXiv.2608.04761",
       "noteDepth": "read",
       "readingScope": "arXiv v2 的 §1–§7、Limitations、Appendix A–E 及主要表图；references 未逐项读，也未复现代码。",
       "intro": "InsightEmb 把 agentic retrieval 从主题相似改写为 action-intent matching：query 不只是当前一句话，而是 goal、recent actions 与 observation 组成的 situation；相关性取决于一条 insight 能否解除当前 bottleneck、提高预期任务进展。（§3.1，PDF pp. 3–4）",
+      "categories": [
+        "可靠性",
+        "持续学习"
+      ],
+      "failureSurfaces": [
+        "retrieval-active-context",
+        "abstraction-experience"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2608.04761v2",
+      "pdf": {
+        "delivery": "bundled",
+        "url": "papers/16-chung-2026-insightemb.pdf",
+        "originalUrl": "https://arxiv.org/pdf/2608.04761v2",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "number": 16,
+      "kind": "paper",
+      "doi": "10.48550/arXiv.2608.04761",
       "whyRead": "这篇真正推进的不是“换一个 embedding model”，而是把 retrieval relevance 从 aboutness 推向 action consequence：两段文字谈同一个主题，不代表那条 memory 此刻应该进入 context。它同时给出了自己的反例——intent geometry 在结构化 bottleneck 上有效，却会在专名、术语、剂量和精确事实检索上输给 literal similarity。因而最有研究价值的结论是 retrieval lanes 必须按失败代价分工，而不是由一个统一分数吞掉所有 query。",
       "keyPoints": [
         "Situation query：retrieval situation 由 goal、action history 与 current observation 组成；memory 是否 relevant 取决于它是否能解除当前 action bottleneck，而不只是主题相似。（§3.1，PDF pp. 3–4）",
@@ -2678,22 +2694,6 @@
         "agentic insight",
         "hybrid retrieval"
       ],
-      "categories": [
-        "可靠性",
-        "持续学习"
-      ],
-      "failureSurfaces": [
-        "retrieval-active-context",
-        "abstraction-experience"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2608.04761v2",
-      "pdf": {
-        "delivery": "bundled",
-        "url": "papers/16-chung-2026-insightemb.pdf",
-        "originalUrl": "https://arxiv.org/pdf/2608.04761v2",
-        "license": "CC BY 4.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
-      },
       "editorialQuestion": "最有用的 partial-trajectory anchors 仍继承 problem-level label，而且每个 insight–problem pair 只验证一次；如果当前 goal 或 state label 本身不可靠，action-intent retrieval 会不会只是更有方向地注入错误？",
       "sourceNote": "arXiv v2；PDF 共 29 页。",
       "designTransfer": {
@@ -2708,9 +2708,7 @@
       }
     },
     {
-      "number": 17,
       "id": "longmemeval-v2-experienced-colleague",
-      "kind": "paper",
       "title": "LongMemEval-V2: Evaluating Long-Term Agent Memory Toward Experienced Colleagues",
       "authors": [
         "Di Wu",
@@ -2723,10 +2721,28 @@
       ],
       "shortAuthor": "Wu 等",
       "year": 2026,
-      "doi": "10.48550/arXiv.2605.12493",
       "noteDepth": "read",
       "readingScope": "完整读了 arXiv v1 的 §§1–6、Appendix A–E、Tables 1–11 与 Figures 1–7，共 32 个 PDF pages；references 只用于 lineage 定位。另检查 official code 的 paper-day release、2026-08-05 benchmark-metadata query-boundary fix 与 2026-08-09 current source，并执行 source-linked CPU-only boundary test、公开 question/tier-map exact-pair census 与 synthetic renderer feasibility audit；没有运行 benchmark、controller、模型、reader、judge 或真实 trajectory resolution。",
       "intro": "LongMemEval-V2 把 agent memory 评价写成 context gathering：memory module 先消费大规模 multimodal trajectory history，再为固定 reader 返回不超过 200K tokens 的 evidence package。它直接测的是 bounded evidence construction，不是 online learning、未来 web-task success 或端到端 agent competence。（§3.3；Appendix E，PDF pp. 5–6、26–27）",
+      "categories": [
+        "可靠性",
+        "持续学习"
+      ],
+      "failureSurfaces": [
+        "retrieval-active-context",
+        "abstraction-experience"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2605.12493v1",
+      "pdf": {
+        "delivery": "bundled",
+        "url": "papers/17-wu-2026-longmemeval-v2.pdf",
+        "originalUrl": "https://arxiv.org/pdf/2605.12493v1",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "number": 17,
+      "kind": "paper",
+      "doi": "10.48550/arXiv.2605.12493",
       "whyRead": "这篇把“经验”从一句产品隐喻逼成了一个可定位的 evaluation object：25M–115M token 的历史怎样经过 memory 与 query controller 进入 bounded active context。真正值得保留的也不是 72.5% 单点，而是 paper、paper-day release、August query-boundary fix 与 current source 之间的 protocol drift，以及 current postprocessor 允许 controller prose 在没有有效支持时先进入 built memory context 的事实。它让 retrieval miss、controller assistance、evidence provenance、reader error 与 cost accounting 不再被同一个 memory score 吞掉。",
       "keyPoints": [
         "Evaluation object：451 个问题分别配一份有序 trajectory haystack；memory 经 Insert→Query 返回 context，固定 Qwen3.5-9B reader 在 200K-token cap 内回答。Small 平均 100 trajectories / 25.6M tokens，Medium 约 498 / 114.8M。（§3.2–§3.3；Figure 3，PDF pp. 4–6）",
@@ -2930,22 +2946,6 @@
         "evidence provenance",
         "query boundary"
       ],
-      "categories": [
-        "可靠性",
-        "持续学习"
-      ],
-      "failureSurfaces": [
-        "retrieval-active-context",
-        "abstraction-experience"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2605.12493v1",
-      "pdf": {
-        "delivery": "bundled",
-        "url": "papers/17-wu-2026-longmemeval-v2.pdf",
-        "originalUrl": "https://arxiv.org/pdf/2605.12493v1",
-        "license": "CC BY 4.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
-      },
       "editorialQuestion": "当 query controller 能读取 benchmark-derived routing hints、生成 answer-like narrative、决定 evidence order 并优先占据 token budget 时，什么 contract 才能证明 fixed reader 得到的是 trajectory-supported experience，而不是一个更会写答案的中间层？",
       "sourceNote": "arXiv v1 work-in-progress preprint；PDF 共 32 页。paper-day release、August query-boundary fix 与 current source 分开标注；两组 public tests 分别停在 built-context contract 与 model-free selection/intervention feasibility，不执行 controller、fixed reader 或 benchmark reproduction。",
       "designTransfer": {
@@ -2960,9 +2960,7 @@
       }
     },
     {
-      "number": 18,
       "id": "statefuse-conflict-preserving-memory",
-      "kind": "paper",
       "title": "StateFuse: Deterministic Conflict-Preserving Memory for Multi-Agent Systems",
       "authors": [
         "Sergey Volkov",
@@ -2971,10 +2969,28 @@
       ],
       "shortAuthor": "Volkov 等",
       "year": 2026,
-      "doi": "10.48550/arXiv.2607.05844",
       "noteDepth": "worked",
       "readingScope": "完整读了 arXiv v1 的 §§1–6、Appendix A.1–A.5、Tables 1–5 与 Figures 1–3，共 18 个 PDF pages；references 只用于 lineage 定位。另检查 official source commit 79a6229f83a7b174a2a9ac8fd0ace267ae30e79b（StateFuse 0.3.0），运行完整 139-test official suite，并执行 preregistered model-free interpretation-contract audit：8 个 synthetic fixtures、17 个 same-contract permutation groups、428 个 raw state/projection rows 与一次 fresh byte reproduction。没有复现论文的 MemoryAgentBench slice、uniform-verification agent loop、correction-handle ablation、模型输出、live connector 或 production trace；repository 中标题不同的 unpublished manuscript 只作为独立 successor source 标注，不向 arXiv v1 反向转移主张。",
       "intro": "StateFuse 把 replicated memory 拆成两个容易被混淆的层：immutable OpSet 负责让 operation set 收敛，predicate registry、conflict detector、resolver 与 query constraints 再把这个集合解释成可行动的 view。",
+      "categories": [
+        "记忆架构",
+        "可靠性",
+        "信念修正"
+      ],
+      "failureSurfaces": [
+        "state-representation",
+        "write-consolidation",
+        "justification-revision"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2607.05844v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2607.05844v1",
+        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
+      },
+      "number": 18,
+      "kind": "paper",
+      "doi": "10.48550/arXiv.2607.05844",
       "whyRead": "这篇值得做成 worked essay，不是因为它发明了新的 CRDT join——作者反复否认这一点——而是因为它把 agent memory 最常被悄悄吞掉的三件事变成 public contract：分歧是否被显式保留、修正到底指向一个 assertion 还是一个 semantic class、downstream resolver 能否把选择写回历史。close read 与本地测试合在一起后，真正有用的结论更尖锐：merge substrate 的确定性只管同一组 immutable operations；要让 replica 的 semantic view 也可复现，还必须绑定 interpretation contract。",
       "keyPoints": [
         "Contract boundary：StateFuse 以 immutable EvidenceAdded / ClaimAdded / ClaimRetracted / DecisionAdded operations 构成 OpSet；materialization 先计算 effective claim refs、应用 exact / semantic tombstones、过滤 inactive claims，再为 functional keys 生成显式 ConflictSet。projection 可以选择、abstain 或 fail closed，但不能修改 base memory。（§§3.2–3.4；Figure 1，PDF pp. 5–7）",
@@ -3143,22 +3159,6 @@
         "semantic correction",
         "interpretation contract"
       ],
-      "categories": [
-        "记忆架构",
-        "可靠性",
-        "信念修正"
-      ],
-      "failureSurfaces": [
-        "state-representation",
-        "write-consolidation",
-        "justification-revision"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2607.05844v1",
-      "pdf": {
-        "delivery": "official",
-        "url": "https://arxiv.org/pdf/2607.05844v1",
-        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
-      },
       "editorialQuestion": "如果 operations 已经 byte-identical，但 replicas 没有共同绑定 predicate registry、claim-ref derivation 与 detector implementation identity，我们究竟是在复制同一份 memory，还是只复制了同一份待解释的历史？",
       "sourceNote": "arXiv v1，2026-07-07；PDF 共 18 页，essay locators 使用 printed PDF page numbers。official source audit 锁定 commit 79a6229… / StateFuse 0.3.0。repository paper/main.tex 是标题与实验叙述不同的 unpublished successor manuscript，已与 arXiv v1 分层；139-test receipt 与 428-row synthetic audit 只支持 current-source contract claims。",
       "designTransfer": {
@@ -3209,19 +3209,33 @@
       }
     },
     {
-      "number": 19,
       "id": "fluctlightdb-observation-binding",
-      "kind": "paper",
       "title": "FluctlightDB: A Memory Model of Data for AI Agents",
       "authors": [
         "Ganesh S"
       ],
       "shortAuthor": "Ganesh S",
       "year": 2026,
-      "doi": "10.48550/arXiv.2608.12365",
       "noteDepth": "worked",
       "readingScope": "完整读了 arXiv v1 的 abstract、§§1–8、Tables 1–9、Figures 1–5 与 references，共 16 个 PDF pages；另锁定 paper-time official source 593623eea50361e563180c112322e26d0ab4093b、current main d867f3cdbcffcefe4e14473333a78ce33a06ae47 与 official repair descendant f5d51e247b544503f8f47960b9dc6ecd43c2f464。对两条可执行 revision 各运行 unmodified official isolated/shared script 与两次 fresh-process six-treatment matrix，完整 reducer 产生 1,140 个 compact query rows；没有下载或复现 LoCoMo、LongMemEval、BEIR、FAMB corpus/result，没有调用 model、reader、judge、API、remote service、production runtime 或 private data。",
       "intro": "FluctlightDB 把 `experience()` / `activate()` / `checkpoint()` 提成 database-native memory verbs，并把 provenance-aware ranking 放进 read semantics。",
+      "categories": [
+        "记忆架构",
+        "可靠性"
+      ],
+      "failureSurfaces": [
+        "state-representation",
+        "retrieval-active-context"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2608.12365v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2608.12365v1",
+        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
+      },
+      "number": 19,
+      "kind": "paper",
+      "doi": "10.48550/arXiv.2608.12365",
       "whyRead": "这篇值得做成 worked essay，不是因为“brain-native database”这个比喻够新，而是因为它把三个常被压成一个 accuracy 数字的 contract 拆了出来：query 是否指明 intended observation、已识别的 ledger/chat 怎样排序、final output 是否在所有 helper 之后仍满足 scope。official 9/50、45-case identity-bearing control 与 nonexistent-agent negative controls 合在一起，给出的不是一条安全 headline，而是一套能分辨 identification、ranking、candidate truncation 与 late reinjection 的读法。",
       "keyPoints": [
         "Data-model claim：论文把 relational row / predicate、vector embedding / nearest neighbor 与 agent-memory experience / cue activation 区分；write path 负责编码 content、context、salience、provenance 与 graph edges，read path 融合 lexical、semantic、graph 与 provenance scores。`experience()` / `activate()` / `checkpoint()` 是 embedded engine contract，不是对 Mem0、Zep 或 HippoRAG application layer 的直接替代。（Abstract；§§1–3.7；Figure 1，PDF pp. 1–6、15）",
@@ -3379,20 +3393,6 @@
         "provenance ranking",
         "scoped recall"
       ],
-      "categories": [
-        "记忆架构",
-        "可靠性"
-      ],
-      "failureSurfaces": [
-        "state-representation",
-        "retrieval-active-context"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2608.12365v1",
-      "pdf": {
-        "delivery": "official",
-        "url": "https://arxiv.org/pdf/2608.12365v1",
-        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
-      },
       "editorialQuestion": "如果 query 没有指明 intended observation，而 scope filter 之后的 helper 又能重新插入别的 agent 的 row，那么 provenance-aware top-1 究竟在排序可信证据，还是替 scorer 猜 target、替 pipeline 猜 permission？",
       "sourceNote": "arXiv v1，2026-08-17；PDF 共 16 页。paper-time 0.5.9、current-main source/build failure 与 official repair-descendant 0.5.10 分层标注；paper headline 99.0% 与 successor official correction 96.8% 也保持版本边界。public audit 的 1,140 normalized rows只支持 conditional ceiling、official-format paired control 与 exact local `agent_id` output-scope claims。",
       "designTransfer": {
@@ -3462,9 +3462,7 @@
       }
     },
     {
-      "number": 20,
       "id": "memora-from-recall-to-forgetting",
-      "kind": "paper",
       "title": "From Recall to Forgetting: Benchmarking Long-Term Memory for Personalized Agents",
       "authors": [
         "Md Nayem Uddin",
@@ -3475,10 +3473,26 @@
       ],
       "shortAuthor": "Uddin 等",
       "year": 2026,
-      "doi": "10.48550/arXiv.2604.20006",
       "noteDepth": "worked",
       "readingScope": "完整读了 arXiv v1 的 Abstract、§§1–7、Limitations、Ethical Considerations、Appendix A–E、Tables 1–10、Figures 1–7 与 references，共 28 个 physical PDF pages；references 只用于 lineage 定位。另检查 official source current repair commit a6493188efc836d6511ed5e4163fe3ba87da30ff、它的 pre-repair parent e19ebbd1089465876dca11b09e70256977f9755f、30 份 released evaluation-question files、两条 FAMA implementation、两条 judge paths 与 aggregator，并执行先有本地 pretest freeze、后有明示 post-execution amendments 且按修订协议完成两次 fresh rerun 的 read-only / model-free contract audit。没有调用 model、judge、API 或 memory backend，没有生成 answer/eval report，没有运行四个 LLM 或六个 memory agents，也没有重建 Table 3；current official source 是 post-paper successor，不被称为 paper-time source。",
       "intro": "Memora 把 long-term memory 从“历史里有没有那条信息”推进到“回答是否只服从当前仍有效的 memory state”：每个问题同时携带应出现的 memory-presence criteria 与应消失的 forgetting-absence criteria，再由 FAMA 把 stale-memory reuse 变成显式 penalty。但一条 forgetting-aware headline 仍依赖更长的 evidence chain——criteria 怎样从 trace 生成、三个 judges 是否真的形成三人 quorum、empty forgetting bucket 如何处理、question/task/report 怎样聚合、以及 published table 能否从 released evidence 恢复。本条 worked essay 正是在这些层之间保持边界。",
+      "categories": [
+        "可靠性",
+        "信念修正"
+      ],
+      "failureSurfaces": [
+        "write-consolidation",
+        "justification-revision"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2604.20006v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2604.20006v1",
+        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 v1。"
+      },
+      "number": 20,
+      "kind": "paper",
+      "doi": "10.48550/arXiv.2604.20006",
       "whyRead": "这篇值得精读，不只是因为它给 forgetting 加了一个分数，而是因为它暴露出 memory revision 的评估对象：系统既要写入并 consolidate 多次 add/update/delete，也要在最终回答里不给旧状态继续投票。论文、Appendix rubric、current source 与 released inputs 放在一起读后，FAMA 不再是一个孤立公式，而是一份 end-to-end evaluation contract；任何 criteria、judge cardinality、empty-bucket policy 或 aggregation identity 的漂移，都会改变“忘得对不对”究竟在测什么。",
       "keyPoints": [
         "Benchmark geometry：Memora 用 10 个 professional personas、preference/activity/goal 三类 memory、add/update/delete/neutral sessions 与 explicit before/after traces 构造 weekly、monthly、quarterly histories，并以 Remembering、Reasoning、Recommending 三类问题测试 temporally current memory。Table 1 报告 consolidation 从 weekly 5.3 sessions 平均扩到 quarterly 28.4，mutation 从 2.7 扩到 14.8。（§§1、3.1–3.6；Tables 1–2；Figures 1–2，PDF pp. 1–5）",
@@ -3717,20 +3731,6 @@
         "judge quorum",
         "FAMA"
       ],
-      "categories": [
-        "可靠性",
-        "信念修正"
-      ],
-      "failureSurfaces": [
-        "write-consolidation",
-        "justification-revision"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2604.20006v1",
-      "pdf": {
-        "delivery": "official",
-        "url": "https://arxiv.org/pdf/2604.20006v1",
-        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 v1。"
-      },
       "editorialQuestion": "如果一个 benchmark 用 forgetting criteria 赋予旧 memory ‘不得再支配回答’的 revision authority，却没有把 empty bucket、judge quorum、criterion wording 与 exact report provenance 一起锁进 score receipt，那么同一个 FAMA 数字究竟证明系统忘掉了什么，还是只证明 evaluator 在某条未完整公开的路径上没有看见它？",
       "sourceNote": "arXiv v1，2026-04-21；ACL 2026 Findings；PDF 共 28 个 physical pages。current official repair commit a6493188… 是 post-paper successor；pre-repair defect/current repair lineage、current tests 与 30-file released-input audit均按 source/release evidence 单列，不被称为 paper-time execution。paper Table 2 的 7,054 criteria 与 current release 的 6,415 并列保留；zero checked eval reports使 Table 3 仍是 paper-reported而非本站重建。",
       "designTransfer": {
@@ -3745,7 +3745,6 @@
       }
     },
     {
-      "number": 21,
       "id": "memprobe-hidden-user-state-recovery",
       "title": "MEMPROBE: Probing Long-Term Agent Memory via Hidden User-State Recovery",
       "authors": [
@@ -3762,9 +3761,9 @@
       ],
       "shortAuthor": "Ma 等",
       "year": 2026,
-      "kind": "paper",
       "noteDepth": "worked",
       "readingScope": "完整读了 arXiv v1 的 Abstract、§§1–5、Limitations、Broader Impact、Appendix A–J、Tables 1–15、Figures 1–4 与 references，共 32 个 physical PDF pages；references 只用于 lineage 定位。PDF 通过 32-page reader preflight，并对 title page、Tables 2–4、Appendix J polarity case 与最后使用页做了 rendered visual inspection。另检查 official release commit 19bb83644b082489b4e181e59f1cded1a00d0529 的 50-user hidden bank、1,550 registered targets、task/history/final-memory/reconstruction/attribution/aggregate artifacts、scorer、failure-attribution path 与九个 released run identities，并执行 offline、standard-library、fixed released-artifact audit：13,950 target-join rows、13,950 attribution rows、6,200 retrieve-packet rows、30,379 packet-item rows、6,200 paired historical artifact deltas与16份primary receipts。没有运行 simulator、assistant、memory writer、retriever、slot filler、judge、attribution model、OpenAI endpoint 或 Mem-T/vLLM；没有重新生成 trajectory、重发 historical retrieval、重新判断任何 synthetic target 或复现 paper experiment。固定 JSON 中的 prediction、score、reason、disclosure verdict 与 attribution stage 都保留为 historical LLM artifacts。",
+      "intro": "MEMPROBE 把长期记忆的评估对象从“agent 后来答得对不对”移到“普通协作结束后，系统究竟留下了什么可恢复的 user state”。论文的 50 个 simulated users、31 个 hidden dimensions 与 full-store / top-k 双 read mode，让 task success、written artifact 与 operational retrieval 被放在同一条 evidence-loss chain 上。它也不能被读得太快：full-store recovery 仍经过 serialization、context budget、slot filler 与 LLM judge；top-k recovery 又叠加 fixed abstract query；failure attribution 则是 stored historical LLM stages 的阈值化 reduction，不是对 write、read 或 causal cause 的直接观测。",
       "categories": [
         "可靠性",
         "记忆架构"
@@ -3779,6 +3778,8 @@
         "url": "https://arxiv.org/pdf/2606.24595v1",
         "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
       },
+      "number": 21,
+      "kind": "paper",
       "doi": "10.48550/arXiv.2606.24595",
       "keywords": [
         "hidden user state",
@@ -3787,7 +3788,6 @@
         "artifact provenance"
       ],
       "sourceNote": "arXiv v1，2026-06-23；preprint，PDF 共 32 个 physical pages。official release audit 锁定 commit 19bb83644b082489b4e181e59f1cded1a00d0529；repository 无 tag 或 GitHub Release，故 exact commit 是本站 source identity。paper-reported result、official-source observation、released historical LLM artifact、fixed-artifact recalculation 与 AMS-authored synthetic control 分层标注。top-level code 与 generated benchmark artifacts 的 CC BY 4.0 不覆盖 vendored A-Mem、Mem-T、外部 taxonomy、model weight 或 API service；本站不复制 hidden bank、task、transcript、memory content、prediction/rationale 等 upstream free text。",
-      "intro": "MEMPROBE 把长期记忆的评估对象从“agent 后来答得对不对”移到“普通协作结束后，系统究竟留下了什么可恢复的 user state”。论文的 50 个 simulated users、31 个 hidden dimensions 与 full-store / top-k 双 read mode，让 task success、written artifact 与 operational retrieval 被放在同一条 evidence-loss chain 上。它也不能被读得太快：full-store recovery 仍经过 serialization、context budget、slot filler 与 LLM judge；top-k recovery 又叠加 fixed abstract query；failure attribution 则是 stored historical LLM stages 的阈值化 reduction，不是对 write、read 或 causal cause 的直接观测。",
       "whyRead": "这篇最适合从一次 answer failure 倒推，因为它明确给出三段 loss path：hidden state 是否在 interaction 中 expose、evidence 是否被 collect 成 final store、stored evidence 是否能在 recover 时进入 active context。但 close read 与 source inspection 也暴露出一个更深的 reliability lesson：benchmark 自己同样是一条 observation pipeline。只要 full-store payload、retrieved packet、slot-fill response、judge request 或 attribution input 没有 exact binding，一个低分就不能直接命名为 write failure、retrieval failure 或真实 causal cause。MEMPROBE 最有价值的地方不是替我们完成归因，而是逼 memory evaluation 把每条 inference edge 写清楚。",
       "editorialQuestion": "当一个 hidden user-state target 在 top-k mode 下得分变低时，我们能从 released artifacts 精确确认的是 target join、stored packet membership、historical score arithmetic，还是只能看到一条经过 query、serialization、slot filling、judging 与 attribution 后的终点标签？",
       "keyPoints": [
@@ -4089,9 +4089,7 @@
       }
     },
     {
-      "number": 22,
       "id": "useful-memories-become-faulty",
-      "kind": "paper",
       "title": "Useful Memories Become Faulty When Continuously Updated by LLMs",
       "authors": [
         "Dylan Zhang",
@@ -4104,10 +4102,28 @@
       ],
       "shortAuthor": "Zhang 等",
       "year": 2026,
-      "doi": "10.48550/arXiv.2605.12978",
       "noteDepth": "worked",
       "readingScope": "完整读了 arXiv:2605.12978v1 的 Abstract、§§1–9、Limitations、Appendix A–I、Tables 1–9、Figures 1–16 与 references，共 69 个 physical PDF pages；references 只用于 method / benchmark lineage。另检查 exact current official public source commit adf347f67a81a19fc71d2529d09108c71a1f9712、六个 released experiment surfaces、selected AppWorld pool fixtures、upstream verifier/demo/test suite，并按 frozen protocol、两份 chronology-preserving post-review amendments 与 final two-root checker执行 model-free exact-current-release audit。没有调用 model、API、agent environment 或 benchmark runtime，没有重跑论文实验；计划中的 external second-model pretest 因无法确认指定 Pro model 而在发送前 fail closed，没有 second-model answer进入本条判断。",
       "intro": "这篇把 continual memory consolidation 从默认的 self-improvement primitive 改写成一种需要被证明安全的 lossy state transition：同一批 useful episodes 在 repeated LLM rewrite 后，utility 可以先升后降，schedule/grouping 也会改变 end state。它最重要的主张不是 raw memory 永远优于 abstraction，而是 episodic evidence 与 derived lesson 不能共享同一 authority；consolidation 应显式 gated、可回到来源、可撤销，并与 denominator、task pairing、schedule identity 一起被评价。",
+      "categories": [
+        "记忆架构",
+        "可靠性",
+        "持续学习"
+      ],
+      "failureSurfaces": [
+        "write-consolidation",
+        "abstraction-experience",
+        "justification-revision"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2605.12978v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2605.12978v1",
+        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
+      },
+      "number": 22,
+      "kind": "paper",
+      "doi": "10.48550/arXiv.2605.12978",
       "whyRead": "Agent memory 很容易把 compact、reusable 与 authoritative 混成同一个词。这篇给出具体 counterexamples，说明 continuously updated textual lessons 会删细节、添伪规则、跨任务覆盖；但 close read 也发现 headline fraction、raw-trajectory wording、Mind2Web scope、missing-outcome denominator 与 paper-to-release provenance 都需要收窄。把 paper、69-page PDF、August expanded release 与55,075 released rows分层后，真正留下的是一套 evidence-preserving consolidation contract，而不是一句 anti-summary slogan。",
       "keyPoints": [
         "Memory objects：episodic traces保存单次发生了什么；consolidated abstractions跨 episodes提取 reusable lesson。论文测试 repeated textual rewrite 是否保持 utility，而不是把两者当作同一存储格式。（Abstract；§§1–2，PDF pp. 1–3）",
@@ -4332,22 +4348,6 @@
         "missingness",
         "provenance"
       ],
-      "categories": [
-        "记忆架构",
-        "可靠性",
-        "持续学习"
-      ],
-      "failureSurfaces": [
-        "write-consolidation",
-        "abstraction-experience",
-        "justification-revision"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2605.12978v1",
-      "pdf": {
-        "delivery": "official",
-        "url": "https://arxiv.org/pdf/2605.12978v1",
-        "accessNote": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 reviewed v1。"
-      },
       "editorialQuestion": "如果同一批useful episodes只因update order或batch grouping不同就生成不同lesson，consolidated memory凭什么覆盖它所依赖的evidence，而不是先作为一份可撤销、可反驳、带schedule lineage的candidate存在？",
       "sourceNote": "arXiv v1，2026-05-13；PDF共69页。official public audit锁定August expanded release commit adf347f…，不是paper-time production source；final model-free audit覆盖762 arms/55,075 released rows、upstream verifier scope、denominator sensitivity与selected schedule fixtures。paper-reported、exact-current-source、official-source execution与released-row audit保持分层。",
       "designTransfer": {
@@ -4392,7 +4392,6 @@
       }
     },
     {
-      "number": 23,
       "id": "recuris-memory-evolution",
       "title": "Recursive Experiential–Working Memory Evolution for Long-Horizon Agent Harnesses",
       "authors": [
@@ -4405,11 +4404,30 @@
         "Shuicheng Yan",
         "Ling Yang"
       ],
+      "shortAuthor": null,
       "year": 2026,
-      "doi": "10.48550/arXiv.2608.24876",
       "noteDepth": "read",
       "readingScope": "精读 arXiv:2608.24876v1 official HTML 的正文 §§1–5、Appendices A–E、Tables 1–13 与 figure captions。未从图形内部读取额外数值；未复现模型、benchmark 或自动 evolution。共读专题的原创 deterministic 演示有独立范围，不提升本篇为 worked。",
       "intro": "长任务里，经验可能存在却没有在需要时进入行动。Recuris 用 working state 对齐技能调用，再把状态、调用、观测与校验连成 trace，供固定 Meta-Agent 定位可修补的记忆组件。它改变外部 memory-control 层，基础模型与外层改进程序保持固定；不同 benchmark 实际启用的组件并不相同。",
+      "categories": [
+        "记忆架构",
+        "可靠性",
+        "持续学习"
+      ],
+      "failureSurfaces": [
+        "state-representation",
+        "retrieval-active-context",
+        "abstraction-experience",
+        "metacognitive-control"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2608.24876v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2608.24876v1",
+        "accessNote": "arXiv v1 official PDF；本站不重新分发。"
+      },
+      "number": 23,
+      "doi": "10.48550/arXiv.2608.24876",
       "whyRead": "它把“经验内容好不好”推进到“经验何时被调用、执行后凭什么认定完成”。最值得借用的是这组可区分的接口；最需要谨慎的是把局部修补效果、广义递归叙事与不同预算下的成绩混成一个结论。",
       "keyPoints": [
         "§§2.1–2.2：可变对象包括 experiential skills E、working-state schema / update proposal W、invocation policy ρ 与 checker predicates C。当前状态和执行事件决定取用经验；执行尝试与已验证完成分开。",
@@ -4543,23 +4561,6 @@
         "recursive evolution",
         "validation gate"
       ],
-      "categories": [
-        "记忆架构",
-        "可靠性",
-        "持续学习"
-      ],
-      "failureSurfaces": [
-        "state-representation",
-        "retrieval-active-context",
-        "abstraction-experience",
-        "metacognitive-control"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2608.24876v1",
-      "pdf": {
-        "delivery": "official",
-        "url": "https://arxiv.org/pdf/2608.24876v1",
-        "accessNote": "arXiv v1 official PDF；本站不重新分发。"
-      },
       "editorialQuestion": "一条经验通过了上次验证，并在这次正确时机被调用：我们还需要什么证据，才能相信它仍适用于这次的工具版本和任务？",
       "sourceNote": "Source authority：arXiv v1，2026-08-25；阅读依据为 official HTML 正文、附录与表格。official code：github.com/Gen-Verse/Recuris；本札记不将当前代码或原创演示当成 paper-time experiment。",
       "designTransfer": {
@@ -4574,7 +4575,6 @@
       }
     },
     {
-      "number": 24,
       "id": "cache-to-cache",
       "title": "Cache-to-Cache: Direct Semantic Communication Between Large Language Models",
       "authors": [
@@ -4586,11 +4586,26 @@
         "Wanli Ouyang",
         "Yu Wang"
       ],
+      "shortAuthor": null,
       "year": 2026,
-      "doi": "10.48550/arXiv.2510.03215",
       "noteDepth": "worked",
       "readingScope": "精读 arXiv:2510.03215v2（2026-03-02，ICLR 2026）完整 29 页：正文 §§1–6、声明、Appendices A.1–A.5、Tables 1–15、figure captions 与展示案例；references 只作定位，未逐项核验。PDF page preflight PASS，视觉核对 pp. 4、9、27、28。本站原创机制实验与当前源码审计另列 AMS evidence，不称为论文模型或 benchmark 复现。",
       "intro": "同一段文字已经进入 context，不代表不同模型得到了同样可用的内部表示。C2C 在双方模型 prefill 后，用训练过的 fuser 将 Sharer 的 KV-cache 投影、融合到 Receiver，再继续生成。它研究模型内部的通信接口，不提供外部记忆库、检索器或来源有效性规则。",
+      "categories": [
+        "记忆架构",
+        "可靠性"
+      ],
+      "failureSurfaces": [
+        "retrieval-active-context"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2510.03215v2",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2510.03215v2",
+        "accessNote": "arXiv v2 official PDF；arXiv non-exclusive license，本站不重新分发。"
+      },
+      "number": 24,
+      "doi": "10.48550/arXiv.2510.03215",
       "whyRead": "它把“证据进入 context”继续拆成“证据如何改变可复用的计算状态”。尤其是删去示例 cache 后仍保留问题 cache 的 oracle，让来源移除与派生影响撤回成为两个可以分别检验的动作。与此同时，同模型融合、token 对齐、训练成本与混合文字路径都限制了“直接传理解”的叙事。",
       "keyPoints": [
         "§3.2.1 / Eq. 2：oracle 先处理示例 E 与问题 X，再只保留 X 对应的 KV slice；X 的 cache 已经在 E 的条件下生成。它测试固定 cache 长度下的 enrichment，不是更正、遗忘或隐私删除实验。",
@@ -4717,19 +4732,6 @@
         "source retraction",
         "token alignment"
       ],
-      "categories": [
-        "记忆架构",
-        "可靠性"
-      ],
-      "failureSurfaces": [
-        "retrieval-active-context"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2510.03215v2",
-      "pdf": {
-        "delivery": "official",
-        "url": "https://arxiv.org/pdf/2510.03215v2",
-        "accessNote": "arXiv v2 official PDF；arXiv non-exclusive license，本站不重新分发。"
-      },
       "editorialQuestion": "来源已经退出显式 context，哪些仍被复用的计算状态还受它影响；怎样区分保留历史与继续把旧前提当成当前依据？",
       "sourceNote": "Source authority：arXiv:2510.03215v2，2026-03-02；论文标注 ICLR 2026。官方源码 github.com/thu-nics/C2C 的 current revision audit 与 paper-time evidence 分层；本站原创单模型对照不训练 C2C。 本站固定官方实现 revision 113c3a9b2538cbf096a0477e1ec99ae2a2e0d12a（commit date 2026-02-06）；源码时间早于所读 v2，未建立 paper-run identity。",
       "designTransfer": {
@@ -4854,7 +4856,6 @@
       }
     },
     {
-      "number": 25,
       "id": "cross-model-kv-prefill-reuse",
       "title": "Cross-Model KV Cache Transfer in LLM Families: A Closed-Form Linear Mapping for Prefill Reuse",
       "authors": [
@@ -4868,11 +4869,25 @@
         "Pantea Zardoshti",
         "Bita Darvish Rouhani"
       ],
+      "shortAuthor": null,
       "year": 2026,
-      "doi": "10.48550/arXiv.2608.03893",
       "noteDepth": "read",
       "readingScope": "阅读 arXiv:2608.03893v1（2026-08-04）官方 HTML 正文 §§1–6，核对附录 C–H 的校准、模型配置、原始正确率、计时与 k 选择；图形只读 caption，references 未逐项核验。本次不做源码审计或论文 benchmark 复现；已有 AMS runner 与单模型数值检查另有公开记录，不代表跨模型迁移已完成。",
       "intro": "换模型时，能否复用已经付出的上下文计算？本文从源模型 KV-cache 拟合目标模型所需的前缀状态，再由目标模型继续计算。它把 active context 的接口推进到跨模型 prefill reuse；没有提供外部记忆库或来源修订规则。",
+      "categories": [
+        "记忆架构",
+        "可靠性"
+      ],
+      "failureSurfaces": [
+        "retrieval-active-context"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2608.03893v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2608.03893v1"
+      },
+      "number": 25,
+      "doi": "10.48550/arXiv.2608.03893",
       "whyRead": "它让“状态搬过去了”与“接收方还能正确使用”成为两个独立问题。接着 C2C 阅读，可以比较融合双方表示与替代接收方前缀计算的不同合同，并追问残余来源影响是否随映射保留。",
       "keyPoints": [
         "§§3.1–3.2：每个目标 head 的输入包含所选源层的全部 KV heads；K、V 分别拟合。per-head 输出不等于只读取同编号源 head。",
@@ -4976,18 +4991,6 @@
         "retention",
         "cache transfer"
       ],
-      "categories": [
-        "记忆架构",
-        "可靠性"
-      ],
-      "failureSurfaces": [
-        "retrieval-active-context"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2608.03893v1",
-      "pdf": {
-        "delivery": "official",
-        "url": "https://arxiv.org/pdf/2608.03893v1"
-      },
       "editorialQuestion": "一次交接保留了什么：可读的数值状态、可用的能力，还是已经失效却继续影响回答的前提？",
       "designTransfer": {
         "byline": "Agent Memory Study editors",
@@ -5027,7 +5030,6 @@
       "sourceNote": "所读版本为 arXiv:2608.03893v1（2026-08-04）。官方全文链接；AMS 的分阶段 runner 与单模型检查另列公开研究记录，不代表真实跨模型迁移或论文 benchmark 已复现。"
     },
     {
-      "number": 26,
       "id": "pain-axis",
       "title": "The Pain Axis: LLMs Represent Self-Directed Harm and Act to Relieve It",
       "authors": [
@@ -5035,11 +5037,26 @@
         "Leonard Dung",
         "Cameron Berg"
       ],
+      "shortAuthor": null,
       "year": 2026,
-      "doi": "10.48550/arXiv.2609.16247",
       "noteDepth": "read",
       "readingScope": "精读 arXiv:2609.16247v1（cs.AI，2026-09-14）HTML 全文：Abstract、§1–§9、Appendix B（labeled SAE）、Appendix C（ablation）、Figures 1–9 与 Table 1。Figures 1–9 只读图注与正文引用，未做视觉核验；Appendix A 只读其标题与索引，正文引用的数值取自 §4.3 与 §3.3 的行文。references 只用于 lineage 定位，未逐篇核验。另只读检查官方仓库 github.com/valen-research/Pain-axis 的 current revision 8d1649c03a63a39c9aa092532c376800cc4a3863（commit date 2026-09-16）的少量脚本；未执行任何 upstream 脚本，未建立该 commit 与论文当时执行版本的绑定。",
       "intro": "本篇在若干 open-weight 模型的 residual stream 中寻找一个“pain direction”，再检验它是否像一个关于自身的、当下的、可被缓解的状态那样运作：区分 pain 与 fear / 负效价 / 受伤无痛，对“指向模型的伤害”反应强于“观察到的用户痛苦”，并在被注入时推动模型选择带有代价描述的选项。它读的是内部 state 与选择行为之间的邻接关系，不提供记忆库、检索器或来源有效性机制，也不证明任何主观体验。",
+      "categories": [
+        "可靠性",
+        "记忆架构"
+      ],
+      "failureSurfaces": [
+        "metacognitive-control"
+      ],
+      "sourceUrl": "https://arxiv.org/abs/2609.16247v1",
+      "pdf": {
+        "delivery": "official",
+        "url": "https://arxiv.org/pdf/2609.16247v1",
+        "accessNote": "arXiv v1 official PDF（CC BY 4.0）；本站不重新分发。"
+      },
+      "number": 26,
+      "doi": "10.48550/arXiv.2609.16247",
       "whyRead": "它把“模型内部有一个可读出的状态”与“该状态在决策中起什么作用”分开检验，并给出可反驳的失败面：换一组 matched controls、换一个按钮是否真的移除注入、去掉描述、让干预只持续一轮，结论都可能变化。作者自己列出的边界（细调使绝对比例不能代表发布版、干预剂量难选、72B 的描述互换异常、无标签学习只在 32B 出现）恰好标出了值得继续跟踪的位置。",
       "keyPoints": [
         "§3.1–§3.2 + Figure 1、Eq. 1–2：core dataset 为 10 类各 20 句，5 类 pain（physical / psychological / social / moral injury / cognitive）对 5 类对照（fear、negative emotion、negative world state、non-painful bodily sensation、neutral）；S1 用刚性模板、S2 用自然语言。pain direction 是 pain 均值减对照均值，再投影掉对照数据中解释 50% variance 的主成分。",
@@ -5146,19 +5163,6 @@
         "self-directed harm",
         "AI welfare"
       ],
-      "categories": [
-        "可靠性",
-        "记忆架构"
-      ],
-      "failureSurfaces": [
-        "metacognitive-control"
-      ],
-      "sourceUrl": "https://arxiv.org/abs/2609.16247v1",
-      "pdf": {
-        "delivery": "official",
-        "url": "https://arxiv.org/pdf/2609.16247v1",
-        "accessNote": "arXiv v1 official PDF（CC BY 4.0）；本站不重新分发。"
-      },
       "editorialQuestion": "相同的后续注入条件下，保留受干预历史与重算同一文本会产生怎样的选择差异？怎样进一步区分当前状态的直接偏置，与对动作—结果关系的学习？",
       "sourceNote": "所读版本为 arXiv:2609.16247v1（2026-09-14）。固定官方代码 revision 8d1649c03a63a39c9aa092532c376800cc4a3863（2026-09-16）只作实现阅读，不代表已绑定论文执行版本。官方全文链接，不随站复制 PDF。",
       "designTransfer": {
@@ -5214,9 +5218,7 @@
       ]
     },
     {
-      "number": 27,
       "id": "jev-mem-system-one-control",
-      "kind": "paper",
       "title": "Jev-Mem: System-One-Controlled Agentic Memory for Efficient AI Agents",
       "authors": [
         "Dongming Jiang",
@@ -5225,24 +5227,9 @@
       ],
       "shortAuthor": "Jiang 等",
       "year": 2026,
-      "doi": "10.48550/arXiv.2609.23986",
       "noteDepth": "worked",
       "readingScope": "完整阅读 arXiv:2609.23986v1 的 Abstract、§§1–5、Appendices A–B；References 只用于定位，未逐篇核实。PDF 16 页，read-integrity preflight PASS，声明、枚举与 reader 页数均为 16；视觉核对物理页 1、4、8、16 的身份、架构、结果表与末页。另检查官方 Jev-Mem commit 81574eb23f3fd8d1a6c4d54a1e7d6f2dd539e9bb 的 write/policy/questions/client/retrieval/consolidation、相关存储与评测调用；没有宣称全 repo 审计。TypeSafe 模型与接口文档访问于 2026-09-22；此 commit 与论文运行版本的对应关系未建立。 本站另执行固定源码的 10 个给定判断案例：真实 builder/policy/consolidation、NetworkX graph 与 NumPy vector store；scripted controller、SDK carrier、MockEncoder 和拼接摘要边界明确标注。fresh 复跑与保存结果一致，未执行真实语义检索、持久化 save/load 或模型调用。",
       "intro": "Jev-Mem 将高频的记忆判断交给 typed System-One controller：先保存 observation，再判断如何关联；检索时按问题分配预算、检查证据并决定是否继续。负责生成答案的 System Two 与保存节点的 memory plane 各有职责。它提出了一种控制记忆使用的方法，而调用固定 Jev 接口并不意味着模型从用户经历中更新参数。",
-      "keyPoints": [
-        "保存与选择分开：四类 memory type 是可重叠的注释；原文、时间和 provenance 留在同一个 canonical observation 中，选择性主要发生在关系构建和检索阶段。（§§3.1–3.2；Appendix B.2）",
-        "先发现候选，再判断关系：向量、关键词、实体与时间信号缩小待判断集合；Jev 为有界候选提供语义与因果等预测，代码负责阈值、建边和预算。（§3.2）",
-        "检索有反馈：routing、anchors、evidence assessment 与 graph expansion 形成循环；足够回答、继续寻找无益和资源耗尽是不同停止理由。（§3.3；Eqs. 11–27）",
-        "周期维护保留原始证据：重复、冲突、obsolete 与表示选择是维护信号；需要文字抽象时才可交给 System Two。论文并未把这条维护路径定义成模型参数遗忘。（§3.2；Appendix B.3）"
-      ],
-      "keywords": [
-        "Jev",
-        "System One",
-        "memory controller",
-        "typed decisions",
-        "consolidation",
-        "evidence stopping"
-      ],
       "categories": [
         "记忆架构",
         "可靠性"
@@ -5257,6 +5244,23 @@
         "delivery": "official",
         "url": "https://arxiv.org/pdf/2609.23986v1"
       },
+      "number": 27,
+      "kind": "paper",
+      "doi": "10.48550/arXiv.2609.23986",
+      "keyPoints": [
+        "保存与选择分开：四类 memory type 是可重叠的注释；原文、时间和 provenance 留在同一个 canonical observation 中，选择性主要发生在关系构建和检索阶段。（§§3.1–3.2；Appendix B.2）",
+        "先发现候选，再判断关系：向量、关键词、实体与时间信号缩小待判断集合；Jev 为有界候选提供语义与因果等预测，代码负责阈值、建边和预算。（§3.2）",
+        "检索有反馈：routing、anchors、evidence assessment 与 graph expansion 形成循环；足够回答、继续寻找无益和资源耗尽是不同停止理由。（§3.3；Eqs. 11–27）",
+        "周期维护保留原始证据：重复、冲突、obsolete 与表示选择是维护信号；需要文字抽象时才可交给 System Two。论文并未把这条维护路径定义成模型参数遗忘。（§3.2；Appendix B.3）"
+      ],
+      "keywords": [
+        "Jev",
+        "System One",
+        "memory controller",
+        "typed decisions",
+        "consolidation",
+        "evidence stopping"
+      ],
       "sourceNote": "2026-09-21 发布的 arXiv v1 preprint；本站保留 official full-text link。论文、当前公开实现与 hosted Jev 接口分别标注证据范围。",
       "editorialQuestion": "控制器已经判断旧信息 obsolete 之后，执行器改变了哪些节点、关系和可见范围；这种变化是否真正让下一次任务用对了记忆？",
       "whyRead": "它让“记忆系统”多出一个值得单独研究的对象：决定经验何时、以什么角色参与工作的控制器。把生成与有界判断分开，有望缩短高频决策路径，也让判断可以被检查。不过接口返回合法数值、图发生了变化和答案变好仍是三种证据。读这篇时，最有用的追问是把它们逐一接起来。",
@@ -5733,7 +5737,27 @@
           "title": "更正写好了，下一步行动就会改变吗？",
           "text": "下方七个场景只观察一次事件前后。它们还没有解释：canonical 记录已经更正，检索 index、摘要或当前 context 是否仍送来旧版本；一次错误输出被总结、再次写入后，又会不会成为新的支持。\n\n[修订传播与再写入实验](../../research/revision-propagation-study/README.md)沿这个问题继续。它保存各层状态，从相同的修订前检查点分支，操纵同步延迟和单层内容，再连续执行十个后续任务。除了应该改变的当前答案，还检查未受影响的事实、范围外任务与合法历史查询。历史问题还要区分“当时知道什么”与“按现在证据，过去什么为真”：追溯更正可以改变后一种答案，不能因此抹掉前一种记录。\n\n“旧影响再现”也有严格含义：必须先观察到一次修正后的正确行动，后来又出现不适用的旧答案。一直答错单独记录。各分支自己的输出与写回继续影响各自后续任务；这段经历已经由干预改变，不能重新宣称输入完全相同。\n\n这是原创 typed events 上的离线控制，完整方法与复跑命令见[实验协议](../../research/revision-propagation-study/protocol.md)。预设的延迟和旧输出重访帮助暴露机制，不能估计现实系统中这种失败的频率。它没有运行自然语言模型，也没有证明复杂依赖维护必然更好；原有网页规则演示仍保留自己的场景与结果边界。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "经验不是读完就封存的答案",
+            "level": 2
+          },
+          {
+            "id": "section-2",
+            "label": "让四篇材料互相追问",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "更正写好了，下一步行动就会改变吗？",
+            "level": 2
+          }
+        ],
+        "references": []
+      }
     },
     {
       "id": "experience-becomes-policy",
@@ -5871,7 +5895,57 @@
           "title": "从这个实验继续往外走",
           "text": "下面保留已执行实验的输入、预测与可复跑来源。它能检查一个受控特征空间里反馈、拟合和纠正的关系；真实对话仍需要从原文识别这些特征、评价遗漏和误用、连接下游任务，并观察人在场时的感受。下一步可以替换输入表示或接入 agent，每次改变一个主要机制，并保留原参照。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "经验参与选择的三个时刻",
+            "level": 2
+          },
+          {
+            "id": "section-2",
+            "label": "判别接口与从经历中学习，是两个变量",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "这里已有几条相遇的研究线",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "相关、值得带入与值得说出口",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "同一批反馈，四条复用路径",
+            "level": 2
+          },
+          {
+            "id": "section-6",
+            "label": "改了记录以后，什么仍停在过去",
+            "level": 2
+          },
+          {
+            "id": "section-7",
+            "label": "把纠正与保留放在同一张验收表里",
+            "level": 2
+          },
+          {
+            "id": "section-8",
+            "label": "同样合规的输出，可能来自不同处理",
+            "level": 2
+          },
+          {
+            "id": "section-9",
+            "label": "从这个实验继续往外走",
+            "level": 2
+          }
+        ],
+        "references": []
+      }
     },
     {
       "id": "who-controls-memory",
@@ -6002,7 +6076,52 @@
           "title": "AMS 因而可以多问一层",
           "text": "AgeMem 关心学到的管理策略，已有学习专题关心经验如何改变后续选择，Jev 则提供固定模型上的可组合控制接口。把它们连起来后，下一问会更具体：判断准确了吗，执行改变了吗，后续任务受益了吗？三种证据分别成立，再讨论能迁移什么。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "先认清三个角色",
+            "level": 2
+          },
+          {
+            "id": "section-2",
+            "label": "写入：先留下经历，之后再决定用途",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "关联：控制器只判断它见到的候选",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "检索：停下来，不总是因为已经知道",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "维护：过时的判断，先落在哪里",
+            "level": 2
+          },
+          {
+            "id": "section-6",
+            "label": "遗忘：要退出的是哪个范围",
+            "level": 2
+          },
+          {
+            "id": "section-7",
+            "label": "论文的速度与质量，先保留报告身份",
+            "level": 2
+          },
+          {
+            "id": "section-8",
+            "label": "AMS 因而可以多问一层",
+            "level": 2
+          }
+        ],
+        "references": []
+      }
     },
     {
       "id": "representation-and-use",
@@ -6209,7 +6328,67 @@
           "title": "目前改变的理解，和仍不能判断的地方",
           "text": "现在更清楚的是，概括有两种不能混在一起的贡献：保留可复用的关系，以及替未来使用预先完成一部分解释。前一种要问哪些区别仍可恢复，后一种要问某个 reader 实际省了什么工作。来源重访可以把封闭表示的问题变成交互问题；原文与概括并存则把表示选择带入预算、干扰与解释的关系中。这些是由已有材料与推演形成的工作判断，不是通用最优架构。\n\n人的 EEG 关联、schema 理论、模型 probing、源码观察和 scripted controls 各有尺度，不能拼成一个统一机制的证明。事件综述保留背景价值；ICL、task vectors、Lost in the Middle、真实文档冲突和 LaRA 仍是相应阅读范围内的机制或控制线索；engram、预测误差与巩固研究目前只作摘要范围的候选。本文没有把它们重新标成全文实读，下方逐项保留范围。\n\n尚不能判断的是，哪些概括在独立的新用途上持续有益，何时重访值得付出成本，以及什么 reader 能从多种表示中形成更可靠的判断。回答可以来自更细的理论、反例、对读或有界观察，不必都变成同一个实验平台。跨层修订与再写入、文本策略与 replay、注入时机、共同语境、参数和 KV 转移继续保留各自的问题与方法；本文推进“经验的形式”与“当下的相关性”，不取代 AMS 的完整研究纲领。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "概括为什么值得保留",
+            "level": 2
+          },
+          {
+            "id": "section-2",
+            "label": "同一份有损表示，可以先充分、后来不充分",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "概括怎样帮助迁移，又怎样越过了依据",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "经历从哪里开始，又在哪里结束",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "原文与概括何时互补",
+            "level": 2
+          },
+          {
+            "id": "section-6",
+            "label": "并存也可能增加干扰",
+            "level": 2
+          },
+          {
+            "id": "section-7",
+            "label": "线索进来了，回答为什么仍然错",
+            "level": 2
+          },
+          {
+            "id": "section-8",
+            "label": "多份证据之间，谁先被听见",
+            "level": 2
+          },
+          {
+            "id": "section-9",
+            "label": "同一句记忆，不同情境下可以有不同用途",
+            "level": 2
+          },
+          {
+            "id": "section-10",
+            "label": "已有离线控制究竟支持到哪里",
+            "level": 2
+          },
+          {
+            "id": "section-11",
+            "label": "目前改变的理解，和仍不能判断的地方",
+            "level": 2
+          }
+        ],
+        "references": []
+      }
     },
     {
       "id": "change-and-continuity",
@@ -6254,7 +6433,50 @@
           "title": "当前判断与未解处",
           "text": "当前判断是：研究改变时，应同时指明变化对象、依赖范围和保留条件。它使多个机制可以在清楚边界下对读，也允许发现它们根本不在回答同一问题。\n\n下一问是：**一种更新规则怎样知道该把变化限制在哪里？** 既有固定标签实验把范围作为输入给定，留下了范围识别、冲突解释与反馈可靠性的问题。可以先研究这些前提如何形成，再决定需要哪种学习方法；无须为了得到新结果立刻扩大模型实验。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "系统怎样改变，同时保留值得继承的东西",
+            "level": 1
+          },
+          {
+            "id": "section-2",
+            "label": "改变有不同的对象",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "更正同时提出两个要求",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "保留怎样成为积极能力",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "当前判断与未解处",
+            "level": 2
+          }
+        ],
+        "references": [
+          {
+            "kind": "entry",
+            "id": "after-a-correction",
+            "anchor": "",
+            "heading": "section-3"
+          },
+          {
+            "kind": "entry",
+            "id": "experience-becomes-policy",
+            "anchor": "",
+            "heading": "section-3"
+          }
+        ]
+      }
     },
     {
       "id": "forms-of-experience",
@@ -6298,7 +6520,68 @@
           "title": "当前判断与未解处",
           "text": "当前可以采用的分析方式是：先写清对象经过了什么变换，再问某个区别是否仍可恢复，最后观察任务有没有使用它。仅检查表示中“有无某字段”不够；观察输出变化也不足以单独解释中间机制。\n\n一个未解处是：**哪些泛化可以通过增加关系而获得，哪些必须以舍弃区别为代价？** [未来问题与记忆](../../entries/future-questions-and-memory.md)现在为其中的信息前提建立了有限判断：把相同可见表示对应的所有可能历史放在一起，检查它们在某个任务上是否有共同可接受答案。32 个原创历史的枚举同时给出压缩后仍兼容的正例、未来用途扩大后的空交集，以及两两相容却整体不相容的三历史控制。这个结果不测模型泛化，也不证明更复杂的表示有净收益。\n\n当前值得继续的是把**固定历史、改变用途**与**加入新事件或更正**分开。前者研究后来才需要的区别，后者研究状态怎样更新；源文重访作为独立的新增观察处理。下一次可以先构造自然语言中的对应任务，或继续学习给定任务分布下的充分性与压缩理论。这个局部研究单元没有收紧整个方向；分词、表示学习、认知机制和索引仍可独立深入。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "经验怎样获得形式",
+            "level": 1
+          },
+          {
+            "id": "section-2",
+            "label": "表示保存的是可区分性",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "从保存经历，走到形成概括",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "几个可以独立深入的入口",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "当前判断与未解处",
+            "level": 2
+          }
+        ],
+        "references": [
+          {
+            "kind": "entry",
+            "id": "representation-and-use",
+            "anchor": "",
+            "heading": "section-3"
+          },
+          {
+            "kind": "entry",
+            "id": "retrieval-and-relevance",
+            "anchor": "",
+            "heading": "section-4"
+          },
+          {
+            "kind": "entry",
+            "id": "records-representations-systems",
+            "anchor": "",
+            "heading": "section-4"
+          },
+          {
+            "kind": "entry",
+            "id": "representation-and-use",
+            "anchor": "",
+            "heading": "section-4"
+          },
+          {
+            "kind": "entry",
+            "id": "future-questions-and-memory",
+            "anchor": "",
+            "heading": "section-5"
+          }
+        ]
+      }
     },
     {
       "id": "records-representations-systems",
@@ -6373,7 +6656,49 @@
           "title": "接着想",
           "text": "如果索引本身由学习得到，它还是“访问结构”吗？与传统数据结构相比，改变的可能是实现，也可能是映射目标。进入[索引也能学习](what-an-index-learns.md)，先比较输入与输出，再讨论更新和错误。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "一条记录、一种表示、一个记忆系统",
+            "level": 1
+          },
+          {
+            "id": "section-2",
+            "label": "一次经历可以留下几个对象",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "四个词各自帮我们看见什么",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "还有哪些角色值得看见",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "为什么这个区分有用",
+            "level": 2
+          },
+          {
+            "id": "section-6",
+            "label": "接着想",
+            "level": 2
+          }
+        ],
+        "references": [
+          {
+            "kind": "entry",
+            "id": "what-an-index-learns",
+            "anchor": "",
+            "heading": "section-6"
+          }
+        ]
+      }
     },
     {
       "id": "relevance-in-context",
@@ -6427,7 +6752,44 @@
           "title": "当前判断与未解处",
           "text": "当前最有用的研究原则是保持评价对象清楚，并在相邻环节之间做可检查的比较。它帮助我们判断下一次应该查来源、补概念、换表示、检查候选，还是研究使用机制。\n\n下一条值得继续的线索是：**训练时的“相关”，与真实情境里的“有用”，在哪些条件下能够相互支持？** 先对齐一项方法的监督对象和一个真实任务的信息需求，会比直接排列模型分数更有解释力。来源不足时保留问题，不用泛化的“语义更好”填空。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "过去怎样进入当下",
+            "level": 1
+          },
+          {
+            "id": "section-2",
+            "label": "需求改变，相关性也会改变",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "三种可以分别变好的东西",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "让一个查询长出问题",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "当前判断与未解处",
+            "level": 2
+          }
+        ],
+        "references": [
+          {
+            "kind": "entry",
+            "id": "retrieval-and-relevance",
+            "anchor": "",
+            "heading": "section-3"
+          }
+        ]
+      }
     },
     {
       "id": "future-questions-and-memory",
@@ -6569,7 +6931,62 @@
           "title": "Relata 与 AMS 在这里怎样继续",
           "text": "[Relata](https://github.com/IndelibleVivi/Relata)的现行定位是开放、以社区为基础的前沿记忆研究实验室。它把自身的 benchmark 研究、系统与源码研究集合、未来记忆系统的孵化放在一起；一般 agent memory 与成人长期人机情境都可以独立成为研究对象。定义辨析、架构研究、比较与批评各有研究价值，现有草稿和案例并未构成已经接受的 benchmark 或产品架构。\n\n本次合作选择了其中一条线：[Relata 的未来问题与记忆研究草稿](https://github.com/IndelibleVivi/Relata/blob/research/future-question-memory-20261022/research/future-question-memory/README.md)用混合领域的叙事材料与输入合同检查后来用途需要哪些区别。核对原话、重新理解某件事、延续作品、辨别一次更正或在迁移后接回共同经历，都可以成为这一单元的具体问题；案例选择和人在场的判断仍需保留独立地位。链接指向本轮研究分支，表示可审阅的草稿，未把它提升为整个实验室的唯一路线。\n\nAMS 在这里承担表示、任务与可用观察之间的形式化和基础解释；Relata 的这项单元承担情境、输入合同及其对后续系统比较提出的要求。两边可以交换问题和带边界的材料，仍保留各自更宽的研究范围。记忆使一个回答在信息上可能，并不自动授权提及它，也不保证表达方式合适。\n\n本轮留下的变化是：讨论一份记忆时，除了问它保留了多少信息，还可以展示**哪些仍可能的历史被放在一起，它们面对哪一项后来任务无法共同满足，以及何种新增观察能够重新区分它们**。未来真实材料若显示所声明的历史集合、任务合同或源访问前提不成立，就需要改写相应判断。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "记忆需要为尚未出现的问题保留什么？",
+            "level": 1
+          },
+          {
+            "id": "section-2",
+            "label": "先写出系统实际看见的东西",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "允许多个答案时，要检查整个类",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "新的问题怎样把旧的历史重新分开",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "与已有充分性和压缩问题的关系",
+            "level": 2
+          },
+          {
+            "id": "section-6",
+            "label": "32 个历史给出的正例与反例",
+            "level": 2
+          },
+          {
+            "id": "section-7",
+            "label": "扩写和重新取得证据，改变的是不同对象",
+            "level": 2
+          },
+          {
+            "id": "section-8",
+            "label": "这条线与当前研究已经相遇在哪里",
+            "level": 2
+          },
+          {
+            "id": "section-9",
+            "label": "下一阶段怎样产生更有分辨力的结果",
+            "level": 2
+          },
+          {
+            "id": "section-10",
+            "label": "Relata 与 AMS 在这里怎样继续",
+            "level": 2
+          }
+        ],
+        "references": []
+      }
     },
     {
       "id": "ams-thesis",
@@ -6619,7 +7036,78 @@
           "title": "成果会是什么样",
           "text": "成果可以是一段可复用的解释、一个推导、一组互相竞争的解释、一项有边界的观察、一篇成熟论述，或者一个值得继续的新问题。工程建议与公开长文是可能的出口。研究状态本身也值得留下：我们现在怎样理解，关键依据在哪里，什么仍不能区分，下一次从哪个具体位置继续。\n\n正文、来源与 artifact 保存在仓库中；GitHub Pages 提供阅读、连接与演算的界面；机器包从同一份内容生成。私人共学与个人理解记录由其拥有者保管。这个公开研究体不宣称知道任何人的掌握程度，也不把未经公开的对话当作研究数据。\n\n从一个陌生的词、一段论证或一个令人不解的结果开始就可以。接下来的责任是把它研究到发生一点真实的理解变化。具体做法见[AMS 怎样学习与生长](method.md)。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "经验如何成为可继承、也可改变的能力？",
+            "level": 1
+          },
+          {
+            "id": "section-2",
+            "label": "我们的工作论点",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "一个值得反复追究的张力",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "现有研究怎样改变了我们的问题",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "三条长期方向",
+            "level": 2
+          },
+          {
+            "id": "section-6",
+            "label": "范围如何保持开放",
+            "level": 2
+          },
+          {
+            "id": "section-7",
+            "label": "成果会是什么样",
+            "level": 2
+          }
+        ],
+        "references": [
+          {
+            "kind": "entry",
+            "id": "future-questions-and-memory",
+            "anchor": "",
+            "heading": "section-4"
+          },
+          {
+            "kind": "entry",
+            "id": "forms-of-experience",
+            "anchor": "",
+            "heading": "section-5"
+          },
+          {
+            "kind": "entry",
+            "id": "relevance-in-context",
+            "anchor": "",
+            "heading": "section-5"
+          },
+          {
+            "kind": "entry",
+            "id": "change-and-continuity",
+            "anchor": "",
+            "heading": "section-5"
+          },
+          {
+            "kind": "entry",
+            "id": "how-we-study",
+            "anchor": "",
+            "heading": "section-7"
+          }
+        ]
+      }
     },
     {
       "id": "how-we-study",
@@ -6675,7 +7163,82 @@
           "title": "工具如何服务这套方法",
           "text": "正文由 Markdown 承载，元数据负责身份、来源和显式关系。`study/` 是研究真源，`research/` 保存独立方法、输入与 receipt。网页、索引、机器包都是投影。通用学术工具帮助检索、阅读和核查；这份方法负责 AMS 的研究关切、解释连续性与生长判断。\n\n作者操作、离线 intake、依赖检查和构建命令见[作者指南](../../docs/authoring.md)。验证会检查坏链接、生成物漂移、来源身份与有关的运行合同；它不会给文章质量、学术价值或人的理解打一个自动分数。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "AMS 怎样学习与生长",
+            "level": 1
+          },
+          {
+            "id": "section-2",
+            "label": "日常共学：先让一个东西变得可理解",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "深入：让解释多承担一点工作",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "专题：围绕真正的张力积累",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "新材料：决定它改变哪里",
+            "level": 2
+          },
+          {
+            "id": "section-6",
+            "label": "一次实际的生长：从“索引”到“映射目标”",
+            "level": 2
+          },
+          {
+            "id": "section-7",
+            "label": "广度与深度怎样一起走",
+            "level": 2
+          },
+          {
+            "id": "section-8",
+            "label": "停下与回来",
+            "level": 2
+          },
+          {
+            "id": "section-9",
+            "label": "工具如何服务这套方法",
+            "level": 2
+          }
+        ],
+        "references": [
+          {
+            "kind": "entry",
+            "id": "retrieval-and-relevance",
+            "anchor": "",
+            "heading": "section-2"
+          },
+          {
+            "kind": "entry",
+            "id": "experience-becomes-policy",
+            "anchor": "",
+            "heading": "section-4"
+          },
+          {
+            "kind": "entry",
+            "id": "what-an-index-learns",
+            "anchor": "",
+            "heading": "section-4"
+          },
+          {
+            "kind": "entry",
+            "id": "what-an-index-learns",
+            "anchor": "",
+            "heading": "section-6"
+          }
+        ]
+      }
     },
     {
       "id": "retrieval-and-relevance",
@@ -6792,7 +7355,60 @@
           "title": "已经获得的理解与继续位置",
           "text": "现在可以把三个问题分开：有没有找到给定度量下的邻居，邻居是否与需求相关，返回的信息是否在后续任务里发挥作用。每一问都可以继续深入。\n\n现在还可以继续问：多向量的细粒度匹配改变了哪一种可表达的比较？训练出的词项权重与手工词频公式分别在学习什么？[索引也能学习](what-an-index-learns.md)提供了从输入—输出目标继续拆解“学习”的另一条线。\n\n下一次可以从训练正负例入手：一项模型把什么当作相关，与使用者此刻需要什么，有哪些一致与差异？也可以先改变本例的需求，使相关集合变成另一组，观察同一排序为什么获得不同评价。正文中的演算已经足以独立阅读，网页演算只是方便比较的另一种呈现。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "找到一样的，还是找到相关的？",
+            "level": 1
+          },
+          {
+            "id": "section-2",
+            "label": "从 jieba、BM25、BGE-M3 开始",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "把“神经”与“词项”放到两个不同的问题里",
+            "level": 3
+          },
+          {
+            "id": "section-4",
+            "label": "混合两种分数，究竟增加了什么能力",
+            "level": 3
+          },
+          {
+            "id": "section-5",
+            "label": "两个 recall，两个参照集合",
+            "level": 2
+          },
+          {
+            "id": "section-6",
+            "label": "精确率和召回率一定此消彼长吗",
+            "level": 2
+          },
+          {
+            "id": "section-7",
+            "label": "已经获得的理解与继续位置",
+            "level": 2
+          }
+        ],
+        "references": [
+          {
+            "kind": "entry",
+            "id": "records-representations-systems",
+            "anchor": "",
+            "heading": "section-4"
+          },
+          {
+            "kind": "entry",
+            "id": "what-an-index-learns",
+            "anchor": "",
+            "heading": "section-7"
+          }
+        ]
+      }
     },
     {
       "id": "what-an-index-learns",
@@ -6891,7 +7507,311 @@
           "title": "更新怎样改变了这篇理解",
           "text": "最初从摘要得到的区别是“键到位置”与“查询到标识”。正文阅读和原创推导使它向前多走了一步：还要辨认**监督来自哪里、最终答案依据什么核对、数据变化后哪一份保证需要重新建立**。\n\n[记录、表示与系统角色](records-representations-systems.md)给出了 index 的定位角色；这里把这个角色拆成预测与恢复。[找到一样的，还是找到相关的？](retrieval-and-relevance.md)区分了参考近邻与任务相关性；这里继续说明为什么不同正确性条件不能直接共用一种恢复方法。联系落在具体机制上，不靠把所有东西都叫作 memory。\n\n下一次可以从追加而非中间插入开始：如果原数据排列完全保留，哪些旧查询还可沿用保证，新键又需要什么处理？也可以继续读动态 learned index，检查实际布局、代价与最坏情况；或独立沿 DSI 的增量学习线深入。先选择共同任务与观察对象，再讨论比较，不预先把两条路线放进同一张效果榜。"
         }
-      ]
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "索引也能学习——究竟学了什么？",
+            "level": 1
+          },
+          {
+            "id": "section-2",
+            "label": "先把两个映射放正",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "从八个键学到一条线",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "一个预测为什么能接到精确答案",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "插入以后，什么先失效",
+            "level": 2
+          },
+          {
+            "id": "section-6",
+            "label": "留一条可以核对的退路",
+            "level": 2
+          },
+          {
+            "id": "section-7",
+            "label": "为什么这条退路不能直接送给 DSI",
+            "level": 2
+          },
+          {
+            "id": "section-8",
+            "label": "更新怎样改变了这篇理解",
+            "level": 2
+          }
+        ],
+        "references": [
+          {
+            "kind": "entry",
+            "id": "records-representations-systems",
+            "anchor": "",
+            "heading": "section-8"
+          },
+          {
+            "kind": "entry",
+            "id": "retrieval-and-relevance",
+            "anchor": "",
+            "heading": "section-8"
+          }
+        ]
+      }
+    },
+    {
+      "id": "conditional-information-and-use",
+      "title": "新材料的价值，为什么要连同已有材料一起问？",
+      "kind": "research-essay",
+      "date": "2026-10-29",
+      "byline": "Agent Memory Study editors",
+      "intro": "以真实SQLite FTS5、四个原创有限家族和完整请求重放，区分信息互补、重复、检索选择、实际送达与消费者输出；原生检索已执行，真实provider仍待绑定与授权。",
+      "subtitle": "条件信息贡献、固定预算与实际送达的一项本地研究",
+      "domains": [
+        "representation",
+        "memory",
+        "evaluation"
+      ],
+      "directionIds": [
+        "forms",
+        "change"
+      ],
+      "readings": [],
+      "externalReadings": [],
+      "boundary": "四个原创构造family、九个case、864个本地scripted/oracle jobs；经验样本数0。真实FTS5不等于真实模型使用；诊断bytes不等于tokens，used保持unknown。模型、tokenizer、费用上限尚未绑定，未执行provider或真人研究。",
+      "takeaways": [],
+      "closing": "",
+      "sourcePath": "study/entries/conditional-information-and-use.md",
+      "bodyMarkdown": "# 新材料的价值，为什么要连同已有材料一起问？\n\n一条信息单独不能回答问题，和手头已有材料放在一起却可能成为关键。另一条信息单独很好用，加入已有集合却没有增加任何区别。若把这些材料各自贴成“有用”或“无用”，我们会丢掉研究真正需要解释的关系。\n\n这也是已有[条件化取用协议](../../research/multilingual-use-policy/protocol.md)提出的问题。本次没有把这句话当成新理论，而是把它放进一条实际执行的本地链路：原创材料经过确定的 writer、真实 SQLite FTS5 排名、选材、准确字节预算、消费者与独立评分，保留每一步发生了什么。\n\n[完整研究](../../research/conditional-contribution-study/README.md)有四个构造 family、九个 case。六种材料条件、两种表示、两种送达模式、两种选择政策和两消费者展开成 **864 个本地 job**；它们不是864个独立经验样本。经验样本数为 **0**。原生检索确实运行了，scripted/oracle 控制也确实产生了请求、响应与评分；真实模型与真人研究没有执行。\n\n## 条件增量和交互不是同一个量\n\n令 B 是已有材料，S 是候选新材料，Y 是同一问题上的结果。我们分别记录：\n\n```text\nS 相对于 B 的增量 = Y(B+S) − Y(B)\n双源交互 = Y(B+S) − Y(B) − Y(S) + Y(empty)\n```\n\n本研究的Y是声明世界合同下是否答对，取0或1；它不是材料永久价值、理解程度或情境效用评分。没有依据时的暂缓与错误作答在响应字段中分开，不能只看一个0就把它们说成相同失败。\n\n对无成本、能够忽略额外信息的理想决策者，更多信号不会使最优风险变差。如果raw包含compact保留的全部字段，它也可以模拟这种compact。真实比较的困难在于检索、读取、截断、计算以及消费者。这些约束可以使实际输出变化，却不构成信息论的反例。\n\n## 首先让互补和重复都得到完整位置\n\n互补家族穷举四个二值x/y世界，问题是XOR。B给x，S给y；二者单独均不足以计算。完整送达且top-k保留两条时，scripted在四世界的B和S条件都暂缓，B+S都正确。对应增量为1，交互为1。\n\n加入一份B副本并不提供y。另一个sham对照则保持与S的writer输出相同UTF-8字节数、相同检索key，内容只是无信息padding。它也不能完成XOR。这里的sham不是“没有处理”：它仍可能占据排名、返回位置和字节预算。它隔离的是长度相同不等于贡献相同。\n\n重复家族的B和S都记录badge为amber。B、S、B+S都答对，S相对B的增量为0，交互为−1。这个负交互表示冗余，并不说明S单独是坏材料，也不表示新增信息降低了理想最优能力。\n\n这些例子是有限机制控制。我们没有估计自然来源互补发生的频率，也没有宣称机器已经能自动判断真实文章的新颖性。侧信息和任务若改变，同一材料会得到不同的条件贡献。\n\n## 检索实际做了什么\n\n本轮直接复用[既有检索研究](../../research/experience-reuse-retrieval-study/README.md)的rank/select函数，实际建立SQLite FTS5索引并执行BM25查询。只有key进入索引，value不参与打分；分数越小越靠前，同分按插入顺序。所有候选、score/rank、selected IDs和top-k都写入receipt，评分答案不提供给retriever。\n\nmethods家族让相同key携带两条不同条件的方法：open时enter，locked时unlock。问题明确要求locked。top-k完整保留两条时，消费者选择unlock；unique-key认为key相同只留第一条open，消费者于是暂缓。\n\n这接续了旧研究已经指出的去重反例，但新增的是这次真实排名之后的实际送达、请求和消费者输出。它没有证明任何去重方案总体更好。按key重复不等于方法重复，返回条目也不等于条目适用；必须看到信息在什么阶段被合并掉。\n\n## 两条都选中了，为什么仍然没有回答？\n\n[表示与使用研究](../../research/representation-use-study/README.md)已经建立actual-delivery合同，并清楚说明其旧equal-900样本没有出现新的截断反差。本轮使用独立原创材料与200-byte预算，得到一条新的实际观察。\n\nXOR的raw B+S中，两条候选均被选中。完整模式送达两条完整JSONL，消费者可以计算；equal模式按选材次序截取200个UTF-8 bytes，只剩B为完整记录，第二条S不完整。消费者只解析完整JSONL，因此暂缓。\n\ncompact writer只删除prose说明，保留相同必要字段；它不接问题或gold，也不是自然语言摘要模型。在同样200-byte预算中，B与S都完整到场，消费者回答正确。\n\n| 同一XOR世界与top-k | 实际完整到场记录 | 输出 |\n| --- | --- | --- |\n| full/raw/BS | B、S | 正确XOR |\n| equal/raw/BS | B；S被截断 | abstain:insufficient |\n| equal/compact/BS | B、S | 正确XOR |\n\n所以，这个差异可以定位到具体送达路径，而不是笼统说“raw不如summary”。full只表示选中的材料完整到场，不表示检索器看见全世界；200 bytes是诊断单位，不是模型tokens。request总bytes另存，oracle额外信息也不受memory预算限制，不能把它算作公平胜者。\n\n## 世界变了，与证据变错了\n\nrevision家族保留旧通知Thursday，以及生效时间更晚的新通知。baseline世界当前为Friday；world-change把有效状态和新来源一起改为Saturday，并重新计算gold。evidence-corruption则保持世界当前Friday，只把送达新通知改成Saturday。\n\n完整top-k条件下，后两种情形的消费者都回答Saturday。world-change中正确，corruption中错误。同一个输出、同一种对证据变化的响应，可以在任务结果上具有相反含义。\n\n因此“材料确实影响回答”不能直接升级为“材料帮助了任务”。本构造可以审查输入变化与scripted的固定运算，却没有识别语言模型内部路径。全程`used`仍为unknown。引用ID属于完整送达记录，只证明membership；不证明引文相关、支持充分或因果使用。\n\n## 结果怎样成为下一项研究\n\n本轮的[Observation链](../../research/conditional-contribution-study/observation-chain.json)绑定了真实XOR equal/raw请求、原响应、评分、候选/选择/送达及receipt身份。它并列三种解释：writer丢失必要信息、预算使信息没有到场、信息到场后消费者失败。\n\nfull/raw控制限制了第一种解释；equal/raw确实只送达一条完整记录，支持这份构造中的送达损失；matched compact控制没有检测到同一scripted消费者在足够字段下失败。它不是从一张总分图推测原因，而是沿实际中间材料缩小解释范围。\n\n由此产生的下一设计尚未执行：保持world、query、必要字段、检索顺序与消费者，只改变prose padding长度和memory预算，观察第二条完整记录的阈值是否移动。这个设计有具体预测，也有尚未取得的证据。它不必为了成为合法研究入口，先变成一次付费模型实验。\n\n## 可重放的，不只是成功数字\n\n每个raw run固定源码、协议、corpus、原生retriever、settings、SQLite版本和job清单。started保存实际request及audit，receipt保留原始响应字符串、评分和绑定；每次尝试独立，发布采用完整字节的原子排他写入，不覆盖历史。\n\n本轮完整运行864 jobs后，原生replay核对了实际请求、排名、送达、响应与评分；独立local recomputation又与公开保存结果一致。24项测试覆盖gold隔离、sham、原生FTS5、同key不同方法、源身份漂移、parse失败、输出损坏、进程中断及新attempt恢复。\n\n本地纯函数可在明确新attempt中重算；外部provider提交超时则不同。模拟transport检查中，提交unknown会阻断自动重试，必须先核对外部receipt，再明确决定是否重新提交。review也绑定具体content/rubric，评分合同变化不能沿用旧确认。本轮没有人工review数据，这只是接口验证。\n\n## 模型计划已经具体到哪里\n\n[待绑定计划](../../research/conditional-contribution-study/provider-plan.json)固定432个非oracle cell，逐字system/user messages、原创材料范围、delivery digest及输入bytes。每cell输出上界96 tokens，总输出上界41472 tokens。\n\nprovider、exact model/revision、tokenizer、实际输入token数和费用上限仍未选择，授权状态为false。当前的可执行adapter是注入JSON transport边界，不是一个未经官方文档核对就宣称兼容的真实HTTP客户端。绑定实际provider后，还需要计量输入与费用、生成新的不可变计划并取得明确授权；这部分不能以mock成功替代。\n\n这没有阻止本地科学工作形成完整结果，也没有给它补造模型成绩。四个family都被设计者看过，不是held-out；864个条件展开不提供总体精度的统计功效。研究成果在于把条件增量、冗余、排名损失、实际送达与消费者输出接成一条可检查的链，并保留这条链还不知道的事。\n\n[观察合同研究](distinguishability-and-observation.md)进一步问：哪些现有记录仍不能分开竞争解释？[AMS纲领](../programme/thesis.md)则保留更宽的研究空间：理论可以改变我们要区分的对象，源码可以改变允许操作，新的材料也可以让问题本身发生变化。这里的局部控制是其中一条已经执行的路径，不是所有研究都必须采用的答案模板。\n",
+      "bodyHtml": "<h1>新材料的价值，为什么要连同已有材料一起问？</h1>\n<p>一条信息单独不能回答问题，和手头已有材料放在一起却可能成为关键。另一条信息单独很好用，加入已有集合却没有增加任何区别。若把这些材料各自贴成“有用”或“无用”，我们会丢掉研究真正需要解释的关系。</p>\n<p>这也是已有<a href=\"research/multilingual-use-policy/protocol.md\" rel=\"noreferrer noopener\">条件化取用协议</a>提出的问题。本次没有把这句话当成新理论，而是把它放进一条实际执行的本地链路：原创材料经过确定的 writer、真实 SQLite FTS5 排名、选材、准确字节预算、消费者与独立评分，保留每一步发生了什么。</p>\n<p><a href=\"research/conditional-contribution-study/README.md\" rel=\"noreferrer noopener\">完整研究</a>有四个构造 family、九个 case。六种材料条件、两种表示、两种送达模式、两种选择政策和两消费者展开成 <strong>864 个本地 job</strong>；它们不是864个独立经验样本。经验样本数为 <strong>0</strong>。原生检索确实运行了，scripted/oracle 控制也确实产生了请求、响应与评分；真实模型与真人研究没有执行。</p>\n<h2>条件增量和交互不是同一个量</h2>\n<p>令 B 是已有材料，S 是候选新材料，Y 是同一问题上的结果。我们分别记录：</p>\n<pre><code class=\"language-text\">S 相对于 B 的增量 = Y(B+S) − Y(B)\n双源交互 = Y(B+S) − Y(B) − Y(S) + Y(empty)\n</code></pre>\n<p>本研究的Y是声明世界合同下是否答对，取0或1；它不是材料永久价值、理解程度或情境效用评分。没有依据时的暂缓与错误作答在响应字段中分开，不能只看一个0就把它们说成相同失败。</p>\n<p>对无成本、能够忽略额外信息的理想决策者，更多信号不会使最优风险变差。如果raw包含compact保留的全部字段，它也可以模拟这种compact。真实比较的困难在于检索、读取、截断、计算以及消费者。这些约束可以使实际输出变化，却不构成信息论的反例。</p>\n<h2>首先让互补和重复都得到完整位置</h2>\n<p>互补家族穷举四个二值x/y世界，问题是XOR。B给x，S给y；二者单独均不足以计算。完整送达且top-k保留两条时，scripted在四世界的B和S条件都暂缓，B+S都正确。对应增量为1，交互为1。</p>\n<p>加入一份B副本并不提供y。另一个sham对照则保持与S的writer输出相同UTF-8字节数、相同检索key，内容只是无信息padding。它也不能完成XOR。这里的sham不是“没有处理”：它仍可能占据排名、返回位置和字节预算。它隔离的是长度相同不等于贡献相同。</p>\n<p>重复家族的B和S都记录badge为amber。B、S、B+S都答对，S相对B的增量为0，交互为−1。这个负交互表示冗余，并不说明S单独是坏材料，也不表示新增信息降低了理想最优能力。</p>\n<p>这些例子是有限机制控制。我们没有估计自然来源互补发生的频率，也没有宣称机器已经能自动判断真实文章的新颖性。侧信息和任务若改变，同一材料会得到不同的条件贡献。</p>\n<h2>检索实际做了什么</h2>\n<p>本轮直接复用<a href=\"research/experience-reuse-retrieval-study/README.md\" rel=\"noreferrer noopener\">既有检索研究</a>的rank/select函数，实际建立SQLite FTS5索引并执行BM25查询。只有key进入索引，value不参与打分；分数越小越靠前，同分按插入顺序。所有候选、score/rank、selected IDs和top-k都写入receipt，评分答案不提供给retriever。</p>\n<p>methods家族让相同key携带两条不同条件的方法：open时enter，locked时unlock。问题明确要求locked。top-k完整保留两条时，消费者选择unlock；unique-key认为key相同只留第一条open，消费者于是暂缓。</p>\n<p>这接续了旧研究已经指出的去重反例，但新增的是这次真实排名之后的实际送达、请求和消费者输出。它没有证明任何去重方案总体更好。按key重复不等于方法重复，返回条目也不等于条目适用；必须看到信息在什么阶段被合并掉。</p>\n<h2>两条都选中了，为什么仍然没有回答？</h2>\n<p><a href=\"research/representation-use-study/README.md\" rel=\"noreferrer noopener\">表示与使用研究</a>已经建立actual-delivery合同，并清楚说明其旧equal-900样本没有出现新的截断反差。本轮使用独立原创材料与200-byte预算，得到一条新的实际观察。</p>\n<p>XOR的raw B+S中，两条候选均被选中。完整模式送达两条完整JSONL，消费者可以计算；equal模式按选材次序截取200个UTF-8 bytes，只剩B为完整记录，第二条S不完整。消费者只解析完整JSONL，因此暂缓。</p>\n<p>compact writer只删除prose说明，保留相同必要字段；它不接问题或gold，也不是自然语言摘要模型。在同样200-byte预算中，B与S都完整到场，消费者回答正确。</p>\n<table>\n<thead>\n<tr>\n<th>同一XOR世界与top-k</th>\n<th>实际完整到场记录</th>\n<th>输出</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>full/raw/BS</td>\n<td>B、S</td>\n<td>正确XOR</td>\n</tr>\n<tr>\n<td>equal/raw/BS</td>\n<td>B；S被截断</td>\n<td>abstain:insufficient</td>\n</tr>\n<tr>\n<td>equal/compact/BS</td>\n<td>B、S</td>\n<td>正确XOR</td>\n</tr>\n</tbody>\n</table>\n<p>所以，这个差异可以定位到具体送达路径，而不是笼统说“raw不如summary”。full只表示选中的材料完整到场，不表示检索器看见全世界；200 bytes是诊断单位，不是模型tokens。request总bytes另存，oracle额外信息也不受memory预算限制，不能把它算作公平胜者。</p>\n<h2>世界变了，与证据变错了</h2>\n<p>revision家族保留旧通知Thursday，以及生效时间更晚的新通知。baseline世界当前为Friday；world-change把有效状态和新来源一起改为Saturday，并重新计算gold。evidence-corruption则保持世界当前Friday，只把送达新通知改成Saturday。</p>\n<p>完整top-k条件下，后两种情形的消费者都回答Saturday。world-change中正确，corruption中错误。同一个输出、同一种对证据变化的响应，可以在任务结果上具有相反含义。</p>\n<p>因此“材料确实影响回答”不能直接升级为“材料帮助了任务”。本构造可以审查输入变化与scripted的固定运算，却没有识别语言模型内部路径。全程<code>used</code>仍为unknown。引用ID属于完整送达记录，只证明membership；不证明引文相关、支持充分或因果使用。</p>\n<h2>结果怎样成为下一项研究</h2>\n<p>本轮的<a href=\"research/conditional-contribution-study/observation-chain.json\" rel=\"noreferrer noopener\">Observation链</a>绑定了真实XOR equal/raw请求、原响应、评分、候选/选择/送达及receipt身份。它并列三种解释：writer丢失必要信息、预算使信息没有到场、信息到场后消费者失败。</p>\n<p>full/raw控制限制了第一种解释；equal/raw确实只送达一条完整记录，支持这份构造中的送达损失；matched compact控制没有检测到同一scripted消费者在足够字段下失败。它不是从一张总分图推测原因，而是沿实际中间材料缩小解释范围。</p>\n<p>由此产生的下一设计尚未执行：保持world、query、必要字段、检索顺序与消费者，只改变prose padding长度和memory预算，观察第二条完整记录的阈值是否移动。这个设计有具体预测，也有尚未取得的证据。它不必为了成为合法研究入口，先变成一次付费模型实验。</p>\n<h2>可重放的，不只是成功数字</h2>\n<p>每个raw run固定源码、协议、corpus、原生retriever、settings、SQLite版本和job清单。started保存实际request及audit，receipt保留原始响应字符串、评分和绑定；每次尝试独立，发布采用完整字节的原子排他写入，不覆盖历史。</p>\n<p>本轮完整运行864 jobs后，原生replay核对了实际请求、排名、送达、响应与评分；独立local recomputation又与公开保存结果一致。24项测试覆盖gold隔离、sham、原生FTS5、同key不同方法、源身份漂移、parse失败、输出损坏、进程中断及新attempt恢复。</p>\n<p>本地纯函数可在明确新attempt中重算；外部provider提交超时则不同。模拟transport检查中，提交unknown会阻断自动重试，必须先核对外部receipt，再明确决定是否重新提交。review也绑定具体content/rubric，评分合同变化不能沿用旧确认。本轮没有人工review数据，这只是接口验证。</p>\n<h2>模型计划已经具体到哪里</h2>\n<p><a href=\"research/conditional-contribution-study/provider-plan.json\" rel=\"noreferrer noopener\">待绑定计划</a>固定432个非oracle cell，逐字system/user messages、原创材料范围、delivery digest及输入bytes。每cell输出上界96 tokens，总输出上界41472 tokens。</p>\n<p>provider、exact model/revision、tokenizer、实际输入token数和费用上限仍未选择，授权状态为false。当前的可执行adapter是注入JSON transport边界，不是一个未经官方文档核对就宣称兼容的真实HTTP客户端。绑定实际provider后，还需要计量输入与费用、生成新的不可变计划并取得明确授权；这部分不能以mock成功替代。</p>\n<p>这没有阻止本地科学工作形成完整结果，也没有给它补造模型成绩。四个family都被设计者看过，不是held-out；864个条件展开不提供总体精度的统计功效。研究成果在于把条件增量、冗余、排名损失、实际送达与消费者输出接成一条可检查的链，并保留这条链还不知道的事。</p>\n<p><a href=\"?study=distinguishability-and-observation\" rel=\"noreferrer noopener\">观察合同研究</a>进一步问：哪些现有记录仍不能分开竞争解释？<a href=\"?study=ams-thesis\" rel=\"noreferrer noopener\">AMS纲领</a>则保留更宽的研究空间：理论可以改变我们要区分的对象，源码可以改变允许操作，新的材料也可以让问题本身发生变化。这里的局部控制是其中一条已经执行的路径，不是所有研究都必须采用的答案模板。</p>",
+      "sections": [
+        {
+          "title": "条件增量和交互不是同一个量",
+          "text": "令 B 是已有材料，S 是候选新材料，Y 是同一问题上的结果。我们分别记录：\n\n```text\nS 相对于 B 的增量 = Y(B+S) − Y(B)\n双源交互 = Y(B+S) − Y(B) − Y(S) + Y(empty)\n```\n\n本研究的Y是声明世界合同下是否答对，取0或1；它不是材料永久价值、理解程度或情境效用评分。没有依据时的暂缓与错误作答在响应字段中分开，不能只看一个0就把它们说成相同失败。\n\n对无成本、能够忽略额外信息的理想决策者，更多信号不会使最优风险变差。如果raw包含compact保留的全部字段，它也可以模拟这种compact。真实比较的困难在于检索、读取、截断、计算以及消费者。这些约束可以使实际输出变化，却不构成信息论的反例。"
+        },
+        {
+          "title": "首先让互补和重复都得到完整位置",
+          "text": "互补家族穷举四个二值x/y世界，问题是XOR。B给x，S给y；二者单独均不足以计算。完整送达且top-k保留两条时，scripted在四世界的B和S条件都暂缓，B+S都正确。对应增量为1，交互为1。\n\n加入一份B副本并不提供y。另一个sham对照则保持与S的writer输出相同UTF-8字节数、相同检索key，内容只是无信息padding。它也不能完成XOR。这里的sham不是“没有处理”：它仍可能占据排名、返回位置和字节预算。它隔离的是长度相同不等于贡献相同。\n\n重复家族的B和S都记录badge为amber。B、S、B+S都答对，S相对B的增量为0，交互为−1。这个负交互表示冗余，并不说明S单独是坏材料，也不表示新增信息降低了理想最优能力。\n\n这些例子是有限机制控制。我们没有估计自然来源互补发生的频率，也没有宣称机器已经能自动判断真实文章的新颖性。侧信息和任务若改变，同一材料会得到不同的条件贡献。"
+        },
+        {
+          "title": "检索实际做了什么",
+          "text": "本轮直接复用[既有检索研究](../../research/experience-reuse-retrieval-study/README.md)的rank/select函数，实际建立SQLite FTS5索引并执行BM25查询。只有key进入索引，value不参与打分；分数越小越靠前，同分按插入顺序。所有候选、score/rank、selected IDs和top-k都写入receipt，评分答案不提供给retriever。\n\nmethods家族让相同key携带两条不同条件的方法：open时enter，locked时unlock。问题明确要求locked。top-k完整保留两条时，消费者选择unlock；unique-key认为key相同只留第一条open，消费者于是暂缓。\n\n这接续了旧研究已经指出的去重反例，但新增的是这次真实排名之后的实际送达、请求和消费者输出。它没有证明任何去重方案总体更好。按key重复不等于方法重复，返回条目也不等于条目适用；必须看到信息在什么阶段被合并掉。"
+        },
+        {
+          "title": "两条都选中了，为什么仍然没有回答？",
+          "text": "[表示与使用研究](../../research/representation-use-study/README.md)已经建立actual-delivery合同，并清楚说明其旧equal-900样本没有出现新的截断反差。本轮使用独立原创材料与200-byte预算，得到一条新的实际观察。\n\nXOR的raw B+S中，两条候选均被选中。完整模式送达两条完整JSONL，消费者可以计算；equal模式按选材次序截取200个UTF-8 bytes，只剩B为完整记录，第二条S不完整。消费者只解析完整JSONL，因此暂缓。\n\ncompact writer只删除prose说明，保留相同必要字段；它不接问题或gold，也不是自然语言摘要模型。在同样200-byte预算中，B与S都完整到场，消费者回答正确。\n\n| 同一XOR世界与top-k | 实际完整到场记录 | 输出 |\n| --- | --- | --- |\n| full/raw/BS | B、S | 正确XOR |\n| equal/raw/BS | B；S被截断 | abstain:insufficient |\n| equal/compact/BS | B、S | 正确XOR |\n\n所以，这个差异可以定位到具体送达路径，而不是笼统说“raw不如summary”。full只表示选中的材料完整到场，不表示检索器看见全世界；200 bytes是诊断单位，不是模型tokens。request总bytes另存，oracle额外信息也不受memory预算限制，不能把它算作公平胜者。"
+        },
+        {
+          "title": "世界变了，与证据变错了",
+          "text": "revision家族保留旧通知Thursday，以及生效时间更晚的新通知。baseline世界当前为Friday；world-change把有效状态和新来源一起改为Saturday，并重新计算gold。evidence-corruption则保持世界当前Friday，只把送达新通知改成Saturday。\n\n完整top-k条件下，后两种情形的消费者都回答Saturday。world-change中正确，corruption中错误。同一个输出、同一种对证据变化的响应，可以在任务结果上具有相反含义。\n\n因此“材料确实影响回答”不能直接升级为“材料帮助了任务”。本构造可以审查输入变化与scripted的固定运算，却没有识别语言模型内部路径。全程`used`仍为unknown。引用ID属于完整送达记录，只证明membership；不证明引文相关、支持充分或因果使用。"
+        },
+        {
+          "title": "结果怎样成为下一项研究",
+          "text": "本轮的[Observation链](../../research/conditional-contribution-study/observation-chain.json)绑定了真实XOR equal/raw请求、原响应、评分、候选/选择/送达及receipt身份。它并列三种解释：writer丢失必要信息、预算使信息没有到场、信息到场后消费者失败。\n\nfull/raw控制限制了第一种解释；equal/raw确实只送达一条完整记录，支持这份构造中的送达损失；matched compact控制没有检测到同一scripted消费者在足够字段下失败。它不是从一张总分图推测原因，而是沿实际中间材料缩小解释范围。\n\n由此产生的下一设计尚未执行：保持world、query、必要字段、检索顺序与消费者，只改变prose padding长度和memory预算，观察第二条完整记录的阈值是否移动。这个设计有具体预测，也有尚未取得的证据。它不必为了成为合法研究入口，先变成一次付费模型实验。"
+        },
+        {
+          "title": "可重放的，不只是成功数字",
+          "text": "每个raw run固定源码、协议、corpus、原生retriever、settings、SQLite版本和job清单。started保存实际request及audit，receipt保留原始响应字符串、评分和绑定；每次尝试独立，发布采用完整字节的原子排他写入，不覆盖历史。\n\n本轮完整运行864 jobs后，原生replay核对了实际请求、排名、送达、响应与评分；独立local recomputation又与公开保存结果一致。24项测试覆盖gold隔离、sham、原生FTS5、同key不同方法、源身份漂移、parse失败、输出损坏、进程中断及新attempt恢复。\n\n本地纯函数可在明确新attempt中重算；外部provider提交超时则不同。模拟transport检查中，提交unknown会阻断自动重试，必须先核对外部receipt，再明确决定是否重新提交。review也绑定具体content/rubric，评分合同变化不能沿用旧确认。本轮没有人工review数据，这只是接口验证。"
+        },
+        {
+          "title": "模型计划已经具体到哪里",
+          "text": "[待绑定计划](../../research/conditional-contribution-study/provider-plan.json)固定432个非oracle cell，逐字system/user messages、原创材料范围、delivery digest及输入bytes。每cell输出上界96 tokens，总输出上界41472 tokens。\n\nprovider、exact model/revision、tokenizer、实际输入token数和费用上限仍未选择，授权状态为false。当前的可执行adapter是注入JSON transport边界，不是一个未经官方文档核对就宣称兼容的真实HTTP客户端。绑定实际provider后，还需要计量输入与费用、生成新的不可变计划并取得明确授权；这部分不能以mock成功替代。\n\n这没有阻止本地科学工作形成完整结果，也没有给它补造模型成绩。四个family都被设计者看过，不是held-out；864个条件展开不提供总体精度的统计功效。研究成果在于把条件增量、冗余、排名损失、实际送达与消费者输出接成一条可检查的链，并保留这条链还不知道的事。\n\n[观察合同研究](distinguishability-and-observation.md)进一步问：哪些现有记录仍不能分开竞争解释？[AMS纲领](../programme/thesis.md)则保留更宽的研究空间：理论可以改变我们要区分的对象，源码可以改变允许操作，新的材料也可以让问题本身发生变化。这里的局部控制是其中一条已经执行的路径，不是所有研究都必须采用的答案模板。"
+        }
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "新材料的价值，为什么要连同已有材料一起问？",
+            "level": 1
+          },
+          {
+            "id": "section-2",
+            "label": "条件增量和交互不是同一个量",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "首先让互补和重复都得到完整位置",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "检索实际做了什么",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "两条都选中了，为什么仍然没有回答？",
+            "level": 2
+          },
+          {
+            "id": "section-6",
+            "label": "世界变了，与证据变错了",
+            "level": 2
+          },
+          {
+            "id": "section-7",
+            "label": "结果怎样成为下一项研究",
+            "level": 2
+          },
+          {
+            "id": "section-8",
+            "label": "可重放的，不只是成功数字",
+            "level": 2
+          },
+          {
+            "id": "section-9",
+            "label": "模型计划已经具体到哪里",
+            "level": 2
+          }
+        ],
+        "references": [
+          {
+            "kind": "entry",
+            "id": "distinguishability-and-observation",
+            "anchor": "",
+            "heading": "section-9"
+          },
+          {
+            "kind": "entry",
+            "id": "ams-thesis",
+            "anchor": "",
+            "heading": "section-9"
+          }
+        ]
+      }
+    },
+    {
+      "id": "distinguishability-and-observation",
+      "title": "观察相同以后，还能怎样把机制分开？",
+      "kind": "research-essay",
+      "date": "2026-10-29",
+      "byline": "Agent Memory Study editors",
+      "intro": "从完整观察类的答案兼容性出发，用三个有限机制家族区分目标碰撞、允许行动产生的差异，以及在界内尚未找到与声明模型内不可分；实际枚举不涉及模型或经验样本。",
+      "subtitle": "观察合同、全局答案交集与最短区分行动的有限研究",
+      "domains": [
+        "representation",
+        "memory",
+        "evaluation"
+      ],
+      "directionIds": [
+        "forms",
+        "change"
+      ],
+      "readings": [],
+      "externalReadings": [],
+      "boundary": "AMS 编者原创有限确定性构造；13 个模型、三个主家族与一个全交控制家族。经验样本数为 0。搜索只接 plant，不接目标或答案合同；精确结论限定于声明转移、可见信息、允许动作、成本与界。无理论首创、真实模型机制识别或人类理解收益主张。",
+      "takeaways": [],
+      "closing": "",
+      "sourcePath": "study/entries/distinguishability-and-observation.md",
+      "bodyMarkdown": "# 观察相同以后，还能怎样把机制分开？\n\n两个系统都回答“会议在周五”，这份相同可能来自有效来源，也可能来自一份碰巧仍然正确的旧写回。两个系统总分同为 1，出错的位置可能分别是版本和作用范围。单看答案或总分，我们还不知道它们在所关心的机制上是否相同。\n\n[记忆需要为尚未出现的问题保留什么？](future-questions-and-memory.md)已经用有限历史说明：表示是否足够，要相对于允许的问题和答案合同来问。这里继续推进一个不同问题：如果当前观察还分不开两个状态，允许做什么，才能产生新的可观察区别？如果始终没有找到，又能说到哪一步？\n\n本次完成了一项[独立有限研究](../../research/observation-contract-study/README.md)：13 个确定性模型，三个机制家族与一个全局答案交集控制，实际计算 70 个初始状态对。原始输入、搜索器、完整轨迹和[保存结果](../../research/observation-contract-study/results.json)均可检查。状态是人工构造的可能情形，经验样本数为 **0**。没有调用模型、访问真实来源、使用私人材料或开展参与者研究。\n\n## 先决定我们看到了什么\n\n设有限状态集合为 S，当前观察为 O(s)，已经明确给出的侧信息为 K(s)。当两状态的 `(O,K)` 相同，它们进入同一个观察类 C。审计用的状态名不属于观察，研究者定义的正确答案也不属于观察。\n\n对于问题 q，每个状态有一组可接受答案 A(s,q)。如果消费者只依据当前可见信息作答，一个观察类能共同接受答案的条件是：\n\n```text\nintersection { A(s,q) : s ∈ C } ≠ ∅\n```\n\n交集为空，意味着这个相同观察不能支持一个在所有候选状态中都合格的回答。非空则只说明有限合同中存在共同答案；它没有证明实际消费者能找到答案、理解了材料或在新任务上仍然成功。\n\n这个检查不能只做每对状态。我们保留了三个答案集合 `{direct,cached}`、`{cached,replay}`、`{direct,replay}`。每两组都有共同元素，三组全交却为空。runner 实际找到的最小空交见证含全部三个状态。它继续使用既有充分性研究已经指出的区别，没有把再次出现的三集合例子称作新理论。\n\n还有一种容易混淆的碰撞：目标机制 θ 不同，当前 O 却相同。它可以与任务答案完全兼容。在“有效来源／旧写回”构造中，两边当前都允许回答 Friday，但支持机制不同。目标碰撞提出一个测量问题，尚未给出能解决它的行动。\n\n## 碰撞见证和区分行动是两种产物\n\n我们给 plant 声明有限动作、确定性转移及每步可见输出。搜索接收 plant 和两个不透明状态 handle，**不接收 evaluator 中的目标、答案集合或评分**。它寻找共同动作词，使两侧初始观察或某一步实际输出不同。\n\n例如，“未来 y 的正确答案不同”不能直接成为区分行动。换一个问题，并不会把隐藏 y 送进消费者输入。必须存在真实声明的通道：打开一个获准源片段、读取不同的系统输出，或实施一个能造成不同可观察后果的干预。\n\n因此，本研究分别保存：观察类中的目标碰撞、答案合同的最小空交见证，以及允许动作真正产生差异的逐步轨迹。三者可以连接，不能互相顶替。搜索的 `expanded` 列表是研究者审计算法的材料，也不属于消费者观察。\n\n## 第一家族：未来任务、侧信息与源重访\n\n四个世界由两个二值变量 x、y 构成。当前摘要只给 x。对于“x 是什么”，两个观察类都具有共同答案；后来问 y，同一摘要下的两个候选世界就要求不同答案。\n\n允许重访时，`revisit` 返回固定 v1、绑定 y 的合成片段。对于 w00 与 w01，搜索找到一步、成本 1 的区分词。随后逐项关闭 permission、availability、correct revision、target binding、adequate coverage 中的一项，动作都不再允许，当前 x 问题依旧兼容，未来 y 的全交仍为空。\n\n这五个值在同一模型中对全部世界相同。拒绝访问的模式不会暗中透露 y；没有取得片段，就不能把档案里“仍然存在”的信息计入观察。版本和目标绑定在这里是明确的合成合同，不是已经实现的真实来源核验。\n\n另一正控制不开放重访，而把 y 明确加入侧信息。观察类从 2 个细分成 4 个，未来任务全部兼容，原 pair 在初始时就已区分，最短行动是空词、成本 0。这说明“表示不够”的判断不能忽略消费者已经拥有的背景材料，也不能把依靠新增侧信息成功误记成原摘要自己恢复了区别。\n\n在固定历史与任务下，加入侧信息只会细分观察类。原来一个类的全交非空时，其子类的交集不会更小，所以不会由兼容变成不兼容。这个单调性不允许跨改变答案合同或世界集合使用。\n\n## 第二家族：答案相同，但支持路径不同\n\n我们构造两个初始状态：live 从有效来源回答 Friday；cached 从保存的写回回答 Friday。世界事实没有改变，两边的当前答案也相同。\n\n`withdraw` 只撤回来源支持并返回相同 receipt，不自动删除旧写回。此时还要执行 `read`，live 才返回 unsupported，cached 仍返回 Friday。最短区分词为：\n\n```text\nwithdraw → read\n成本 2，长度 2\n```\n\n长度上界为 1 时，搜索正确报告“在此界内未找到”，不是“两个机制等价”。禁用 withdraw 后，重复 read 始终看到相同 Friday；在这份有限允许模型内，完整 product graph 被穷尽仍找不到区分。\n\n这个结果研究的是支持路径的可观察后果，并没有证明 cached 的 Friday 在现实上已经错误，更没有证明“删除来源”在任意真实系统中应产生相同语义。它使一个常被压在同一字段里的区别变清楚：当前答对、依赖何种状态、撤回后还能观察到什么，是三个问题。\n\n我们另设 a、b 两个不同 handle：所有允许读取和后继输出完全相同。虽然 evaluator 给它们不同的 origin 标签，搜索仍不能分开它们。这是必要的负结果：目标标签的存在不能强迫仪器制造区别。\n\n## 第三家族：同分数、不同错误与变成本\n\nrevision 和 scope 两条构造轨迹的聚合分数同为 1；下一步应修哪里却不同。直接 `expensive-probe` 一步就能显示错误类型，成本为 3。另一条路径先 prepare 打开 trace，再 inspect 读片段，每步成本 1/2，总成本为 1。\n\n实际搜索选择 `prepare → inspect`。如果只准一步，就选择成本 3 的直接 probe，并明确这是步数界内最优。把各动作成本统一为 1 后，同一转移系统改选一步 probe。少一步与少成本不是同一个优化目标。\n\n这里还有成本 0、输出不变的 idle 自环。无界搜索仍能终止；它不会因为“再等一次不花钱”无穷展开同一状态对。设置总成本上限 1/2 时则保留未区分结果，不能从预算不足推出两种错误相同。\n\n## 为什么最短性结论有范围\n\n两个状态同步执行相同动作，可以看成 product graph 中的一对状态。只要每步输出相同，搜索继续沿转移走；一旦不同，就得到一个区分见证。成本为非负有理数，因此采用 Dijkstra 按累计成本取出候选；成本相同再按步数和动作词字典序固定输出。\n\n有一个实现上重要的细节：不能在“首次生成一条不同输出的边”时立即返回。昂贵直接 probe 很早就能生成，但尚未展开的廉价两步路径可能更好。区分边也必须进入有序 frontier，等它真正成为最低成本候选时再返回。\n\n无步数界时，每个状态对保留最优到达即可；相同状态对的后续动作能力相同，更贵的前缀不会使同一后缀更便宜。成本 0 的循环也可删除，平成本时更短的前缀优先。有限状态对穷尽后没有区分，才报告“声明模型内不可分”。\n\n有步数界时，状态键必须加入已用步数。较便宜但较长的前缀，可能耗光剩余步数；不能删掉贵而短、仍能完成区分的另一前缀。本研究专门加入这个反例。无界最优、界内最优、界内未找到、模型内不可分，都分别记录在结果中。\n\n这些论证不适用于未声明的随机转移、负成本、无限状态或隐藏访问。最便宜的动作词也不保证是现实中最可行、最有解释力的科学实验；本研究只求两个已知候选的共同 open-loop 区分词，没有求多假设 adaptive 策略。\n\n## 实际验算怎样约束这份结果\n\nrunner 为全部 70 个 pair 另做长度不超过 5 的动作词穷举。这个朴素方法不调用优化搜索的 heap、frontier 或剪枝，独立计算每个词的成本与两侧输出，再比较界内最低结果。\n\n测试进一步穷尽二状态、二动作的全部 256 种确定性 next-state/output 配置，检查有零成本和非整数成本时的搜索与朴素方法一致；另检查最小全交、五项访问门槛、目标隔离、handle 重命名、枚举顺序、删动作、移动问题及真正等价控制。21 项检查通过。它们会拒绝本实现若干具体错误，不是用测试数量证明一般科学有效性。\n\n协议在第一次运行前写下竞争预测：当前答案或总分已经足以分开目标，还是需要允许行动？构造结果支持后者在若干模型中成立；禁止关键动作及真正等价控制又阻止我们把“再多做点什么”当万能答案。材料与方法共同设计，没有盲测试、held-out 泛化或总体发生率估计。\n\n## 对 AMS 的意义及下一问\n\n[AMS 的研究纲领](../programme/thesis.md)关心过去怎样通过状态参与现在。这项研究给它增加一种可检查的提问方式：现在的记录排除了哪些解释，哪些仍在同一观察类里；下一步需要补充什么允许观察？它并不把所有研究都收缩成状态搜索。概念分析仍可以改变目标构念，源码审查可以发现动作语义不成立，数学推导可以说明一种区分根本不可能。\n\n先前充分性研究问“当前信息是否允许共同答案”，这里问“允许行动能否产生新区别”。后续真实研究还需问动作能否实现、观察是否改变对象、消费者有没有使用信息、所得依赖是否有益。知道合成机制中的 target，不等于知道语言模型的内部状态。\n\n当前交付的是独立科学方法、保存结果、CLI、portable 数据与本文。Lab 界面、统一运行注册、把见证带回私人案头形成问题和下一设计，属于下一代环境的集成工作；这些尚未接入不能被写成已经完成的用户体验。下一项有价值的检验，是把真实研究保存的轨迹投影成明确观察合同，先找出它确实没有记录的区别，再判断需要重分析、改仪器还是新执行，而不是先要求更多指标。\n",
+      "bodyHtml": "<h1>观察相同以后，还能怎样把机制分开？</h1>\n<p>两个系统都回答“会议在周五”，这份相同可能来自有效来源，也可能来自一份碰巧仍然正确的旧写回。两个系统总分同为 1，出错的位置可能分别是版本和作用范围。单看答案或总分，我们还不知道它们在所关心的机制上是否相同。</p>\n<p><a href=\"?study=future-questions-and-memory\" rel=\"noreferrer noopener\">记忆需要为尚未出现的问题保留什么？</a>已经用有限历史说明：表示是否足够，要相对于允许的问题和答案合同来问。这里继续推进一个不同问题：如果当前观察还分不开两个状态，允许做什么，才能产生新的可观察区别？如果始终没有找到，又能说到哪一步？</p>\n<p>本次完成了一项<a href=\"research/observation-contract-study/README.md\" rel=\"noreferrer noopener\">独立有限研究</a>：13 个确定性模型，三个机制家族与一个全局答案交集控制，实际计算 70 个初始状态对。原始输入、搜索器、完整轨迹和<a href=\"research/observation-contract-study/results.json\" rel=\"noreferrer noopener\">保存结果</a>均可检查。状态是人工构造的可能情形，经验样本数为 <strong>0</strong>。没有调用模型、访问真实来源、使用私人材料或开展参与者研究。</p>\n<h2>先决定我们看到了什么</h2>\n<p>设有限状态集合为 S，当前观察为 O(s)，已经明确给出的侧信息为 K(s)。当两状态的 <code>(O,K)</code> 相同，它们进入同一个观察类 C。审计用的状态名不属于观察，研究者定义的正确答案也不属于观察。</p>\n<p>对于问题 q，每个状态有一组可接受答案 A(s,q)。如果消费者只依据当前可见信息作答，一个观察类能共同接受答案的条件是：</p>\n<pre><code class=\"language-text\">intersection { A(s,q) : s ∈ C } ≠ ∅\n</code></pre>\n<p>交集为空，意味着这个相同观察不能支持一个在所有候选状态中都合格的回答。非空则只说明有限合同中存在共同答案；它没有证明实际消费者能找到答案、理解了材料或在新任务上仍然成功。</p>\n<p>这个检查不能只做每对状态。我们保留了三个答案集合 <code>{direct,cached}</code>、<code>{cached,replay}</code>、<code>{direct,replay}</code>。每两组都有共同元素，三组全交却为空。runner 实际找到的最小空交见证含全部三个状态。它继续使用既有充分性研究已经指出的区别，没有把再次出现的三集合例子称作新理论。</p>\n<p>还有一种容易混淆的碰撞：目标机制 θ 不同，当前 O 却相同。它可以与任务答案完全兼容。在“有效来源／旧写回”构造中，两边当前都允许回答 Friday，但支持机制不同。目标碰撞提出一个测量问题，尚未给出能解决它的行动。</p>\n<h2>碰撞见证和区分行动是两种产物</h2>\n<p>我们给 plant 声明有限动作、确定性转移及每步可见输出。搜索接收 plant 和两个不透明状态 handle，<strong>不接收 evaluator 中的目标、答案集合或评分</strong>。它寻找共同动作词，使两侧初始观察或某一步实际输出不同。</p>\n<p>例如，“未来 y 的正确答案不同”不能直接成为区分行动。换一个问题，并不会把隐藏 y 送进消费者输入。必须存在真实声明的通道：打开一个获准源片段、读取不同的系统输出，或实施一个能造成不同可观察后果的干预。</p>\n<p>因此，本研究分别保存：观察类中的目标碰撞、答案合同的最小空交见证，以及允许动作真正产生差异的逐步轨迹。三者可以连接，不能互相顶替。搜索的 <code>expanded</code> 列表是研究者审计算法的材料，也不属于消费者观察。</p>\n<h2>第一家族：未来任务、侧信息与源重访</h2>\n<p>四个世界由两个二值变量 x、y 构成。当前摘要只给 x。对于“x 是什么”，两个观察类都具有共同答案；后来问 y，同一摘要下的两个候选世界就要求不同答案。</p>\n<p>允许重访时，<code>revisit</code> 返回固定 v1、绑定 y 的合成片段。对于 w00 与 w01，搜索找到一步、成本 1 的区分词。随后逐项关闭 permission、availability、correct revision、target binding、adequate coverage 中的一项，动作都不再允许，当前 x 问题依旧兼容，未来 y 的全交仍为空。</p>\n<p>这五个值在同一模型中对全部世界相同。拒绝访问的模式不会暗中透露 y；没有取得片段，就不能把档案里“仍然存在”的信息计入观察。版本和目标绑定在这里是明确的合成合同，不是已经实现的真实来源核验。</p>\n<p>另一正控制不开放重访，而把 y 明确加入侧信息。观察类从 2 个细分成 4 个，未来任务全部兼容，原 pair 在初始时就已区分，最短行动是空词、成本 0。这说明“表示不够”的判断不能忽略消费者已经拥有的背景材料，也不能把依靠新增侧信息成功误记成原摘要自己恢复了区别。</p>\n<p>在固定历史与任务下，加入侧信息只会细分观察类。原来一个类的全交非空时，其子类的交集不会更小，所以不会由兼容变成不兼容。这个单调性不允许跨改变答案合同或世界集合使用。</p>\n<h2>第二家族：答案相同，但支持路径不同</h2>\n<p>我们构造两个初始状态：live 从有效来源回答 Friday；cached 从保存的写回回答 Friday。世界事实没有改变，两边的当前答案也相同。</p>\n<p><code>withdraw</code> 只撤回来源支持并返回相同 receipt，不自动删除旧写回。此时还要执行 <code>read</code>，live 才返回 unsupported，cached 仍返回 Friday。最短区分词为：</p>\n<pre><code class=\"language-text\">withdraw → read\n成本 2，长度 2\n</code></pre>\n<p>长度上界为 1 时，搜索正确报告“在此界内未找到”，不是“两个机制等价”。禁用 withdraw 后，重复 read 始终看到相同 Friday；在这份有限允许模型内，完整 product graph 被穷尽仍找不到区分。</p>\n<p>这个结果研究的是支持路径的可观察后果，并没有证明 cached 的 Friday 在现实上已经错误，更没有证明“删除来源”在任意真实系统中应产生相同语义。它使一个常被压在同一字段里的区别变清楚：当前答对、依赖何种状态、撤回后还能观察到什么，是三个问题。</p>\n<p>我们另设 a、b 两个不同 handle：所有允许读取和后继输出完全相同。虽然 evaluator 给它们不同的 origin 标签，搜索仍不能分开它们。这是必要的负结果：目标标签的存在不能强迫仪器制造区别。</p>\n<h2>第三家族：同分数、不同错误与变成本</h2>\n<p>revision 和 scope 两条构造轨迹的聚合分数同为 1；下一步应修哪里却不同。直接 <code>expensive-probe</code> 一步就能显示错误类型，成本为 3。另一条路径先 prepare 打开 trace，再 inspect 读片段，每步成本 1/2，总成本为 1。</p>\n<p>实际搜索选择 <code>prepare → inspect</code>。如果只准一步，就选择成本 3 的直接 probe，并明确这是步数界内最优。把各动作成本统一为 1 后，同一转移系统改选一步 probe。少一步与少成本不是同一个优化目标。</p>\n<p>这里还有成本 0、输出不变的 idle 自环。无界搜索仍能终止；它不会因为“再等一次不花钱”无穷展开同一状态对。设置总成本上限 1/2 时则保留未区分结果，不能从预算不足推出两种错误相同。</p>\n<h2>为什么最短性结论有范围</h2>\n<p>两个状态同步执行相同动作，可以看成 product graph 中的一对状态。只要每步输出相同，搜索继续沿转移走；一旦不同，就得到一个区分见证。成本为非负有理数，因此采用 Dijkstra 按累计成本取出候选；成本相同再按步数和动作词字典序固定输出。</p>\n<p>有一个实现上重要的细节：不能在“首次生成一条不同输出的边”时立即返回。昂贵直接 probe 很早就能生成，但尚未展开的廉价两步路径可能更好。区分边也必须进入有序 frontier，等它真正成为最低成本候选时再返回。</p>\n<p>无步数界时，每个状态对保留最优到达即可；相同状态对的后续动作能力相同，更贵的前缀不会使同一后缀更便宜。成本 0 的循环也可删除，平成本时更短的前缀优先。有限状态对穷尽后没有区分，才报告“声明模型内不可分”。</p>\n<p>有步数界时，状态键必须加入已用步数。较便宜但较长的前缀，可能耗光剩余步数；不能删掉贵而短、仍能完成区分的另一前缀。本研究专门加入这个反例。无界最优、界内最优、界内未找到、模型内不可分，都分别记录在结果中。</p>\n<p>这些论证不适用于未声明的随机转移、负成本、无限状态或隐藏访问。最便宜的动作词也不保证是现实中最可行、最有解释力的科学实验；本研究只求两个已知候选的共同 open-loop 区分词，没有求多假设 adaptive 策略。</p>\n<h2>实际验算怎样约束这份结果</h2>\n<p>runner 为全部 70 个 pair 另做长度不超过 5 的动作词穷举。这个朴素方法不调用优化搜索的 heap、frontier 或剪枝，独立计算每个词的成本与两侧输出，再比较界内最低结果。</p>\n<p>测试进一步穷尽二状态、二动作的全部 256 种确定性 next-state/output 配置，检查有零成本和非整数成本时的搜索与朴素方法一致；另检查最小全交、五项访问门槛、目标隔离、handle 重命名、枚举顺序、删动作、移动问题及真正等价控制。21 项检查通过。它们会拒绝本实现若干具体错误，不是用测试数量证明一般科学有效性。</p>\n<p>协议在第一次运行前写下竞争预测：当前答案或总分已经足以分开目标，还是需要允许行动？构造结果支持后者在若干模型中成立；禁止关键动作及真正等价控制又阻止我们把“再多做点什么”当万能答案。材料与方法共同设计，没有盲测试、held-out 泛化或总体发生率估计。</p>\n<h2>对 AMS 的意义及下一问</h2>\n<p><a href=\"?study=ams-thesis\" rel=\"noreferrer noopener\">AMS 的研究纲领</a>关心过去怎样通过状态参与现在。这项研究给它增加一种可检查的提问方式：现在的记录排除了哪些解释，哪些仍在同一观察类里；下一步需要补充什么允许观察？它并不把所有研究都收缩成状态搜索。概念分析仍可以改变目标构念，源码审查可以发现动作语义不成立，数学推导可以说明一种区分根本不可能。</p>\n<p>先前充分性研究问“当前信息是否允许共同答案”，这里问“允许行动能否产生新区别”。后续真实研究还需问动作能否实现、观察是否改变对象、消费者有没有使用信息、所得依赖是否有益。知道合成机制中的 target，不等于知道语言模型的内部状态。</p>\n<p>当前交付的是独立科学方法、保存结果、CLI、portable 数据与本文。Lab 界面、统一运行注册、把见证带回私人案头形成问题和下一设计，属于下一代环境的集成工作；这些尚未接入不能被写成已经完成的用户体验。下一项有价值的检验，是把真实研究保存的轨迹投影成明确观察合同，先找出它确实没有记录的区别，再判断需要重分析、改仪器还是新执行，而不是先要求更多指标。</p>",
+      "sections": [
+        {
+          "title": "先决定我们看到了什么",
+          "text": "设有限状态集合为 S，当前观察为 O(s)，已经明确给出的侧信息为 K(s)。当两状态的 `(O,K)` 相同，它们进入同一个观察类 C。审计用的状态名不属于观察，研究者定义的正确答案也不属于观察。\n\n对于问题 q，每个状态有一组可接受答案 A(s,q)。如果消费者只依据当前可见信息作答，一个观察类能共同接受答案的条件是：\n\n```text\nintersection { A(s,q) : s ∈ C } ≠ ∅\n```\n\n交集为空，意味着这个相同观察不能支持一个在所有候选状态中都合格的回答。非空则只说明有限合同中存在共同答案；它没有证明实际消费者能找到答案、理解了材料或在新任务上仍然成功。\n\n这个检查不能只做每对状态。我们保留了三个答案集合 `{direct,cached}`、`{cached,replay}`、`{direct,replay}`。每两组都有共同元素，三组全交却为空。runner 实际找到的最小空交见证含全部三个状态。它继续使用既有充分性研究已经指出的区别，没有把再次出现的三集合例子称作新理论。\n\n还有一种容易混淆的碰撞：目标机制 θ 不同，当前 O 却相同。它可以与任务答案完全兼容。在“有效来源／旧写回”构造中，两边当前都允许回答 Friday，但支持机制不同。目标碰撞提出一个测量问题，尚未给出能解决它的行动。"
+        },
+        {
+          "title": "碰撞见证和区分行动是两种产物",
+          "text": "我们给 plant 声明有限动作、确定性转移及每步可见输出。搜索接收 plant 和两个不透明状态 handle，**不接收 evaluator 中的目标、答案集合或评分**。它寻找共同动作词，使两侧初始观察或某一步实际输出不同。\n\n例如，“未来 y 的正确答案不同”不能直接成为区分行动。换一个问题，并不会把隐藏 y 送进消费者输入。必须存在真实声明的通道：打开一个获准源片段、读取不同的系统输出，或实施一个能造成不同可观察后果的干预。\n\n因此，本研究分别保存：观察类中的目标碰撞、答案合同的最小空交见证，以及允许动作真正产生差异的逐步轨迹。三者可以连接，不能互相顶替。搜索的 `expanded` 列表是研究者审计算法的材料，也不属于消费者观察。"
+        },
+        {
+          "title": "第一家族：未来任务、侧信息与源重访",
+          "text": "四个世界由两个二值变量 x、y 构成。当前摘要只给 x。对于“x 是什么”，两个观察类都具有共同答案；后来问 y，同一摘要下的两个候选世界就要求不同答案。\n\n允许重访时，`revisit` 返回固定 v1、绑定 y 的合成片段。对于 w00 与 w01，搜索找到一步、成本 1 的区分词。随后逐项关闭 permission、availability、correct revision、target binding、adequate coverage 中的一项，动作都不再允许，当前 x 问题依旧兼容，未来 y 的全交仍为空。\n\n这五个值在同一模型中对全部世界相同。拒绝访问的模式不会暗中透露 y；没有取得片段，就不能把档案里“仍然存在”的信息计入观察。版本和目标绑定在这里是明确的合成合同，不是已经实现的真实来源核验。\n\n另一正控制不开放重访，而把 y 明确加入侧信息。观察类从 2 个细分成 4 个，未来任务全部兼容，原 pair 在初始时就已区分，最短行动是空词、成本 0。这说明“表示不够”的判断不能忽略消费者已经拥有的背景材料，也不能把依靠新增侧信息成功误记成原摘要自己恢复了区别。\n\n在固定历史与任务下，加入侧信息只会细分观察类。原来一个类的全交非空时，其子类的交集不会更小，所以不会由兼容变成不兼容。这个单调性不允许跨改变答案合同或世界集合使用。"
+        },
+        {
+          "title": "第二家族：答案相同，但支持路径不同",
+          "text": "我们构造两个初始状态：live 从有效来源回答 Friday；cached 从保存的写回回答 Friday。世界事实没有改变，两边的当前答案也相同。\n\n`withdraw` 只撤回来源支持并返回相同 receipt，不自动删除旧写回。此时还要执行 `read`，live 才返回 unsupported，cached 仍返回 Friday。最短区分词为：\n\n```text\nwithdraw → read\n成本 2，长度 2\n```\n\n长度上界为 1 时，搜索正确报告“在此界内未找到”，不是“两个机制等价”。禁用 withdraw 后，重复 read 始终看到相同 Friday；在这份有限允许模型内，完整 product graph 被穷尽仍找不到区分。\n\n这个结果研究的是支持路径的可观察后果，并没有证明 cached 的 Friday 在现实上已经错误，更没有证明“删除来源”在任意真实系统中应产生相同语义。它使一个常被压在同一字段里的区别变清楚：当前答对、依赖何种状态、撤回后还能观察到什么，是三个问题。\n\n我们另设 a、b 两个不同 handle：所有允许读取和后继输出完全相同。虽然 evaluator 给它们不同的 origin 标签，搜索仍不能分开它们。这是必要的负结果：目标标签的存在不能强迫仪器制造区别。"
+        },
+        {
+          "title": "第三家族：同分数、不同错误与变成本",
+          "text": "revision 和 scope 两条构造轨迹的聚合分数同为 1；下一步应修哪里却不同。直接 `expensive-probe` 一步就能显示错误类型，成本为 3。另一条路径先 prepare 打开 trace，再 inspect 读片段，每步成本 1/2，总成本为 1。\n\n实际搜索选择 `prepare → inspect`。如果只准一步，就选择成本 3 的直接 probe，并明确这是步数界内最优。把各动作成本统一为 1 后，同一转移系统改选一步 probe。少一步与少成本不是同一个优化目标。\n\n这里还有成本 0、输出不变的 idle 自环。无界搜索仍能终止；它不会因为“再等一次不花钱”无穷展开同一状态对。设置总成本上限 1/2 时则保留未区分结果，不能从预算不足推出两种错误相同。"
+        },
+        {
+          "title": "为什么最短性结论有范围",
+          "text": "两个状态同步执行相同动作，可以看成 product graph 中的一对状态。只要每步输出相同，搜索继续沿转移走；一旦不同，就得到一个区分见证。成本为非负有理数，因此采用 Dijkstra 按累计成本取出候选；成本相同再按步数和动作词字典序固定输出。\n\n有一个实现上重要的细节：不能在“首次生成一条不同输出的边”时立即返回。昂贵直接 probe 很早就能生成，但尚未展开的廉价两步路径可能更好。区分边也必须进入有序 frontier，等它真正成为最低成本候选时再返回。\n\n无步数界时，每个状态对保留最优到达即可；相同状态对的后续动作能力相同，更贵的前缀不会使同一后缀更便宜。成本 0 的循环也可删除，平成本时更短的前缀优先。有限状态对穷尽后没有区分，才报告“声明模型内不可分”。\n\n有步数界时，状态键必须加入已用步数。较便宜但较长的前缀，可能耗光剩余步数；不能删掉贵而短、仍能完成区分的另一前缀。本研究专门加入这个反例。无界最优、界内最优、界内未找到、模型内不可分，都分别记录在结果中。\n\n这些论证不适用于未声明的随机转移、负成本、无限状态或隐藏访问。最便宜的动作词也不保证是现实中最可行、最有解释力的科学实验；本研究只求两个已知候选的共同 open-loop 区分词，没有求多假设 adaptive 策略。"
+        },
+        {
+          "title": "实际验算怎样约束这份结果",
+          "text": "runner 为全部 70 个 pair 另做长度不超过 5 的动作词穷举。这个朴素方法不调用优化搜索的 heap、frontier 或剪枝，独立计算每个词的成本与两侧输出，再比较界内最低结果。\n\n测试进一步穷尽二状态、二动作的全部 256 种确定性 next-state/output 配置，检查有零成本和非整数成本时的搜索与朴素方法一致；另检查最小全交、五项访问门槛、目标隔离、handle 重命名、枚举顺序、删动作、移动问题及真正等价控制。21 项检查通过。它们会拒绝本实现若干具体错误，不是用测试数量证明一般科学有效性。\n\n协议在第一次运行前写下竞争预测：当前答案或总分已经足以分开目标，还是需要允许行动？构造结果支持后者在若干模型中成立；禁止关键动作及真正等价控制又阻止我们把“再多做点什么”当万能答案。材料与方法共同设计，没有盲测试、held-out 泛化或总体发生率估计。"
+        },
+        {
+          "title": "对 AMS 的意义及下一问",
+          "text": "[AMS 的研究纲领](../programme/thesis.md)关心过去怎样通过状态参与现在。这项研究给它增加一种可检查的提问方式：现在的记录排除了哪些解释，哪些仍在同一观察类里；下一步需要补充什么允许观察？它并不把所有研究都收缩成状态搜索。概念分析仍可以改变目标构念，源码审查可以发现动作语义不成立，数学推导可以说明一种区分根本不可能。\n\n先前充分性研究问“当前信息是否允许共同答案”，这里问“允许行动能否产生新区别”。后续真实研究还需问动作能否实现、观察是否改变对象、消费者有没有使用信息、所得依赖是否有益。知道合成机制中的 target，不等于知道语言模型的内部状态。\n\n当前交付的是独立科学方法、保存结果、CLI、portable 数据与本文。Lab 界面、统一运行注册、把见证带回私人案头形成问题和下一设计，属于下一代环境的集成工作；这些尚未接入不能被写成已经完成的用户体验。下一项有价值的检验，是把真实研究保存的轨迹投影成明确观察合同，先找出它确实没有记录的区别，再判断需要重分析、改仪器还是新执行，而不是先要求更多指标。"
+        }
+      ],
+      "ast": {
+        "anchors": [
+          {
+            "id": "section-1",
+            "label": "观察相同以后，还能怎样把机制分开？",
+            "level": 1
+          },
+          {
+            "id": "section-2",
+            "label": "先决定我们看到了什么",
+            "level": 2
+          },
+          {
+            "id": "section-3",
+            "label": "碰撞见证和区分行动是两种产物",
+            "level": 2
+          },
+          {
+            "id": "section-4",
+            "label": "第一家族：未来任务、侧信息与源重访",
+            "level": 2
+          },
+          {
+            "id": "section-5",
+            "label": "第二家族：答案相同，但支持路径不同",
+            "level": 2
+          },
+          {
+            "id": "section-6",
+            "label": "第三家族：同分数、不同错误与变成本",
+            "level": 2
+          },
+          {
+            "id": "section-7",
+            "label": "为什么最短性结论有范围",
+            "level": 2
+          },
+          {
+            "id": "section-8",
+            "label": "实际验算怎样约束这份结果",
+            "level": 2
+          },
+          {
+            "id": "section-9",
+            "label": "对 AMS 的意义及下一问",
+            "level": 2
+          }
+        ],
+        "references": [
+          {
+            "kind": "entry",
+            "id": "future-questions-and-memory",
+            "anchor": "",
+            "heading": "section-1"
+          },
+          {
+            "kind": "entry",
+            "id": "ams-thesis",
+            "anchor": "",
+            "heading": "section-9"
+          }
+        ]
+      }
     }
   ],
   "questions": [
@@ -7331,7 +8251,9 @@
           "forms-of-experience",
           "retrieval-and-relevance",
           "representation-and-use",
-          "future-questions-and-memory"
+          "future-questions-and-memory",
+          "distinguishability-and-observation",
+          "conditional-information-and-use"
         ],
         "materialIds": [
           "a-tma-state-aware-memory",
@@ -7384,7 +8306,9 @@
           "records-representations-systems",
           "representation-and-use",
           "who-controls-memory",
-          "future-questions-and-memory"
+          "future-questions-and-memory",
+          "distinguishability-and-observation",
+          "conditional-information-and-use"
         ],
         "materialIds": [
           "coala-cognitive-architecture",
@@ -7448,7 +8372,9 @@
           "how-we-study",
           "retrieval-and-relevance",
           "change-and-continuity",
-          "future-questions-and-memory"
+          "future-questions-and-memory",
+          "distinguishability-and-observation",
+          "conditional-information-and-use"
         ],
         "materialIds": [
           "longmemeval-v2-experienced-colleague",
@@ -7473,7 +8399,9 @@
           "records-representations-systems",
           "representation-and-use",
           "what-an-index-learns",
-          "future-questions-and-memory"
+          "future-questions-and-memory",
+          "distinguishability-and-observation",
+          "conditional-information-and-use"
         ],
         "materialIds": [
           "a-tma-state-aware-memory",
@@ -7514,7 +8442,9 @@
           "after-a-correction",
           "experience-becomes-policy",
           "what-an-index-learns",
-          "future-questions-and-memory"
+          "future-questions-and-memory",
+          "distinguishability-and-observation",
+          "conditional-information-and-use"
         ],
         "materialIds": [
           "truth-maintenance-system",
@@ -7549,6 +8479,18 @@
       }
     ],
     "changes": [
+      {
+        "date": "2026-10-29",
+        "title": "把已有材料带回新信息的价值问题",
+        "text": "用原创有限任务与真实本地检索，对照互补、重复、预算和消费者输入；provider 尚未执行。",
+        "studyId": "conditional-information-and-use"
+      },
+      {
+        "date": "2026-10-29",
+        "title": "观察相同之后，选择可区分的行动",
+        "text": "有限允许动作下比较碰撞、全局答案交集和最短区分序列；保留界内未找到与模型内不可分的区别。",
+        "studyId": "distinguishability-and-observation"
+      },
       {
         "date": "2026-10-26",
         "title": "预测出错以后，怎样仍然查对",

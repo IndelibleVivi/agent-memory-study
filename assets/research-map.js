@@ -20,7 +20,40 @@
     });
   }
 
-  function referenceGraph(data = {}) {
+  function sourceData(data = {}) {
+    if (data?.schema === "ams-public-corpus-manifest/1") {
+      const manifestFamilies = {
+        material: "materials", study: "studies",
+        question: "questions", finding: "findings",
+      };
+      const rows = Object.fromEntries(
+        Object.values(manifestFamilies).map(name => [name, []]),
+      );
+      for (const object of list(data.objects)) {
+        rows[manifestFamilies[object.public_kind]].push({
+          id: object.public_id, title: object.public_id, intro: "",
+          domains: [], _manifestObject: object,
+        });
+      }
+      return {
+        ...rows, room: data.room || {domains: []},
+        references: data.graphs?.references || [],
+        navigation: data.graphs?.navigation_memberships || [],
+      };
+    }
+    return data;
+  }
+
+  function referenceGraph(rawData = {}) {
+    const data = sourceData(rawData);
+    if (data.references) {
+      const nodes = Object.entries(families).flatMap(([kind, family]) =>
+        list(data[family]).map(item => ({
+          key: `${kind}/${item.id}`, kind, id: item.id, title: item.title,
+          item, domainIds: [], primaryDomain: null, summary: item.intro || "",
+        })));
+      return {nodes, references: data.references.map(reference => ({...reference}))};
+    }
     const domains = domainList(data?.room?.domains);
     const nodes = Object.entries(families).flatMap(([kind, family]) =>
       list(data?.[family]).map(item => {
@@ -55,17 +88,16 @@
       }
       list(item.readings).forEach((reading, position) =>
         connect(node, "material", reading?.materialId, "reading", `readings[${position}].materialId`));
-      // The compiler emits double-quoted, query-relative anchors for known routes.
-      // Do not scan prose, external URLs, tags, or shared domain membership for edges.
-      const html = typeof item.bodyHtml === "string" ? item.bodyHtml : "";
-      let anchorIndex = 0;
-      for (const match of html.matchAll(/<a\b[^>]*?\shref="(\?[^\"]*)"[^>]*>/g)) {
-        const locator = `bodyHtml[${anchorIndex++}]`;
-        const query = new URLSearchParams(match[1].slice(1).split("#", 1)[0].replaceAll("&amp;", "&"));
-        for (const kind of Object.keys(families)) {
-          if (query.has(kind)) connect(node, kind, query.get(kind), "body-link", locator);
-        }
-      }
+      // The compiler emits direct Markdown references beside rendered HTML.
+      // Never mine HTML here: presentation and relation extraction stay separate.
+      list(item.ast?.references).forEach((reference, position) => {
+        const targetKind = reference?.kind === "entry" ? "study"
+          : reference?.kind === "source_note" ? "material"
+          : reference?.kind === "thread" ? "question"
+          : reference?.kind === "claim_revision" ? "finding" : reference?.kind;
+        connect(node, targetKind, reference?.id, "body-link",
+          `ast.references[${position}]`);
+      });
     });
     return {nodes, references};
   }

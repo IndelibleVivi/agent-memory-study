@@ -166,6 +166,14 @@
   }
 
   function markdown(bundle) {
+    if (bundle?.schema === "ams-study-packet/2") {
+      const original = bundle;
+      const canonical = normalizeKind(original.kind);
+      bundle = {...original, schema: SCHEMA, kind: canonical, url: publicUrl(canonical,original.id),
+        contentVersion: original.entity_refs.map(ref => ref.revision).join(" · "),
+        attribution: canonical === "source" ? {sourceAuthors:original.attribution.source_authors,noteByline:original.attribution.note_byline} : original.attribution,
+        manifestPolicy: {scope: original.manifest_policy,contract: original.contract_version,compiler:original.compiler_version}};
+    }
     if (!bundle || bundle.schema !== SCHEMA) throw new Error(`Unsupported packet schema: ${bundle?.schema}`);
     const lines = [
       `# ${bundle.title}`, "",
@@ -190,7 +198,7 @@
       lines.push(prose, "", "## 来源、范围与接续", "");
     } else lines.push("## Current content", "");
     for (const [key, value] of Object.entries(content)) {
-      if (["bodyMarkdown", "bodyHtml", "sections", "id", "title"].includes(key)) continue;
+      if (["bodyMarkdown", "bodyHtml", "sections", "ast", "id", "title"].includes(key)) continue;
       markdownLines(value, key, lines);
     }
     lines.push("", "## Referenced objects", "");
@@ -214,7 +222,7 @@
       policy: "Only the selected current public objects. No private workspace text, recursive full texts or inferred relationships. Content dates are not immutable revisions."};
   }
   function collectionMarkdown(bundle) {
-    if (!bundle || bundle.schema !== "ams-study-collection/1") throw new Error("Unsupported study collection.");
+    if (!bundle || !["ams-study-collection/1","ams-study-collection/2"].includes(bundle.schema)) throw new Error("Unsupported study collection.");
     return [`# ${bundle.title}`, "", bundle.policy, "", ...bundle.objects.map(item => markdown(item))].join("\n");
   }
   return {SCHEMA, SITE, kind: normalizeKind, packet, markdown, publicUrl, collection, collectionMarkdown};

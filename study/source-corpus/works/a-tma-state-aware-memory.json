@@ -1,0 +1,58 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:a-tma-state-aware-memory",
+  "revision": "rev:work-sha256:01b4dafafbe058dd2",
+  "state_revision": "rev:work-sha256:01b4dafafbe058dd2",
+  "title": "A-TMA: Decoupling state-aware memory failures in long-term agent memory",
+  "work_type": "paper",
+  "authors": [
+    "Zitong Shi",
+    "Yixuan Tang",
+    "Anthony Kum Hoe Tung"
+  ],
+  "year": 2026,
+  "short_author": "Shi 等",
+  "identifiers": [
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2607.01935",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2607.01935",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://arxiv.org/pdf/2607.01935v2",
+      "delivery": "official-link",
+      "original_locator": "https://arxiv.org/pdf/2607.01935v2",
+      "access_note": "arXiv v2 preprint"
+    }
+  ],
+  "aliases": [
+    "a-tma-state-aware-memory"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "e363a76e360e0a46aaa91dc5721486dd1ad7aedafa40ab0b3f03ee2bb9b2b8d3",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

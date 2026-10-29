@@ -1,0 +1,60 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:mosaic-long-term-memory",
+  "revision": "rev:work-sha256:56a908bcc1267e449",
+  "state_revision": "rev:work-sha256:56a908bcc1267e449",
+  "title": "Accurate and efficient long-term memory for LLM agents",
+  "work_type": "paper",
+  "authors": [
+    "Zicheng Zhao",
+    "Xinyang Guo",
+    "Luyao Lv",
+    "Menghan Wang",
+    "Ming Li",
+    "Shuaicheng Li"
+  ],
+  "year": 2026,
+  "short_author": "Zhao 等",
+  "identifiers": [
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2607.16211",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2607.16211",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://arxiv.org/pdf/2607.16211v1",
+      "delivery": "official-link",
+      "original_locator": "https://arxiv.org/pdf/2607.16211v1"
+    }
+  ],
+  "aliases": [
+    "mosaic-long-term-memory"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "9cdf6fd4f945aaab823b69628be03b98c2482a26795db9ff28eb513ae4b429bc",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

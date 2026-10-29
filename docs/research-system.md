@@ -8,37 +8,36 @@ AMS 研究经验、信息与智能的跨时间关系。成熟形态是一间能�
 | --- | --- | --- |
 | 从概念进入研究 | 轻量 Markdown 文章、原创集合演算、领域与方向入口 | 解释是否充分、下一问是否值得问 |
 | 跨来源推敲 | 来源范围、双向显式引用、研究案头中的选材／对读／带版本摘录 | 相同术语是否指同一对象、材料支持什么 |
-| 保存与再进入 | 本地案头文件、单篇接续、章节与演算恢复、旧／新字段检查、有限撤销／重做 | 原笔记和摘录在新正文下是否仍然成立 |
+| 保存与再进入 | 公开模式的可携文件、明确启动的 SQLite 本地环境、固定依据与章节／演算恢复、有限撤销／重做 | 原笔记和摘录在新正文下是否仍然成立 |
 | 人机共同取用 | 同源单篇研究包、顺序选材包、CLI、静态 Markdown / JSON | 引用、解释、推论与执行指令的区别 |
 | 复核实证主张 | 各项 `research/` 的方法、runner、原始证据与 replay 边界 | 证据回答的对象、外推条件与独立性 |
-| 修订和发表 | 同源引用图的反向 impact、私人案头到 repo 外 draft、canonical compiler、共享 renderer 与交付检查 | 修改哪些论证、哪些私人文字可公开、署名与依据是否成立 |
+| 修订和发表 | 显式引用 impact、正式论证的范围检查、带 base 的 ChangeSet、逐 owner apply 与选择性发表 preview | 修改哪些论证、哪些私人文字可公开、署名与依据是否成立 |
 
 这些能力使 AMS 成为可用的研究系统；它仍不自动发现研究问题、判断材料的支持强度或评价人的掌握度。真实 FTS5 检索、结构化分类器学习、固定源码审计、模型缓存观察与 scripted controls 是不同的研究资产。保存的 receipt、离线重放与新的模型执行必须分别说明，不能因为页面统一而合并为一个效果结论。
 
 ## 状态与作者真源
 
+下图回答“谁拥有哪一份状态，私人工作怎样接回公开研究”；节点与箭头对应 compiler、React adapters、Repository、原生 job 与 publication 服务的实际边界。
+
 ```mermaid
-flowchart LR
-  S["study/ 公开正文与 metadata"] --> C["content.py / build.py"]
-  R["research/ 独立方法与 receipts"] --> C
-  C --> D["公开 projections"]
-  D --> G["ResearchMap 显式有向引用"]
-  G --> I["网页双向导航 / author.py impact"]
-  D --> V["app.js 同一正文 renderer"]
-  D --> P["study-packets.js 公开包"]
-  V --> W["study-desk.js 页面内案头"]
-  W --> F["用户主动保存的私人文件"]
-  F -->|"校验后显式打开"| W
-  F --> A["author.py：repo 外私人 draft"]
-  A -.->|"作者核对后手工采用"| S
-  W -->|"仅取已知公开身份"| P
-  P --> X["browser / CLI / 静态文件"]
-  V --> H["seo_build.py 静态阅读页面"]
+flowchart TB
+  S["study/ 公开作者真源"] --> C["content.py 编译"]
+  R["research/ 方法与历史 receipts"] --> C
+  C --> P["版本 shards 与公开研究包"]
+  P --> U["React 共享 reader"]
+  U --> H["Node prerender / 静态与 portable"]
+  U -->|"公开模式：页面内编辑"| F["主动下载的私人文件"]
+  U -->|"明确启动：同源 commands"| L["Python 本地服务"]
+  L --> D["SQLite 与不可变文件"]
+  L -->|"显式任务"| J["research 原生 runner"]
+  J -->|"原始证据留在本地"| D
+  D -->|"选定内容与依赖"| V["私有 publication preview / patch"]
+  V -.-> G["Git owner：另行采用到 study/；再构建与激活"]
 ```
 
-公开内容只有 `study/` 一份作者真源，研究结果继续由各自的 `research/` artifact 拥有。案头中的私人理解不自动回写前者，也不修改后者；公开选材包只从已选择身份重新投影当前公开内容。案头快照帮助检查保存后的字段变化，不认证作者、不证明笔记正确，也不把编辑日期变成不可变 revision。对象基准与摘录来源各自保留，确认当前正文不会改写既有摘录。
+`study/`、各项 `research/` 与私人仓储分别拥有公开解释、研究方法／证据和进行中的工作。公开索引在本地 DB 中只是固定版本 cache；私人理解不会自动回写 Git。默认 HTTP 服务只能产生有 base 的 preview / patch，应用、Git commit、站点激活是不同 receipt。
 
-同一条笔记在单篇接续与整组案头中共用页面内状态和操作历史。`ams-continuation/1` 保留既有单篇文件的读写；新文件使用 `ams-workspace/2`，仍读取并迁移 `ams-workspace/1`。协议兼容用于接住已经保存的文件，不保留第二套编辑实现。操作与文件限制见[案头使用说明](study-workspace.md)。
+新案头使用 `ams-workspace/3`：固定 revision、独立摘录依据和恢复所需的字节随文件保存；兼读已存在的 continuation v1、workspace v1/v2。没有可信旧版本的材料保持待核对，不能用日期代替内容身份。当前正文的选择不改写原摘录。`assets/study-desk.js` 只保留已有文件解析和原创演算消费者，当前多案头状态由 `apps/reader/src/desk-store.ts` 拥有。完整边界见[案头说明](study-workspace.md)和[本地环境](local-workspace.md)。
 
 `research-map.js` 维护唯一显式引用提取：星图把它投影为无向边，网页分开显示出处和引用者，作者 impact 沿反向引用给出最短检查路径。CLI 先编译当前 canonical，再调用这一实现；不会因为 generated projection 尚未重建而漏掉刚写入的正文链接。领域、方向和共享主题只作导航，不变成引用或依赖。
 
@@ -50,4 +49,4 @@ flowchart LR
 
 **实证连接沿自己的问题推进。** 候选检索、有限名额、实际送达与后续使用之间还有值得补齐的执行连接；真实自然语言消费者也不能从 scripted/oracle 控制中推断出来。这些研究从各自的 estimand、family lineage、预算和访问边界出发，按需接入已有能力。尚未出现第二个真实消费者时，不为了统一架构抽取跨研究框架；新的 provider、人类或私人材料研究需要各自的执行范围。
 
-**可靠性交付服务真实使用。** 保留 source file mode、旧 URL、无 JavaScript 正文、可携研究包和 GitHub Pages 发布面；新交互必须经历源码浏览器与实际静态产物验收。源码、commit、CI 与线上激活分别记录。系统的成熟度最终取决于研究能否持续开展、解释能否被重获和修订，而不是控件数量或通过的测试总数。
+**可靠性交付服务真实使用。** 保留 portable file reader、旧 URL、无 JavaScript 正文、可携研究包和 GitHub Pages 发布面；新交互必须经历公共产物、真实本地服务与重启恢复验收。源码、commit、CI 与线上激活分别记录。系统的成熟度最终取决于研究能否持续开展、解释能否被重获和修订，而不是控件数量或通过的测试总数。

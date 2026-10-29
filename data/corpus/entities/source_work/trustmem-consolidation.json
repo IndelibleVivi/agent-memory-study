@@ -1,0 +1,61 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:trustmem-consolidation",
+  "revision": "rev:work-sha256:6cb6cb2f463bf894e",
+  "state_revision": "rev:work-sha256:6cb6cb2f463bf894e",
+  "title": "TRUSTMEM: Learning trustworthy memory consolidation for LLM agents with long-term memory",
+  "work_type": "paper",
+  "authors": [
+    "Tianyu Yang",
+    "Sudipta Paul",
+    "Vijay Srinivasan",
+    "Vivek Kulkarni",
+    "Srinivas Chappidi"
+  ],
+  "year": 2026,
+  "short_author": "Yang 等",
+  "identifiers": [
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2606.25161v1",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2606.25161v1",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "papers/02-yang-2026-trustmem.pdf",
+      "delivery": "bundled",
+      "original_locator": "https://arxiv.org/pdf/2606.25161v1",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "aliases": [
+    "trustmem-consolidation"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "2d05dd35d45fd42489a5b3ddb119727c63064efd60f9974078d300602a4bea57",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

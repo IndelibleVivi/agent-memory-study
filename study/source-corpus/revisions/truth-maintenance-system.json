@@ -1,0 +1,29 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:truth-maintenance-system",
+  "revision": "rev:sha256:abb4561fdbe7c2e4c",
+  "state_revision": "rev:sha256:abb4561fdbe7c2e4c",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:truth-maintenance-system",
+    "revision": "rev:work-sha256:abb4561fdbe7c2e4c"
+  },
+  "identity": {
+    "mode": "observed-snapshot",
+    "observed_at": null,
+    "source_locator": "https://hdl.handle.net/1721.1/5733",
+    "observation_basis": "Legacy public locator does not prove a distinct publisher version; this is the reviewed source identity, not a stored byte snapshot.",
+    "publisher_version_known": false,
+    "snapshot_captured": false
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "e0c829b06292915cd842d8e501136ce93a9c164afd7fa4810cd2502a48fd1cc0",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

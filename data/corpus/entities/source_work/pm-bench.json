@@ -1,0 +1,58 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:pm-bench",
+  "revision": "rev:work-sha256:947a3754a55029925",
+  "state_revision": "rev:work-sha256:947a3754a55029925",
+  "title": "PM-bench: Evaluating prospective memory in LLM agents",
+  "work_type": "paper",
+  "authors": [
+    "Genglin Liu",
+    "Saadia Gabriel"
+  ],
+  "year": 2026,
+  "short_author": "Liu 等",
+  "identifiers": [
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2607.12385",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2607.12385",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "papers/06-liu-2026-pm-bench.pdf",
+      "delivery": "bundled",
+      "original_locator": "https://arxiv.org/pdf/2607.12385v1",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "aliases": [
+    "pm-bench"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "5de1c075b7c2ab25e85abcd667a84341f183411949c9e69193da47a1b65e5d7b",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

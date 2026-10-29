@@ -1,0 +1,15 @@
+{
+  "site": "https://indeliblevivi.github.io/agent-memory-study/",
+  "verification": "7VmMLWHwFBaFG7l2fMQyj7y3wFvLIC9Lmudl_CuoVHE",
+  "analytics": {
+    "source": "https://static.cloudflareinsights.com/beacon.min.js",
+    "token": "4e0929eca0504d43aca1cc1a1f30ffaf",
+    "host": "indeliblevivi.github.io"
+  },
+  "icons": [
+    "assets/icons/apple-touch-icon.png",
+    "assets/icons/favicon-48.png",
+    "assets/icons/favicon-32.png",
+    "assets/icons/favicon-16.png"
+  ]
+}

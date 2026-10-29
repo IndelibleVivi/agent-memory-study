@@ -19,7 +19,7 @@ python3 tools/author.py impact retrieval-and-relevance --kind study
 
 CLI 默认使用 PATH 中的 `node`；需要明确指定已安装的本地 runtime 时，可用 `AMS_NODE=/absolute/path/to/node`，该值必须是可执行文件。它不安装或启动远程服务。
 
-阅读后判断它补充基础、改变机制解释、提供反例、开启旁支、修正来源身份，还是暂不采用。只把实际选择过的内容编入研究体。新来源札记放 `study/sources/<id>.json`，沿现有 source 合同填写身份、范围和依据；短小外部阅读也可先放文章的 `externalReadings`，不自动增加 Zotero 书目。`failureSurfaces` 可为空，有关联时在 source 填写 ID，反向 `materialIds` 由 compiler 生成。
+阅读后判断它补充基础、改变机制解释、提供反例、开启旁支、修正来源身份，还是暂不采用。只把实际选择过的内容编入研究体。来源真源位于 `study/source-corpus/works/`、`revisions/`、`notes/`：作品身份、发布或观察 Revision 与 AMS 札记分别保存，不能用札记编辑日期产生论文新版。短小外部阅读也可先放文章的 `externalReadings`，不自动增加 Zotero 书目。`failure_surfaces` 可为空；有关联时在 source note 导航中填写 ID，反向 `materialIds` 由 compiler 生成。
 
 ## 从一篇轻量文章开始
 
@@ -60,7 +60,9 @@ python3 tools/author.py new-study a-question-about-retrieval \
 
 ## 从私人案头继续成文
 
-已经在案头整理的思考不必重新手工抄一遍：
+新 v3 案头在明确启动的本地环境中使用“整理成文、比较依据与修订”：先保存私人文稿，再生成带 base 的修订和选择性发表 preview。它不会自动改 Git，具体流程见[修订与发表](revision-publication.md)。
+
+已有 v1/v2 案头保留离线 draft helper，不必重新抄写：
 
 ```bash
 python3 tools/author.py draft-from-workspace \
@@ -89,4 +91,4 @@ node tools/export_study.cjs --kind study --id retrieval-and-relevance --format m
 
 `data/materials.json` 和 `assets/materials-data.js` 都由 `study/` 编译，stage 时一起检查；`tools/content.py --check` 和 `tools/build.py --check-drift` 只检查、不修复。新来源改变 Zotero inventory 时，按 [agent contract](../AGENTS.md) 用有 provenance 的 RDF source 同次生成；单纯更新文章无需写 Zotero。
 
-改变页面、路由、编译链接或新交互时，继续执行 [网站说明](website.md) 中的真实浏览器与静态构建检查。私人草稿、输入、接续文件不进入 Git。公开研究包保留编辑日期／edition、正文和显式 ID 引用；普通正文链接与外部引用仍在正文／metadata 中，日期并非不可变版本；精确追溯另保留 Git revision。
+改变页面、路由、编译链接或新交互时，继续执行 [网站说明](website.md) 中的真实浏览器与静态构建检查。私人草稿、输入、接续文件不进入 Git。公开研究包保留编辑日期／edition、正文和显式 ID 引用；普通正文链接与外部引用仍在正文／metadata 中，日期并非不可变版本；v2 JSON 包另带内容 revision，Git revision 记录仓库交付。

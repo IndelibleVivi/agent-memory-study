@@ -1,0 +1,64 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:proactive-wake-anchor",
+  "revision": "rev:work-sha256:e7c864e33ff0a2d4f",
+  "state_revision": "rev:work-sha256:e7c864e33ff0a2d4f",
+  "title": "Do proactive agents really need an LLM to decide when to wake and what to anchor?",
+  "work_type": "paper",
+  "authors": [
+    "Xiaoze Liu",
+    "Ruowang Zhang",
+    "Amir H. Abdi",
+    "Michel Galley",
+    "Zhikai Chen",
+    "Siheng Xiong",
+    "Xiaoqian Wang",
+    "Jing Gao"
+  ],
+  "year": 2026,
+  "short_author": "Liu 等",
+  "identifiers": [
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2605.30152",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2605.30152",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "papers/05-liu-2026-proactive-agents.pdf",
+      "delivery": "bundled",
+      "original_locator": "https://arxiv.org/pdf/2605.30152v1",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "aliases": [
+    "proactive-wake-anchor"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "9c014cfbee0a1490499e154a65185c060eaac78c06f60c69f9a9bebf257cb04a",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

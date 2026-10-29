@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:continual-learning-experience-reuse",
+  "revision": "rev:sha256:0c4ef3c7e30450a76",
+  "state_revision": "rev:sha256:0c4ef3c7e30450a76",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:continual-learning-experience-reuse",
+    "revision": "rev:work-sha256:0c4ef3c7e30450a76"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2604.27003v1",
+    "source_locator": "https://arxiv.org/pdf/2604.27003v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "8fe80c550f1a36be226e9f9ea76b37a19f4af1d72a3aaab641d49590b70f4db8",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

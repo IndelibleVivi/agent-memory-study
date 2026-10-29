@@ -1,0 +1,68 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:cache-to-cache",
+  "revision": "rev:work-sha256:5c57aefab5d081274",
+  "state_revision": "rev:work-sha256:5c57aefab5d081274",
+  "title": "Cache-to-Cache: Direct Semantic Communication Between Large Language Models",
+  "work_type": "paper",
+  "authors": [
+    "Tianyu Fu",
+    "Zihan Min",
+    "Hanling Zhang",
+    "Jichao Yan",
+    "Guohao Dai",
+    "Wanli Ouyang",
+    "Yu Wang"
+  ],
+  "year": 2026,
+  "short_author": null,
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.48550/arXiv.2510.03215",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2510.03215v2",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2510.03215v2",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://arxiv.org/pdf/2510.03215v2",
+      "delivery": "official-link",
+      "original_locator": "https://arxiv.org/pdf/2510.03215v2",
+      "access_note": "arXiv v2 official PDF；arXiv non-exclusive license，本站不重新分发。"
+    }
+  ],
+  "aliases": [
+    "cache-to-cache"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "92831c61ba3b6ad5fc6a1bc9c5aab76e913d1720ed45a58af47e6e9551627e0b",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:trustmem-consolidation",
+  "revision": "rev:sha256:6cb6cb2f463bf894e",
+  "state_revision": "rev:sha256:6cb6cb2f463bf894e",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:trustmem-consolidation",
+    "revision": "rev:work-sha256:6cb6cb2f463bf894e"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2606.25161v1",
+    "source_locator": "https://arxiv.org/pdf/2606.25161v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "da62b41b9e877f9991be2422470bd12a731608a6e8707bc197e05b1b59a7d437",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

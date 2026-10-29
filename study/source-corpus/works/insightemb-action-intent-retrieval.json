@@ -1,0 +1,66 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:insightemb-action-intent-retrieval",
+  "revision": "rev:work-sha256:f458c5b374038ed21",
+  "state_revision": "rev:work-sha256:f458c5b374038ed21",
+  "title": "InsightEmb: Learning Action-Intent Embeddings for Agentic Insight Retrieval",
+  "work_type": "paper",
+  "authors": [
+    "Tsz Ting Chung",
+    "Jiangnan Li",
+    "Jie Zhou",
+    "Mo Yu"
+  ],
+  "year": 2026,
+  "short_author": "Chung 等",
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.48550/arXiv.2608.04761",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2608.04761v2",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2608.04761v2",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "papers/16-chung-2026-insightemb.pdf",
+      "delivery": "bundled",
+      "original_locator": "https://arxiv.org/pdf/2608.04761v2",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "aliases": [
+    "insightemb-action-intent-retrieval"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "a513a9913461626371afe96de5c2977f88bd0949abf0dec30187954f1b80ac11",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

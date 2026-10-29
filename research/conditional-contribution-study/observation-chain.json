@@ -1,0 +1,311 @@
+{
+  "schema": "ams-conditional-research-chain/1",
+  "status": "exploratory-local-control",
+  "sources": {
+    "corpus.json": "c11bcf98113d4836ed5f3c73fbdc60aa66755961b8102b8b4a5ed8830ab9a851",
+    "native-retriever": "e2581c126e2b92c2d6fb31a710ca50031ee7cec8c2a8c0797873802a8dbba3b8",
+    "protocol.md": "18202338b9f6a58d004548c1df0bbeffa5e3cfb3cbd02ae91bdfd8200db97e16",
+    "provider.py": "15c6b8ddf991f692c2d6077c8bd39ce8cfce59c07e0786469d6100d160d2f9c0",
+    "study.py": "2742ef14cbdfc9a2da8427b20519fb6eb3826cef3b914e7468913c9892ed02ff"
+  },
+  "empirical_sample_count": 0,
+  "observation": {
+    "id": "p9-xor-delivery-loss",
+    "job": {
+      "arm": "BS",
+      "backend": "scripted",
+      "case": "xor-01",
+      "family": "complement",
+      "id": "750f9735a4197f14d590cbd3",
+      "mode": "equal",
+      "policy": "top-k",
+      "representation": "raw",
+      "split": "development"
+    },
+    "raw_ref": {
+      "path": "attempts/750f9735a4197f14d590cbd3/0001/receipt.json",
+      "content_digest": "7eb8d5a914e3cca78a4d1dde16fdb7914829fdcdda56356e7418b253ebe3af52"
+    },
+    "actual_request": {
+      "backend": "scripted",
+      "generation": {
+        "deterministic": true,
+        "network": false
+      },
+      "messages": [
+        {
+          "content": "Use only the supplied JSONL memory. Return JSON {\"action\":\"answer|abstain\",\"value\":\"string\",\"citations\":[\"record id\"]}. Do not use external knowledge. Missing required evidence permits abstain with value insufficient.",
+          "role": "system"
+        },
+        {
+          "content": "{\"memory\":\"{\\\"id\\\":\\\"b\\\",\\\"key\\\":\\\"signal\\\",\\\"value\\\":{\\\"kind\\\":\\\"bit\\\",\\\"name\\\":\\\"x\\\",\\\"prose\\\":\\\"Original synthetic research material; no private source.\\\",\\\"value\\\":\\\"0\\\"}}\\n{\\\"id\\\":\\\"s\\\",\\\"key\\\":\\\"signal\\\",\\\"value\\\":{\\\"kind\\\":\\\"bit\\\",\\\"name\\\":\\\"y\\\",\\\"pr\",\"question\":{\"kind\":\"xor\",\"query\":\"signal\",\"text\":\"Return XOR of explicitly supplied x and y, or abstain if either is missing.\"}}",
+          "role": "user"
+        }
+      ],
+      "schema": "ams-conditional-request/1",
+      "tokenizer": {
+        "id": "utf8-bytes/1",
+        "provider_tokens": false
+      }
+    },
+    "raw_response": "{\"action\":\"abstain\",\"citations\":[],\"value\":\"insufficient\"}",
+    "score": {
+      "citations_valid": true,
+      "response_status": "abstain",
+      "scorer": "conditional-exact-world/1",
+      "task_correct": false,
+      "unsupported_answer": false,
+      "used": "unknown"
+    },
+    "audit": {
+      "candidate_pool": [
+        {
+          "content_digest": "0666d12dde49797d15010110394899cfad4cabc3f0c590c32bcbb3f2d53cf6bf",
+          "id": "b",
+          "key": "signal"
+        },
+        {
+          "content_digest": "31a4958f43da15ac3944d32e24ff4da10bf37db03c99042f97a4ee35cbf6107a",
+          "id": "s",
+          "key": "signal"
+        }
+      ],
+      "complete_record_ids": [
+        "b"
+      ],
+      "delivered_memory_bytes": 200,
+      "delivery_digest": "3f6bb1795078f07ccc9df1895f9d4df91db8c8633460c0a4c061a3894e7ccf5d",
+      "memory_budget_bytes": 200,
+      "planned_memory_bytes": 278,
+      "ranking": [
+        {
+          "id": "b",
+          "rank": 1,
+          "score": -1e-06
+        },
+        {
+          "id": "s",
+          "rank": 2,
+          "score": -1e-06
+        }
+      ],
+      "request_bytes": 967,
+      "selected_ids": [
+        "b",
+        "s"
+      ],
+      "selection_policy": "top-k",
+      "top_k": 3,
+      "truncated": true,
+      "used": "unknown",
+      "writer": {
+        "id": "field-preserving-raw/1",
+        "input_digest": "cc74cd91b4031a652a55112debdc93a177dee8fe1852bb2e27800a8185e2487e",
+        "output_digest": "a7fdb05c3209c0e7f76908749088599b5032dbc9e16a64f5c3fca32b1659b760"
+      }
+    },
+    "statement": "两条候选均被选中，raw的第二条未完整送达；实际消费者暂缓。"
+  },
+  "competing_explanations": [
+    {
+      "id": "representation-loss",
+      "prediction": "若writer删除y，完整raw也不能回答。",
+      "status": "limited-by-full-delivery-control"
+    },
+    {
+      "id": "delivery-loss",
+      "prediction": "相同语义字段完整到场后scripted应能回答；200-byte raw留下不完整第二条。",
+      "status": "supported-in-this-constructed-control"
+    },
+    {
+      "id": "consumer-failure",
+      "prediction": "足够上下文仍可能失败；需要实际足够送达再判断。",
+      "status": "not-detected-in-matched-compact-scripted-control"
+    }
+  ],
+  "comparison": {
+    "raw": {
+      "audit": {
+        "candidate_pool": [
+          {
+            "content_digest": "0666d12dde49797d15010110394899cfad4cabc3f0c590c32bcbb3f2d53cf6bf",
+            "id": "b",
+            "key": "signal"
+          },
+          {
+            "content_digest": "31a4958f43da15ac3944d32e24ff4da10bf37db03c99042f97a4ee35cbf6107a",
+            "id": "s",
+            "key": "signal"
+          }
+        ],
+        "complete_record_ids": [
+          "b"
+        ],
+        "delivered_memory_bytes": 200,
+        "delivery_digest": "3f6bb1795078f07ccc9df1895f9d4df91db8c8633460c0a4c061a3894e7ccf5d",
+        "memory_budget_bytes": 200,
+        "planned_memory_bytes": 278,
+        "ranking": [
+          {
+            "id": "b",
+            "rank": 1,
+            "score": -1e-06
+          },
+          {
+            "id": "s",
+            "rank": 2,
+            "score": -1e-06
+          }
+        ],
+        "request_bytes": 967,
+        "selected_ids": [
+          "b",
+          "s"
+        ],
+        "selection_policy": "top-k",
+        "top_k": 3,
+        "truncated": true,
+        "used": "unknown",
+        "writer": {
+          "id": "field-preserving-raw/1",
+          "input_digest": "cc74cd91b4031a652a55112debdc93a177dee8fe1852bb2e27800a8185e2487e",
+          "output_digest": "a7fdb05c3209c0e7f76908749088599b5032dbc9e16a64f5c3fca32b1659b760"
+        }
+      },
+      "job": {
+        "arm": "BS",
+        "backend": "scripted",
+        "case": "xor-01",
+        "family": "complement",
+        "id": "750f9735a4197f14d590cbd3",
+        "mode": "equal",
+        "policy": "top-k",
+        "representation": "raw",
+        "split": "development"
+      },
+      "response": {
+        "action": "abstain",
+        "citations": [],
+        "value": "insufficient"
+      },
+      "score": {
+        "citations_valid": true,
+        "response_status": "abstain",
+        "scorer": "conditional-exact-world/1",
+        "task_correct": false,
+        "unsupported_answer": false,
+        "used": "unknown"
+      },
+      "status": "successful"
+    },
+    "compact": {
+      "audit": {
+        "candidate_pool": [
+          {
+            "content_digest": "8b54c3c88ceead4e54f0504325a20b65e1eb30c891c3dbf14a9b195998ef9528",
+            "id": "b",
+            "key": "signal"
+          },
+          {
+            "content_digest": "1e2d94c0f12703e726924e411ca6acf856a0138f465456d433366b4c39a169b6",
+            "id": "s",
+            "key": "signal"
+          }
+        ],
+        "complete_record_ids": [
+          "b",
+          "s"
+        ],
+        "delivered_memory_bytes": 144,
+        "delivery_digest": "94397a42604892ca35df42ea680221f26e046a160d2e0e2c89a67a0369e67627",
+        "memory_budget_bytes": 200,
+        "planned_memory_bytes": 144,
+        "ranking": [
+          {
+            "id": "b",
+            "rank": 1,
+            "score": -1e-06
+          },
+          {
+            "id": "s",
+            "rank": 2,
+            "score": -1e-06
+          }
+        ],
+        "request_bytes": 910,
+        "selected_ids": [
+          "b",
+          "s"
+        ],
+        "selection_policy": "top-k",
+        "top_k": 3,
+        "truncated": false,
+        "used": "unknown",
+        "writer": {
+          "id": "field-preserving-compact/1",
+          "input_digest": "cc74cd91b4031a652a55112debdc93a177dee8fe1852bb2e27800a8185e2487e",
+          "output_digest": "b80b9a578595d0087629cc80040857d526260e79cccd359a016afdcd185b47cc"
+        }
+      },
+      "job": {
+        "arm": "BS",
+        "backend": "scripted",
+        "case": "xor-01",
+        "family": "complement",
+        "id": "789eb31c0711f149fb9e9876",
+        "mode": "equal",
+        "policy": "top-k",
+        "representation": "compact",
+        "split": "development"
+      },
+      "response": {
+        "action": "answer",
+        "citations": [
+          "b",
+          "s"
+        ],
+        "value": "1"
+      },
+      "score": {
+        "citations_valid": true,
+        "response_status": "answer",
+        "scorer": "conditional-exact-world/1",
+        "task_correct": true,
+        "unsupported_answer": false,
+        "used": "unknown"
+      },
+      "status": "successful"
+    }
+  },
+  "next_design": {
+    "id": "p9-length-padding-crossing",
+    "status": "proposed-not-run",
+    "question": "只改变无关prose长度、保持必要字段与消费者，送达阈值何时跨越第二条记录？",
+    "fixed": [
+      "same world/query",
+      "top-k order",
+      "scripted consumer",
+      "field values"
+    ],
+    "intervention": {
+      "padding_bytes": [
+        0,
+        32,
+        64,
+        96
+      ],
+      "memory_budget_bytes": [
+        160,
+        200,
+        240,
+        280
+      ]
+    },
+    "predictions": [
+      "full delivery should be invariant to prose padding",
+      "fixed-byte effects should track complete-record threshold"
+    ],
+    "limits": "新增设计尚未执行；真实模型另需获准的provider计划。"
+  },
+  "article_ref": "../../study/entries/conditional-information-and-use.md"
+}

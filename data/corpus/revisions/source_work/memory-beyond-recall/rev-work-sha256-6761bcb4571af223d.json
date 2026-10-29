@@ -1,0 +1,64 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:memory-beyond-recall",
+  "revision": "rev:work-sha256:6761bcb4571af223d",
+  "state_revision": "rev:work-sha256:6761bcb4571af223d",
+  "title": "Memory beyond recall: a dual-process cognitive memory system for self-evolving LLM agents",
+  "work_type": "paper",
+  "authors": [
+    "Tianxiang Fei",
+    "Mingyang Song",
+    "Mao Zheng",
+    "Xiang Yu"
+  ],
+  "year": 2026,
+  "short_author": "Fei 等",
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.48550/arXiv.2606.09483",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2606.09483",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2606.09483",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://arxiv.org/pdf/2606.09483v1",
+      "delivery": "official-link",
+      "original_locator": "https://arxiv.org/pdf/2606.09483v1"
+    }
+  ],
+  "aliases": [
+    "memory-beyond-recall"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "3bdfa4a74df8feff332235c8b1e3a5d88b183055a68493bf5a78420e6df16db9",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

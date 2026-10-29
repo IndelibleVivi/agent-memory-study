@@ -1,0 +1,64 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:pain-axis",
+  "revision": "rev:work-sha256:696f4b975d571611e",
+  "state_revision": "rev:work-sha256:696f4b975d571611e",
+  "title": "The Pain Axis: LLMs Represent Self-Directed Harm and Act to Relieve It",
+  "work_type": "paper",
+  "authors": [
+    "Valen Tagliabue",
+    "Leonard Dung",
+    "Cameron Berg"
+  ],
+  "year": 2026,
+  "short_author": null,
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.48550/arXiv.2609.16247",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2609.16247v1",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2609.16247v1",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://arxiv.org/pdf/2609.16247v1",
+      "delivery": "official-link",
+      "original_locator": "https://arxiv.org/pdf/2609.16247v1",
+      "access_note": "arXiv v1 official PDF（CC BY 4.0）；本站不重新分发。"
+    }
+  ],
+  "aliases": [
+    "pain-axis"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "e0b5c8a4a7ad5fa4c4e09decd9d64c9b0468937c4ab01462ce1600ab36788d1e",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

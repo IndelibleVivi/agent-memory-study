@@ -48,7 +48,7 @@ def fresh_fixture() -> dict:
 
 class AuthorIntakeTests(unittest.TestCase):
     def test_exact_doi_and_url_recognize_existing_source(self):
-        data = author.family(author.SOURCES)
+        data = author.source_records()
         source = data[0]
         first = author.inspect(source["sourceUrl"])
         self.assertEqual(first["matchStatus"], "exact")
@@ -66,7 +66,7 @@ class AuthorIntakeTests(unittest.TestCase):
         self.assertNotEqual(key, "arxiv:2502.01736")
 
     def test_title_match_is_conservative(self):
-        source = author.family(author.SOURCES)[0]
+        source = author.source_records()[0]
         result = author.inspect(source["title"])
         self.assertIn(result["matchStatus"], {"exact", "title-match"})
         self.assertFalse(result["note"].startswith("Input was not recognized"))
@@ -79,7 +79,7 @@ class AuthorIntakeTests(unittest.TestCase):
         self.assertIn("not recognized", result["note"])
 
     def test_version_identifier_is_distinguished_from_same_source(self):
-        source = author.family(author.SOURCES)[0]
+        source = author.source_records()[0]
         if "arxiv.org/abs/" not in source.get("sourceUrl", ""):
             self.skipTest("fixture requires an arXiv source")
         base = source["sourceUrl"].removesuffix("v1").removesuffix("v2").removesuffix("v3")
@@ -88,7 +88,7 @@ class AuthorIntakeTests(unittest.TestCase):
         self.assertTrue(result["versionCandidates"])
 
     def test_impact_lists_explicit_dependencies_and_map_navigation_separately(self):
-        source = author.family(author.SOURCES)[0]
+        source = author.source_records()[0]
         result = author.impact(source["id"])
         self.assertEqual(result["sourceId"], source["id"])
         for field in ("entries", "inquiries", "transfers", "mapDomains", "mapDirections"):
@@ -149,7 +149,7 @@ class ImpactAndBridgeTests(unittest.TestCase):
         payload['questions'][0]['continuation'] = {'materialIds':['source-a']}
         payload['findings'].append({'id':'indirect', 'title':'Indirect', 'questionIds':['question-a']})
         with mock.patch.object(author, "fresh_data", return_value=payload) as compile_data, \
-             mock.patch.object(author, "family", return_value=payload['materials']):
+             mock.patch.object(author, "source_records", return_value=payload['materials']):
             output = author.impact('source-a')
         compile_data.assert_called_once()
         self.assertEqual(output["sourceId"], 'source-a')

@@ -1,0 +1,29 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:mistake-notebook-learning",
+  "revision": "rev:sha256:7432aa554ec28430c",
+  "state_revision": "rev:sha256:7432aa554ec28430c",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:mistake-notebook-learning",
+    "revision": "rev:work-sha256:7432aa554ec28430c"
+  },
+  "identity": {
+    "mode": "observed-snapshot",
+    "observed_at": null,
+    "source_locator": "https://aclanthology.org/2026.findings-acl.719.pdf",
+    "observation_basis": "Legacy public locator does not prove a distinct publisher version; this is the reviewed source identity, not a stored byte snapshot.",
+    "publisher_version_known": false,
+    "snapshot_captured": false
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "3df3c56612dcd3fca0577b2d8f1340174f4356b8f16ebcbd44654f932c393e93",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

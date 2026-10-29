@@ -1,0 +1,217 @@
+{
+  "schema": "ams-study-packet/2",
+  "contract_version": "ams-core/2",
+  "compiler_version": "ams-content-compiler/2",
+  "kind": "material",
+  "id": "a-tma-state-aware-memory",
+  "title": "A-TMA: Decoupling state-aware memory failures in long-term agent memory",
+  "entity_refs": [
+    {
+      "kind": "source_work",
+      "id": "work:a-tma-state-aware-memory",
+      "revision": "rev:work-sha256:01b4dafafbe058dd2"
+    },
+    {
+      "kind": "source_revision",
+      "id": "work:a-tma-state-aware-memory",
+      "revision": "rev:sha256:01b4dafafbe058dd2"
+    },
+    {
+      "kind": "source_note",
+      "id": "note:a-tma-state-aware-memory",
+      "revision": "rev:note-sha256:01b4dafafbe058dd2"
+    }
+  ],
+  "attribution": {
+    "source_authors": [
+      "Zitong Shi",
+      "Yixuan Tang",
+      "Anthony Kum Hoe Tung"
+    ],
+    "note_byline": "Agent Memory Study editors",
+    "source_revision_mode": "observed-snapshot",
+    "note_depth": "read",
+    "reading_scope": "arXiv v2（2026-07-08）§1–§6、Appendix A.1–A.11、Tables 1–5、Figures 1–3 与 Algorithm 1；references 只用于 lineage 定位，未逐篇 close-read；未复现代码或数据。"
+  },
+  "content": {
+    "id": "a-tma-state-aware-memory",
+    "title": "A-TMA: Decoupling state-aware memory failures in long-term agent memory",
+    "authors": [
+      "Zitong Shi",
+      "Yixuan Tang",
+      "Anthony Kum Hoe Tung"
+    ],
+    "shortAuthor": "Shi 等",
+    "year": 2026,
+    "noteDepth": "read",
+    "readingScope": "arXiv v2（2026-07-08）§1–§6、Appendix A.1–A.11、Tables 1–5、Figures 1–3 与 Algorithm 1；references 只用于 lineage 定位，未逐篇 close-read；未复现代码或数据。",
+    "intro": "A-TMA 把 ghost memory 重新定义为跨层的 state-coordination failure：旧值、现值与 transition evidence 可以同时正确地留在 bank，错误则可能发生在 bank role、按 query view 组织 retrieval evidence，或 QA 选择状态的任一层。（§1；§3；Figure 1，PDF pp. 1–2、5）",
+    "categories": [
+      "可靠性"
+    ],
+    "failureSurfaces": [
+      "state-representation",
+      "retrieval-active-context"
+    ],
+    "sourceUrl": "https://arxiv.org/abs/2607.01935",
+    "pdf": {
+      "delivery": "official",
+      "url": "https://arxiv.org/pdf/2607.01935v2",
+      "accessNote": "arXiv v2 preprint"
+    },
+    "number": 1,
+    "kind": "paper",
+    "doi": null,
+    "whyRead": "它最值得读的地方不是又提出一个 memory overlay，而是给 terminal answer 之前的失败建立了可追踪的层次：recorded、historically recoverable、retrieved for this view 与 used correctly by QA 不再被压成同一个“记住了”。这套 decomposition 也让新的风险变得可见——谁给 state 定角色、谁选择 query view、谁把 label 写进 prompt，谁就在 read side 获得了实际的 evidence authority。",
+    "keyPoints": [
+      "Bank：每条 record 包含 content、time/source position、state status、typed links 与 host metadata；status 包括 active、superseded、transition、unknown，links 可表达 supersession、evolution、scoped exception 与 coexistence。（§4.1–§4.3，PDF pp. 5–7）",
+      "Retrieval：rule-based query profiler 先选择 current、historical、transition 或 neutral view，再把 host seed、relation hops 与 bounded controller 组成 evidence packet；controller 只能重排已有候选，不能找回 missing record。（§4.4；Appendix A.8，PDF pp. 8–9、18）",
+      "QA：serializer 把 evidence trace 标成 current、historical、transition 或 generic retrieved memory，再交给 generator；因此 bank 中 recorded、retrieval 中 available 与 answer 中 used correctly 是可分开的事实。（§4.5–§4.6；Algorithm 1，PDF pp. 9–10、19）"
+    ],
+    "argumentMap": [
+      {
+        "step": "01 · 先改写错误对象",
+        "claim": "旧记录存在本身不是 ghost memory。旧值、现值与 transition evidence 可以同时为真；错误在于它们没有被赋予或读取为 query 所需的 state role。",
+        "locator": "§1；§3；Figure 1，PDF pp. 1–2、5"
+      },
+      {
+        "step": "02 · 再把状态写进可检查的 record",
+        "claim": "每条 record 除 content 与时间外，还携带 active、superseded、transition、unknown 等 status，以及 supersession、evolution、scoped exception、coexistence 等 typed links；目标不是删除旧值，而是保留可追踪的关系。",
+        "locator": "§4.1–§4.3，PDF pp. 5–7"
+      },
+      {
+        "step": "03 · 让 retrieval 对 query view 负责",
+        "claim": "query profiler 先把问题分成 current、historical、transition 或 neutral view，retrieval 再从 host seed、state links 与 controller 组成 evidence packet；缺失记录、错误排序与错误 view 因而可以分开观察。",
+        "locator": "§4.4；Appendix A.8，PDF pp. 8–9、18"
+      },
+      {
+        "step": "04 · 最后把 answer-side selection 单独暴露",
+        "claim": "serializer 把 state role 明示给 generator，使“证据已经在 packet 中但 QA 仍选错状态”不再被误判为 retrieval miss。terminal answer 正确也不能反向证明前面的 bank 与 retrieval 正确。",
+        "locator": "§4.5–§4.6；Algorithm 1，PDF pp. 9–10、19"
+      }
+    ],
+    "methodNotes": [
+      {
+        "label": "LTP construct",
+        "text": "LTP 以 10 个 LoCoMo-anchored profiles 为骨架，每个 profile 建 40 个 mutable slots；每个 slot 插入较早 old-state cue 与较晚 current/conflicting cue，再各生成 historical 与 current probe。完整规模是 400 state units、800 cue events 与 800 probes。它是受控生成的 state-change benchmark，不是 400 次自然对话中的真实状态变化。",
+        "locator": "Appendix A.1–A.3，PDF pp. 15–16"
+      },
+      {
+        "label": "Bank supervision",
+        "text": "Sentry 用 topic / logic 双 projection head 筛出 risky pairs；Qwen2.5-3B audit Judge 再决定 conflict、fusion action、clarification need 与 suggested links。Judge 先在 700 个 English items 上 QLoRA SFT，再以规则奖励做 GRPO，并在 151-item held-out set 上报告 87.4% accuracy 与 0.8774 F1。",
+        "locator": "§4.3；Appendix A.8，PDF pp. 6–7、17–18"
+      },
+      {
+        "label": "Retrieval control",
+        "text": "rule-based profiler 根据 temporal/change lexical hints 选 view；host seeds 加入 relation hops 与较弱 semantic hops 后稳定预排。optional 3B controller 只能在给定 candidate pool 内选择，parse 或 ID validation 失败则回退，因此它无法修复 candidate miss。",
+        "locator": "§4.4；Appendix A.8，PDF pp. 8–9、18"
+      },
+      {
+        "label": "Answer measurement",
+        "text": "QA 固定 top-5 evidence budget，使用 qwen2.5:3b 生成答案，llama3.3:70b 只作 offline answer judge。对 100 个 outputs 的 human audit 中，三分类 agreement 在 LTP 为 88.0% / κ 0.820，在 LoCoMo 仅 72.0% / κ 0.578；合并 correct 与 partially correct 后 overall binary agreement 才升至 93.0% / κ 0.847。",
+        "locator": "§5.1；Appendix A.5、A.8，PDF pp. 10、16–18"
+      }
+    ],
+    "reportedFindings": [
+      "Full LTP 上，A-Mem+A-TMA 的 aggregate QA accuracy 为 0.818、conflict 为 0.860，相对 A-Mem 分别提高 0.031 与 0.048；但 70B judge score 从 0.700 微降到 0.698。Graphiti/Zep+A-TMA 的 QA accuracy 从 0.524 到 0.635、conflict 从 0.480 到 0.720，同时 fact accuracy 从 0.568 降到 0.550。（Table 2，PDF p. 11）",
+      "InsideOut+A-TMA 在 LTP 的 QA accuracy 从 0.117 升到 0.662，是最大的同-host delta；同一 row 的 displayed bank score 仍为 0.000，与正文所说 bank、retrieval、QA 三层都修复并不相容。（§5.2；Table 2，PDF p. 11）",
+      "Full LoCoMo 含 10 个 samples、1,986 个 QA pairs。AriadneMem 仍有最高 average F1 0.2240；Graphiti/Zep+A-TMA 的 temporal F1 从 0.0295 到 0.1705，但 temporal judged QA 从 0.3707 降到 0.3178，open-domain 与 adversarial 指标也下降。（Tables 3–4，PDF pp. 11–12）",
+      "A-Mem+A-TMA 在 LoCoMo 的 average F1、BLEU 与 judged QA 小幅上升，但 multi-hop 三项都下降；效果随 host、question category 与 metric 改变，不能收缩成 uniform improvement。（Table 4；§5.3，PDF p. 12）"
+    ],
+    "evidenceLimits": [
+      "它是尚未经过同行评审的 arXiv preprint；正文没有给出可定位的 code 或 LTP dataset release，因此这些是 paper-reported point estimates，不是复现结果。",
+      "论文没有报告 repeated seeds、confidence intervals、bootstrap、significance test 或 per-profile variance；800 probes 嵌套在 10 个 shared replay banks 与 400 个 paired state units 中，不能直接当作 800 个独立实验单位。",
+      "LTP 是从 10 个 LoCoMo-anchored profiles 构造的 controlled synthetic benchmark；后续 LoCoMo evaluation 也使用 10 个 LoCoMo samples，论文没有证明 conversation/profile lineage 独立。transition view 没有直接 change-QA target，neutral view 也没有独立结果。（Appendix A.1–A.4，PDF pp. 15–16）",
+      "LTP 的 cue1 / cue2 被放在分离的 time quantiles，old/current probes 也可能与 lexical profiler 的 hand-written hints 对齐；没有 chronology-only、reversed-quantile、oracle-view 或 shuffled-label controls，无法分离受控 temporal geometry 与 learned overlay 的贡献。",
+      "Sentry 的 logic=0 同时容纳 same-slot conflict 与 irrelevant negative；论文未给 per-class confusion matrix、true-predecessor candidate recall、false-negative supersession rate 或 similar-slot stress test。正确 prior state 若未进入候选，Sentry 与 Judge 都无法补回。",
+      "Bank role 与 Evidence support 是 pipeline diagnostics，不是独立、统一的 effect size。前者按 host-native status/link 个性化，后者没有公开 matching algorithm、threshold、paraphrase handling 或 reliability audit；Average Rank 还重复混合 aggregate QA 及其 conflict/fact partitions。"
+    ],
+    "sourceTensions": [
+      {
+        "label": "Full row 与 no-Sentry 叙述对不上",
+        "observation": "Table 5 的 Full row 在 QA / preferred / judge 上均高于 -Sentry；Appendix A.10 却说 no-Sentry 最好，并引用表中不存在的数值。controller ablation 的起点也取自另一条 no-Sentry row。",
+        "implication": "在 raw results 或作者 correction 出现前，不能从 Table 5 与 Appendix A.10 中挑一套数字来做 component attribution。",
+        "locators": [
+          "Table 5，PDF p. 12",
+          "Appendix A.10，PDF p. 19"
+        ]
+      },
+      {
+        "label": "QA-label ablation 的方向相反",
+        "observation": "Appendix A.10 声称 removing QA labels 令 conflict 升到 0.858；Table 5 中 Full 已是 0.858，no-label row 是 0.850。A.10 还描述一个所有 variants 为 0.500 的 internal bank diagnostic，而表中 Bank coexist 全为 1.000。",
+        "implication": "serializer label 与 bank component 的单独贡献都没有稳定、可读的公开数值依据。",
+        "locators": [
+          "Table 5，PDF p. 12",
+          "Appendix A.10，PDF p. 19"
+        ]
+      },
+      {
+        "label": "Controller 到底看哪些 candidates",
+        "observation": "§4.4 把 controller 写成对完整 candidate set 操作，Appendix A.8 说最多看 10 条 shortlist，Algorithm 1 则在 TopK 之后才调用 controller；reported k=5 时，最后一种读法只给它 5 条。",
+        "implication": "这决定 controller 能否救回 rank 6–10 的 target，也决定 no-controller ablation 实际移除了什么。",
+        "locators": [
+          "§4.4，PDF pp. 8–9",
+          "Appendix A.8，PDF p. 18",
+          "Algorithm 1，PDF p. 19"
+        ]
+      },
+      {
+        "label": "InsideOut 的三层修复缺一层",
+        "observation": "§5.2 说 InsideOut+A-TMA 在 bank、retrieval 与 QA 三层修复 failure chain；Table 2 的同一 row 却显示 Bank role 为 0.000。",
+        "implication": "现有文本无法判断 sidecar role 是否被 scorer 排除、gain 是否主要来自 retrieval / QA，或 narrative / displayed value 是否过期。",
+        "locators": [
+          "§5.2，PDF p. 11",
+          "Table 2，PDF p. 11"
+        ]
+      }
+    ],
+    "editorialInferences": [
+      {
+        "label": "Read-side label amplification",
+        "text": "显式 state label 即使不改写 bank，也会在 answer time 前景化某条证据；如果 classifier 或 bank Judge 判错，它可能让错误比 raw chronology 更有说服力。",
+        "boundary": "这是根据论文 architecture 作出的编者 inference，不是 paper-tested result；论文没有报告 corrupted-label、false-supersession 或 wrong-role negative control。"
+      },
+      {
+        "label": "Diagnosability is instrumentation, not causality",
+        "text": "把 bank、retrieval 与 QA 分层记录，会让 failure localization 更可检查；但一个 trace 字段能指出哪层看起来异常，不等于它已经证明该层是 causal source，更不等于该层的 learned judge 判定正确。",
+        "boundary": "这是对 measurement contract 的编者 synthesis。Table 5 的表文冲突与缺少 layer-wise error-transition matrix，使 causal attribution 仍未成立。"
+      },
+      {
+        "label": "Role metadata is an authority surface",
+        "text": "active、superseded、transition 与 coexistence 不是无害的检索标签：它们决定某条记忆何时被前景化、何时只作为历史、何时被压低。即使 canonical store 不被覆盖，read path 仍在执行事实角色分配。",
+        "boundary": "这是由 architecture 产生的 editorial consequence，不是论文声称或验证的 governance result；时间顺序与 LLM conflict verdict 都不能单独取得这种 authority。"
+      }
+    ],
+    "openProtocols": [
+      {
+        "title": "State-label corruption stress test",
+        "status": "proposed-not-run",
+        "question": "显式 state labels 在正确时帮助 QA，在错误时会不会比 raw chronology 更强地放大 wrong-state intrusion？",
+        "method": "对同一组 synthetic multi-state records 固定内容、时间与 retrieval candidates，只改变 serialized state role；比较 raw chronology、correct labels、swapped labels 与 partially missing labels 四条 read paths。",
+        "fixtures": "公开 synthetic fixtures 覆盖 current、historical、transition、coexistence、scoped exception、correction 与 target-absent；不使用任何 private memory、人物或运行时实现。",
+        "controls": "加入 false-supersession、wrong-view、target-absent、label-shuffle 与 no-label controls；generation model、prompt budget、candidate order 与 decoding 固定。",
+        "measures": "逐题公开 candidate support、wrong-state intrusion、answer correctness、abstention 与 confidence；raw outputs 与 derived aggregates 分开保存。",
+        "limitations": "这是尚未执行的 paper-facing protocol，只能检验 label sensitivity；不能证明某个未公开实现的 production safety，也不能替代作者 code / dataset reproduction。"
+      }
+    ],
+    "keywords": [
+      "temporal state",
+      "memory retrieval",
+      "failure diagnosis"
+    ],
+    "editorialQuestion": "transition view 本身没有被直接作为问答目标充分测试；在含糊、并存或带条件例外的状态里，query-view 与 state-role classifier 会不会只是新的错误入口？",
+    "sourceNote": "arXiv v2；本站链接官方 PDF，不在 repo 内重新分发。",
+    "designTransfer": {
+      "byline": "Agent Memory Study editors",
+      "date": "2026-09-08",
+      "when": "同一事实有现值、旧值和变更过程，而系统常在“问现在”与“问当时”之间混用证据。",
+      "move": "先给可核验的状态变化保留角色与关联，在检索结果里同时说明此次问题要看的时间视角。",
+      "check": "保留同一份旧值 / 现值证据，分别问现在、过去和如何变化；再故意错标一个角色，检查错误是否被更有把握地写进回答。",
+      "boundary": "这组对照是编者建议，尚未执行。显式角色会放大错误标注；不能从可解释 trace 直接推定因果定位。",
+      "basis": "既有札记 “关键抓手”：§§4.1–4.6；“编者判断”：Read-side label amplification。",
+      "status": "proposed-not-run"
+    }
+  },
+  "manifest": [],
+  "manifest_policy": "Current public object plus bounded direct references; no linked full texts, private workflow, or inferred support."
+}

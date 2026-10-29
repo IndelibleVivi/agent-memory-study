@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:longmemeval-v2-experienced-colleague",
+  "revision": "rev:sha256:2ef34aafef7e101c9",
+  "state_revision": "rev:sha256:2ef34aafef7e101c9",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:longmemeval-v2-experienced-colleague",
+    "revision": "rev:work-sha256:2ef34aafef7e101c9"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2605.12493v1",
+    "source_locator": "https://arxiv.org/pdf/2605.12493v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "1ba8985ded1e83a97f3d1655fe6f4ffafa10608a91c72f17ab9296387665886c",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

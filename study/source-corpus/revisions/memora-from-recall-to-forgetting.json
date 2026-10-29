@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:memora-from-recall-to-forgetting",
+  "revision": "rev:sha256:c432d63796b905846",
+  "state_revision": "rev:sha256:c432d63796b905846",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:memora-from-recall-to-forgetting",
+    "revision": "rev:work-sha256:c432d63796b905846"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2604.20006v1",
+    "source_locator": "https://arxiv.org/abs/2604.20006v1",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "793cb4e0ddad2be65e9210d5d674fc9b5b73d007b42f58ad06a3cd98b7b8cac8",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

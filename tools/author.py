@@ -24,7 +24,7 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 STUDY_ROOT = ROOT / "study"
-SOURCES = STUDY_ROOT / "sources"
+CORPUS = STUDY_ROOT / "source-corpus"
 ENTRIES = STUDY_ROOT / "entries"
 INQUIRIES = STUDY_ROOT / "inquiries"
 TRANSFERS = STUDY_ROOT / "transfers"
@@ -52,6 +52,30 @@ def family(folder: Path) -> list[dict[str, Any]]:
     if not folder.is_dir():
         raise ValueError(f"Missing study family: {folder.relative_to(ROOT).as_posix()}")
     return [load_json(path) for path in sorted(folder.glob("*.json"))]
+
+def source_records() -> list[dict[str, Any]]:
+    """Return Work identity plus the independently authored AMS note fields."""
+    works = family(CORPUS / "works")
+    notes = family(CORPUS / "notes")
+    result = []
+    for work in works:
+        expected_ref = {
+            "kind": work["kind"], "id": work["id"], "revision": work["revision"],
+        }
+        note = next((item for item in notes if item["work_ref"] == expected_ref), None)
+        if note is None:
+            continue
+        identifiers = work.get("identifiers", [])
+        result.append({
+            "id": note["alias"], "title": work["title"], "authors": work["authors"],
+            "year": work["year"],
+            "sourceUrl": next((item["value"] for item in identifiers
+                               if item["role"] == "source-locator"), ""),
+            "doi": next((item["value"] for item in identifiers
+                         if item["namespace"] == "doi"), None),
+            "noteDepth": note["note_depth"], "readingScope": note["reading_scope"],
+        })
+    return result
 
 def normalize(value: Any) -> str:
     return " ".join(re.sub(r"[^\w]+", " ", str(value or "").casefold()).split())
@@ -156,7 +180,7 @@ def match_source(sources: list[dict[str, Any]], value: str) -> dict[str, Any]:
 
 def impact(source_id: str) -> dict[str, Any]:
     """Legacy material impact shape kept for existing CLI users."""
-    sources = family(SOURCES)
+    sources = source_records()
     if source_id not in {source["id"] for source in sources}:
         raise ValueError(f"Unknown source id: {source_id}")
     return _legacy_impact(source_id, fresh_impact("material", source_id))
@@ -289,7 +313,7 @@ def _legacy_impact(source_id: str, result: dict[str, Any]) -> dict[str, Any]:
     return output
 
 def inspect(value: str) -> dict[str, Any]:
-    sources = family(SOURCES)
+    sources = source_records()
     match = match_source(sources, value)
     source = match["source"]
     output = {

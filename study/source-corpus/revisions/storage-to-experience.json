@@ -1,0 +1,29 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:storage-to-experience",
+  "revision": "rev:sha256:4eddf8c3cc7b4ba97",
+  "state_revision": "rev:sha256:4eddf8c3cc7b4ba97",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:storage-to-experience",
+    "revision": "rev:work-sha256:4eddf8c3cc7b4ba97"
+  },
+  "identity": {
+    "mode": "observed-snapshot",
+    "observed_at": null,
+    "source_locator": "https://aclanthology.org/2026.findings-acl.2069.pdf",
+    "observation_basis": "Legacy public locator does not prove a distinct publisher version; this is the reviewed source identity, not a stored byte snapshot.",
+    "publisher_version_known": false,
+    "snapshot_captured": false
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "04edf7f29c97a54583bc6b413a8909974ba858bdfec9b07c358e2655eb534c12",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

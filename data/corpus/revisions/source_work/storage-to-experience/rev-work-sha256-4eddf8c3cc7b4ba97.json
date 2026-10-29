@@ -1,0 +1,71 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:storage-to-experience",
+  "revision": "rev:work-sha256:4eddf8c3cc7b4ba97",
+  "state_revision": "rev:work-sha256:4eddf8c3cc7b4ba97",
+  "title": "From storage to experience: a survey on the evolution of LLM agent memory mechanisms",
+  "work_type": "paper",
+  "authors": [
+    "Jinghao Luo",
+    "Yuchen Tian",
+    "Chuxue Cao",
+    "Ziyang Luo",
+    "Hongzhan Lin",
+    "Kaixin Li",
+    "Chuyi Kong",
+    "Ruichao Yang",
+    "Jing Ma"
+  ],
+  "year": 2026,
+  "short_author": "Luo 等",
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.18653/v1/2026.findings-acl.2069",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "url",
+      "value": "https://aclanthology.org/2026.findings-acl.2069/",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://aclanthology.org/2026.findings-acl.2069/",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "papers/09-luo-2026-storage-to-experience.pdf",
+      "delivery": "bundled",
+      "original_locator": "https://aclanthology.org/2026.findings-acl.2069.pdf",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "aliases": [
+    "storage-to-experience"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "ce37b5319d535fd94d426abd71b17798c90df711e4f5ab42173f18d4276bedfb",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

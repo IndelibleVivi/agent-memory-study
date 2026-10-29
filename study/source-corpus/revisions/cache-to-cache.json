@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:cache-to-cache",
+  "revision": "rev:sha256:5c57aefab5d081274",
+  "state_revision": "rev:sha256:5c57aefab5d081274",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:cache-to-cache",
+    "revision": "rev:work-sha256:5c57aefab5d081274"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2510.03215v2",
+    "source_locator": "https://arxiv.org/abs/2510.03215v2",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "eef41c9b0290cc9ba7313cb4746a6731dfdbcca51fc69582dbaadc23942aabc9",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

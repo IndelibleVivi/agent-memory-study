@@ -1,0 +1,375 @@
+{
+  "schema": "ams-study-packet/2",
+  "contract_version": "ams-core/2",
+  "compiler_version": "ams-content-compiler/2",
+  "kind": "study",
+  "id": "after-a-correction",
+  "title": "一条更正之后",
+  "entity_refs": [
+    {
+      "kind": "entry",
+      "id": "entry:after-a-correction",
+      "revision": "rev:entry-sha256:2e2b94a04b65c78eb8b2e3c0f545d07f58ac5598e6175ca26b7761071f6844a1"
+    }
+  ],
+  "attribution": {
+    "byline": "Agent Memory Study editors",
+    "date": "2026-10-23"
+  },
+  "content": {
+    "id": "after-a-correction",
+    "number": "01",
+    "title": "一条更正之后",
+    "subtitle": "旧经验该退出哪里，又应该留在哪里？",
+    "byline": "Agent Memory Study editors",
+    "date": "2026-10-23",
+    "kind": "editorial-synthesis-with-deterministic-demo",
+    "intro": "经验被写下来之后，还有一段生活：工具换了版本，来源被撤回，旧任务仍在继续。一条“更新后的记忆”能不能同时照顾这些变化？我们把四份材料放到同一张桌上，读完之后，亲手改动一个条件。",
+    "readings": [
+      {
+        "materialId": "truth-maintenance-system",
+        "label": "Doyle · 支持如何变化",
+        "locator": "TMS justification 与 dependency-directed revision；见材料的 argument map",
+        "takeaway": "一条结论可以有多份支持。撤回某个支持，不自动消灭所有其他理由。",
+        "limit": "符号依赖结构不会自行判断自然语言来源是否真实。"
+      },
+      {
+        "materialId": "statefuse-conflict-preserving-memory",
+        "label": "StateFuse · 冲突留在哪里",
+        "locator": "状态 / conflict-preserving representation；见材料的 method notes 与 public audit",
+        "takeaway": "将冲突状态保留为可检查对象，读者才能知道系统为什么没有给出单一结论。",
+        "limit": "本演示不实现 StateFuse 的算子或声称通过其 reference semantics。"
+      },
+      {
+        "materialId": "useful-memories-become-faulty",
+        "label": "Faulty Memories · 压缩会失去什么",
+        "locator": "§4.1、Tables 2–3、Appendix F.4；见材料的 source tensions",
+        "takeaway": "派生经验不能凭“总结过了”取得覆盖其原始证据的权威。",
+        "limit": "论文的 model-generated consolidation 与这里的 typed rule 更新不是同一 treatment。"
+      },
+      {
+        "materialId": "recuris-memory-evolution",
+        "label": "Recuris · 经验何时进入行动",
+        "locator": "§§2.2–2.3；Table 2；Appendix E",
+        "takeaway": "当前未完成目标可以组织经验调用；取用之后仍要确认执行反馈。",
+        "limit": "本演示没有 Meta-Agent、LLM、自动诊断、验证 gate 或 recursive evolution。"
+      }
+    ],
+    "takeaways": [
+      {
+        "title": "给经验一个适用范围",
+        "text": "若你的工具、规则或流程存在并行版本，经验应能回答“适用于哪一个”。若环境稳定，先不要为不存在的变化增加复杂度。"
+      },
+      {
+        "title": "保留能回到的支持",
+        "text": "若来源会更正，给派生结论保留来源链接与撤回状态。多份独立支持不应被压成一个不可解释的覆盖值。"
+      },
+      {
+        "title": "让暂缓保持可见",
+        "text": "有冲突或没有支持时，说明缺什么证据。一次拒绝误用可能牺牲完成率；需要另行测试恢复证据的成本与用户体验。"
+      },
+      {
+        "title": "用你的任务反驳这个设计",
+        "text": "挑一件真实、可匿名化的任务，写下旧版仍正确、新版更正、来源撤回和错误标签四种情况；先比较现有做法，再决定哪一个接口值得改。真正的借鉴要接受“不值得增加复杂度”这个结果。"
+      }
+    ],
+    "boundary": "原创 synthetic 规则演示；不是论文复现、LLM benchmark 或真实项目效果评估。范围与撤回均由 fixture 明确提供，没有测试从自然语言识别这些信息的能力。不合并成总分，不测 token、延迟或成本。",
+    "closing": "读完之后，可以回原文质疑这次串读，可以把场景带进自己的项目，也可以补一个使这些规则失效的反例。书房不要求每次阅读都产出代码；它提供一段从理解、比较到自行判断的路。",
+    "labTitle": "把一个条件改掉",
+    "labIntro": "这是一个虚构的 export-json 工具。v1 / v2 是任务范围，--format / --output 是可选参数。下方同时显示四种规则；切换事件前后，观察证据、建议与工具检查。所有数据公开，运行只在本页进行。",
+    "policies": [
+      {
+        "id": "none",
+        "label": "不读取经验",
+        "description": "不给参数建议；本演示没有能凭先验自行补全的语言模型。"
+      },
+      {
+        "id": "frozen",
+        "label": "冻结首次经验",
+        "description": "沿用最初第一条说明，不处理后续事件或适用范围。"
+      },
+      {
+        "id": "latest",
+        "label": "取全局最近经验",
+        "description": "处理撤回，选择最后一条仍有效的说明，不按版本筛选。"
+      },
+      {
+        "id": "scoped",
+        "label": "按范围与支持重建",
+        "description": "处理撤回，只读当前版本的有效来源；一致才建议，冲突或无支持时停止。"
+      }
+    ],
+    "scenarios": [
+      {
+        "id": "unchanged",
+        "title": "01 · 没有发生更正",
+        "description": "v1 说明始终有效；事件只补充一份同版本、同内容的独立说明。",
+        "target": "v1",
+        "initial": [
+          {
+            "id": "manual-v1",
+            "scope": "v1",
+            "flag": "--format"
+          }
+        ],
+        "change": {
+          "label": "补充独立说明",
+          "adds": [
+            {
+              "id": "example-v1",
+              "scope": "v1",
+              "flag": "--format"
+            }
+          ],
+          "retracts": []
+        },
+        "environment": {
+          "before": "--format",
+          "after": "--format"
+        },
+        "lesson": "稳定环境里，固定经验就足够。维护来源和范围未必增加这次任务的收益。"
+      },
+      {
+        "id": "corrected",
+        "title": "02 · 更正了当前版本",
+        "description": "v2 最初误记沿用 --format；更正撤回该说明，明确 v2 使用 --output。",
+        "target": "v2",
+        "initial": [
+          {
+            "id": "draft-v2",
+            "scope": "v2",
+            "flag": "--format"
+          }
+        ],
+        "change": {
+          "label": "撤回错误说明，加入 v2 更正",
+          "adds": [
+            {
+              "id": "correction-v2",
+              "scope": "v2",
+              "flag": "--output"
+            }
+          ],
+          "retracts": [
+            "draft-v2"
+          ]
+        },
+        "environment": {
+          "before": "--output",
+          "after": "--output"
+        },
+        "lesson": "固定经验继续执行过期建议；按事件更新能够修正它。环境本来就要求 --output，改变的是记忆证据。"
+      },
+      {
+        "id": "legacy",
+        "title": "03 · 新版本来了，旧任务还在",
+        "description": "v2 新增 --output；此刻任务仍使用 v1。v1 的说明从未被撤回。",
+        "target": "v1",
+        "initial": [
+          {
+            "id": "manual-v1",
+            "scope": "v1",
+            "flag": "--format"
+          }
+        ],
+        "change": {
+          "label": "发布 v2 说明",
+          "adds": [
+            {
+              "id": "manual-v2",
+              "scope": "v2",
+              "flag": "--output"
+            }
+          ],
+          "retracts": []
+        },
+        "environment": {
+          "before": "--format",
+          "after": "--format"
+        },
+        "lesson": "全局最近经验误把新版本当成普遍更正；新鲜度不能代替适用范围。"
+      },
+      {
+        "id": "withdrawn",
+        "title": "04 · 唯一支持被撤回",
+        "description": "v2 草稿的唯一说明被撤回，尚无可用替代。任务仍存在，但当前记忆无法判断参数。",
+        "target": "v2",
+        "initial": [
+          {
+            "id": "draft-v2",
+            "scope": "v2",
+            "flag": "--format"
+          }
+        ],
+        "change": {
+          "label": "撤回未经确认的草稿",
+          "adds": [],
+          "retracts": [
+            "draft-v2"
+          ]
+        },
+        "environment": {
+          "before": "--output",
+          "after": "--output"
+        },
+        "lesson": "缺少支持时停止建议能避免这次误用，但也没有完成任务。拒答不是成功，需要重新取得证据。"
+      },
+      {
+        "id": "alternative-support",
+        "title": "05 · 撤回一份，另一份仍有效",
+        "description": "两份独立来源都支持 v1 使用 --format；只撤回第一份。",
+        "target": "v1",
+        "initial": [
+          {
+            "id": "manual-v1",
+            "scope": "v1",
+            "flag": "--format"
+          },
+          {
+            "id": "example-v1",
+            "scope": "v1",
+            "flag": "--format"
+          }
+        ],
+        "change": {
+          "label": "只撤回第一份来源",
+          "adds": [],
+          "retracts": [
+            "manual-v1"
+          ]
+        },
+        "environment": {
+          "before": "--format",
+          "after": "--format"
+        },
+        "lesson": "结论可以有替代支持。删除一条 support link 不等于删除结论，更不等于让旧来源重新有效。"
+      },
+      {
+        "id": "conflict",
+        "title": "06 · 当前范围里出现冲突",
+        "description": "v2 的两份有效说明给出不同参数；没有更高 authority 的裁决。后来的那份恰好是错的。",
+        "target": "v2",
+        "initial": [
+          {
+            "id": "manual-v2",
+            "scope": "v2",
+            "flag": "--output"
+          }
+        ],
+        "change": {
+          "label": "收到尚未裁决的冲突说明",
+          "adds": [
+            {
+              "id": "disputed-v2",
+              "scope": "v2",
+              "flag": "--format"
+            }
+          ],
+          "retracts": []
+        },
+        "environment": {
+          "before": "--output",
+          "after": "--output"
+        },
+        "lesson": "保留冲突的策略停止推荐；固定经验这次反而正确。保留冲突保护解释诚实，却不保证更高完成率。"
+      },
+      {
+        "id": "mislabelled-scope",
+        "title": "07 · 范围标签本身错了",
+        "description": "一份实际属于 v1 的说明被错误标成 v2；系统看到的 typed metadata 与真实工具不一致。",
+        "target": "v2",
+        "initial": [],
+        "change": {
+          "label": "加入错误标注的来源",
+          "adds": [
+            {
+              "id": "mislabelled-manual",
+              "scope": "v2",
+              "flag": "--format"
+            }
+          ],
+          "retracts": []
+        },
+        "environment": {
+          "before": "--output",
+          "after": "--output"
+        },
+        "lesson": "按范围重建也会采纳错误建议。可追溯不等于来源真实；这里故意保留它的失败，不能拿 provenance 自证正确。"
+      }
+    ],
+    "artifactUrl": "research/correction-scope-study/README.md",
+    "externalReadings": [],
+    "sourcePath": "study/entries/after-a-correction.md",
+    "bodyMarkdown": "## 经验不是读完就封存的答案\n\n一个 agent 曾成功使用 --format，便留下经验“导出 JSON 要用这个参数”。后来 v2 改用 --output。把经验冻住，会误导新任务；只保留最新说法，又可能误导仍在 v1 上的旧任务。需要追问的不是一句话够不够聪明，而是这句话依赖什么、在哪里仍然成立。\n\n## 让四篇材料互相追问\n\nDoyle 帮我们问“结论靠什么支持”；StateFuse 让冲突与状态变化不被一句摘要抹平；Faulty Memories 追问反复压缩为什么会损伤原有证据；Recuris 则把经验放回正在进行的任务，问它有没有在需要时真正被调用。这是编者组织的对话，并不表示四篇论文提出或验证了同一个系统。\n\n## 更正写好了，下一步行动就会改变吗？\n\n下方七个场景只观察一次事件前后。它们还没有解释：canonical 记录已经更正，检索 index、摘要或当前 context 是否仍送来旧版本；一次错误输出被总结、再次写入后，又会不会成为新的支持。\n\n[修订传播与再写入实验](../../research/revision-propagation-study/README.md)沿这个问题继续。它保存各层状态，从相同的修订前检查点分支，操纵同步延迟和单层内容，再连续执行十个后续任务。除了应该改变的当前答案，还检查未受影响的事实、范围外任务与合法历史查询。历史问题还要区分“当时知道什么”与“按现在证据，过去什么为真”：追溯更正可以改变后一种答案，不能因此抹掉前一种记录。\n\n“旧影响再现”也有严格含义：必须先观察到一次修正后的正确行动，后来又出现不适用的旧答案。一直答错单独记录。各分支自己的输出与写回继续影响各自后续任务；这段经历已经由干预改变，不能重新宣称输入完全相同。\n\n这是原创 typed events 上的离线控制，完整方法与复跑命令见[实验协议](../../research/revision-propagation-study/protocol.md)。预设的延迟和旧输出重访帮助暴露机制，不能估计现实系统中这种失败的频率。它没有运行自然语言模型，也没有证明复杂依赖维护必然更好；原有网页规则演示仍保留自己的场景与结果边界。\n",
+    "bodyHtml": "<h2>经验不是读完就封存的答案</h2>\n<p>一个 agent 曾成功使用 --format，便留下经验“导出 JSON 要用这个参数”。后来 v2 改用 --output。把经验冻住，会误导新任务；只保留最新说法，又可能误导仍在 v1 上的旧任务。需要追问的不是一句话够不够聪明，而是这句话依赖什么、在哪里仍然成立。</p>\n<h2>让四篇材料互相追问</h2>\n<p>Doyle 帮我们问“结论靠什么支持”；StateFuse 让冲突与状态变化不被一句摘要抹平；Faulty Memories 追问反复压缩为什么会损伤原有证据；Recuris 则把经验放回正在进行的任务，问它有没有在需要时真正被调用。这是编者组织的对话，并不表示四篇论文提出或验证了同一个系统。</p>\n<h2>更正写好了，下一步行动就会改变吗？</h2>\n<p>下方七个场景只观察一次事件前后。它们还没有解释：canonical 记录已经更正，检索 index、摘要或当前 context 是否仍送来旧版本；一次错误输出被总结、再次写入后，又会不会成为新的支持。</p>\n<p><a href=\"research/revision-propagation-study/README.md\" rel=\"noreferrer noopener\">修订传播与再写入实验</a>沿这个问题继续。它保存各层状态，从相同的修订前检查点分支，操纵同步延迟和单层内容，再连续执行十个后续任务。除了应该改变的当前答案，还检查未受影响的事实、范围外任务与合法历史查询。历史问题还要区分“当时知道什么”与“按现在证据，过去什么为真”：追溯更正可以改变后一种答案，不能因此抹掉前一种记录。</p>\n<p>“旧影响再现”也有严格含义：必须先观察到一次修正后的正确行动，后来又出现不适用的旧答案。一直答错单独记录。各分支自己的输出与写回继续影响各自后续任务；这段经历已经由干预改变，不能重新宣称输入完全相同。</p>\n<p>这是原创 typed events 上的离线控制，完整方法与复跑命令见<a href=\"research/revision-propagation-study/protocol.md\" rel=\"noreferrer noopener\">实验协议</a>。预设的延迟和旧输出重访帮助暴露机制，不能估计现实系统中这种失败的频率。它没有运行自然语言模型，也没有证明复杂依赖维护必然更好；原有网页规则演示仍保留自己的场景与结果边界。</p>",
+    "sections": [
+      {
+        "title": "经验不是读完就封存的答案",
+        "text": "一个 agent 曾成功使用 --format，便留下经验“导出 JSON 要用这个参数”。后来 v2 改用 --output。把经验冻住，会误导新任务；只保留最新说法，又可能误导仍在 v1 上的旧任务。需要追问的不是一句话够不够聪明，而是这句话依赖什么、在哪里仍然成立。"
+      },
+      {
+        "title": "让四篇材料互相追问",
+        "text": "Doyle 帮我们问“结论靠什么支持”；StateFuse 让冲突与状态变化不被一句摘要抹平；Faulty Memories 追问反复压缩为什么会损伤原有证据；Recuris 则把经验放回正在进行的任务，问它有没有在需要时真正被调用。这是编者组织的对话，并不表示四篇论文提出或验证了同一个系统。"
+      },
+      {
+        "title": "更正写好了，下一步行动就会改变吗？",
+        "text": "下方七个场景只观察一次事件前后。它们还没有解释：canonical 记录已经更正，检索 index、摘要或当前 context 是否仍送来旧版本；一次错误输出被总结、再次写入后，又会不会成为新的支持。\n\n[修订传播与再写入实验](../../research/revision-propagation-study/README.md)沿这个问题继续。它保存各层状态，从相同的修订前检查点分支，操纵同步延迟和单层内容，再连续执行十个后续任务。除了应该改变的当前答案，还检查未受影响的事实、范围外任务与合法历史查询。历史问题还要区分“当时知道什么”与“按现在证据，过去什么为真”：追溯更正可以改变后一种答案，不能因此抹掉前一种记录。\n\n“旧影响再现”也有严格含义：必须先观察到一次修正后的正确行动，后来又出现不适用的旧答案。一直答错单独记录。各分支自己的输出与写回继续影响各自后续任务；这段经历已经由干预改变，不能重新宣称输入完全相同。\n\n这是原创 typed events 上的离线控制，完整方法与复跑命令见[实验协议](../../research/revision-propagation-study/protocol.md)。预设的延迟和旧输出重访帮助暴露机制，不能估计现实系统中这种失败的频率。它没有运行自然语言模型，也没有证明复杂依赖维护必然更好；原有网页规则演示仍保留自己的场景与结果边界。"
+      }
+    ],
+    "ast": {
+      "anchors": [
+        {
+          "id": "section-1",
+          "label": "经验不是读完就封存的答案",
+          "level": 2
+        },
+        {
+          "id": "section-2",
+          "label": "让四篇材料互相追问",
+          "level": 2
+        },
+        {
+          "id": "section-3",
+          "label": "更正写好了，下一步行动就会改变吗？",
+          "level": 2
+        }
+      ],
+      "references": []
+    }
+  },
+  "manifest_policy": "Current public object plus bounded direct references; no linked full texts, private workflow, or inferred support.",
+  "manifest": [
+    {
+      "kind": "material",
+      "id": "truth-maintenance-system",
+      "revision": "rev:note-sha256:abb4561fdbe7c2e4c",
+      "publicKind": "material",
+      "title": "A truth maintenance system",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/truth-maintenance-system/"
+    },
+    {
+      "kind": "material",
+      "id": "statefuse-conflict-preserving-memory",
+      "revision": "rev:note-sha256:ae013071e2d5b4c39",
+      "publicKind": "material",
+      "title": "StateFuse: Deterministic Conflict-Preserving Memory for Multi-Agent Systems",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/statefuse-conflict-preserving-memory/"
+    },
+    {
+      "kind": "material",
+      "id": "useful-memories-become-faulty",
+      "revision": "rev:note-sha256:704b163b88b823801",
+      "publicKind": "material",
+      "title": "Useful Memories Become Faulty When Continuously Updated by LLMs",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/useful-memories-become-faulty/"
+    },
+    {
+      "kind": "material",
+      "id": "recuris-memory-evolution",
+      "revision": "rev:note-sha256:d0cb5216864b4d810",
+      "publicKind": "material",
+      "title": "Recursive Experiential–Working Memory Evolution for Long-Horizon Agent Harnesses",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/recuris-memory-evolution/"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@ams/research-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./canonical": "./canonical.js",
+    "./content-fields": "./content-fields.generated.js"
+  },
+  "types": "./index.d.ts",
+  "scripts": {
+    "test": "node --test test/core.test.js"
+  }
+}

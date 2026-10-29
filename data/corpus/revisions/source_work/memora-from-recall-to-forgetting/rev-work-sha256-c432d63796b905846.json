@@ -1,0 +1,66 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:memora-from-recall-to-forgetting",
+  "revision": "rev:work-sha256:c432d63796b905846",
+  "state_revision": "rev:work-sha256:c432d63796b905846",
+  "title": "From Recall to Forgetting: Benchmarking Long-Term Memory for Personalized Agents",
+  "work_type": "paper",
+  "authors": [
+    "Md Nayem Uddin",
+    "Kumar Shubham",
+    "Eduardo Blanco",
+    "Chitta Baral",
+    "Gengyu Wang"
+  ],
+  "year": 2026,
+  "short_author": "Uddin 等",
+  "identifiers": [
+    {
+      "namespace": "doi",
+      "value": "10.48550/arXiv.2604.20006",
+      "status": "confirmed",
+      "role": "work-identity"
+    },
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2604.20006v1",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2604.20006v1",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "https://arxiv.org/pdf/2604.20006v1",
+      "delivery": "official-link",
+      "original_locator": "https://arxiv.org/pdf/2604.20006v1",
+      "access_note": "本站不重新分发这份 PDF；请从 arXiv official source 阅读 v1。"
+    }
+  ],
+  "aliases": [
+    "memora-from-recall-to-forgetting"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "615d69ccec460a177a313f161f5e7166366f71409144835397186fab8b473fd0",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

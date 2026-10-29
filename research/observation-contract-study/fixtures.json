@@ -1,0 +1,1876 @@
+{
+  "schema": "ams-observation-contract-fixtures/1",
+  "provenance": "AMS editors 原创有限合成构造；无经验样本。",
+  "models": [
+    {
+      "id": "future-access",
+      "family": "future-query",
+      "description": "当前摘要足够回答 x，不足以回答未来 y；获准源重访可分。",
+      "plant": {
+        "states": {
+          "w00": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w00",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w00",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w01": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w01",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w01",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          },
+          "w10": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w10",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w10",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w11": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w11",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w11",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "ask-current": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "只回答当前可见字段"
+          },
+          "revisit": {
+            "cost": 1,
+            "gates": {
+              "permitted": true,
+              "available": true,
+              "correct_revision": true,
+              "target_bound": true,
+              "adequate_coverage": true
+            },
+            "meaning": "读取正确版本且绑定 y 的源片段"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "w00": "y=0",
+          "w01": "y=1",
+          "w10": "y=0",
+          "w11": "y=1"
+        },
+        "answers": {
+          "current": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "0"
+            ],
+            "w10": [
+              "1"
+            ],
+            "w11": [
+              "1"
+            ]
+          },
+          "future": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "1"
+            ],
+            "w10": [
+              "0"
+            ],
+            "w11": [
+              "1"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "current": "x 是什么？",
+          "future": "y 是什么？"
+        }
+      }
+    },
+    {
+      "id": "future-denied-permitted",
+      "family": "future-query",
+      "description": "源重访单项门槛关闭：permitted",
+      "plant": {
+        "states": {
+          "w00": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w00",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w00",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w01": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w01",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w01",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          },
+          "w10": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w10",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w10",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w11": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w11",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w11",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "ask-current": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "只回答当前可见字段"
+          },
+          "revisit": {
+            "cost": 1,
+            "gates": {
+              "permitted": false,
+              "available": true,
+              "correct_revision": true,
+              "target_bound": true,
+              "adequate_coverage": true
+            },
+            "meaning": "读取正确版本且绑定 y 的源片段"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "w00": "y=0",
+          "w01": "y=1",
+          "w10": "y=0",
+          "w11": "y=1"
+        },
+        "answers": {
+          "current": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "0"
+            ],
+            "w10": [
+              "1"
+            ],
+            "w11": [
+              "1"
+            ]
+          },
+          "future": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "1"
+            ],
+            "w10": [
+              "0"
+            ],
+            "w11": [
+              "1"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "current": "x 是什么？",
+          "future": "y 是什么？"
+        }
+      }
+    },
+    {
+      "id": "future-denied-available",
+      "family": "future-query",
+      "description": "源重访单项门槛关闭：available",
+      "plant": {
+        "states": {
+          "w00": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w00",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w00",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w01": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w01",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w01",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          },
+          "w10": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w10",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w10",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w11": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w11",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w11",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "ask-current": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "只回答当前可见字段"
+          },
+          "revisit": {
+            "cost": 1,
+            "gates": {
+              "permitted": true,
+              "available": false,
+              "correct_revision": true,
+              "target_bound": true,
+              "adequate_coverage": true
+            },
+            "meaning": "读取正确版本且绑定 y 的源片段"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "w00": "y=0",
+          "w01": "y=1",
+          "w10": "y=0",
+          "w11": "y=1"
+        },
+        "answers": {
+          "current": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "0"
+            ],
+            "w10": [
+              "1"
+            ],
+            "w11": [
+              "1"
+            ]
+          },
+          "future": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "1"
+            ],
+            "w10": [
+              "0"
+            ],
+            "w11": [
+              "1"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "current": "x 是什么？",
+          "future": "y 是什么？"
+        }
+      }
+    },
+    {
+      "id": "future-denied-correct_revision",
+      "family": "future-query",
+      "description": "源重访单项门槛关闭：correct_revision",
+      "plant": {
+        "states": {
+          "w00": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w00",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w00",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w01": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w01",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w01",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          },
+          "w10": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w10",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w10",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w11": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w11",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w11",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "ask-current": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "只回答当前可见字段"
+          },
+          "revisit": {
+            "cost": 1,
+            "gates": {
+              "permitted": true,
+              "available": true,
+              "correct_revision": false,
+              "target_bound": true,
+              "adequate_coverage": true
+            },
+            "meaning": "读取正确版本且绑定 y 的源片段"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "w00": "y=0",
+          "w01": "y=1",
+          "w10": "y=0",
+          "w11": "y=1"
+        },
+        "answers": {
+          "current": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "0"
+            ],
+            "w10": [
+              "1"
+            ],
+            "w11": [
+              "1"
+            ]
+          },
+          "future": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "1"
+            ],
+            "w10": [
+              "0"
+            ],
+            "w11": [
+              "1"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "current": "x 是什么？",
+          "future": "y 是什么？"
+        }
+      }
+    },
+    {
+      "id": "future-denied-target_bound",
+      "family": "future-query",
+      "description": "源重访单项门槛关闭：target_bound",
+      "plant": {
+        "states": {
+          "w00": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w00",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w00",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w01": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w01",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w01",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          },
+          "w10": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w10",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w10",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w11": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w11",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w11",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "ask-current": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "只回答当前可见字段"
+          },
+          "revisit": {
+            "cost": 1,
+            "gates": {
+              "permitted": true,
+              "available": true,
+              "correct_revision": true,
+              "target_bound": false,
+              "adequate_coverage": true
+            },
+            "meaning": "读取正确版本且绑定 y 的源片段"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "w00": "y=0",
+          "w01": "y=1",
+          "w10": "y=0",
+          "w11": "y=1"
+        },
+        "answers": {
+          "current": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "0"
+            ],
+            "w10": [
+              "1"
+            ],
+            "w11": [
+              "1"
+            ]
+          },
+          "future": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "1"
+            ],
+            "w10": [
+              "0"
+            ],
+            "w11": [
+              "1"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "current": "x 是什么？",
+          "future": "y 是什么？"
+        }
+      }
+    },
+    {
+      "id": "future-denied-adequate_coverage",
+      "family": "future-query",
+      "description": "源重访单项门槛关闭：adequate_coverage",
+      "plant": {
+        "states": {
+          "w00": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w00",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w00",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w01": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w01",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w01",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          },
+          "w10": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w10",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w10",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w11": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "ask-current": {
+                "next": "w11",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w11",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "ask-current": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "只回答当前可见字段"
+          },
+          "revisit": {
+            "cost": 1,
+            "gates": {
+              "permitted": true,
+              "available": true,
+              "correct_revision": true,
+              "target_bound": true,
+              "adequate_coverage": false
+            },
+            "meaning": "读取正确版本且绑定 y 的源片段"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "w00": "y=0",
+          "w01": "y=1",
+          "w10": "y=0",
+          "w11": "y=1"
+        },
+        "answers": {
+          "current": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "0"
+            ],
+            "w10": [
+              "1"
+            ],
+            "w11": [
+              "1"
+            ]
+          },
+          "future": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "1"
+            ],
+            "w10": [
+              "0"
+            ],
+            "w11": [
+              "1"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "current": "x 是什么？",
+          "future": "y 是什么？"
+        }
+      }
+    },
+    {
+      "id": "future-side-information",
+      "family": "future-query",
+      "description": "即使重访禁止，声明已有 y 的侧信息也能细分观察类。",
+      "plant": {
+        "states": {
+          "w00": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {
+              "known_y": 0
+            },
+            "transitions": {
+              "ask-current": {
+                "next": "w00",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w00",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w01": {
+            "observation": {
+              "summary_x": 0
+            },
+            "side_information": {
+              "known_y": 1
+            },
+            "transitions": {
+              "ask-current": {
+                "next": "w01",
+                "output": {
+                  "x": 0
+                }
+              },
+              "revisit": {
+                "next": "w01",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          },
+          "w10": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {
+              "known_y": 0
+            },
+            "transitions": {
+              "ask-current": {
+                "next": "w10",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w10",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 0
+                }
+              }
+            }
+          },
+          "w11": {
+            "observation": {
+              "summary_x": 1
+            },
+            "side_information": {
+              "known_y": 1
+            },
+            "transitions": {
+              "ask-current": {
+                "next": "w11",
+                "output": {
+                  "x": 1
+                }
+              },
+              "revisit": {
+                "next": "w11",
+                "output": {
+                  "source_version": "v1",
+                  "target": "y",
+                  "y": 1
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "ask-current": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "只回答当前可见字段"
+          },
+          "revisit": {
+            "cost": 1,
+            "gates": {
+              "permitted": false,
+              "available": true,
+              "correct_revision": true,
+              "target_bound": true,
+              "adequate_coverage": true
+            },
+            "meaning": "读取正确版本且绑定 y 的源片段"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "w00": "y=0",
+          "w01": "y=1",
+          "w10": "y=0",
+          "w11": "y=1"
+        },
+        "answers": {
+          "current": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "0"
+            ],
+            "w10": [
+              "1"
+            ],
+            "w11": [
+              "1"
+            ]
+          },
+          "future": {
+            "w00": [
+              "0"
+            ],
+            "w01": [
+              "1"
+            ],
+            "w10": [
+              "0"
+            ],
+            "w11": [
+              "1"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "current": "x 是什么？",
+          "future": "y 是什么？"
+        }
+      }
+    },
+    {
+      "id": "writeback-active",
+      "family": "source-writeback",
+      "description": "当前同答案；撤回再读取使有效来源与旧写回分开。",
+      "plant": {
+        "states": {
+          "live": {
+            "observation": {
+              "answer": "Friday"
+            },
+            "side_information": {},
+            "transitions": {
+              "read": {
+                "next": "live",
+                "output": {
+                  "answer": "Friday"
+                }
+              },
+              "withdraw": {
+                "next": "withdrawn-live",
+                "output": {
+                  "receipt": "withdrawal-accepted"
+                }
+              }
+            }
+          },
+          "cached": {
+            "observation": {
+              "answer": "Friday"
+            },
+            "side_information": {},
+            "transitions": {
+              "read": {
+                "next": "cached",
+                "output": {
+                  "answer": "Friday"
+                }
+              },
+              "withdraw": {
+                "next": "withdrawn-cached",
+                "output": {
+                  "receipt": "withdrawal-accepted"
+                }
+              }
+            }
+          },
+          "withdrawn-live": {
+            "observation": {
+              "answer": "Friday"
+            },
+            "side_information": {},
+            "transitions": {
+              "read": {
+                "next": "withdrawn-live",
+                "output": {
+                  "answer": "unsupported"
+                }
+              },
+              "withdraw": {
+                "next": "withdrawn-live",
+                "output": {
+                  "receipt": "withdrawal-accepted"
+                }
+              }
+            }
+          },
+          "withdrawn-cached": {
+            "observation": {
+              "answer": "Friday"
+            },
+            "side_information": {},
+            "transitions": {
+              "read": {
+                "next": "withdrawn-cached",
+                "output": {
+                  "answer": "Friday"
+                }
+              },
+              "withdraw": {
+                "next": "withdrawn-cached",
+                "output": {
+                  "receipt": "withdrawal-accepted"
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "read": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "读取当前记忆输出"
+          },
+          "withdraw": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "撤回支持来源；本构造中不删除历史写回"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "live": "live",
+          "cached": "cached",
+          "withdrawn-live": "live",
+          "withdrawn-cached": "cached"
+        },
+        "answers": {
+          "current": {
+            "live": [
+              "Friday"
+            ],
+            "cached": [
+              "Friday"
+            ],
+            "withdrawn-live": [
+              "Friday"
+            ],
+            "withdrawn-cached": [
+              "Friday"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "current": "干预前的当前答案是什么？"
+        }
+      }
+    },
+    {
+      "id": "writeback-forbidden",
+      "family": "source-writeback",
+      "description": "撤回未获准；初始 live/cached 在允许读取下等价。",
+      "plant": {
+        "states": {
+          "live": {
+            "observation": {
+              "answer": "Friday"
+            },
+            "side_information": {},
+            "transitions": {
+              "read": {
+                "next": "live",
+                "output": {
+                  "answer": "Friday"
+                }
+              },
+              "withdraw": {
+                "next": "withdrawn-live",
+                "output": {
+                  "receipt": "withdrawal-accepted"
+                }
+              }
+            }
+          },
+          "cached": {
+            "observation": {
+              "answer": "Friday"
+            },
+            "side_information": {},
+            "transitions": {
+              "read": {
+                "next": "cached",
+                "output": {
+                  "answer": "Friday"
+                }
+              },
+              "withdraw": {
+                "next": "withdrawn-cached",
+                "output": {
+                  "receipt": "withdrawal-accepted"
+                }
+              }
+            }
+          },
+          "withdrawn-live": {
+            "observation": {
+              "answer": "Friday"
+            },
+            "side_information": {},
+            "transitions": {
+              "read": {
+                "next": "withdrawn-live",
+                "output": {
+                  "answer": "unsupported"
+                }
+              },
+              "withdraw": {
+                "next": "withdrawn-live",
+                "output": {
+                  "receipt": "withdrawal-accepted"
+                }
+              }
+            }
+          },
+          "withdrawn-cached": {
+            "observation": {
+              "answer": "Friday"
+            },
+            "side_information": {},
+            "transitions": {
+              "read": {
+                "next": "withdrawn-cached",
+                "output": {
+                  "answer": "Friday"
+                }
+              },
+              "withdraw": {
+                "next": "withdrawn-cached",
+                "output": {
+                  "receipt": "withdrawal-accepted"
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "read": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "读取当前记忆输出"
+          },
+          "withdraw": {
+            "cost": 1,
+            "gates": {
+              "permitted": false
+            },
+            "meaning": "撤回支持来源；本构造中不删除历史写回"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "live": "live",
+          "cached": "cached",
+          "withdrawn-live": "live",
+          "withdrawn-cached": "cached"
+        },
+        "answers": {
+          "current": {
+            "live": [
+              "Friday"
+            ],
+            "cached": [
+              "Friday"
+            ],
+            "withdrawn-live": [
+              "Friday"
+            ],
+            "withdrawn-cached": [
+              "Friday"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "current": "干预前的当前答案是什么？"
+        }
+      }
+    },
+    {
+      "id": "equivalent-control",
+      "family": "source-writeback",
+      "description": "构造不同 handle、相同可观察行为的真正等价正控制。",
+      "plant": {
+        "states": {
+          "a": {
+            "observation": {
+              "answer": "Friday"
+            },
+            "side_information": {},
+            "transitions": {
+              "read": {
+                "next": "a",
+                "output": {
+                  "answer": "Friday"
+                }
+              }
+            }
+          },
+          "b": {
+            "observation": {
+              "answer": "Friday"
+            },
+            "side_information": {},
+            "transitions": {
+              "read": {
+                "next": "b",
+                "output": {
+                  "answer": "Friday"
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "read": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "读取"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "a": "origin-a",
+          "b": "origin-b"
+        },
+        "answers": {
+          "current": {
+            "a": [
+              "Friday"
+            ],
+            "b": [
+              "Friday"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "current": "当前答案"
+        }
+      }
+    },
+    {
+      "id": "score-weighted",
+      "family": "score-scope",
+      "description": "同总分的两种错误；两步廉价行动优于一步昂贵行动。",
+      "plant": {
+        "states": {
+          "revision": {
+            "observation": {
+              "aggregate_score": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "prepare": {
+                "next": "revision-ready",
+                "output": {
+                  "opened": true
+                }
+              },
+              "inspect": {
+                "next": "revision",
+                "output": {
+                  "trace": "closed"
+                }
+              },
+              "expensive-probe": {
+                "next": "revision",
+                "output": {
+                  "failure": "revision"
+                }
+              },
+              "idle": {
+                "next": "revision",
+                "output": {
+                  "idle": true
+                }
+              }
+            }
+          },
+          "revision-ready": {
+            "observation": {
+              "aggregate_score": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "prepare": {
+                "next": "revision-ready",
+                "output": {
+                  "opened": true
+                }
+              },
+              "inspect": {
+                "next": "revision-ready",
+                "output": {
+                  "failure": "revision"
+                }
+              },
+              "expensive-probe": {
+                "next": "revision-ready",
+                "output": {
+                  "failure": "revision"
+                }
+              },
+              "idle": {
+                "next": "revision-ready",
+                "output": {
+                  "idle": true
+                }
+              }
+            }
+          },
+          "scope": {
+            "observation": {
+              "aggregate_score": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "prepare": {
+                "next": "scope-ready",
+                "output": {
+                  "opened": true
+                }
+              },
+              "inspect": {
+                "next": "scope",
+                "output": {
+                  "trace": "closed"
+                }
+              },
+              "expensive-probe": {
+                "next": "scope",
+                "output": {
+                  "failure": "scope"
+                }
+              },
+              "idle": {
+                "next": "scope",
+                "output": {
+                  "idle": true
+                }
+              }
+            }
+          },
+          "scope-ready": {
+            "observation": {
+              "aggregate_score": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "prepare": {
+                "next": "scope-ready",
+                "output": {
+                  "opened": true
+                }
+              },
+              "inspect": {
+                "next": "scope-ready",
+                "output": {
+                  "failure": "scope"
+                }
+              },
+              "expensive-probe": {
+                "next": "scope-ready",
+                "output": {
+                  "failure": "scope"
+                }
+              },
+              "idle": {
+                "next": "scope-ready",
+                "output": {
+                  "idle": true
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "prepare": {
+            "cost": "1/2",
+            "gates": {},
+            "meaning": "打开原始轨迹"
+          },
+          "inspect": {
+            "cost": "1/2",
+            "gates": {},
+            "meaning": "读取已打开的 revision/scope 错误片段"
+          },
+          "expensive-probe": {
+            "cost": 3,
+            "gates": {},
+            "meaning": "直接测量错误类型"
+          },
+          "idle": {
+            "cost": 0,
+            "gates": {},
+            "meaning": "无信息零成本自环"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "revision": "revision",
+          "revision-ready": "revision",
+          "scope": "scope",
+          "scope-ready": "scope"
+        },
+        "answers": {
+          "repair": {
+            "revision": [
+              "revision"
+            ],
+            "revision-ready": [
+              "revision"
+            ],
+            "scope": [
+              "scope"
+            ],
+            "scope-ready": [
+              "scope"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "repair": "下一步应修 revision 还是 scope？"
+        }
+      }
+    },
+    {
+      "id": "score-unit-cost",
+      "family": "score-scope",
+      "description": "把每项动作成本设为 1；最少步骤选择直接 probe。",
+      "plant": {
+        "states": {
+          "revision": {
+            "observation": {
+              "aggregate_score": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "prepare": {
+                "next": "revision-ready",
+                "output": {
+                  "opened": true
+                }
+              },
+              "inspect": {
+                "next": "revision",
+                "output": {
+                  "trace": "closed"
+                }
+              },
+              "expensive-probe": {
+                "next": "revision",
+                "output": {
+                  "failure": "revision"
+                }
+              },
+              "idle": {
+                "next": "revision",
+                "output": {
+                  "idle": true
+                }
+              }
+            }
+          },
+          "revision-ready": {
+            "observation": {
+              "aggregate_score": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "prepare": {
+                "next": "revision-ready",
+                "output": {
+                  "opened": true
+                }
+              },
+              "inspect": {
+                "next": "revision-ready",
+                "output": {
+                  "failure": "revision"
+                }
+              },
+              "expensive-probe": {
+                "next": "revision-ready",
+                "output": {
+                  "failure": "revision"
+                }
+              },
+              "idle": {
+                "next": "revision-ready",
+                "output": {
+                  "idle": true
+                }
+              }
+            }
+          },
+          "scope": {
+            "observation": {
+              "aggregate_score": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "prepare": {
+                "next": "scope-ready",
+                "output": {
+                  "opened": true
+                }
+              },
+              "inspect": {
+                "next": "scope",
+                "output": {
+                  "trace": "closed"
+                }
+              },
+              "expensive-probe": {
+                "next": "scope",
+                "output": {
+                  "failure": "scope"
+                }
+              },
+              "idle": {
+                "next": "scope",
+                "output": {
+                  "idle": true
+                }
+              }
+            }
+          },
+          "scope-ready": {
+            "observation": {
+              "aggregate_score": 1
+            },
+            "side_information": {},
+            "transitions": {
+              "prepare": {
+                "next": "scope-ready",
+                "output": {
+                  "opened": true
+                }
+              },
+              "inspect": {
+                "next": "scope-ready",
+                "output": {
+                  "failure": "scope"
+                }
+              },
+              "expensive-probe": {
+                "next": "scope-ready",
+                "output": {
+                  "failure": "scope"
+                }
+              },
+              "idle": {
+                "next": "scope-ready",
+                "output": {
+                  "idle": true
+                }
+              }
+            }
+          }
+        },
+        "actions": {
+          "prepare": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "打开原始轨迹"
+          },
+          "inspect": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "读取已打开的 revision/scope 错误片段"
+          },
+          "expensive-probe": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "直接测量错误类型"
+          },
+          "idle": {
+            "cost": 1,
+            "gates": {},
+            "meaning": "无信息零成本自环"
+          }
+        },
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "revision": "revision",
+          "revision-ready": "revision",
+          "scope": "scope",
+          "scope-ready": "scope"
+        },
+        "answers": {
+          "repair": {
+            "revision": [
+              "revision"
+            ],
+            "revision-ready": [
+              "revision"
+            ],
+            "scope": [
+              "scope"
+            ],
+            "scope-ready": [
+              "scope"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "repair": "下一步应修 revision 还是 scope？"
+        }
+      }
+    },
+    {
+      "id": "nonpairwise-control",
+      "family": "answer-intersection",
+      "description": "两两相容但全类不相容；没有任何可执行区分动作。",
+      "plant": {
+        "states": {
+          "a": {
+            "observation": {
+              "display": "same"
+            },
+            "side_information": {},
+            "transitions": {}
+          },
+          "b": {
+            "observation": {
+              "display": "same"
+            },
+            "side_information": {},
+            "transitions": {}
+          },
+          "c": {
+            "observation": {
+              "display": "same"
+            },
+            "side_information": {},
+            "transitions": {}
+          }
+        },
+        "actions": {},
+        "side_information_description": "仅 states.side_information 所列值可见；handle、targets 与 answers 不可见。"
+      },
+      "evaluator": {
+        "targets": {
+          "a": "mode-a",
+          "b": "mode-b",
+          "c": "mode-c"
+        },
+        "answers": {
+          "route": {
+            "a": [
+              "direct",
+              "cached"
+            ],
+            "b": [
+              "cached",
+              "replay"
+            ],
+            "c": [
+              "direct",
+              "replay"
+            ]
+          }
+        },
+        "question_descriptions": {
+          "route": "选择一条在实际状态中被允许的路线。"
+        }
+      }
+    }
+  ]
+}

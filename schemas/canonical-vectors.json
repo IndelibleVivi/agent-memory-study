@@ -1,0 +1,27 @@
+{
+  "schema": "ams-canonical-vectors/1",
+  "canonicalization": "ams-json-canonical/1",
+  "vectors": [
+    {
+      "name": "object-key-order",
+      "value": {"z": [3, 2, 1], "a": {"β": "保留", "a": true}},
+      "bytes": "{\"a\":{\"a\":true,\"\\u03b2\":\"\\u4fdd\\u7559\"},\"z\":[3,2,1]}",
+      "sha256": "81e5c0f487dac12a3cea01656bd419e268f1ed2c014096289ecc23f96f9101d7"
+    },
+    {
+      "name": "source-work-content",
+      "value": {
+        "aliases": ["x"],
+        "authors": ["A"],
+        "identifiers": [],
+        "manifestations": [],
+        "title": "X",
+        "visibility": "public",
+        "work_type": "paper",
+        "year": 2026
+      },
+      "bytes": "{\"aliases\":[\"x\"],\"authors\":[\"A\"],\"identifiers\":[],\"manifestations\":[],\"title\":\"X\",\"visibility\":\"public\",\"work_type\":\"paper\",\"year\":2026}",
+      "sha256": "6b9075fcbc113beed97093e2a9aac029b711bf122bb54ea6db9d7595bf1f37ef"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_work",
+  "id": "work:coala-cognitive-architecture",
+  "revision": "rev:work-sha256:f3bbf0987f273e0a9",
+  "state_revision": "rev:work-sha256:f3bbf0987f273e0a9",
+  "title": "Cognitive architectures for language agents",
+  "work_type": "paper",
+  "authors": [
+    "Theodore R. Sumers",
+    "Shunyu Yao",
+    "Karthik Narasimhan",
+    "Thomas L. Griffiths"
+  ],
+  "year": 2024,
+  "short_author": "Sumers 等",
+  "identifiers": [
+    {
+      "namespace": "arxiv",
+      "value": "https://arxiv.org/abs/2309.02427",
+      "status": "confirmed",
+      "role": "source-locator"
+    }
+  ],
+  "manifestations": [
+    {
+      "media_type": "text/html",
+      "locator": "https://arxiv.org/abs/2309.02427",
+      "delivery": "official-link"
+    },
+    {
+      "media_type": "application/pdf",
+      "locator": "papers/08-sumers-2024-cognitive-architectures.pdf",
+      "delivery": "bundled",
+      "original_locator": "https://arxiv.org/pdf/2309.02427v3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "aliases": [
+    "coala-cognitive-architecture"
+  ],
+  "visibility": "public",
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "9530ffd124b0ce60c34a4d345350b4af95dec0e90da59811eace15b471eb427b",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "aliases",
+      "authors",
+      "identifiers",
+      "manifestations",
+      "short_author",
+      "title",
+      "visibility",
+      "work_type",
+      "year"
+    ]
+  }
+}

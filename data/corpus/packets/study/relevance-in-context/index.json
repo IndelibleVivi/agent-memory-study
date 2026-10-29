@@ -1,0 +1,121 @@
+{
+  "schema": "ams-study-packet/2",
+  "contract_version": "ams-core/2",
+  "compiler_version": "ams-content-compiler/2",
+  "kind": "study",
+  "id": "relevance-in-context",
+  "title": "过去怎样进入当下",
+  "entity_refs": [
+    {
+      "kind": "entry",
+      "id": "entry:relevance-in-context",
+      "revision": "rev:entry-sha256:5f7bc5c0bd12c09ddc8579b0dcea205360ac1a4e825820629fd7dad07f32ed70"
+    }
+  ],
+  "attribution": {
+    "byline": "Agent Memory Study editors",
+    "date": "2026-10-18"
+  },
+  "content": {
+    "id": "relevance-in-context",
+    "title": "过去怎样进入当下",
+    "kind": "research-essay",
+    "date": "2026-10-18",
+    "byline": "Agent Memory Study editors",
+    "intro": "从地址、近邻与相关性，到信息真正参与判断，研究它们怎样接上。",
+    "subtitle": "长期方向 02 · 检索、需求与使用",
+    "number": "08",
+    "domains": [
+      "indexing",
+      "retrieval",
+      "control",
+      "evaluation"
+    ],
+    "directionIds": [
+      "relevance"
+    ],
+    "readings": [],
+    "externalReadings": [
+      {
+        "label": "Information retrieval system evaluation",
+        "url": "https://nlp.stanford.edu/IR-book/html/htmledition/information-retrieval-system-evaluation-1.html",
+        "kind": "基础教材",
+        "locator": "教材 §8.1，文档、信息需求与相关性判断",
+        "takeaway": "评价需要先明确需求和相关性参照。",
+        "limit": "仅使用所读章节，不代表系统性完成教材。"
+      }
+    ],
+    "takeaways": [],
+    "boundary": "这是 AMS 的编者论述。来源、原创推演与既有研究的边界在正文分别说明；不包含私人共学记录或新的模型实验。",
+    "closing": "",
+    "sourcePath": "study/programme/directions/relevance-in-context.md",
+    "bodyMarkdown": "# 过去怎样进入当下\n\n一份信息能够被定位，不代表它回答当前需要；回答了当前需要，也还要有人或某种机制真正使用它。这个方向研究地址、匹配、相关性与使用怎样接上。\n\n## 需求改变，相关性也会改变\n\n同一条“接口 v1 的调用方式”，对维护 v1 的人可能直接相关，对寻找 v2 迁移方案的人可能只是背景。信息没有消失，当前需要它承担的作用变了。我们因此把相关性理解为需要说明条件的关系，而不把它当成文档永久拥有的标签。\n\n[IR 教材的评价章节](https://nlp.stanford.edu/IR-book/html/htmledition/information-retrieval-system-evaluation-1.html)把信息需求、文档集合和相关性判断放在评价的前提中。AMS 据此采用的研究动作是：在比较检索方法之前，先让“要找到什么”与“按什么算找到”可被检查。\n\n## 三种可以分别变好的东西\n\n一个近似索引可以更准确地恢复给定表示下的近邻；一种表示可以把相关内容放得更近；一个使用过程可以更好地消费已经取得的证据。这三种改进可以相互帮助，也可能留下各自的瓶颈。\n\n[两个 recall 的演算](../../entries/retrieval-and-relevance.md)提供一个有限而清楚的例子：完全找回精确邻居，仍然可能漏掉需求相关文档。这时继续修索引近似度不会解除设定中的差距，需要检查表示或评价对象。这个例子没有判定现实检索错误的主要来源。\n\n[候选竞争研究](../../../research/experience-reuse-retrieval-study/README.md)又把名额与冗余带进来：候选还在，重复记录仍可能改变谁进入有限预算。这使选择成为值得独立研究的机制，而不只是检索之后的一步整理。\n\n## 让一个查询长出问题\n\n学习 IR 可以从 jieba、BM25、embedding 开始，也可以从一个查询为什么找错开始。先把文本单位、评分、访问结构和评价拆清，再沿真正改变理解的地方深入：相关性如何标注，训练正负例如何形成，词项约束与语义泛化何时互补，排序怎样处理冗余。\n\n需要跨向 agent 时，再观察候选如何进入工作状态、被赋予什么角色、是否改变判断。任务效用要求新的证据，不能从检索分数直接继承。但基础 IR 不必每次都完成这一步；理解相关性本身就是成果。\n\n## 当前判断与未解处\n\n当前最有用的研究原则是保持评价对象清楚，并在相邻环节之间做可检查的比较。它帮助我们判断下一次应该查来源、补概念、换表示、检查候选，还是研究使用机制。\n\n下一条值得继续的线索是：**训练时的“相关”，与真实情境里的“有用”，在哪些条件下能够相互支持？** 先对齐一项方法的监督对象和一个真实任务的信息需求，会比直接排列模型分数更有解释力。来源不足时保留问题，不用泛化的“语义更好”填空。\n",
+    "bodyHtml": "<h1>过去怎样进入当下</h1>\n<p>一份信息能够被定位，不代表它回答当前需要；回答了当前需要，也还要有人或某种机制真正使用它。这个方向研究地址、匹配、相关性与使用怎样接上。</p>\n<h2>需求改变，相关性也会改变</h2>\n<p>同一条“接口 v1 的调用方式”，对维护 v1 的人可能直接相关，对寻找 v2 迁移方案的人可能只是背景。信息没有消失，当前需要它承担的作用变了。我们因此把相关性理解为需要说明条件的关系，而不把它当成文档永久拥有的标签。</p>\n<p><a href=\"https://nlp.stanford.edu/IR-book/html/htmledition/information-retrieval-system-evaluation-1.html\" rel=\"noreferrer noopener\">IR 教材的评价章节</a>把信息需求、文档集合和相关性判断放在评价的前提中。AMS 据此采用的研究动作是：在比较检索方法之前，先让“要找到什么”与“按什么算找到”可被检查。</p>\n<h2>三种可以分别变好的东西</h2>\n<p>一个近似索引可以更准确地恢复给定表示下的近邻；一种表示可以把相关内容放得更近；一个使用过程可以更好地消费已经取得的证据。这三种改进可以相互帮助，也可能留下各自的瓶颈。</p>\n<p><a href=\"?study=retrieval-and-relevance\" rel=\"noreferrer noopener\">两个 recall 的演算</a>提供一个有限而清楚的例子：完全找回精确邻居，仍然可能漏掉需求相关文档。这时继续修索引近似度不会解除设定中的差距，需要检查表示或评价对象。这个例子没有判定现实检索错误的主要来源。</p>\n<p><a href=\"research/experience-reuse-retrieval-study/README.md\" rel=\"noreferrer noopener\">候选竞争研究</a>又把名额与冗余带进来：候选还在，重复记录仍可能改变谁进入有限预算。这使选择成为值得独立研究的机制，而不只是检索之后的一步整理。</p>\n<h2>让一个查询长出问题</h2>\n<p>学习 IR 可以从 jieba、BM25、embedding 开始，也可以从一个查询为什么找错开始。先把文本单位、评分、访问结构和评价拆清，再沿真正改变理解的地方深入：相关性如何标注，训练正负例如何形成，词项约束与语义泛化何时互补，排序怎样处理冗余。</p>\n<p>需要跨向 agent 时，再观察候选如何进入工作状态、被赋予什么角色、是否改变判断。任务效用要求新的证据，不能从检索分数直接继承。但基础 IR 不必每次都完成这一步；理解相关性本身就是成果。</p>\n<h2>当前判断与未解处</h2>\n<p>当前最有用的研究原则是保持评价对象清楚，并在相邻环节之间做可检查的比较。它帮助我们判断下一次应该查来源、补概念、换表示、检查候选，还是研究使用机制。</p>\n<p>下一条值得继续的线索是：<strong>训练时的“相关”，与真实情境里的“有用”，在哪些条件下能够相互支持？</strong> 先对齐一项方法的监督对象和一个真实任务的信息需求，会比直接排列模型分数更有解释力。来源不足时保留问题，不用泛化的“语义更好”填空。</p>",
+    "sections": [
+      {
+        "title": "需求改变，相关性也会改变",
+        "text": "同一条“接口 v1 的调用方式”，对维护 v1 的人可能直接相关，对寻找 v2 迁移方案的人可能只是背景。信息没有消失，当前需要它承担的作用变了。我们因此把相关性理解为需要说明条件的关系，而不把它当成文档永久拥有的标签。\n\n[IR 教材的评价章节](https://nlp.stanford.edu/IR-book/html/htmledition/information-retrieval-system-evaluation-1.html)把信息需求、文档集合和相关性判断放在评价的前提中。AMS 据此采用的研究动作是：在比较检索方法之前，先让“要找到什么”与“按什么算找到”可被检查。"
+      },
+      {
+        "title": "三种可以分别变好的东西",
+        "text": "一个近似索引可以更准确地恢复给定表示下的近邻；一种表示可以把相关内容放得更近；一个使用过程可以更好地消费已经取得的证据。这三种改进可以相互帮助，也可能留下各自的瓶颈。\n\n[两个 recall 的演算](../../entries/retrieval-and-relevance.md)提供一个有限而清楚的例子：完全找回精确邻居，仍然可能漏掉需求相关文档。这时继续修索引近似度不会解除设定中的差距，需要检查表示或评价对象。这个例子没有判定现实检索错误的主要来源。\n\n[候选竞争研究](../../../research/experience-reuse-retrieval-study/README.md)又把名额与冗余带进来：候选还在，重复记录仍可能改变谁进入有限预算。这使选择成为值得独立研究的机制，而不只是检索之后的一步整理。"
+      },
+      {
+        "title": "让一个查询长出问题",
+        "text": "学习 IR 可以从 jieba、BM25、embedding 开始，也可以从一个查询为什么找错开始。先把文本单位、评分、访问结构和评价拆清，再沿真正改变理解的地方深入：相关性如何标注，训练正负例如何形成，词项约束与语义泛化何时互补，排序怎样处理冗余。\n\n需要跨向 agent 时，再观察候选如何进入工作状态、被赋予什么角色、是否改变判断。任务效用要求新的证据，不能从检索分数直接继承。但基础 IR 不必每次都完成这一步；理解相关性本身就是成果。"
+      },
+      {
+        "title": "当前判断与未解处",
+        "text": "当前最有用的研究原则是保持评价对象清楚，并在相邻环节之间做可检查的比较。它帮助我们判断下一次应该查来源、补概念、换表示、检查候选，还是研究使用机制。\n\n下一条值得继续的线索是：**训练时的“相关”，与真实情境里的“有用”，在哪些条件下能够相互支持？** 先对齐一项方法的监督对象和一个真实任务的信息需求，会比直接排列模型分数更有解释力。来源不足时保留问题，不用泛化的“语义更好”填空。"
+      }
+    ],
+    "ast": {
+      "anchors": [
+        {
+          "id": "section-1",
+          "label": "过去怎样进入当下",
+          "level": 1
+        },
+        {
+          "id": "section-2",
+          "label": "需求改变，相关性也会改变",
+          "level": 2
+        },
+        {
+          "id": "section-3",
+          "label": "三种可以分别变好的东西",
+          "level": 2
+        },
+        {
+          "id": "section-4",
+          "label": "让一个查询长出问题",
+          "level": 2
+        },
+        {
+          "id": "section-5",
+          "label": "当前判断与未解处",
+          "level": 2
+        }
+      ],
+      "references": [
+        {
+          "kind": "entry",
+          "id": "retrieval-and-relevance",
+          "anchor": "",
+          "heading": "section-3"
+        }
+      ]
+    }
+  },
+  "manifest_policy": "Current public object plus bounded direct references; no linked full texts, private workflow, or inferred support.",
+  "manifest": [
+    {
+      "kind": "study",
+      "id": "retrieval-and-relevance",
+      "revision": "rev:entry-sha256:c59b2187a7d258ce99952405d550bcb920913796b3286d977fff15f4f5833bd3",
+      "publicKind": "study",
+      "title": "找到一样的，还是找到相关的？",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/study/retrieval-and-relevance/"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:coala-cognitive-architecture",
+  "revision": "rev:sha256:f3bbf0987f273e0a9",
+  "state_revision": "rev:sha256:f3bbf0987f273e0a9",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:coala-cognitive-architecture",
+    "revision": "rev:work-sha256:f3bbf0987f273e0a9"
+  },
+  "identity": {
+    "mode": "publisher-version",
+    "namespace": "arxiv",
+    "value": "2309.02427v3",
+    "source_locator": "https://arxiv.org/pdf/2309.02427v3",
+    "identity_basis": "Explicit arXiv version in the reviewed source locator."
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "238833c87d770c52ef2c725c316c03f3cfbd0af31635d6327d3487316a5e3f73",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

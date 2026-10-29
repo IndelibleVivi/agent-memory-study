@@ -1,0 +1,29 @@
+{
+  "schema": "ams-core/2",
+  "kind": "source_revision",
+  "id": "work:mosaic-long-term-memory",
+  "revision": "rev:sha256:56a908bcc1267e449",
+  "state_revision": "rev:sha256:56a908bcc1267e449",
+  "work_ref": {
+    "kind": "source_work",
+    "id": "work:mosaic-long-term-memory",
+    "revision": "rev:work-sha256:56a908bcc1267e449"
+  },
+  "identity": {
+    "mode": "observed-snapshot",
+    "observed_at": null,
+    "source_locator": "https://arxiv.org/abs/2607.16211",
+    "observation_basis": "Legacy public locator does not prove a distinct publisher version; this is the reviewed source identity, not a stored byte snapshot.",
+    "publisher_version_known": false,
+    "snapshot_captured": false
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "d2f0b0aba56ff326c0d461acc3f3ddd962795a48e5de4f81fd53d4dafbd193ef",
+    "canonicalization": "ams-json-canonical/1",
+    "fields": [
+      "identity",
+      "work_ref"
+    ]
+  }
+}

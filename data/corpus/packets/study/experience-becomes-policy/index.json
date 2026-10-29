@@ -1,0 +1,250 @@
+{
+  "schema": "ams-study-packet/2",
+  "contract_version": "ams-core/2",
+  "compiler_version": "ams-content-compiler/2",
+  "kind": "study",
+  "id": "experience-becomes-policy",
+  "title": "没有再读那段往事，它为什么还是改变了选择？",
+  "entity_refs": [
+    {
+      "kind": "entry",
+      "id": "entry:experience-becomes-policy",
+      "revision": "rev:entry-sha256:cd193ffcfa26d2de6f6cf279e0181576c2e62cbb99a5329988302ff462d707df"
+    }
+  ],
+  "attribution": {
+    "byline": "Agent Memory Study editors",
+    "date": "2026-09-22"
+  },
+  "content": {
+    "id": "experience-becomes-policy",
+    "number": "02",
+    "title": "没有再读那段往事，它为什么还是改变了选择？",
+    "subtitle": "从案例、规则到参数：经验怎样留下判断习惯，又怎样被教回来。",
+    "byline": "Agent Memory Study editors",
+    "date": "2026-09-22",
+    "kind": "editorial-synthesis-with-recorded-experiment",
+    "intro": "一次判断结束后，可以留下完整案例、可读规则，或者一组更新过的参数。下一次遇到相近情境，这些载体会以不同方式参与选择。本专题把论文、产品接口与开源实现放在一起，再用原创的结构化实验追踪学习前后和纠正之后的变化。",
+    "readings": [
+      {
+        "materialId": "coala-cognitive-architecture",
+        "label": "CoALA · 经验可以留在程序里",
+        "locator": "§4.1、§4.5；本站条目保持 skim 范围",
+        "takeaway": "模型参数、实现动作的程序与实施决策的程序可以放进同一架构讨论。",
+        "limit": "概念框架不证明小样本个性化学习有效，也不替代具体实验。"
+      },
+      {
+        "materialId": "mistake-notebook-learning",
+        "label": "MNL · 把失败写成下一次可读的指导",
+        "locator": "§§3.1–3.3、Eq. 5；本站已有 promotion cohort audit",
+        "takeaway": "经验可以通过可读 guidance 影响后续行为；接受一次更新需要说明比较的是哪批任务。",
+        "limit": "同批次改善不保证留出表现；本实验的规则归纳并非 MNL 实现。"
+      },
+      {
+        "materialId": "agentic-memory",
+        "label": "AgeMem · 学会管理记忆的动作",
+        "locator": "§§3.2–3.5、Appendix A.2；本站 reward audit",
+        "takeaway": "学习的对象可以是检索、过滤、更新等内部动作；反馈指标决定它受到怎样的训练。",
+        "limit": "trajectory reward 不识别每个动作的独立贡献；本站不在此重跑 RL。"
+      },
+      {
+        "materialId": "insightemb-action-intent-retrieval",
+        "label": "InsightEmb · 当前用途怎样进入检索",
+        "locator": "§§3.1、3.3–3.4；Limitations",
+        "takeaway": "经验是否能解除当前任务的困难，比主题重合提供了另一种监督方向。",
+        "limit": "一次 solver outcome、问题级标签与当前时刻的增量用途不能直接等同。"
+      },
+      {
+        "materialId": "proactive-wake-anchor",
+        "label": "Proactive trigger · 小模型选择何时行动",
+        "locator": "§§3–5；Appendix E.2–E.10",
+        "takeaway": "轻量部件可以承担调用前的 trigger 与 routing，计算分工本身值得比较。",
+        "limit": "离线 trigger 或下游 judge 指标不等于人在持续使用中的认可。"
+      }
+    ],
+    "externalReadings": [
+      {
+        "label": "Jev · 结构化判断接口",
+        "kind": "官方产品文档",
+        "url": "https://docs.typesafe.ai/introduction",
+        "locator": "Introduction：TypeSafe primitives、Atomic questions；访问 2026-09-21",
+        "takeaway": "把 state 上的具体问题作为结构化决策接口，适合讨论决策部件的职责。",
+        "limit": "这里只核对接口说明；未调用服务、验证速度/校准主张或个人持续学习。"
+      },
+      {
+        "label": "jevlike · 可训练的选项评分部件",
+        "kind": "独立开源实现",
+        "url": "https://github.com/vinnylarouge/jevlike",
+        "locator": "README：Architecture、Data format、Use your own data、Limitations；访问 2026-09-21",
+        "takeaway": "用候选查询上下文并输出选项概率；支持可选冻结编码器。相关记录按组切分、打乱上下文对照为小实验提供可借用的检查。",
+        "limit": "本轮阅读 README，未完成代码审计或运行上游训练。本站实验采用独立的结构化分类器，不复现 attention head，也不验证仓库速度和效果数字。"
+      },
+      {
+        "label": "Policy Distillation · 已有策略怎样被压缩",
+        "kind": "论文线索",
+        "url": "https://arxiv.org/abs/1511.06295v2",
+        "locator": "Rusu et al.，2016，v2 Abstract；本轮仅摘要范围",
+        "takeaway": "将已有强化学习策略迁移到更小网络，为“经验所形成的行为能否换一种载体”提供历史参照。",
+        "limit": "原研究在 Atari 环境；这里只作机制线索，不据此声称个人记忆、选择小头或纠正实验有效。"
+      }
+    ],
+    "takeaways": [
+      {
+        "title": "先说清楚学的是什么",
+        "text": "分开候选生成、用途选择与最终表达。固定候选的分类结果，只回答中间这一环。"
+      },
+      {
+        "title": "纠正需要找到真正的载体",
+        "text": "记录、规则、参数和运行时约束分别有更新路径。覆盖输出与更新参数应留下不同证据。"
+      },
+      {
+        "title": "更正的另一半是保留",
+        "text": "把应改变、应保留和相邻有效边界分别检查；只看更正项成功，会漏掉更新后的范围外退化。"
+      },
+      {
+        "title": "把相同与失败也留下",
+        "text": "简单规则、案例或小头可能同样有效，也可能各自失败；实验的价值在于明确条件，而非宣布一种载体普遍更好。"
+      }
+    ],
+    "boundary": "已执行范围：给定结构化观测的小型分类学习与纠正对照。未执行：Jev 服务、jevlike 复现、pretrained language encoder、真实对话或 agent 任务。测试组名称不同不自动代表新的语义结构。",
+    "closing": "每一次经历是否值得压缩，要看它让哪些选择变得更好，也要看后来改错的成本。保留可读来源、训练反馈与版本关系，让新的判断仍然能够被追问。",
+    "labTitle": "查看一次真实拟合留下的选择",
+    "labIntro": "这是一项本机实际执行的原创结构化学习实验。页面展示保存下来的结果，可以切换学习与纠正阶段、逐例比较；不会在浏览器重新训练模型，也不采集访客输入。",
+    "artifactUrl": "research/decision-learning-study/README.md",
+    "resultsUrl": "research/decision-learning-study/results.json",
+    "sourcePath": "study/entries/experience-becomes-policy.md",
+    "bodyMarkdown": "## 经验参与选择的三个时刻\n\n案例通常在决定之前被取回，规则在读取或执行时起作用，参数则在此前的训练中被改变。三者都可以承载经验，代价与可检查性却不同。我们关心经历、载体与后续行为之间的具体联系：哪些选择变了，换一个情境是否还成立，来源失效时又该更新哪个对象。程序性记忆是理解这件事的一套架构语言；它不意味着每个训练模型都拥有某个个体的生活经验。\n\n## 判别接口与从经历中学习，是两个变量\n\nJev 的官方文档描述 state 加 typed questions，返回 Choice、Score 或 Noul 等结构化结果。固定地调用这种接口，可以改变决策方式，却不证明模型从当前使用者的反馈中学习。jevlike 是独立的选项评分实验：可变选项对上下文进行 attention，再输出选项概率；它没有复现 Jev 未公开的设计。把反馈变成训练样本并更新小头，是另一项需要单独记录与评价的操作。\n\n## 这里已有几条相遇的研究线\n\nCoALA 区分 memory、内部动作与 decision cycle；MNL 把失败压缩成可检索 guidance；AgeMem 通过 reward 学习记忆管理动作；InsightEmb 把经验检索与当前行动用途联系起来；轻量 proactive trigger 则研究何时调用下游 agent。它们使用不同数据、反馈和评价单位。本专题借它们提出比较问题，不把跨论文的分数拼成模型排行榜。\n\n## 相关、值得带入与值得说出口\n\n一条记忆可能与话题相关，却已经包含在当前上下文中；也可能帮助选择下一步，而无需在回复中复述。实验先把问题收窄为逐条候选的增量用途，允许全部不用。候选生成保持给定，因此它无法证明找回遗漏记忆的能力；结构化的已知内容和适用范围也由 fixture 提供，不能把分类正确称为自然语言理解或对话体验改善。\n\n## 同一批反馈，四条复用路径\n\n没有新增经验的参照、保存案例的近邻、从训练样本归纳的可读规则，以及真正优化参数的小型分类器，接受可比较的观测。规则不能偷看评价答案，分类器也不能从测试结果挑选参数。方法在归纳偏好、存储和计算上仍然不同，所以观察只支持这些具体实现的比较；不能把任何差距全部归因于“经验放在了哪里”。\n\n## 改了记录以后，什么仍停在过去\n\n纠正反馈之后，仍加载旧参数、从修正数据重新拟合、用少量纠正样本继续训练，以及在运行时覆盖选择，是不同处理。应当分别检查需要改变的范围和仍然有效的范围。输出被约束改正，只说明这次干预有效；参数变化也不自动证明某条来源的影响已被彻底遗忘。本站原有 cache 撤回实验提供相邻问题意识，不是权重遗忘的证据。\n\n## 把纠正与保留放在同一张验收表里\n\n下面纠正阶段的 changed 是按新目标应改变的候选，preserved 是目标未变的其余候选；boundary 则是 preserved 中仍应有用的边界子集，不能把三列相加。先看纠正项是否改对，再看旧的有效选择是否被连带压掉。这里增量更新只看更正样本且没有 replay，完整重训也未保住全部边界。它们提示我们检查损伤发生在哪里，并不证明某种方法总会失败，也没有检验 replay 能否补救。\n\n## 同样合规的输出，可能来自不同处理\n\n运行时约束直接得到新范围规则，覆盖原分类器的一部分输出；原参数没有变。它可以在这组已知条件中满足合规目标，却不能证明参数已被教回来。反过来，重新拟合确实改变参数，也未检验某条来源的影响是否彻底撤回。把行为、参数与来源影响分开记录，才知道下一项检查要对准什么。两条实践判断从这些观察提出目标侧验收方法，仍等待具体项目检验。\n\n## 从这个实验继续往外走\n\n下面保留已执行实验的输入、预测与可复跑来源。它能检查一个受控特征空间里反馈、拟合和纠正的关系；真实对话仍需要从原文识别这些特征、评价遗漏和误用、连接下游任务，并观察人在场时的感受。下一步可以替换输入表示或接入 agent，每次改变一个主要机制，并保留原参照。\n",
+    "bodyHtml": "<h2>经验参与选择的三个时刻</h2>\n<p>案例通常在决定之前被取回，规则在读取或执行时起作用，参数则在此前的训练中被改变。三者都可以承载经验，代价与可检查性却不同。我们关心经历、载体与后续行为之间的具体联系：哪些选择变了，换一个情境是否还成立，来源失效时又该更新哪个对象。程序性记忆是理解这件事的一套架构语言；它不意味着每个训练模型都拥有某个个体的生活经验。</p>\n<h2>判别接口与从经历中学习，是两个变量</h2>\n<p>Jev 的官方文档描述 state 加 typed questions，返回 Choice、Score 或 Noul 等结构化结果。固定地调用这种接口，可以改变决策方式，却不证明模型从当前使用者的反馈中学习。jevlike 是独立的选项评分实验：可变选项对上下文进行 attention，再输出选项概率；它没有复现 Jev 未公开的设计。把反馈变成训练样本并更新小头，是另一项需要单独记录与评价的操作。</p>\n<h2>这里已有几条相遇的研究线</h2>\n<p>CoALA 区分 memory、内部动作与 decision cycle；MNL 把失败压缩成可检索 guidance；AgeMem 通过 reward 学习记忆管理动作；InsightEmb 把经验检索与当前行动用途联系起来；轻量 proactive trigger 则研究何时调用下游 agent。它们使用不同数据、反馈和评价单位。本专题借它们提出比较问题，不把跨论文的分数拼成模型排行榜。</p>\n<h2>相关、值得带入与值得说出口</h2>\n<p>一条记忆可能与话题相关，却已经包含在当前上下文中；也可能帮助选择下一步，而无需在回复中复述。实验先把问题收窄为逐条候选的增量用途，允许全部不用。候选生成保持给定，因此它无法证明找回遗漏记忆的能力；结构化的已知内容和适用范围也由 fixture 提供，不能把分类正确称为自然语言理解或对话体验改善。</p>\n<h2>同一批反馈，四条复用路径</h2>\n<p>没有新增经验的参照、保存案例的近邻、从训练样本归纳的可读规则，以及真正优化参数的小型分类器，接受可比较的观测。规则不能偷看评价答案，分类器也不能从测试结果挑选参数。方法在归纳偏好、存储和计算上仍然不同，所以观察只支持这些具体实现的比较；不能把任何差距全部归因于“经验放在了哪里”。</p>\n<h2>改了记录以后，什么仍停在过去</h2>\n<p>纠正反馈之后，仍加载旧参数、从修正数据重新拟合、用少量纠正样本继续训练，以及在运行时覆盖选择，是不同处理。应当分别检查需要改变的范围和仍然有效的范围。输出被约束改正，只说明这次干预有效；参数变化也不自动证明某条来源的影响已被彻底遗忘。本站原有 cache 撤回实验提供相邻问题意识，不是权重遗忘的证据。</p>\n<h2>把纠正与保留放在同一张验收表里</h2>\n<p>下面纠正阶段的 changed 是按新目标应改变的候选，preserved 是目标未变的其余候选；boundary 则是 preserved 中仍应有用的边界子集，不能把三列相加。先看纠正项是否改对，再看旧的有效选择是否被连带压掉。这里增量更新只看更正样本且没有 replay，完整重训也未保住全部边界。它们提示我们检查损伤发生在哪里，并不证明某种方法总会失败，也没有检验 replay 能否补救。</p>\n<h2>同样合规的输出，可能来自不同处理</h2>\n<p>运行时约束直接得到新范围规则，覆盖原分类器的一部分输出；原参数没有变。它可以在这组已知条件中满足合规目标，却不能证明参数已被教回来。反过来，重新拟合确实改变参数，也未检验某条来源的影响是否彻底撤回。把行为、参数与来源影响分开记录，才知道下一项检查要对准什么。两条实践判断从这些观察提出目标侧验收方法，仍等待具体项目检验。</p>\n<h2>从这个实验继续往外走</h2>\n<p>下面保留已执行实验的输入、预测与可复跑来源。它能检查一个受控特征空间里反馈、拟合和纠正的关系；真实对话仍需要从原文识别这些特征、评价遗漏和误用、连接下游任务，并观察人在场时的感受。下一步可以替换输入表示或接入 agent，每次改变一个主要机制，并保留原参照。</p>",
+    "sections": [
+      {
+        "title": "经验参与选择的三个时刻",
+        "text": "案例通常在决定之前被取回，规则在读取或执行时起作用，参数则在此前的训练中被改变。三者都可以承载经验，代价与可检查性却不同。我们关心经历、载体与后续行为之间的具体联系：哪些选择变了，换一个情境是否还成立，来源失效时又该更新哪个对象。程序性记忆是理解这件事的一套架构语言；它不意味着每个训练模型都拥有某个个体的生活经验。"
+      },
+      {
+        "title": "判别接口与从经历中学习，是两个变量",
+        "text": "Jev 的官方文档描述 state 加 typed questions，返回 Choice、Score 或 Noul 等结构化结果。固定地调用这种接口，可以改变决策方式，却不证明模型从当前使用者的反馈中学习。jevlike 是独立的选项评分实验：可变选项对上下文进行 attention，再输出选项概率；它没有复现 Jev 未公开的设计。把反馈变成训练样本并更新小头，是另一项需要单独记录与评价的操作。"
+      },
+      {
+        "title": "这里已有几条相遇的研究线",
+        "text": "CoALA 区分 memory、内部动作与 decision cycle；MNL 把失败压缩成可检索 guidance；AgeMem 通过 reward 学习记忆管理动作；InsightEmb 把经验检索与当前行动用途联系起来；轻量 proactive trigger 则研究何时调用下游 agent。它们使用不同数据、反馈和评价单位。本专题借它们提出比较问题，不把跨论文的分数拼成模型排行榜。"
+      },
+      {
+        "title": "相关、值得带入与值得说出口",
+        "text": "一条记忆可能与话题相关，却已经包含在当前上下文中；也可能帮助选择下一步，而无需在回复中复述。实验先把问题收窄为逐条候选的增量用途，允许全部不用。候选生成保持给定，因此它无法证明找回遗漏记忆的能力；结构化的已知内容和适用范围也由 fixture 提供，不能把分类正确称为自然语言理解或对话体验改善。"
+      },
+      {
+        "title": "同一批反馈，四条复用路径",
+        "text": "没有新增经验的参照、保存案例的近邻、从训练样本归纳的可读规则，以及真正优化参数的小型分类器，接受可比较的观测。规则不能偷看评价答案，分类器也不能从测试结果挑选参数。方法在归纳偏好、存储和计算上仍然不同，所以观察只支持这些具体实现的比较；不能把任何差距全部归因于“经验放在了哪里”。"
+      },
+      {
+        "title": "改了记录以后，什么仍停在过去",
+        "text": "纠正反馈之后，仍加载旧参数、从修正数据重新拟合、用少量纠正样本继续训练，以及在运行时覆盖选择，是不同处理。应当分别检查需要改变的范围和仍然有效的范围。输出被约束改正，只说明这次干预有效；参数变化也不自动证明某条来源的影响已被彻底遗忘。本站原有 cache 撤回实验提供相邻问题意识，不是权重遗忘的证据。"
+      },
+      {
+        "title": "把纠正与保留放在同一张验收表里",
+        "text": "下面纠正阶段的 changed 是按新目标应改变的候选，preserved 是目标未变的其余候选；boundary 则是 preserved 中仍应有用的边界子集，不能把三列相加。先看纠正项是否改对，再看旧的有效选择是否被连带压掉。这里增量更新只看更正样本且没有 replay，完整重训也未保住全部边界。它们提示我们检查损伤发生在哪里，并不证明某种方法总会失败，也没有检验 replay 能否补救。"
+      },
+      {
+        "title": "同样合规的输出，可能来自不同处理",
+        "text": "运行时约束直接得到新范围规则，覆盖原分类器的一部分输出；原参数没有变。它可以在这组已知条件中满足合规目标，却不能证明参数已被教回来。反过来，重新拟合确实改变参数，也未检验某条来源的影响是否彻底撤回。把行为、参数与来源影响分开记录，才知道下一项检查要对准什么。两条实践判断从这些观察提出目标侧验收方法，仍等待具体项目检验。"
+      },
+      {
+        "title": "从这个实验继续往外走",
+        "text": "下面保留已执行实验的输入、预测与可复跑来源。它能检查一个受控特征空间里反馈、拟合和纠正的关系；真实对话仍需要从原文识别这些特征、评价遗漏和误用、连接下游任务，并观察人在场时的感受。下一步可以替换输入表示或接入 agent，每次改变一个主要机制，并保留原参照。"
+      }
+    ],
+    "ast": {
+      "anchors": [
+        {
+          "id": "section-1",
+          "label": "经验参与选择的三个时刻",
+          "level": 2
+        },
+        {
+          "id": "section-2",
+          "label": "判别接口与从经历中学习，是两个变量",
+          "level": 2
+        },
+        {
+          "id": "section-3",
+          "label": "这里已有几条相遇的研究线",
+          "level": 2
+        },
+        {
+          "id": "section-4",
+          "label": "相关、值得带入与值得说出口",
+          "level": 2
+        },
+        {
+          "id": "section-5",
+          "label": "同一批反馈，四条复用路径",
+          "level": 2
+        },
+        {
+          "id": "section-6",
+          "label": "改了记录以后，什么仍停在过去",
+          "level": 2
+        },
+        {
+          "id": "section-7",
+          "label": "把纠正与保留放在同一张验收表里",
+          "level": 2
+        },
+        {
+          "id": "section-8",
+          "label": "同样合规的输出，可能来自不同处理",
+          "level": 2
+        },
+        {
+          "id": "section-9",
+          "label": "从这个实验继续往外走",
+          "level": 2
+        }
+      ],
+      "references": []
+    }
+  },
+  "manifest_policy": "Current public object plus bounded direct references; no linked full texts, private workflow, or inferred support.",
+  "manifest": [
+    {
+      "kind": "material",
+      "id": "coala-cognitive-architecture",
+      "revision": "rev:note-sha256:f3bbf0987f273e0a9",
+      "publicKind": "material",
+      "title": "Cognitive architectures for language agents",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/coala-cognitive-architecture/"
+    },
+    {
+      "kind": "material",
+      "id": "mistake-notebook-learning",
+      "revision": "rev:note-sha256:7432aa554ec28430c",
+      "publicKind": "material",
+      "title": "Mistake notebook learning: Batch-clustered failures for training-free agent adaptation",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/mistake-notebook-learning/"
+    },
+    {
+      "kind": "material",
+      "id": "agentic-memory",
+      "revision": "rev:note-sha256:394c516b806b03516",
+      "publicKind": "material",
+      "title": "Agentic memory: Learning unified long-term and short-term memory management for large language model agents",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/agentic-memory/"
+    },
+    {
+      "kind": "material",
+      "id": "insightemb-action-intent-retrieval",
+      "revision": "rev:note-sha256:f458c5b374038ed21",
+      "publicKind": "material",
+      "title": "InsightEmb: Learning Action-Intent Embeddings for Agentic Insight Retrieval",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/insightemb-action-intent-retrieval/"
+    },
+    {
+      "kind": "material",
+      "id": "proactive-wake-anchor",
+      "revision": "rev:note-sha256:e7c864e33ff0a2d4f",
+      "publicKind": "material",
+      "title": "Do proactive agents really need an LLM to decide when to wake and what to anchor?",
+      "url": "https://indeliblevivi.github.io/agent-memory-study/material/proactive-wake-anchor/"
+    }
+  ]
+}
