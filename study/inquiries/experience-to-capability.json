@@ -2,10 +2,10 @@
   "id": "experience-to-capability",
   "title": "旧经验，怎样继续帮助当前任务？",
   "question": "经验在什么条件下能够提高当前能力？环境、版本或适用范围改变以后，怎样继续受益，又不被过去误导？",
-  "intro": "一条经验从被保存到参与行动，中间经过候选、选择、理解与适用判断。检索竞争、更正与范围、纵向修订传播提供了不同层次的已执行控制；cache 撤回则提醒我们，跨层借鉴必须重新建立依赖证据。",
-  "judgment": "目前能说明的是：经验还在不保证取得到，较新的说明不保证适用于当前范围，派生状态的撤回还可能需要单独处理。我们尚未证明，把条件与修订关系加入 memory 就能提高真实 agent 的任务完成率。",
-  "byline": "Agent Memory Study editors",
-  "updated": "2026-10-23",
+  "intro": "一条经验从被保存到参与行动，中间经过候选、选择、理解与适用判断。检索竞争、更正与范围、纵向修订传播提供了不同层次的已执行控制；cache 撤回则提醒我们，跨层借鉴必须重新建立依赖证据。本次续论加入读者侧信息、组合支持与技能库／控制器配对，分别定位用途标签和状态复用的适用条件。",
+  "judgment": "目前能说明的是：经验还在不保证取得到，较新的说明不保证适用于当前范围，派生状态的撤回还可能需要单独处理。我们尚未证明，把条件与修订关系加入 memory 就能提高真实 agent 的任务完成率。新的有限见证进一步说明：用途次序可能随读者侧信息反转，单条或双条用途不能穷尽三条互补支持；固定 MemSkill 源码还显示普通库回退与完整状态恢复不同。前两项是理论与精确枚举，后一项是静态源码观察，都不增加真实 agent 的性能证据。",
+  "byline": "Agent Memory Study editors · 2026-11-05 additions: Cove, AI-assisted research",
+  "updated": "2026-11-05",
   "status": "open",
   "explanations": [
     {
@@ -27,6 +27,22 @@
     {
       "title": "另一个层次：被删掉的是什么",
       "text": "单模型 cache 实验提示，删除来源 slots 与消除来源对保留状态的计算影响是两件事。这是相邻机制的证据，不支持把文本经验和神经状态混为一谈；迁移时必须重新建立目标系统的依赖证据。"
+    },
+    {
+      "title": "也许证据到了，解释键还没有到",
+      "text": "固定查询与候选，读者是否拥有互补映射键可以反转两条记忆的决策价值。应检查实际暴露的组合与读者已知状态；这个有限见证没有证明某个真实 embedding 失败。"
+    },
+    {
+      "title": "也许信息增加了，本轮得分却没有增加",
+      "text": "两份独立的带噪报告可以降低条件熵，却不提高当前二元决策的最优准确率。零增量标签不等于信息冗余；损失函数、后验变化与实际使用须分别判断。"
+    },
+    {
+      "title": "也许选择接口没有看见高阶互补",
+      "text": "在其它可见特征相同、只观察单条和双条用途的设定中，三条共同充分的支持可能无法被识别。该限制针对观察接口，不能按图结构或模型名字直接归类。替代充分路径也使单一 gold-set recall 不等于支持完整性。"
+    },
+    {
+      "title": "也许复用改变了状态配对",
+      "text": "MemSkill 的普通演化回退恢复技能库而保留当前 controller；完整 checkpoint 另有恢复机制。历史库的训练奖励不能直接说明重组状态的表现。库 × controller 的 held-out 四格协议尚未执行。"
     }
   ],
   "evidence": [
@@ -53,6 +69,24 @@
       "url": "research/c2c-cache-retraction-study/README.md",
       "observation": "固定 SmolLM2-135M-Instruct 的 20/20 来源配对在裁去来源 slots 后仍有分布差异，3/20 首个 greedy token 改变；重算与屏蔽控制通过。",
       "limit": "原创单模型机制实验，不是 C2C benchmark 复现。残余依赖不等于正确恢复事实，亦未验证文本摘要、向量索引或权重遗忘。"
+    },
+    {
+      "label": "读者侧信息：精确有限分布与三个见证",
+      "url": "research/memory-side-information-study/README.md",
+      "observation": "固定任务下 X/Y 的最优准确率由 1/2 对 3/4 变为 1 对 3/4；一阶、二阶边际相同仍可有不同联合价值；独立第二份报告降低熵但不提高当前最优准确率。",
+      "limit": "作者设定的有限概率模型，准确率为有理数计算，熵为浮点计算。没有自然语言 reader、模型训练或独立任务能力结果。"
+    },
+    {
+      "label": "高阶组合证据：低阶观察与替代支持枚举",
+      "url": "research/memory-evidence-complementarity-study/README.md",
+      "observation": "六候选、隐藏三元支持、三条预算且仅可见不具区分力的二阶以内用途时，均匀隐藏世界成功上界为 1/20；另有可加正面控制及候选／预算／选择三层支持分解。",
+      "limit": "观察接口与均匀先验均由构造给定；记录条数不是 token 预算。没有证明真实图、embedding 或某个 slate 方法必然失败。"
+    },
+    {
+      "label": "MemSkill 固定版本：回退对象与状态配对",
+      "url": "research/memskill-state-pairing-study/memskill-mechanism-dossier.md",
+      "observation": "固定 f65b797 的阶段 snapshot 保存技能库与阶段训练奖励；普通回退恢复库，完整 checkpoint 另有 controller/optimizer 保存与恢复。early-stop 与 final 导出按实际路径分别说明。",
+      "limit": "源码 commit 晚于论文 v2；静态分支观察不证明该分支实际频率、性能伤害、测试泄漏或负迁移。四格模型实验未执行。"
     }
   ],
   "materialIds": [
@@ -65,7 +99,10 @@
   ],
   "studyIds": [
     "after-a-correction",
-    "representation-and-use"
+    "representation-and-use",
+    "memory-value-side-information",
+    "memory-evidence-complementarity",
+    "memskill-state-pairing"
   ],
   "findingIds": [
     "retrieval-candidate-competition",
@@ -77,6 +114,6 @@
     "comparison": "后续 pilot 可比较不注入经验、现有朴素检索／摘要、条件化候选方案，并用正确证据分支诊断“取不到”与“用不好”。第一轮只改变一个主要机制；若比较整套方案，就把结论限定为整套方案。",
     "success": "任务实际完成是主要结果；另报旧范围误用、暂缓、延迟与 token。注入分支对齐预算，任务族作为样本单位，不把同一场景的许多改写计成独立任务。",
     "reviseWhen": "如果证据可得时现有方法同样完成任务，或候选方案的收益被误用、暂缓与成本抵消，就缩小或撤回“条件化处理值得采用”的建议；若失败集中在条件识别，研究重点转向这一环节。",
-    "boundary": "研究方向，尚未运行真实模型 pilot；没有冻结未查看任务族，也没有效果或显著性结论。现有 deterministic 场景不充当真实 no-memory agent。"
+    "boundary": "研究方向，尚未运行真实模型 pilot；没有冻结未查看任务族，也没有效果或显著性结论。现有 deterministic 场景不充当真实 no-memory agent。侧信息、组合选择和 MemSkill 配对各自另有独立协议；不把它们合成一次多机制处理。"
   }
 }

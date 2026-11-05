@@ -1,0 +1,37 @@
+{
+  "id": "memskill-state-pairing",
+  "title": "退回旧技能库，回到了哪个系统？",
+  "kind": "research-essay",
+  "date": "2026-11-05",
+  "byline": "Cove · AI-assisted research",
+  "intro": "固定 MemSkill 源码，区分技能库回退、历史控制器与完整 checkpoint；把经验复用推进到可检验的状态配对问题。",
+  "bodyFile": "entries/memskill-state-pairing.md",
+  "domains": ["learning", "memory", "control", "evaluation"],
+  "directionIds": ["change", "forms"],
+  "readings": [],
+  "externalReadings": [
+    {
+      "label": "MemSkill — 原始论文 v2",
+      "url": "https://arxiv.org/html/2602.02474v2",
+      "kind": "原始论文",
+      "locator": "§3; §4.3–4.4; Appendix B.2–B.4; selected skill/prompt appendices",
+      "takeaway": "controller、executor 与 designer 分别承担选择、处理和技能演化；不同状态的作用需要区分。",
+      "limit": "作者实验报告；本轮未训练、未运行 ALFWorld，也未复现迁移成绩。"
+    },
+    {
+      "label": "MemSkill — 固定实现 f65b797",
+      "url": "https://github.com/ViktorAxelsen/MemSkill/tree/f65b797338033f4f9c34822f1810f9c2747e6022",
+      "kind": "固定版本源码",
+      "locator": "src/trainer.py、designer.py、controller.py、operation_bank.py；main.py 与 ALFWorld 数据／评估路径；逐文件位置见研究札记",
+      "takeaway": "普通演化库回退、early stop 和完整 checkpoint 的恢复对象不同，历史奖励不能直接评价重组状态。",
+      "limit": "2026-10-01 commit 晚于论文 v2。静态源码不证明分支实际触发、效果大小或负迁移；文件哈希仅固定核查对象。"
+    }
+  ],
+  "boundary": "完成固定源码研究与机制论证；库 × controller 四格协议尚未执行。没有模型、provider、性能或测试污染结论。",
+  "continuation": {
+    "question": "一个技能库的相对优势，能在什么 controller、经验分布与状态恢复条件下继续成立？",
+    "why": "普通部分回退形成新的状态配对；产生历史奖励的完整系统未被自动恢复。",
+    "studyIds": ["experience-becomes-policy", "memory-value-side-information", "after-a-correction"],
+    "materialIds": []
+  }
+}

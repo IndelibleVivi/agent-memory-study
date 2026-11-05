@@ -38,7 +38,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         ]
         for mutate in mutations:
             invalid = copy.deepcopy(self.data)
-            mutate(invalid['studies'][0])
+            mutate(next(s for s in invalid['studies'] if s['id'] == 'after-a-correction'))
             with self.subTest(mutation=mutate), self.assertRaises(ValueError):
                 self.validate_copy(invalid)
 
@@ -61,7 +61,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
 
     def test_proposed_study_keeps_plan_separate_from_results_and_demo(self):
         data = copy.deepcopy(self.data)
-        study = data["studies"][0]
+        study = next(s for s in data["studies"] if s["id"] == "after-a-correction")
         study["kind"] = "editorial-synthesis-with-proposed-experiment"
         study.pop("scenarios")
         study.pop("policies")
@@ -69,7 +69,7 @@ class PublicReadingRoomBuildTests(unittest.TestCase):
         for field, value in (("resultsUrl", "research/decision-learning-study/results.json"),
                              ("scenarios", []), ("policies", []), ("recordedResults", {})):
             invalid = copy.deepcopy(data)
-            invalid["studies"][0][field] = value
+            next(s for s in invalid["studies"] if s["id"] == study["id"])[field] = value
             with self.subTest(field=field), self.assertRaises(ValueError):
                 self.validate_copy(invalid)
 

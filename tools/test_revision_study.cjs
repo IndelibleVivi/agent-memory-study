@@ -1,7 +1,7 @@
 const {test} = require('node:test');
 const assert = require('node:assert/strict');
 const {select, run} = require('../assets/revision-study.js');
-const study = require('../data/materials.json').studies[0];
+const study = require('../data/materials.json').studies.find(item => item.id === 'after-a-correction');
 const scenario = id => study.scenarios.find(item => item.id === id);
 
 test('correction changes advice without giving the policy its environment answer', () => {

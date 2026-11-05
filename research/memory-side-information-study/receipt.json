@@ -1,0 +1,22 @@
+{
+  "evidence_status": "executed-exact-finite-enumeration",
+  "executed_at_utc": "2026-11-04T19:51:44.562997+00:00",
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-B",
+    "study.py",
+    "--check"
+  ],
+  "portable_reproduction": "python3 -B research/memory-side-information-study/study.py --check",
+  "working_directory_role": "research/memory-side-information-study",
+  "python_version": "3.12.14",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+  "exit_code": 0,
+  "stdout": "memory-side-information-study: exact results and analytic controls match\n",
+  "stderr": "",
+  "input_output_hashes": {
+    "study.py": "577f8bdcb424ba9c6f1014b698136e9abaf4c6406320d2afa03c0a6895eb0755",
+    "results.json": "bdd65147bf852dc70219f388986a0365d0d5e9becf8224a26c3101c94ab0452c"
+  },
+  "scope": "Recomputation and analytic controls of authored finite laws; no model execution, real retrieval, learning or independent external validation."
+}

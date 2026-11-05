@@ -1,0 +1,128 @@
+{
+  "repo": "https://github.com/ViktorAxelsen/MemSkill",
+  "commit": "f65b797338033f4f9c34822f1810f9c2747e6022",
+  "report_date": "2026-11-05",
+  "retrieved_at_utc": "2026-11-04T19:31:25.874832+00:00",
+  "files": [
+    {
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/README.md",
+      "bytes": 19729,
+      "sha256": "a3865482c39e151034dd5bc7de24e9bdda54bcacc10728a6f2377025793edf24"
+    },
+    {
+      "path": "main.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/main.py",
+      "bytes": 41188,
+      "sha256": "a5e2420a10ee41e34527762409b203c3469203f97387ef0cdd635cf22bdb56b8"
+    },
+    {
+      "path": "src/trainer.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/trainer.py",
+      "bytes": 100469,
+      "sha256": "9d263a1f1673d9d12fd1c0cc7ab8c77f22393ac1d6d0775fe1ae919cef435cda"
+    },
+    {
+      "path": "src/controller.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/controller.py",
+      "bytes": 38972,
+      "sha256": "539c3af9f0d2a05ed09eb794b79e3a441eb169e95a85c62a1b3db7ad04f92e65"
+    },
+    {
+      "path": "src/executor.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/executor.py",
+      "bytes": 26173,
+      "sha256": "fddadd8820f50a4fce0ff6a566cf855a8722d616b86979bd7c066a02c99683d1"
+    },
+    {
+      "path": "src/memory_bank.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/memory_bank.py",
+      "bytes": 15295,
+      "sha256": "a71e011335fed3d3f9aa7cd565191a64f184c42e240bb72e0893bee16ec361de"
+    },
+    {
+      "path": "src/operation_bank.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/operation_bank.py",
+      "bytes": 15365,
+      "sha256": "62c32073d9b56d779a5a649a5d22aabdfb1bad13ad597b539845261d990bb4fd"
+    },
+    {
+      "path": "src/designer.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/designer.py",
+      "bytes": 73468,
+      "sha256": "7636bb9c4b937dd065324eb07a757b0eb042d50fc9b4993b8657e8bfd75984d0"
+    },
+    {
+      "path": "src/interactive_designer.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/interactive_designer.py",
+      "bytes": 4794,
+      "sha256": "ececa037720f55bbacc71fbaf1ebe46252f18004beaf61c633f6b467a14d8ae6"
+    },
+    {
+      "path": "src/config.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/config.py",
+      "bytes": 23326,
+      "sha256": "e94e436bf8adeed243c195ef83e900b592f08b0d8c21010b94a5ae5db7f18ffe"
+    },
+    {
+      "path": "src/data_processing/alfworld.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/data_processing/alfworld.py",
+      "bytes": 5524,
+      "sha256": "0ece93dff464f9fb2e136db808c6c161e31da2a6f0ec9ebc7ad2fad2aceec96a"
+    },
+    {
+      "path": "src/data_processing/base.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/data_processing/base.py",
+      "bytes": 9066,
+      "sha256": "681917911114490a1f52f7d4906652421e77d62bad328b58f30f9b273886f127"
+    },
+    {
+      "path": "src/alfworld_env_runner.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/alfworld_env_runner.py",
+      "bytes": 15738,
+      "sha256": "62450cc513052abb8d8a6ed3890c7bba0414e872529aa4dfac9895bdfa469c08"
+    },
+    {
+      "path": "src/eval/alfworld.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/eval/alfworld.py",
+      "bytes": 1589,
+      "sha256": "e0e7f6ff27aead67abcadaa47bfea047bcf0013bdcfa05d76bdce42bc7c369f7"
+    },
+    {
+      "path": "src/eval/base.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/src/eval/base.py",
+      "bytes": 10819,
+      "sha256": "bfa34e6e43787b9f35cb47efd2a22b496123f30d71e9e6ea57a538b0d57666de"
+    },
+    {
+      "path": "alfworld_replay.py",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/alfworld_replay.py",
+      "bytes": 13018,
+      "sha256": "c221102b0f5ba005c09326718385df0d320216856b5e88039a4194d08216b618"
+    },
+    {
+      "path": "train_alfworld.sh",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/train_alfworld.sh",
+      "bytes": 1323,
+      "sha256": "cb0c9a4545ac73249eee52965adc6f57c18c991ffe9579916a5eeeaca847a58f"
+    },
+    {
+      "path": "eval_alfworld.sh",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/eval_alfworld.sh",
+      "bytes": 1497,
+      "sha256": "63f43847b082f89a9255771cb59559d0f434eeaa48bdf1547ec41ea485c3eb0f"
+    },
+    {
+      "path": "skills/embodied_task_skills/capture_action_constraints.md",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/skills/embodied_task_skills/capture_action_constraints.md",
+      "bytes": 863,
+      "sha256": "be4e9dbce9998ac6a5d56e1914bda7a77f7a79cf1054a81170434be75fa387cc"
+    },
+    {
+      "path": "skills/embodied_task_skills/track_object_location.md",
+      "url": "https://raw.githubusercontent.com/ViktorAxelsen/MemSkill/f65b797338033f4f9c34822f1810f9c2747e6022/skills/embodied_task_skills/track_object_location.md",
+      "bytes": 735,
+      "sha256": "2c13f52c0355642af899814b426fefd19a9bf6448a805372e348694d1b6f8771"
+    }
+  ]
+}

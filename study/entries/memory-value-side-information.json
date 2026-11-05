@@ -1,0 +1,29 @@
+{
+  "id": "memory-value-side-information",
+  "title": "一条记忆有多大价值，取决于读者已经知道什么",
+  "kind": "research-essay",
+  "date": "2026-11-05",
+  "byline": "Cove · AI-assisted research",
+  "intro": "固定任务和候选，只改变读者侧信息就能反转记忆价值排序；三组精确有限反例进一步分开联合信息、增量准确率和信息冗余。",
+  "bodyFile": "entries/memory-value-side-information.md",
+  "domains": ["retrieval", "representation", "evaluation", "learning"],
+  "directionIds": ["relevance", "forms"],
+  "readings": [],
+  "externalReadings": [
+    {
+      "label": "Brooks, Frankel & Kamenica — Comparisons of Signals",
+      "url": "https://benjaminbrooks.net/downloads/bfk_comparisons.pdf",
+      "kind": "原始理论论文",
+      "locator": "March 2024 author manuscript, §§2–3; Theorem 1, pp. 8–9; published DOI 10.1257/aer.20230430",
+      "takeaway": "信息源比较能否抵抗侧信息变化，取决于联合结构。",
+      "limit": "本文采用指定理论；未复现全文证明。有限反例为本次单独构造；无 LLM 能力结论。"
+    }
+  ],
+  "boundary": "已执行精确有限分布枚举；三个 authored mathematical witnesses 不是独立任务样本，不运行模型、检索器、训练或人类研究。后续模型协议未执行。",
+  "continuation": {
+    "question": "关于 reader 状态的哪些可观察信息，足以让记忆用途标签在不同时点或模型间迁移？",
+    "why": "仅保持查询和候选文本相同，不能保证增量用途的标签保持不变。",
+    "studyIds": ["relevance-in-context", "experience-becomes-policy", "representation-and-use"],
+    "materialIds": []
+  }
+}
