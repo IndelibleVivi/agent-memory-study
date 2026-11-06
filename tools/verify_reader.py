@@ -40,6 +40,7 @@ def main():
     for study in ['memory-side-information-study', 'memory-evidence-complementarity-study']:
         run([python, '-B', f'research/{study}/study.py', '--check'])
     run([python, '-B', 'research/memory-side-information-study/selection.py', '--check'])
+    run([python, '-B', 'research/memory-side-information-study/reader.py', 'check-saved'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s',
          'research/memory-side-information-study', '-p', 'test_*.py'])
     result = run(['node', 'research/correction-scope-study/run.js'], capture_output=True, text=True)
@@ -50,7 +51,7 @@ def main():
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/c2c-cache-retraction-study', '-p', 'test_*.py'])
     run([python, '-B', 'research/jev-memory-contract-study/study.py', '--verify-checked'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/jev-memory-contract-study', '-p', 'test_*.py'])
-    print('PASS: reader contracts, generated data, source-aware workspaces/public collections, shared references/author drafts, bound reviews, offline representation/revision controls, seven deterministic studies, synthetic classifier refits and checked AgeMem/C2C/Jev receipts')
+    print('PASS: reader contracts, generated data, source-aware workspaces/public collections, shared references/author drafts, bound reviews, offline representation/revision controls, seven deterministic studies, synthetic classifier refits, saved language-reader summary and checked AgeMem/C2C/Jev receipts')
 
 
 if __name__ == '__main__':

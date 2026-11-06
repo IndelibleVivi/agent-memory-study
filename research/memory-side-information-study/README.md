@@ -1,6 +1,6 @@
 # Memory value under reader side information
 
-**Status:** executed exact finite enumeration: fixed-exposure witnesses on 2026-11-05, selection-channel continuation on 2026-11-07. Authored theory controls; no model/provider execution, retrieval engine, human observation, training or benchmark promotion. Author: Cove (AI-assisted research). The article is canonical at [study/entries/memory-value-side-information.md](../../study/entries/memory-value-side-information.md).
+**Status:** executed exact finite enumeration: fixed-exposure witnesses on 2026-11-05, selection-channel continuation on 2026-11-07. A separately frozen natural-language reader experiment ran on 2026-11-07 (Asia/Singapore) using official OpenAI Responses API. No retrieval engine, human observation, training or benchmark promotion. Author: Cove (AI-assisted research). The article is canonical at [study/entries/memory-value-side-information.md](../../study/entries/memory-value-side-information.md).
 
 ## What was actually computed
 
@@ -56,10 +56,50 @@ No external full-text PDF is redistributed. The article uses existing `externalR
 | Matched marginals | All unary and pairwise laws on Θ/C/X match, while joint accuracy is 1 vs 1/2 | These marginals determine the needed joint relation | Which real representations preserve it |
 | Accuracy plateau | Independent N2 adds conditional information but changes accuracy by zero | Zero accuracy uplift implies no extra information | Effects under other losses or subsequent tasks |
 
-## Follow-up protocol, not executed
+## Executed natural-language reader experiment
 
-The [full proposed protocol](protocol.md) fixes a small fictional routing task, complete rendering rules for the eight enumerated worlds, a valid-key versus irrelevant-key comparison crossed with X/Y, label controls, the weighted accuracy interaction estimand, calibration handling, and failure conditions. It keeps forced binary choice separate from any later abstention study. The selection continuation adds explicit exposure assignment and future selector/message controls; it does not execute the language study. A stimulus renderer and semantic review must precede subject execution. The actual provider/model, permitted cost/call budget, repetition count and stopping criterion remain to be fixed for that separate execution. This result does not activate such a study.
+The [frozen protocol](protocol.md) and [compact result](reader-results.json) cover a separate, explicitly authorized execution. `reader.py` owns authored input rendering and offline scoring; `reader_api.py` owns the bounded official API calls. The original finite results and receipt above remain unchanged.
+
+**Observed:** GPT-6.1 Sol, low reasoning effort, standard tier; 68 distinct input messages × 3 predeclared calls = 204 valid responses, no retries, refusals, malformed outputs, timeouts or missing calls. The 64 core inputs cross X/Y, valid/irrelevant project keys, both visible record values, both mappings, both codebook row orders and both paragraph positions. Four no-key inputs are auxiliary diagnostics. The 272 weighted latent rows reuse responses for identical visible input; they are not 272 independent tasks. All input/output and scoring bindings were replayed locally from the retained raw run.
+
+| Fixed record | Valid project P key | Independent project Q key | No key (auxiliary) |
+| --- | ---: | ---: | ---: |
+| Reliable coded X | 1.00 | 0.50 | 0.50 |
+| Noisy direct Y | 0.75 | 0.75 | 0.75 |
+
+The weighted interaction D is .50 in all three repeats and all four order combinations. These are scores under the authored finite distribution, not binomial estimates from 204 independent tasks. The .75 reflects the stipulated report error, not a count of independently sampled real-world failures.
+
+Accuracy alone would miss blindly applying Q's mapping: that policy also gets .50 on X+Q and can produce D=.50. Here X+Q and X alone always report p_A=.50; flipping Q's mapping changes neither the reported probability nor choice. Flipping a valid P mapping with fixed X reverses the probability completely, as the compatible target also reverses. Y's probability remains .75/.25 according to the report. Brier is 0 for X+P, .25 for X+Q / X alone, and .1875 for Y; posterior MAE is zero in each cell. All 68 inputs have zero probability range across the three calls. This is agreement with the stipulated posterior in one short task, not evidence of general calibration or internal reasoning transparency.
+
+The result supports **observable use of project-scoped complementary information in this task**. It does not justify a complex memory architecture: the reader already succeeds when the appropriate information is directly present. Actual no-record/side-information-only reader behavior was not measured; incremental values against .50 use a theoretical baseline. Long histories, inferred rather than explicit scope, selector behavior, another model and real task families remain outside this execution.
+
+**Configuration and cost:** all 204 responses report `gpt-6.1-sol`, `service_tier=default`, `reasoning.effort=low`, `max_output_tokens=2048`, `store=false`; returned sampling defaults were `temperature=1.0`, `top_p=.98` (neither sent by the runner). The model name has no separately published date snapshot. Official input-token preflight matched all 32 P/Q pairs; all 204 usage counts matched preflight, 279–302 tokens per input. Formal calls used 61,062 input and 4,544 output tokens (492 reasoning, zero cached input). At the [observed official prices](https://developers.openai.com/api/docs/models/gpt-6.1-sol), the uncached estimate is **0.167564 USD**, or **0.167872 USD** including the separate 64-input/18-output-token format canary. This is a usage-based estimate, not an account invoice. The predeclared budget was 5 USD; the conservative generation cap was 4.356055 USD. The 68 token-count requests are non-generation preflight, not subject responses.
+
+### Verification and a fresh authorized execution
+
+Offline checks need only Python stdlib and never contact OpenAI:
+
+```bash
+python3 -B -m unittest discover -s research/memory-side-information-study -p 'test_*.py'
+python3 -B research/memory-side-information-study/reader.py check-saved
+```
+
+The compact check validates saved-summary consistency and binding to the current stimuli/truth; it cannot reproduce provider outputs without the private raw run. Scorer controls include a correct reader, an always-A reader and a blind-Q reader that achieves the same main D but fails the scope diagnostics. It also checks missing responses, invalid probabilities, corrupted envelopes and actual-delivery mismatch.
+
+A **new** run needs explicit operator authorization and current model/pricing verification. Supply `OPENAI_API_KEY` through the operator's approved environment; never put it in the repo. Choose a new directory outside the checkout:
+
+```bash
+RUN_DIR=/absolute/path/outside-repository/new-reader-run
+python3 -B research/memory-side-information-study/reader.py prepare "$RUN_DIR"
+# The following two commands contact official OpenAI and spend API credits.
+python3 -B research/memory-side-information-study/reader_api.py preflight "$RUN_DIR"
+python3 -B research/memory-side-information-study/reader_api.py run "$RUN_DIR"
+# Offline: verify every delivered request/response binding and recompute scores.
+python3 -B research/memory-side-information-study/reader_api.py replay "$RUN_DIR" --output "$RUN_DIR/analysis.json"
+```
+
+`preflight` sends one non-research format canary and 68 input-token count requests. `run` sends at most 204 measurements, four at a time; it stops after a batch brings HTTP/transport/incomplete failures to three or more. It never retries or resumes automatically. A request file without its response may already have been delivered: preserve it and investigate, do not resend blindly. Fresh execution/analysis destinations refuse overwriting. Raw requests, responses, account metadata and private execution traces stay outside Git; public files contain only authored methods/stimulus code and aggregate observations. `store=false` is a request setting, not a claim of zero provider retention.
 
 ## Integration
 
-Both `--check` commands and the selection tests are part of `tools/verify_reader.py`. The entry joins the existing relevance, representation, learning and evaluation routes; the programme, experience article, representation article and two existing inquiries carry the fixed-exposure conditions. The selection continuation updates this article, the relevance direction and the evidence-complementarity protocol's interpretation of correct answers without annotated support. Past receipts remain unchanged. After editing canonical text, regenerate `data/materials.json` and `assets/materials-data.js` through `tools/build.py --write-json`; do not hand-edit the projections. These external readings do not add bibliographic sources or require a new RDF import.
+Both finite `--check` commands, all offline tests and `reader.py check-saved` are part of `tools/verify_reader.py`. The unified verifier does not run `reader_api.py preflight` or `run`. The entry joins the existing relevance, representation, learning and evaluation routes; the programme, experience article, representation article and two existing inquiries carry the fixed-exposure conditions. The selection continuation updates this article, the relevance direction and the evidence-complementarity protocol's interpretation of correct answers without annotated support. Past receipts remain unchanged. After editing canonical text, regenerate `data/materials.json` and `assets/materials-data.js` through `tools/build.py --write-json`; do not hand-edit the projections. These external readings do not add bibliographic sources or require a new RDF import.

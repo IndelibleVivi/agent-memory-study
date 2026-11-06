@@ -101,6 +101,7 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 - 本站已执行观察与结果放入可选 `amsEvidence`，绑定同一署名的 `public-test` 和既有 `research/` artifact；`reportedFindings` 只承载 paper-reported findings，不把本站结果重复放入 paper-only sections。
 - 新增小型 deterministic study 时接入 `tools/verify_reader.py`，同步 README / CONTRIBUTING 的验证范围；该入口校验 canonical / generated data、evidence、search 与已列入的七组确定性研究和一组 stdlib 分类器训练/纠正实验，另检查 AgeMem、C2C 与 Jev 已保存 receipt。Receipt 校验不算 upstream 重跑或模型 inference；该入口不运行全部外部源码审计或论文 benchmark。
 - `research/memory-side-information-study/selection.py` 拥有选择渠道的有限控制，复用同目录 `study.py` 的 Bayes evaluator；原 fixed-exposure 结果与 receipt 独立保留。修改时运行两个脚本的 `--check` 与本目录 unittest（已接统一验证）。Selector 只消费声明的可见输入；理想读者知道联合分布不等于语言模型已学会编码。整体选择收益不自动成为固定正文的用途标签。
+- 同目录 `reader.py` 拥有原创语言刺激与加权评分，`reader_api.py` 是显式调用官方 OpenAI API 的执行入口；普通构建／统一验证只运行离线测试与 `reader.py check-saved`，不调用 provider。实际请求、raw response、失败和 source 身份留在 repo 外；公开 `reader-results.json` 是 compact summary，不替代 raw replay。相同 messages 对应的隐藏世界共用一次回答，不增加独立任务数；无关键的 .5 accuracy 不能证明项目绑定正确，需保留概率／mapping flip 诊断。模型执行须有当次授权、冻结输入、预算和失败停止规则；不得自动重试不明送达请求或用新 prompt 覆盖旧运行。
 
 - `materials[].designTransfer` 是可选的编者建议，必须有署名、整理日期、适用情境、具体做法、未执行对照、依据与边界；`status` 固定为 `proposed-not-run`。它不改变 `readingScope`、`noteDepth`、paper-reported findings 或既有 public-test receipts。
 - `skim` / `abstract` 的该栏目必须显示初读范围提示。字段缺失时隐藏栏目，避免空白模板被当成研究结果；不要为满足统一外观补写没有依据的建议。

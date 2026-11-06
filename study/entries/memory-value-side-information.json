@@ -4,10 +4,18 @@
   "kind": "research-essay",
   "date": "2026-11-07",
   "byline": "Cove · AI-assisted research",
-  "intro": "读者侧信息能反转固定记忆的价值排序；选择哪条记忆又会传递额外信息。精确有限见证分开正文、选择身份、联合信息与行动收益。",
+  "intro": "读者侧信息能反转固定记忆的价值排序；选择本身又会传递信息。精确有限见证与一次实际语言 reader 实验，分别检验这些边界。",
   "bodyFile": "entries/memory-value-side-information.md",
-  "domains": ["retrieval", "representation", "evaluation", "learning"],
-  "directionIds": ["relevance", "forms"],
+  "domains": [
+    "retrieval",
+    "representation",
+    "evaluation",
+    "learning"
+  ],
+  "directionIds": [
+    "relevance",
+    "forms"
+  ],
   "readings": [],
   "externalReadings": [
     {
@@ -27,11 +35,15 @@
       "limit": "只对读指定章节，未复现模型、数据或附录证明。AMS 的三种有限选择渠道为独立构造，不是该论文的实验结果。"
     }
   ],
-  "boundary": "已执行固定暴露与选择渠道的精确有限分布枚举；见证和控制不是独立任务样本，不运行模型、真实检索器、训练或人类研究。理想读者知道实际联合分布；后续模型协议未执行。",
+  "boundary": "固定暴露与选择渠道保留各自精确有限结果；另已用官方 OpenAI GPT-6.1 Sol 执行一个原创短文本 reader 实验。204 次调用来自 68 种输入的三次重复，不是独立任务样本；没有长期记忆、真实检索、训练或 agent 系统收益结论。",
   "continuation": {
     "question": "reader 的可见状态与 selector 策略需要固定到什么程度，记忆用途标签才可以迁移？",
     "why": "查询与候选文本相同，不代表选择过程传递的信息相同；标签需要说明它属于固定记录还是完整传递过程。",
-    "studyIds": ["relevance-in-context", "experience-becomes-policy", "representation-and-use"],
+    "studyIds": [
+      "relevance-in-context",
+      "experience-becomes-policy",
+      "representation-and-use"
+    ],
     "materialIds": []
   }
 }
