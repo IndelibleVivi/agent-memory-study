@@ -39,6 +39,9 @@ def main():
         run([python, '-B', '-m', 'unittest', 'discover', '-s', directory, '-p', 'test_*.py'])
     for study in ['memory-side-information-study', 'memory-evidence-complementarity-study']:
         run([python, '-B', f'research/{study}/study.py', '--check'])
+    run([python, '-B', 'research/memory-side-information-study/selection.py', '--check'])
+    run([python, '-B', '-m', 'unittest', 'discover', '-s',
+         'research/memory-side-information-study', '-p', 'test_*.py'])
     result = run(['node', 'research/correction-scope-study/run.js'], capture_output=True, text=True)
     if json.loads(result.stdout) != json.loads((ROOT / 'research/correction-scope-study/results.json').read_text()):
         raise SystemExit('Correction study outputs differ from the checked results.')

@@ -183,7 +183,9 @@ experiment (including classifier fitting and correction), and checks the saved
 AgeMem reward, C2C cache-retraction and Jev source-contract receipts for fixture binding and internal consistency.
 The two new exact studies check conditional memory value and higher-order evidence
 selection through their own finite distributions, enumerations and analytic
-controls. They use no model/provider; their natural-language protocols remain
+controls. Conditional-memory checks also recompute selection-channel controls and
+test selector/reader observation boundaries, payload projection, independent
+selection and the complete-source bound. They use no model/provider; their natural-language protocols remain
 unexecuted. Static InMind and MemSkill source notes are not upstream runtime tests.
 The [Jev source experiment](research/jev-memory-contract-study/README.md) requires a
 pinned external checkout for fresh execution; the reader command verifies the saved receipt only.

@@ -22,9 +22,9 @@ AMS 从 agent memory 出发，研究信息、经验与智能的跨时间关系�
 
 这些新文章是基于公开来源与原创例子写成的研究内容，不是私人聊天的重建。当前有 15 篇学习／研究文章、27 份来源札记、2 个问题专题、5 条实践判断。领域与方向只是可改的阅读地图；数量、关联和阅读深度不代表个人掌握度。
 
-2026-11-05 的研究续作沿现有问题展开：
+2026-11-05 至 07 的研究续作沿现有问题展开：
 
-- [记忆价值与读者侧信息](study/entries/memory-value-side-information.md)：理论见证、精确分布计算与未执行的语言干预协议。
+- [记忆价值与读者侧信息](study/entries/memory-value-side-information.md)：精确分布计算进一步区分固定正文、选择身份与选择过程传递的信息；语言干预协议仍未执行。
 - [高阶证据与预算内选择](study/entries/memory-evidence-complementarity.md)：低阶观察边界、替代支持路径、正面控制与近期原始论文比较。
 - [MemSkill 的状态配对](study/entries/memskill-state-pairing.md)：固定源码中的技能库／控制器回退边界，以及尚未执行的四格迁移协议。
 
@@ -125,7 +125,7 @@ python3 -B tools/seo_build.py
 python3 -B tools/test_static_reader.py
 ```
 
-构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、原创索引演算的拟合／校准／查找与回退、星图与三维研究体共用的身份／引用关系、领域布局，以及七组确定性研究和一组 stdlib 分类器学习／纠正实验（包括侧信息决策值与高阶证据选择的精确枚举）；另检查表示与修订传播的离线执行合同、casebook 的内容／rubric 绑定和 AgeMem、C2C、Jev 已保存 receipts。修订传播的完整运行与 raw replay 使用其目录命令；统一入口中的 compact summary 检查不能替代它。验证不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
+构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、原创索引演算的拟合／校准／查找与回退、星图与三维研究体共用的身份／引用关系、领域布局，以及七组确定性研究和一组 stdlib 分类器学习／纠正实验（包括侧信息决策值、选择渠道及高阶证据选择的精确枚举）；另检查表示与修订传播的离线执行合同、casebook 的内容／rubric 绑定和 AgeMem、C2C、Jev 已保存 receipts。修订传播的完整运行与 raw replay 使用其目录命令；统一入口中的 compact summary 检查不能替代它。验证不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
 
 表示执行器保存实际请求、送达材料、原始回答与评分身份，支持 dry-run、续跑和离线重放检查。
 运行文件完整写入后才原子发布，已有文件不覆写；中断尝试保留证据，续跑另建 attempt。

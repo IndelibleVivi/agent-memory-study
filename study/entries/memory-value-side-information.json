@@ -2,9 +2,9 @@
   "id": "memory-value-side-information",
   "title": "一条记忆有多大价值，取决于读者已经知道什么",
   "kind": "research-essay",
-  "date": "2026-11-05",
+  "date": "2026-11-07",
   "byline": "Cove · AI-assisted research",
-  "intro": "固定任务和候选，只改变读者侧信息就能反转记忆价值排序；三组精确有限反例进一步分开联合信息、增量准确率和信息冗余。",
+  "intro": "读者侧信息能反转固定记忆的价值排序；选择哪条记忆又会传递额外信息。精确有限见证分开正文、选择身份、联合信息与行动收益。",
   "bodyFile": "entries/memory-value-side-information.md",
   "domains": ["retrieval", "representation", "evaluation", "learning"],
   "directionIds": ["relevance", "forms"],
@@ -17,12 +17,20 @@
       "locator": "March 2024 author manuscript, §§2–3; Theorem 1, pp. 8–9; published DOI 10.1257/aer.20230430",
       "takeaway": "信息源比较能否抵抗侧信息变化，取决于联合结构。",
       "limit": "本文采用指定理论；未复现全文证明。有限反例为本次单独构造；无 LLM 能力结论。"
+    },
+    {
+      "label": "Jethani et al. — Have We Learned to Explain?",
+      "url": "https://proceedings.mlr.press/v130/jethani21a.html",
+      "kind": "原始方法与理论论文",
+      "locator": "AISTATS 2021, §§2–4; §3.1 selection encoding, §3.2 control flow, §4 independent-mask evaluator",
+      "takeaway": "选择 mask 可以携带预测或未选中的分支条件；整体预测能力与所选特征的条件信息需要分开评价。",
+      "limit": "只对读指定章节，未复现模型、数据或附录证明。AMS 的三种有限选择渠道为独立构造，不是该论文的实验结果。"
     }
   ],
-  "boundary": "已执行精确有限分布枚举；三个 authored mathematical witnesses 不是独立任务样本，不运行模型、检索器、训练或人类研究。后续模型协议未执行。",
+  "boundary": "已执行固定暴露与选择渠道的精确有限分布枚举；见证和控制不是独立任务样本，不运行模型、真实检索器、训练或人类研究。理想读者知道实际联合分布；后续模型协议未执行。",
   "continuation": {
-    "question": "关于 reader 状态的哪些可观察信息，足以让记忆用途标签在不同时点或模型间迁移？",
-    "why": "仅保持查询和候选文本相同，不能保证增量用途的标签保持不变。",
+    "question": "reader 的可见状态与 selector 策略需要固定到什么程度，记忆用途标签才可以迁移？",
+    "why": "查询与候选文本相同，不代表选择过程传递的信息相同；标签需要说明它属于固定记录还是完整传递过程。",
     "studyIds": ["relevance-in-context", "experience-becomes-policy", "representation-and-use"],
     "materialIds": []
   }

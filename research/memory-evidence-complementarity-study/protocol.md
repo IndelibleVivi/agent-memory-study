@@ -165,9 +165,11 @@ reader 的答案标签随世界保存为 `y`，不在实体重命名后继续硬
 - `latent_exact_match = (answer == y)`：只比较该世界真值，与是否选中支持无关；
 - `supported_completion = selected_has_support and (answer == y)`：完整支持与正确答案同时成立；
 - `appropriate_abstention = (not selected_has_support) and (answer == "unknown")`：在本协议封闭支持语义下，没有足够记录时的弃答；
-- `correct_without_annotated_support = (not selected_has_support) and (answer == y)`：答案碰巧正确、背景推得或支持标注可能遗漏的待审计行。
+- `correct_without_annotated_support = (not selected_has_support) and (answer == y)`：答案碰巧正确、背景推得、支持标注遗漏或选择过程传递了额外信息的待审计行。
 
 这些量不可合并成一个未加说明的 accuracy。支持完整但弃答、答案错误以及格式错误也分别保留；不得用 appropriate abstention 的增加掩盖 supported completion 的减少。
+
+2026-11-07 补充：[选择渠道的有限见证](../memory-side-information-study/README.md)说明，selector 可能通过身份、顺序或选中的正文传递未交付观察的作用。故上面的待审计行还须核对 selector 输入与 reader 实际消息；不能仅因 ID 单独无预测力或已隐藏 ID 就排除这种机制。它不改变材料 A 的不透明界：只要全部世界的 selector 可见输入仍完全相同，selector 就不能取得区分这些世界的信息。若扩展了输入，必须重述界的适用条件，不把效果直接归于已选正文的支持完整性。本协议仍未进行模型执行。
 
 ### 7.2 统计与推广边界
 
