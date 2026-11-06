@@ -1177,7 +1177,8 @@ def main():
                         expect(page.locator('#practice-results .practice-result')).to_have_count(3)
                         page.locator('#question-index a[data-route=question]').first.click()
                         expect(page.locator('#inquiry-title')).to_have_text(data['questions'][0]['title'])
-                        expect(page.locator('#inquiry-next')).to_contain_text('尚未运行真实模型 pilot')
+                        expect(page.locator('#inquiry-next')).to_contain_text('真实 agent pilot 尚未执行')
+                        expect(page.locator('#inquiry-next')).to_contain_text('侧信息已有独立短文本模型观察')
                         layout('question dossier'); record('question entry, current judgment, evidence and next test')
                         if width in (1440, 390):
                             page.screenshot(path=str(output / f'question-{width}.png'))
