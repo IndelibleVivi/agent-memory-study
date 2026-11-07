@@ -1,7 +1,6 @@
 """Post-result question-only diagnostic; separate identity, no new writer calls."""
 import argparse
 import hashlib
-import json
 from pathlib import Path
 
 import natural as n
@@ -33,16 +32,17 @@ def prepare(parent, output):
         n.freeze(root/('prior-'+phase+'-preflight.json'), n.load(parent/(phase+'-preflight.json')))
 
 
-def checked(root):
+def checked(root, recorded_source=None):
     root = n.safe_root(root)
     m, data = n.load(root/'manifest.json'), n.load(root/'corpus.json')
-    if m['source_identity'] != identity() or m['corpus_digest'] != n.digest(data):
+    n.check_source(m['source_identity'], identity(), recorded_source)
+    if m['corpus_digest'] != n.digest(data):
         raise ValueError('diagnostic source/corpus changed')
     return root, data
 
 
-def replay(root):
-    root, data = checked(root)
+def replay(root, recorded_source=None):
+    root, data = checked(root, recorded_source)
     plan = jobs(data)
     if n.load(root/'question-only-plan.json') != plan:
         raise ValueError('question-only request plan changed')
@@ -52,6 +52,7 @@ def replay(root):
     for model in n.MODELS:
         rows = []
         usage = {'input_tokens': 0, 'output_tokens': 0, 'cached_tokens': 0, 'reasoning_tokens': 0}
+        complete = 0
         for j in plan:
             if j['model'] != model:
                 continue
@@ -60,16 +61,17 @@ def replay(root):
             rows.append({'case': j['case'], 'question': j['question'], 'kind': q['kind'], 'gold': q['gold'],
                          'choice': parsed.get('choice'), 'status': parsed['status'],
                          'correct': parsed.get('choice') == q['gold'] if parsed['status'] == 'valid' else False})
-            if j['id'] in rr and rr[j['id']]['http_status'] == 200:
-                u = json.loads(rr[j['id']]['raw_body']).get('usage', {})
-                for k in ('input_tokens', 'output_tokens'): usage[k] += u.get(k, 0)
-                usage['cached_tokens'] += u.get('input_tokens_details', {}).get('cached_tokens', 0)
-                usage['reasoning_tokens'] += u.get('output_tokens_details', {}).get('reasoning_tokens', 0)
+            u = api.usage_metadata(rr.get(j['id']))
+            if u is not None:
+                complete += 1
+                for k in usage: usage[k] += u[k]
         groups.append({'model': model, 'correct': sum(r['correct'] for r in rows), 'total': len(rows),
                        'valid': sum(r['status'] == 'valid' for r in rows), 'rows': rows, 'usage': usage,
+                       'usage_receipts': complete, 'usage_unavailable': len(rows)-complete,
                        'usage_estimate_usd': round((usage['input_tokens']*n.PRICES[model][0]
                                                    + usage['output_tokens']*n.PRICES[model][2])/1e6, 6)})
-    return {'schema': 'ams-question-only-results/1', 'status': 'post-result-diagnostic', 'source_identity': identity(),
+    return {'schema': 'ams-question-only-results/1', 'status': 'post-result-diagnostic',
+            'source_identity': n.load(root/'manifest.json')['source_identity'], 'replay_source_identity': identity(),
             'date': '2026-11-07', 'planned_calls': len(plan), 'receipts': len(rr), 'groups': groups,
             'raw_receipts_digest': n.digest(rr), 'total_reserved_usd_including_primary':
             sum(n.load(p)['upper_usd'] for p in root.glob('*-preflight.json'))}
@@ -77,7 +79,8 @@ def replay(root):
 
 def check_saved():
     s = n.load(n.ROOT/'natural-question-only-results.json')
-    if s['source_identity'] != identity() or s['planned_calls'] != 144 or s['receipts'] != 144:
+    n.check_saved_source(s, identity())
+    if s['planned_calls'] != 144 or s['receipts'] != 144:
         raise ValueError('saved question-only identity/count mismatch')
     truth = {(c['id'], q['id']): q for c in n.corpus()['cases'] for q in c['questions']}
     if [g['model'] for g in s['groups']] != list(n.MODELS): raise ValueError('model mismatch')
@@ -98,7 +101,10 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('command', choices=('prepare', 'run', 'replay', 'check-saved'))
     p.add_argument('--run', type=Path); p.add_argument('--parent', type=Path); p.add_argument('--output', type=Path)
+    p.add_argument('--recorded-source', type=Path, help='replay only: verified execution-source archive')
     a = p.parse_args()
+    if a.recorded_source and a.command != 'replay':
+        p.error('--recorded-source is only allowed for offline replay')
     if a.command == 'prepare':
         if not a.parent or not a.output: p.error('prepare requires --parent and --output')
         prepare(a.parent, a.output)
@@ -109,6 +115,6 @@ if __name__ == '__main__':
             root, data = checked(a.run)
             with api.locked(root): api.run_phase(root, 'question-only', jobs(data))
         else:
-            result = replay(a.run)
+            result = replay(a.run, a.recorded_source)
             if a.output: n.freeze(a.output, result)
             print(n.canonical(result))

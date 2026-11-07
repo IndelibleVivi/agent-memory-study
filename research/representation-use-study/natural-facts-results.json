@@ -13,6 +13,8 @@
       "total": 24,
       "unknown": 0,
       "usage_estimate_usd": 0.005711,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
       "wrong_value": 0
     },
     {
@@ -27,6 +29,8 @@
       "total": 24,
       "unknown": 2,
       "usage_estimate_usd": 0.0028,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
       "wrong_value": 2
     },
     {
@@ -41,6 +45,8 @@
       "total": 24,
       "unknown": 4,
       "usage_estimate_usd": 0.003561,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
       "wrong_value": 2
     },
     {
@@ -55,6 +61,8 @@
       "total": 24,
       "unknown": 22,
       "usage_estimate_usd": 0.00145,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
       "wrong_value": 0
     },
     {
@@ -69,6 +77,8 @@
       "total": 24,
       "unknown": 0,
       "usage_estimate_usd": 0.11017,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
       "wrong_value": 0
     },
     {
@@ -83,6 +93,8 @@
       "total": 24,
       "unknown": 5,
       "usage_estimate_usd": 0.053824,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
       "wrong_value": 0
     },
     {
@@ -97,6 +109,8 @@
       "total": 24,
       "unknown": 2,
       "usage_estimate_usd": 0.0584,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
       "wrong_value": 2
     },
     {
@@ -111,6 +125,8 @@
       "total": 24,
       "unknown": 22,
       "usage_estimate_usd": 0.02512,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
       "wrong_value": 0
     }
   ],
@@ -118,6 +134,17 @@
   "planned_calls": 192,
   "raw_receipts_digest": "26642055ff43fd7a4c56b803e056af5b43ff4f2184423eeb3a2e57c3da1fd539",
   "receipts": 192,
+  "replay_source_identity": {
+    "corpus.py": "0381222dd2772a3e3b8c4d098d3cf8bcd566909fedad1a95968faf73090cdd1b",
+    "natural-cases.json": "0ae45c5ec9808e1522fa59aa133cbb305295787c010a5cd91c0b425c5eb85a6f",
+    "natural-facts-protocol.md": "0aee3ffa8d732ba65ef80f5110dab1e81b63ff2f170f36c453d46b47bea5514e",
+    "natural-facts.json": "f43918401fb7655273c0444b2ec36eee9f568cc45a51c292ce153cf091ae3b34",
+    "natural-protocol.md": "041606ee6c4333c716af5c2ea1dac9861e83675077197bab52a345914d61a1dc",
+    "natural.py": "79a163111b8f33111dcbe27a5c4ec2876dc1c6145781a86e4edb036ac1f82833",
+    "natural_api.py": "53f3ccfef2cdfbc59c5b017f37b2010bcddd87925acee12f0646e29e12dc6e0f",
+    "natural_facts.py": "166cd793a2dfdb976ecf853f81076de177030d117b23eb70c8d52b9adb59da3b",
+    "study.py": "5510db5d2dd9d1fdc04cb31389300ab9545b1cf454497ab9a19a765c8f4aeec9"
+  },
   "rows": [
     {
       "answer": 75,

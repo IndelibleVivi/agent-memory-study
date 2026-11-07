@@ -662,6 +662,8 @@
         "reasoning_tokens": 11452
       },
       "usage_estimate_usd": 0.009539,
+      "usage_receipts": 72,
+      "usage_unavailable": 0,
       "valid": 72
     },
     {
@@ -1325,12 +1327,24 @@
         "reasoning_tokens": 2791
       },
       "usage_estimate_usd": 0.108794,
+      "usage_receipts": 72,
+      "usage_unavailable": 0,
       "valid": 72
     }
   ],
   "planned_calls": 144,
   "raw_receipts_digest": "dabb8cdaf8d64fb7016a8ae1c8cca471017a0ec070c0e03881b2b2d01537726e",
   "receipts": 144,
+  "replay_source_identity": {
+    "corpus.py": "0381222dd2772a3e3b8c4d098d3cf8bcd566909fedad1a95968faf73090cdd1b",
+    "natural-cases.json": "0ae45c5ec9808e1522fa59aa133cbb305295787c010a5cd91c0b425c5eb85a6f",
+    "natural-protocol.md": "041606ee6c4333c716af5c2ea1dac9861e83675077197bab52a345914d61a1dc",
+    "natural-question-only.md": "506bb1cc754dcd9c9edff3f845f35eba12980407d4e062d4e29c876cba2ec3e0",
+    "natural.py": "79a163111b8f33111dcbe27a5c4ec2876dc1c6145781a86e4edb036ac1f82833",
+    "natural_api.py": "53f3ccfef2cdfbc59c5b017f37b2010bcddd87925acee12f0646e29e12dc6e0f",
+    "natural_probe.py": "9035bbd7ee309b8616ec18cc27bbc257f9b385d6fe1d00d391fc55c5eac6a4a6",
+    "study.py": "5510db5d2dd9d1fdc04cb31389300ab9545b1cf454497ab9a19a765c8f4aeec9"
+  },
   "schema": "ams-question-only-results/1",
   "source_identity": {
     "corpus.py": "0381222dd2772a3e3b8c4d098d3cf8bcd566909fedad1a95968faf73090cdd1b",

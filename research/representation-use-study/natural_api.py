@@ -231,8 +231,31 @@ def read(root):
         run_phase(root, 'readers', jobs)
 
 
-def replay(root):
-    root, manifest, data = n.checked(root)
+def usage_metadata(receipt):
+    """Optional provider accounting must not invalidate independently scored evidence."""
+    if not receipt or receipt.get('http_status') != 200:
+        return None
+    try:
+        body = json.loads(receipt['raw_body'])
+        if not isinstance(body, dict) or not isinstance(body.get('usage'), dict):
+            return None
+        usage = body['usage']
+        totals = {k: usage[k] for k in ('input_tokens', 'output_tokens')}
+        for detail, name in (('input_tokens_details', 'cached_tokens'),
+                             ('output_tokens_details', 'reasoning_tokens')):
+            details = usage.get(detail, {})
+            if not isinstance(details, dict):
+                return None
+            totals[name] = details.get(name, 0)
+        if any(type(v) is not int or v < 0 for v in totals.values()):
+            return None
+        return totals | {'model': body.get('model') if isinstance(body.get('model'), str) else None}
+    except (ValueError, TypeError, KeyError):
+        return None
+
+
+def replay(root, recorded_source=None):
+    root, manifest, data = n.checked(root, recorded_source)
     memories, jobs = frozen_readers(root, data)
     rr = responses(root, 'readers', jobs)
     summary = n.aggregate(data, jobs, rr)
@@ -263,27 +286,25 @@ def replay(root):
             for j in selected:
                 r = receipts.get(j['id'])
                 receipt_binding[phase + ':' + j['id']] = n.digest(r)
-                if not r or r['http_status'] != 200:
-                    continue
-                b = json.loads(r['raw_body'])
-                u = b.get('usage')
-                if not u:
+                u = usage_metadata(r)
+                if u is None:
                     continue
                 complete += 1
-                models.add(b['model'])
+                if u['model'] is not None:
+                    models.add(u['model'])
                 matched &= u['input_tokens'] == pre['counts'][j['id']]
-                for k in ('input_tokens', 'output_tokens'):
+                for k in totals:
                     totals[k] += u[k]
-                totals['cached_tokens'] += u.get('input_tokens_details', {}).get('cached_tokens', 0)
-                totals['reasoning_tokens'] += u.get('output_tokens_details', {}).get('reasoning_tokens', 0)
             rate = n.PRICES[model]
             # No cache discount claimed: upper estimate from returned usage, not an invoice.
             estimate = (totals['input_tokens'] * rate[0] + totals['output_tokens'] * rate[2]) / 1e6
             usage.append({'phase': phase, 'model': model, 'planned': len(selected), 'usage_receipts': complete,
-                          'returned_models': sorted(models), 'input_counts_match': matched,
+                          'usage_unavailable': len(selected)-complete,
+                          'returned_models': sorted(models), 'input_counts_match': matched if complete else None,
                           **totals, 'undiscounted_usage_estimate_usd': round(estimate, 6)})
     return {'schema': 'ams-natural-scope-results/1', 'status': 'executed-exploratory-model-diagnostic',
             'date': '2026-11-07', 'source_identity': manifest['source_identity'],
+            'replay_source_identity': n.identity(),
             'raw_receipts_digest': n.digest(receipt_binding), 'independent_histories': len(data['cases']),
             'questions_per_history': 6, 'planned_reader_calls': len(jobs), 'reader_receipts': len(rr),
             'writer_model': n.WRITER_MODEL, 'memory_limit_characters': n.MEMORY_LIMIT,
@@ -300,7 +321,10 @@ if __name__ == '__main__':
     ap.add_argument('command', choices=('writers', 'readers', 'replay', 'inherit-writers'))
     ap.add_argument('--run', required=True, type=Path)
     ap.add_argument('--output', type=Path, help='exclusive replay output; does not call API')
+    ap.add_argument('--recorded-source', type=Path, help='replay only: verified execution-source archive')
     a = ap.parse_args()
+    if a.recorded_source and a.command != 'replay':
+        ap.error('--recorded-source is only allowed for offline replay')
     if a.command == 'inherit-writers':
         if not a.output:
             ap.error('inherit-writers requires --output for a new run')
@@ -311,7 +335,7 @@ if __name__ == '__main__':
     elif a.command == 'readers':
         read(a.run)
     else:
-        result = replay(a.run)
+        result = replay(a.run, a.recorded_source)
         if a.output:
             n.freeze(a.output, result)
         print(n.canonical(result))

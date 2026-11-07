@@ -487,6 +487,14 @@
   "questions_per_history": 6,
   "raw_receipts_digest": "57568a07aad9ad941f37bdff42409370f49c772e098ac6475dc9e66b5df6dd5a",
   "reader_receipts": 432,
+  "replay_source_identity": {
+    "corpus.py": "0381222dd2772a3e3b8c4d098d3cf8bcd566909fedad1a95968faf73090cdd1b",
+    "natural-cases.json": "0ae45c5ec9808e1522fa59aa133cbb305295787c010a5cd91c0b425c5eb85a6f",
+    "natural-protocol.md": "041606ee6c4333c716af5c2ea1dac9861e83675077197bab52a345914d61a1dc",
+    "natural.py": "79a163111b8f33111dcbe27a5c4ec2876dc1c6145781a86e4edb036ac1f82833",
+    "natural_api.py": "53f3ccfef2cdfbc59c5b017f37b2010bcddd87925acee12f0646e29e12dc6e0f",
+    "study.py": "5510db5d2dd9d1fdc04cb31389300ab9545b1cf454497ab9a19a765c8f4aeec9"
+  },
   "reserved_upper_usd": 4.925626,
   "schema": "ams-natural-scope-results/1",
   "source_identity": {
@@ -513,7 +521,8 @@
         "gpt-6-luna"
       ],
       "undiscounted_usage_estimate_usd": 5.1e-05,
-      "usage_receipts": 1
+      "usage_receipts": 1,
+      "usage_unavailable": 0
     },
     {
       "cached_tokens": 0,
@@ -528,7 +537,8 @@
         "gpt-6.1-sol"
       ],
       "undiscounted_usage_estimate_usd": 0.000598,
-      "usage_receipts": 1
+      "usage_receipts": 1,
+      "usage_unavailable": 0
     },
     {
       "cached_tokens": 0,
@@ -543,7 +553,8 @@
         "gpt-6.1-sol"
       ],
       "undiscounted_usage_estimate_usd": 0.173846,
-      "usage_receipts": 24
+      "usage_receipts": 24,
+      "usage_unavailable": 0
     },
     {
       "cached_tokens": 0,
@@ -558,7 +569,8 @@
         "gpt-6-luna"
       ],
       "undiscounted_usage_estimate_usd": 0.034516,
-      "usage_receipts": 216
+      "usage_receipts": 216,
+      "usage_unavailable": 0
     },
     {
       "cached_tokens": 0,
@@ -573,7 +585,8 @@
         "gpt-6.1-sol"
       ],
       "undiscounted_usage_estimate_usd": 0.613864,
-      "usage_receipts": 216
+      "usage_receipts": 216,
+      "usage_unavailable": 0
     }
   ],
   "writer_inherited_without_regeneration": true,

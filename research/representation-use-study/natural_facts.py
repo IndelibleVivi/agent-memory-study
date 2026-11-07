@@ -95,17 +95,18 @@ def prepare(parent, budget_parent, output):
     for p in bp.glob('*-preflight.json'): n.freeze(root/('prior-'+p.name),n.load(p))
 
 
-def checked(root):
+def checked(root, recorded_source=None):
     root=n.safe_root(root);m=n.load(root/'manifest.json')
     data,memories,questions=(n.load(root/name) for name in ('corpus.json','memories.json','tasks.json'))
-    if (m['source_identity']!=identity() or m['corpus_digest']!=n.digest(data)
+    n.check_source(m['source_identity'],identity(),recorded_source)
+    if (m['corpus_digest']!=n.digest(data)
             or m['memories_digest']!=n.digest(memories) or m['tasks_digest']!=n.digest(questions)):
         raise ValueError('factual source or input binding changed')
     return root,data,memories,questions
 
 
-def replay(root):
-    root,data,memories,questions=checked(root);plan=jobs(data,memories,questions)
+def replay(root, recorded_source=None):
+    root,data,memories,questions=checked(root,recorded_source);plan=jobs(data,memories,questions)
     if n.load(root/'facts-plan.json')!=plan:raise ValueError('factual plan changed')
     rr=api.responses(root,'facts',plan);ix={q['id']:q for q in questions['questions']}
     rows=[];usage=[]
@@ -118,19 +119,22 @@ def replay(root):
     for model in n.MODELS:
         for arm in ARMS:
             totals={'input_tokens':0,'output_tokens':0,'reasoning_tokens':0,'cached_tokens':0}
+            complete=0
             for j in plan:
-                if j['model']!=model or j['arm']!=arm or j['id'] not in rr or rr[j['id']]['http_status']!=200:continue
-                u=json.loads(rr[j['id']]['raw_body']).get('usage',{})
-                for k in ('input_tokens','output_tokens'):totals[k]+=u.get(k,0)
-                totals['reasoning_tokens']+=u.get('output_tokens_details',{}).get('reasoning_tokens',0)
-                totals['cached_tokens']+=u.get('input_tokens_details',{}).get('cached_tokens',0)
+                if j['model']!=model or j['arm']!=arm:continue
+                u=api.usage_metadata(rr.get(j['id']))
+                if u is not None:
+                    complete+=1
+                    for k in totals:totals[k]+=u[k]
             selected=[r for r in rows if r['model']==model and r['arm']==arm]
             usage.append({'model':model,'arm':arm,**totals,'total':len(selected),'correct':sum(r['correct'] for r in selected),
+                 'usage_receipts':complete,'usage_unavailable':len(selected)-complete,
                  'sufficient_correct':sum(r['correct'] and r['source_sufficient'] for r in selected),
                  'unknown':sum(r['outcome']=='unknown' for r in selected),'wrong_value':sum(r['outcome']=='wrong-value' for r in selected),
                  'usage_estimate_usd':round((totals['input_tokens']*n.PRICES[model][0]+totals['output_tokens']*n.PRICES[model][2])/1e6,6)})
     return {'schema':'ams-scope-factual-results/1','status':'exploratory-redesign-after-option-cue-diagnostic','date':'2026-11-07',
-            'source_identity':identity(),'planned_calls':len(plan),'receipts':len(rr),'independent_histories':len(data['cases']),
+            'source_identity':n.load(root/'manifest.json')['source_identity'],'replay_source_identity':identity(),
+            'planned_calls':len(plan),'receipts':len(rr),'independent_histories':len(data['cases']),
             'source_sufficient_questions':sum(q['gold'] is not None for q in questions['questions']),
             'groups':usage,'rows':rows,'raw_receipts_digest':n.digest(rr),
             'total_reserved_usd_including_prior':sum(n.load(p)['upper_usd'] for p in root.glob('*-preflight.json'))}
@@ -138,7 +142,8 @@ def replay(root):
 
 def check_saved():
     s=n.load(n.ROOT/'natural-facts-results.json');qs={q['id']:q for q in tasks()['questions']}
-    if s['source_identity']!=identity() or s['planned_calls']!=192 or s['receipts']!=192:raise ValueError('saved facts identity/count mismatch')
+    n.check_saved_source(s,identity())
+    if s['planned_calls']!=192 or s['receipts']!=192:raise ValueError('saved facts identity/count mismatch')
     expected={(q,m,a) for q in qs for m in n.MODELS for a in ARMS}
     if len(s['rows'])!=192 or {(r['question'],r['model'],r['arm']) for r in s['rows']}!=expected:raise ValueError('fact rows mismatch')
     for r in s['rows']:
@@ -162,7 +167,9 @@ def check_saved():
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('command',choices=('prepare','run','replay','check-saved'))
     for name in ('run','parent','budget-parent','output'):p.add_argument('--'+name,type=Path)
+    p.add_argument('--recorded-source',type=Path,help='replay only: verified execution-source archive')
     a=p.parse_args()
+    if a.recorded_source and a.command!='replay':p.error('--recorded-source is only allowed for offline replay')
     if a.command=='prepare':
         if not a.parent or not a.budget_parent or not a.output:p.error('prepare needs parent, budget-parent and output')
         prepare(a.parent,a.budget_parent,a.output)
@@ -173,6 +180,6 @@ if __name__=='__main__':
             root,data,memories,questions=checked(a.run)
             with api.locked(root):api.run_phase(root,'facts',jobs(data,memories,questions))
         else:
-            result=replay(a.run)
+            result=replay(a.run,a.recorded_source)
             if a.output:n.freeze(a.output,result)
             print(n.canonical(result))

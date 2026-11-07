@@ -186,11 +186,35 @@ def prepare(path):
     freeze(root / 'writer-jobs.json', writer_jobs(data))
 
 
-def checked(path):
+def check_source(recorded, current, recorded_source=None):
+    """A mismatched execution source is only readable with an explicit verified archive."""
+    if recorded == current and recorded_source is None:
+        return
+    if recorded_source is None:
+        raise ValueError('source/protocol/corpus changed; new run required')
+    if set(recorded) != set(current):
+        raise ValueError('recorded source file set changed')
+    archive = Path(recorded_source)
+    for name, expected in recorded.items():
+        if Path(name).name != name or hashlib.sha256((archive/name).read_bytes()).hexdigest() != expected:
+            raise ValueError('recorded source archive mismatch')
+
+
+def check_saved_source(summary, current):
+    recorded = summary['source_identity']
+    if (set(recorded) != set(current)
+            or any(not isinstance(v, str) or len(v) != 64 or any(c not in '0123456789abcdef' for c in v)
+                   for v in recorded.values())
+            or summary.get('replay_source_identity', recorded) != current):
+        raise ValueError('saved source/replay identity mismatch')
+
+
+def checked(path, recorded_source=None):
     root = safe_root(path)
     manifest, data = load(root / 'manifest.json'), load(root / 'corpus.json')
-    if manifest['source_identity'] != identity() or manifest['corpus_digest'] != digest(data):
-        raise ValueError('source/protocol/corpus changed; new run required')
+    check_source(manifest['source_identity'], identity(), recorded_source)
+    if manifest['corpus_digest'] != digest(data):
+        raise ValueError('corpus changed')
     if manifest['budget_usd'] != BUDGET or manifest['memory_limit'] != MEMORY_LIMIT:
         raise ValueError('configuration changed')
     if load(root / 'writer-jobs.json') != writer_jobs(data):
@@ -200,7 +224,8 @@ def checked(path):
 
 def check_saved(path=ROOT / 'natural-results.json'):
     s = load(path)
-    if s['source_identity'] != identity() or s['schema'] != 'ams-natural-scope-results/1':
+    check_saved_source(s, identity())
+    if s['schema'] != 'ams-natural-scope-results/1':
         raise ValueError('saved source identity mismatch')
     data = corpus()
     jobs = reader_jobs(data, {j['id']: {'status': 'valid', 'memory': ''} for j in writer_jobs(data)})

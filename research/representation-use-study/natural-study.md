@@ -20,8 +20,9 @@ python3 -B research/representation-use-study/natural_facts.py check-saved
 python3 -B tools/verify_reader.py
 ```
 
-这些命令不调用 API。`check-saved` 校验当前 source identity、case/gold 定位、分母与配对
-计数，不能替代原始响应重放。原始运行文件必须留在 repo 外。
+这些命令不调用 API。`check-saved` 校验当前 replay source identity（未经后续重分析的
+结果使用原 source identity）、case/gold 定位、分母与配对计数，不能替代原始响应重放。
+原始运行文件必须留在 repo 外。
 
 ## 另行授权的真实调用
 
@@ -41,10 +42,14 @@ python3 -B research/representation-use-study/natural_api.py replay \
 正式文件独占、原子发布，不覆盖；同时只能有一个 executor。已有成功请求跳过，已写 request
 却没有 response 的请求视为 outcome unknown，不自动重复扣费。HTTP 错误、incomplete 或
 无效格式保留原响应，不自动重试。token counting 失败会阻止该阶段 generation。
+HTTP 200 内部的损坏 JSON／非对象响应仍作为技术失败进入评分；usage 独立校验，缺失或
+无效的计费元数据以 `usage_unavailable` 单列，不让费用汇总中断，也不把未知费用当作免费。
+`usage_receipts` 给出可计量覆盖，估价只覆盖这些记录。有效答案不会因 usage 无效而扣分，
+无效答案仍可计入其有效 usage。外层 receipt 文件损坏或 request binding 不匹配依旧拒绝。
 若进程崩溃留下 lock，先确认原进程已结束、检查已启动请求和缺失 receipts，再由操作者
 处理 stale lock；不要仅因等待变长就重启。已正式发布的损坏文件必须拒绝。
 
-source／protocol／corpus 变化需要新 run。首次研究在 writer 完成、reader 尚未启动时
+source／protocol／corpus 变化后的新 API 执行需要新 run。首次研究在 writer 完成、reader 尚未启动时
 调整了长度处理：所有原 writer 输入及输出完整继承，不重新抽样。该精确情形可用：
 
 ```bash
@@ -55,6 +60,21 @@ python3 -B research/representation-use-study/natural_api.py inherit-writers \
 入口要求 corpus 和实际 writer／canary requests 完全相同、所有 writer 均有 receipt、
 原 run 没有 reader request；将全部记录和来源 manifest 绑定到新 run，不挑选成功输出。
 这不是任意跨版本复用权限；改变 writer 提示或语料须重新生成。
+
+对已完成运行做离线分析修复时，可显式提供当时的源码／协议归档；每个文件必须匹配原
+manifest 的完整 `source_identity`，归档只读、不执行。三个 replay 入口均支持：
+
+```bash
+python3 -B research/representation-use-study/natural_api.py replay \
+  --run /path/outside/repo/completed-run \
+  --recorded-source /path/outside/repo/recorded-source \
+  --output /path/outside/repo/new-reanalysis.json
+```
+
+该参数只允许离线 `replay`，不放宽 `writers`／`readers`／`run` 的版本检查；重放仍核对
+原输入、plan、receipt 与评分材料的绑定。新分析保留原 `source_identity`，另记当前
+`replay_source_identity`，写到新文件而不覆盖原 run 或旧分析。本次 usage 容错修复用新的
+原创合成坏响应样本验证，并将全部既有真实 raw 重放；没有重新发出付费调用或改变原分数。
 
 ## 结果的阅读边界
 
