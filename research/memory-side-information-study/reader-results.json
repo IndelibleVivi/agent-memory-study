@@ -1,0 +1,509 @@
+{
+  "D": 0.5,
+  "analysis_source_identity": {
+    "protocol.md": "0e347ce557ede94e842044e488f0caf5c3278409e082508fbfdc8c77fdb58c7e",
+    "reader.py": "32ed44712d29a6d22e3014c3e719a15df3bf134fd6cf9ffb414d92361ab60116",
+    "reader_api.py": "7ee13610a8ca5f4b63068cb3a4ac7d5063cb547347ecf4d9701c448b01bcca7f",
+    "study.py": "577f8bdcb424ba9c6f1014b698136e9abaf4c6406320d2afa03c0a6895eb0755"
+  },
+  "by_order": [
+    {
+      "D": 0.5,
+      "cells": {
+        "X/irrelevant": {
+          "accuracy": 0.5,
+          "brier_on_valid_probability": 0.25,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "X/valid": {
+          "accuracy": 1.0,
+          "brier_on_valid_probability": 0.0,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/irrelevant": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/valid": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        }
+      },
+      "position": 0,
+      "row_order": 0
+    },
+    {
+      "D": 0.5,
+      "cells": {
+        "X/irrelevant": {
+          "accuracy": 0.5,
+          "brier_on_valid_probability": 0.25,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "X/valid": {
+          "accuracy": 1.0,
+          "brier_on_valid_probability": 0.0,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/irrelevant": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/valid": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        }
+      },
+      "position": 1,
+      "row_order": 0
+    },
+    {
+      "D": 0.5,
+      "cells": {
+        "X/irrelevant": {
+          "accuracy": 0.5,
+          "brier_on_valid_probability": 0.25,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "X/valid": {
+          "accuracy": 1.0,
+          "brier_on_valid_probability": 0.0,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/irrelevant": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/valid": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        }
+      },
+      "position": 0,
+      "row_order": 1
+    },
+    {
+      "D": 0.5,
+      "cells": {
+        "X/irrelevant": {
+          "accuracy": 0.5,
+          "brier_on_valid_probability": 0.25,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "X/valid": {
+          "accuracy": 1.0,
+          "brier_on_valid_probability": 0.0,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/irrelevant": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/valid": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        }
+      },
+      "position": 1,
+      "row_order": 1
+    }
+  ],
+  "by_repeat": [
+    {
+      "D": 0.5,
+      "cells": {
+        "X/irrelevant": {
+          "accuracy": 0.5,
+          "brier_on_valid_probability": 0.25,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "X/none": {
+          "accuracy": 0.5,
+          "brier_on_valid_probability": 0.25,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "X/valid": {
+          "accuracy": 1.0,
+          "brier_on_valid_probability": 0.0,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/irrelevant": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/none": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/valid": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        }
+      },
+      "repeat": 0
+    },
+    {
+      "D": 0.5,
+      "cells": {
+        "X/irrelevant": {
+          "accuracy": 0.5,
+          "brier_on_valid_probability": 0.25,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "X/none": {
+          "accuracy": 0.5,
+          "brier_on_valid_probability": 0.25,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "X/valid": {
+          "accuracy": 1.0,
+          "brier_on_valid_probability": 0.0,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/irrelevant": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/none": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/valid": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        }
+      },
+      "repeat": 1
+    },
+    {
+      "D": 0.5,
+      "cells": {
+        "X/irrelevant": {
+          "accuracy": 0.5,
+          "brier_on_valid_probability": 0.25,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "X/none": {
+          "accuracy": 0.5,
+          "brier_on_valid_probability": 0.25,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "X/valid": {
+          "accuracy": 1.0,
+          "brier_on_valid_probability": 0.0,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/irrelevant": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/none": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        },
+        "Y/valid": {
+          "accuracy": 0.75,
+          "brier_on_valid_probability": 0.1875,
+          "choice_probability_inconsistency_mass": 0.0,
+          "invalid_choice_mass": 0.0,
+          "posterior_mae_on_valid_probability": 0.0,
+          "probability_coverage": 1.0
+        }
+      },
+      "repeat": 2
+    }
+  ],
+  "cells": {
+    "X/irrelevant": {
+      "accuracy": 0.5,
+      "brier_on_valid_probability": 0.25,
+      "choice_probability_inconsistency_mass": 0.0,
+      "invalid_choice_mass": 0.0,
+      "posterior_mae_on_valid_probability": 0.0,
+      "probability_coverage": 1.0
+    },
+    "X/none": {
+      "accuracy": 0.5,
+      "brier_on_valid_probability": 0.25,
+      "choice_probability_inconsistency_mass": 0.0,
+      "invalid_choice_mass": 0.0,
+      "posterior_mae_on_valid_probability": 0.0,
+      "probability_coverage": 1.0
+    },
+    "X/valid": {
+      "accuracy": 1.0,
+      "brier_on_valid_probability": 0.0,
+      "choice_probability_inconsistency_mass": 0.0,
+      "invalid_choice_mass": 0.0,
+      "posterior_mae_on_valid_probability": 0.0,
+      "probability_coverage": 1.0
+    },
+    "Y/irrelevant": {
+      "accuracy": 0.75,
+      "brier_on_valid_probability": 0.1875,
+      "choice_probability_inconsistency_mass": 0.0,
+      "invalid_choice_mass": 0.0,
+      "posterior_mae_on_valid_probability": 0.0,
+      "probability_coverage": 1.0
+    },
+    "Y/none": {
+      "accuracy": 0.75,
+      "brier_on_valid_probability": 0.1875,
+      "choice_probability_inconsistency_mass": 0.0,
+      "invalid_choice_mass": 0.0,
+      "posterior_mae_on_valid_probability": 0.0,
+      "probability_coverage": 1.0
+    },
+    "Y/valid": {
+      "accuracy": 0.75,
+      "brier_on_valid_probability": 0.1875,
+      "choice_probability_inconsistency_mass": 0.0,
+      "invalid_choice_mass": 0.0,
+      "posterior_mae_on_valid_probability": 0.0,
+      "probability_coverage": 1.0
+    }
+  },
+  "config": {
+    "max_output_tokens": 2048,
+    "model": "gpt-6.1-sol",
+    "reasoning": {
+      "effort": "low"
+    },
+    "service_tier": "default",
+    "store": false,
+    "text": {
+      "format": {
+        "name": "routing_choice",
+        "schema": {
+          "additionalProperties": false,
+          "properties": {
+            "choice": {
+              "enum": [
+                "A",
+                "B"
+              ],
+              "type": "string"
+            },
+            "p_A": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "choice",
+            "p_A"
+          ],
+          "type": "object"
+        },
+        "strict": true,
+        "type": "json_schema"
+      }
+    }
+  },
+  "execution_source_identity": {
+    "protocol.md": "0e347ce557ede94e842044e488f0caf5c3278409e082508fbfdc8c77fdb58c7e",
+    "reader.py": "32ed44712d29a6d22e3014c3e719a15df3bf134fd6cf9ffb414d92361ab60116",
+    "reader_api.py": "7ee13610a8ca5f4b63068cb3a4ac7d5063cb547347ecf4d9701c448b01bcca7f",
+    "study.py": "577f8bdcb424ba9c6f1014b698136e9abaf4c6406320d2afa03c0a6895eb0755"
+  },
+  "flip_diagnostics": {
+    "X/irrelevant": {
+      "choice_flip_rate": 0.0,
+      "mean_absolute_probability_change": 0.0,
+      "mean_mapping_aligned_probability_change": 0.0,
+      "planned_pairs": 24,
+      "valid_choice_pairs": 24,
+      "valid_probability_pairs": 24
+    },
+    "X/valid": {
+      "choice_flip_rate": 1.0,
+      "mean_absolute_probability_change": 1.0,
+      "mean_mapping_aligned_probability_change": 1.0,
+      "planned_pairs": 24,
+      "valid_choice_pairs": 24,
+      "valid_probability_pairs": 24
+    },
+    "Y/irrelevant": {
+      "choice_flip_rate": 0.0,
+      "mean_absolute_probability_change": 0.0,
+      "mean_mapping_aligned_probability_change": 0.0,
+      "planned_pairs": 24,
+      "valid_choice_pairs": 24,
+      "valid_probability_pairs": 24
+    },
+    "Y/valid": {
+      "choice_flip_rate": 0.0,
+      "mean_absolute_probability_change": 0.0,
+      "mean_mapping_aligned_probability_change": 0.0,
+      "planned_pairs": 24,
+      "valid_choice_pairs": 24,
+      "valid_probability_pairs": 24
+    }
+  },
+  "inputs_digest": "2f2fb71ba665b1064b0f9e40f153269d2eb9ec24617e8180b33941d0ff343f22",
+  "latency_seconds": {
+    "max": 7.269,
+    "mean": 2.422
+  },
+  "planned_calls": 204,
+  "preflight": {
+    "estimated_upper_cost_usd": 4.356055,
+    "matched_pairs": 32,
+    "pricing_date": "2026-11-07",
+    "pricing_url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+    "valid_irrelevant_token_matched": true
+  },
+  "provider": "OpenAI official Responses API",
+  "raw_receipts_digest": "a4371bc1099e38215afd6277839773763331e755dbceb1887e956f486633881f",
+  "recorded_calls": 204,
+  "repeat_stability": {
+    "complete_probability_inputs": 68,
+    "max_probability_range": 0,
+    "mean_probability_range": 0.0
+  },
+  "returned_models": [
+    "gpt-6.1-sol"
+  ],
+  "run_finished_at": "2026-11-06T22:24:17.995574+00:00",
+  "run_started_at": "2026-11-06T22:21:58.184937+00:00",
+  "schema": "ams-reader-result/1",
+  "scope": "One authored finite routing task; repeats/order variants are not independent tasks. Self-reported probabilities are observable outputs, not internal beliefs. No-record reader baseline was not measured.",
+  "status_counts": {
+    "valid": 204
+  },
+  "token_counts": {
+    "actual_matches_preflight": true,
+    "actual_max": 302,
+    "actual_min": 279,
+    "calls_with_token_count": 204,
+    "preflight_max": 302,
+    "preflight_min": 279
+  },
+  "truth_digest": "6081fcfeeea60aae61e6e78607a751b1def43e4075be9e2103679fc5d8bff648",
+  "unique_inputs": 68,
+  "unrecorded_calls": 0,
+  "usage": {
+    "cached_input_tokens": 0,
+    "calls_with_usage": 204,
+    "canary_excluded": true,
+    "cost_is_invoice": false,
+    "estimated_cost_usd_uncached": 0.167564,
+    "input_tokens": 61062,
+    "output_tokens": 4544,
+    "reasoning_tokens": 492
+  }
+}

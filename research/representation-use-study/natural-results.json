@@ -1,0 +1,594 @@
+{
+  "date": "2026-11-07",
+  "groups": [
+    {
+      "arm": "raw",
+      "by_case": {
+        "audio-edition": 6,
+        "dispatch-date": 6,
+        "fair-delivery": 6,
+        "field-notes": 6,
+        "joint-release": 6,
+        "micro-grants": 6,
+        "pilot-guide": 6,
+        "poster-set": 6,
+        "search-branch": 6,
+        "studio-room": 6,
+        "support-routing": 6,
+        "water-counts": 6
+      },
+      "by_kind": {
+        "conjunction-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "current-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "historical-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "ordinary-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "preserved-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "targeted-clarification": {
+          "correct": 12,
+          "total": 12
+        }
+      },
+      "correct": 72,
+      "errors": [],
+      "model": "gpt-6-luna",
+      "total": 72,
+      "valid": 72
+    },
+    {
+      "arm": "prose",
+      "by_case": {
+        "audio-edition": 6,
+        "dispatch-date": 6,
+        "fair-delivery": 6,
+        "field-notes": 6,
+        "joint-release": 6,
+        "micro-grants": 6,
+        "pilot-guide": 6,
+        "poster-set": 5,
+        "search-branch": 6,
+        "studio-room": 6,
+        "support-routing": 6,
+        "water-counts": 6
+      },
+      "by_kind": {
+        "conjunction-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "current-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "historical-action": {
+          "correct": 11,
+          "total": 12
+        },
+        "ordinary-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "preserved-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "targeted-clarification": {
+          "correct": 12,
+          "total": 12
+        }
+      },
+      "correct": 71,
+      "errors": [
+        {
+          "case": "poster-set",
+          "choice": "C",
+          "gold": "B",
+          "kind": "historical-action",
+          "question": "poster-set:q3",
+          "status": "valid"
+        }
+      ],
+      "model": "gpt-6-luna",
+      "total": 72,
+      "valid": 72
+    },
+    {
+      "arm": "ledger",
+      "by_case": {
+        "audio-edition": 6,
+        "dispatch-date": 6,
+        "fair-delivery": 6,
+        "field-notes": 5,
+        "joint-release": 6,
+        "micro-grants": 6,
+        "pilot-guide": 6,
+        "poster-set": 5,
+        "search-branch": 6,
+        "studio-room": 6,
+        "support-routing": 6,
+        "water-counts": 6
+      },
+      "by_kind": {
+        "conjunction-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "current-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "historical-action": {
+          "correct": 10,
+          "total": 12
+        },
+        "ordinary-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "preserved-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "targeted-clarification": {
+          "correct": 12,
+          "total": 12
+        }
+      },
+      "correct": 70,
+      "errors": [
+        {
+          "case": "poster-set",
+          "choice": "C",
+          "gold": "B",
+          "kind": "historical-action",
+          "question": "poster-set:q3",
+          "status": "valid"
+        },
+        {
+          "case": "field-notes",
+          "choice": "A",
+          "gold": "C",
+          "kind": "historical-action",
+          "question": "field-notes:q3",
+          "status": "valid"
+        }
+      ],
+      "model": "gpt-6-luna",
+      "total": 72,
+      "valid": 72
+    },
+    {
+      "arm": "raw",
+      "by_case": {
+        "audio-edition": 6,
+        "dispatch-date": 6,
+        "fair-delivery": 6,
+        "field-notes": 6,
+        "joint-release": 6,
+        "micro-grants": 6,
+        "pilot-guide": 6,
+        "poster-set": 6,
+        "search-branch": 6,
+        "studio-room": 6,
+        "support-routing": 6,
+        "water-counts": 6
+      },
+      "by_kind": {
+        "conjunction-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "current-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "historical-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "ordinary-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "preserved-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "targeted-clarification": {
+          "correct": 12,
+          "total": 12
+        }
+      },
+      "correct": 72,
+      "errors": [],
+      "model": "gpt-6.1-sol",
+      "total": 72,
+      "valid": 72
+    },
+    {
+      "arm": "prose",
+      "by_case": {
+        "audio-edition": 6,
+        "dispatch-date": 6,
+        "fair-delivery": 6,
+        "field-notes": 6,
+        "joint-release": 6,
+        "micro-grants": 6,
+        "pilot-guide": 6,
+        "poster-set": 6,
+        "search-branch": 6,
+        "studio-room": 6,
+        "support-routing": 6,
+        "water-counts": 6
+      },
+      "by_kind": {
+        "conjunction-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "current-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "historical-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "ordinary-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "preserved-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "targeted-clarification": {
+          "correct": 12,
+          "total": 12
+        }
+      },
+      "correct": 72,
+      "errors": [],
+      "model": "gpt-6.1-sol",
+      "total": 72,
+      "valid": 72
+    },
+    {
+      "arm": "ledger",
+      "by_case": {
+        "audio-edition": 6,
+        "dispatch-date": 6,
+        "fair-delivery": 6,
+        "field-notes": 5,
+        "joint-release": 6,
+        "micro-grants": 6,
+        "pilot-guide": 6,
+        "poster-set": 6,
+        "search-branch": 6,
+        "studio-room": 6,
+        "support-routing": 6,
+        "water-counts": 6
+      },
+      "by_kind": {
+        "conjunction-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "current-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "historical-action": {
+          "correct": 11,
+          "total": 12
+        },
+        "ordinary-action": {
+          "correct": 12,
+          "total": 12
+        },
+        "preserved-boundary": {
+          "correct": 12,
+          "total": 12
+        },
+        "targeted-clarification": {
+          "correct": 12,
+          "total": 12
+        }
+      },
+      "correct": 71,
+      "errors": [
+        {
+          "case": "field-notes",
+          "choice": "A",
+          "gold": "C",
+          "kind": "historical-action",
+          "question": "field-notes:q3",
+          "status": "valid"
+        }
+      ],
+      "model": "gpt-6.1-sol",
+      "total": 72,
+      "valid": 72
+    }
+  ],
+  "independent_histories": 12,
+  "memories": {
+    "audio-edition--ledger": {
+      "characters": 423,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "audio-edition--prose": {
+      "characters": 435,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "dispatch-date--ledger": {
+      "characters": 464,
+      "status": "valid",
+      "within_requested_budget": false
+    },
+    "dispatch-date--prose": {
+      "characters": 489,
+      "status": "valid",
+      "within_requested_budget": false
+    },
+    "fair-delivery--ledger": {
+      "characters": 404,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "fair-delivery--prose": {
+      "characters": 418,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "field-notes--ledger": {
+      "characters": 438,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "field-notes--prose": {
+      "characters": 435,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "joint-release--ledger": {
+      "characters": 448,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "joint-release--prose": {
+      "characters": 439,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "micro-grants--ledger": {
+      "characters": 413,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "micro-grants--prose": {
+      "characters": 428,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "pilot-guide--ledger": {
+      "characters": 405,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "pilot-guide--prose": {
+      "characters": 433,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "poster-set--ledger": {
+      "characters": 421,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "poster-set--prose": {
+      "characters": 431,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "search-branch--ledger": {
+      "characters": 438,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "search-branch--prose": {
+      "characters": 456,
+      "status": "valid",
+      "within_requested_budget": false
+    },
+    "studio-room--ledger": {
+      "characters": 430,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "studio-room--prose": {
+      "characters": 394,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "support-routing--ledger": {
+      "characters": 429,
+      "status": "valid",
+      "within_requested_budget": true
+    },
+    "support-routing--prose": {
+      "characters": 506,
+      "status": "valid",
+      "within_requested_budget": false
+    },
+    "water-counts--ledger": {
+      "characters": 454,
+      "status": "valid",
+      "within_requested_budget": false
+    },
+    "water-counts--prose": {
+      "characters": 456,
+      "status": "valid",
+      "within_requested_budget": false
+    }
+  },
+  "memory_limit_characters": 450,
+  "paired": [
+    {
+      "baseline": "prose",
+      "baseline_only": 1,
+      "both_correct": 70,
+      "both_wrong": 1,
+      "ledger_only": 0,
+      "model": "gpt-6-luna"
+    },
+    {
+      "baseline": "raw",
+      "baseline_only": 2,
+      "both_correct": 70,
+      "both_wrong": 0,
+      "ledger_only": 0,
+      "model": "gpt-6-luna"
+    },
+    {
+      "baseline": "prose",
+      "baseline_only": 1,
+      "both_correct": 71,
+      "both_wrong": 0,
+      "ledger_only": 0,
+      "model": "gpt-6.1-sol"
+    },
+    {
+      "baseline": "raw",
+      "baseline_only": 1,
+      "both_correct": 71,
+      "both_wrong": 0,
+      "ledger_only": 0,
+      "model": "gpt-6.1-sol"
+    }
+  ],
+  "planned_reader_calls": 432,
+  "questions_per_history": 6,
+  "raw_receipts_digest": "57568a07aad9ad941f37bdff42409370f49c772e098ac6475dc9e66b5df6dd5a",
+  "reader_receipts": 432,
+  "replay_source_identity": {
+    "corpus.py": "0381222dd2772a3e3b8c4d098d3cf8bcd566909fedad1a95968faf73090cdd1b",
+    "natural-cases.json": "0ae45c5ec9808e1522fa59aa133cbb305295787c010a5cd91c0b425c5eb85a6f",
+    "natural-protocol.md": "041606ee6c4333c716af5c2ea1dac9861e83675077197bab52a345914d61a1dc",
+    "natural.py": "79a163111b8f33111dcbe27a5c4ec2876dc1c6145781a86e4edb036ac1f82833",
+    "natural_api.py": "53f3ccfef2cdfbc59c5b017f37b2010bcddd87925acee12f0646e29e12dc6e0f",
+    "study.py": "5510db5d2dd9d1fdc04cb31389300ab9545b1cf454497ab9a19a765c8f4aeec9"
+  },
+  "reserved_upper_usd": 4.925626,
+  "schema": "ams-natural-scope-results/1",
+  "source_identity": {
+    "corpus.py": "0381222dd2772a3e3b8c4d098d3cf8bcd566909fedad1a95968faf73090cdd1b",
+    "natural-cases.json": "0ae45c5ec9808e1522fa59aa133cbb305295787c010a5cd91c0b425c5eb85a6f",
+    "natural-protocol.md": "041606ee6c4333c716af5c2ea1dac9861e83675077197bab52a345914d61a1dc",
+    "natural.py": "ff05ff47ed57a7bbba1c54dda74857ddc44749f691091f55efabc5815b87d1df",
+    "natural_api.py": "d2028baa16fdd21510d017e5c0a8f709539dc3e910cecd37761b37cb259e8b3a",
+    "study.py": "5510db5d2dd9d1fdc04cb31389300ab9545b1cf454497ab9a19a765c8f4aeec9"
+  },
+  "status": "executed-exploratory-model-diagnostic",
+  "undiscounted_usage_estimate_usd": 0.822875,
+  "usage": [
+    {
+      "cached_tokens": 0,
+      "input_counts_match": true,
+      "input_tokens": 194,
+      "model": "gpt-6-luna",
+      "output_tokens": 63,
+      "phase": "canaries",
+      "planned": 1,
+      "reasoning_tokens": 40,
+      "returned_models": [
+        "gpt-6-luna"
+      ],
+      "undiscounted_usage_estimate_usd": 5.1e-05,
+      "usage_receipts": 1,
+      "usage_unavailable": 0
+    },
+    {
+      "cached_tokens": 0,
+      "input_counts_match": true,
+      "input_tokens": 194,
+      "model": "gpt-6.1-sol",
+      "output_tokens": 21,
+      "phase": "canaries",
+      "planned": 1,
+      "reasoning_tokens": 0,
+      "returned_models": [
+        "gpt-6.1-sol"
+      ],
+      "undiscounted_usage_estimate_usd": 0.000598,
+      "usage_receipts": 1,
+      "usage_unavailable": 0
+    },
+    {
+      "cached_tokens": 0,
+      "input_counts_match": true,
+      "input_tokens": 43608,
+      "model": "gpt-6.1-sol",
+      "output_tokens": 8663,
+      "phase": "writers",
+      "planned": 24,
+      "reasoning_tokens": 710,
+      "returned_models": [
+        "gpt-6.1-sol"
+      ],
+      "undiscounted_usage_estimate_usd": 0.173846,
+      "usage_receipts": 24,
+      "usage_unavailable": 0
+    },
+    {
+      "cached_tokens": 0,
+      "input_counts_match": true,
+      "input_tokens": 220587,
+      "model": "gpt-6-luna",
+      "output_tokens": 24915,
+      "phase": "readers",
+      "planned": 216,
+      "reasoning_tokens": 9601,
+      "returned_models": [
+        "gpt-6-luna"
+      ],
+      "undiscounted_usage_estimate_usd": 0.034516,
+      "usage_receipts": 216,
+      "usage_unavailable": 0
+    },
+    {
+      "cached_tokens": 0,
+      "input_counts_match": true,
+      "input_tokens": 220587,
+      "model": "gpt-6.1-sol",
+      "output_tokens": 17269,
+      "phase": "readers",
+      "planned": 216,
+      "reasoning_tokens": 283,
+      "returned_models": [
+        "gpt-6.1-sol"
+      ],
+      "undiscounted_usage_estimate_usd": 0.613864,
+      "usage_receipts": 216,
+      "usage_unavailable": 0
+    }
+  ],
+  "writer_inherited_without_regeneration": true,
+  "writer_model": "gpt-6.1-sol"
+}

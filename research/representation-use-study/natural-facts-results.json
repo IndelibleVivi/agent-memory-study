@@ -1,0 +1,2870 @@
+{
+  "date": "2026-11-07",
+  "groups": [
+    {
+      "arm": "raw",
+      "cached_tokens": 0,
+      "correct": 24,
+      "input_tokens": 44845,
+      "model": "gpt-6-luna",
+      "output_tokens": 2452,
+      "reasoning_tokens": 748,
+      "sufficient_correct": 22,
+      "total": 24,
+      "unknown": 0,
+      "usage_estimate_usd": 0.005711,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
+      "wrong_value": 0
+    },
+    {
+      "arm": "prose",
+      "cached_tokens": 0,
+      "correct": 20,
+      "input_tokens": 13567,
+      "model": "gpt-6-luna",
+      "output_tokens": 2887,
+      "reasoning_tokens": 1169,
+      "sufficient_correct": 18,
+      "total": 24,
+      "unknown": 2,
+      "usage_estimate_usd": 0.0028,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
+      "wrong_value": 2
+    },
+    {
+      "arm": "ledger",
+      "cached_tokens": 0,
+      "correct": 18,
+      "input_tokens": 13885,
+      "model": "gpt-6-luna",
+      "output_tokens": 4346,
+      "reasoning_tokens": 2571,
+      "sufficient_correct": 16,
+      "total": 24,
+      "unknown": 4,
+      "usage_estimate_usd": 0.003561,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
+      "wrong_value": 2
+    },
+    {
+      "arm": "none",
+      "cached_tokens": 0,
+      "correct": 2,
+      "input_tokens": 6085,
+      "model": "gpt-6-luna",
+      "output_tokens": 1682,
+      "reasoning_tokens": 609,
+      "sufficient_correct": 0,
+      "total": 24,
+      "unknown": 22,
+      "usage_estimate_usd": 0.00145,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
+      "wrong_value": 0
+    },
+    {
+      "arm": "raw",
+      "cached_tokens": 0,
+      "correct": 24,
+      "input_tokens": 44845,
+      "model": "gpt-6.1-sol",
+      "output_tokens": 2048,
+      "reasoning_tokens": 37,
+      "sufficient_correct": 22,
+      "total": 24,
+      "unknown": 0,
+      "usage_estimate_usd": 0.11017,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
+      "wrong_value": 0
+    },
+    {
+      "arm": "prose",
+      "cached_tokens": 0,
+      "correct": 19,
+      "input_tokens": 13567,
+      "model": "gpt-6.1-sol",
+      "output_tokens": 2669,
+      "reasoning_tokens": 523,
+      "sufficient_correct": 17,
+      "total": 24,
+      "unknown": 5,
+      "usage_estimate_usd": 0.053824,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
+      "wrong_value": 0
+    },
+    {
+      "arm": "ledger",
+      "cached_tokens": 0,
+      "correct": 20,
+      "input_tokens": 13885,
+      "model": "gpt-6.1-sol",
+      "output_tokens": 3063,
+      "reasoning_tokens": 795,
+      "sufficient_correct": 18,
+      "total": 24,
+      "unknown": 2,
+      "usage_estimate_usd": 0.0584,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
+      "wrong_value": 2
+    },
+    {
+      "arm": "none",
+      "cached_tokens": 0,
+      "correct": 2,
+      "input_tokens": 6085,
+      "model": "gpt-6.1-sol",
+      "output_tokens": 1295,
+      "reasoning_tokens": 0,
+      "sufficient_correct": 0,
+      "total": 24,
+      "unknown": 22,
+      "usage_estimate_usd": 0.02512,
+      "usage_receipts": 24,
+      "usage_unavailable": 0,
+      "wrong_value": 0
+    }
+  ],
+  "independent_histories": 12,
+  "planned_calls": 192,
+  "raw_receipts_digest": "26642055ff43fd7a4c56b803e056af5b43ff4f2184423eeb3a2e57c3da1fd539",
+  "receipts": 192,
+  "replay_source_identity": {
+    "corpus.py": "0381222dd2772a3e3b8c4d098d3cf8bcd566909fedad1a95968faf73090cdd1b",
+    "natural-cases.json": "0ae45c5ec9808e1522fa59aa133cbb305295787c010a5cd91c0b425c5eb85a6f",
+    "natural-facts-protocol.md": "0aee3ffa8d732ba65ef80f5110dab1e81b63ff2f170f36c453d46b47bea5514e",
+    "natural-facts.json": "f43918401fb7655273c0444b2ec36eee9f568cc45a51c292ce153cf091ae3b34",
+    "natural-protocol.md": "041606ee6c4333c716af5c2ea1dac9861e83675077197bab52a345914d61a1dc",
+    "natural.py": "79a163111b8f33111dcbe27a5c4ec2876dc1c6145781a86e4edb036ac1f82833",
+    "natural_api.py": "53f3ccfef2cdfbc59c5b017f37b2010bcddd87925acee12f0646e29e12dc6e0f",
+    "natural_facts.py": "166cd793a2dfdb976ecf853f81076de177030d117b23eb70c8d52b9adb59da3b",
+    "study.py": "5510db5d2dd9d1fdc04cb31389300ab9545b1cf454497ab9a19a765c8f4aeec9"
+  },
+  "rows": [
+    {
+      "answer": 75,
+      "arm": "prose",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 75,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "micro-grants:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 75,
+      "arm": "ledger",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 75,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "micro-grants:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 11,
+      "arm": "raw",
+      "case": "poster-set",
+      "correct": true,
+      "gold": 11,
+      "kind": "current-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "poster-set:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "dispatch-date",
+      "correct": false,
+      "gold": "2026-11-15",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "dispatch-date:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-08",
+      "arm": "prose",
+      "case": "pilot-guide",
+      "correct": true,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "pilot-guide:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "快通",
+      "arm": "raw",
+      "case": "studio-room",
+      "correct": true,
+      "gold": "快通",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "studio-room:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "joint-release",
+      "correct": false,
+      "gold": [
+        "规格单"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "joint-release:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "ledger",
+      "case": "support-routing",
+      "correct": false,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "support-routing:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-08",
+      "arm": "ledger",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "fair-delivery:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 11,
+      "arm": "prose",
+      "case": "poster-set",
+      "correct": true,
+      "gold": 11,
+      "kind": "current-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "poster-set:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 300,
+      "arm": "raw",
+      "case": "search-branch",
+      "correct": true,
+      "gold": 300,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "search-branch:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "dispatch-date",
+      "correct": false,
+      "gold": "前台",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "dispatch-date:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 500,
+      "arm": "ledger",
+      "case": "search-branch",
+      "correct": false,
+      "gold": 300,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "wrong-value",
+      "question": "search-branch:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "pilot-guide",
+      "correct": false,
+      "gold": [
+        "培训员带队训练"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "pilot-guide:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "北门"
+      ],
+      "arm": "raw",
+      "case": "water-counts",
+      "correct": true,
+      "gold": [
+        "北门"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "water-counts:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 500,
+      "arm": "raw",
+      "case": "search-branch",
+      "correct": true,
+      "gold": 500,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "search-branch:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "studio-room",
+      "correct": false,
+      "gold": "快通",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "studio-room:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 650,
+      "arm": "ledger",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 650,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "micro-grants:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 650,
+      "arm": "raw",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 650,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "micro-grants:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-07",
+      "arm": "ledger",
+      "case": "water-counts",
+      "correct": true,
+      "gold": "2026-11-07",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "water-counts:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "prose",
+      "case": "search-branch",
+      "correct": false,
+      "gold": 300,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "search-branch:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "raw",
+      "case": "joint-release",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "joint-release:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "fair-delivery",
+      "correct": false,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "fair-delivery:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "插画",
+        "路线"
+      ],
+      "arm": "ledger",
+      "case": "field-notes",
+      "correct": true,
+      "gold": [
+        "插画",
+        "路线"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "field-notes:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 650,
+      "arm": "ledger",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 650,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "micro-grants:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "北门"
+      ],
+      "arm": "prose",
+      "case": "water-counts",
+      "correct": true,
+      "gold": [
+        "北门"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "water-counts:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "规格单"
+      ],
+      "arm": "raw",
+      "case": "joint-release",
+      "correct": true,
+      "gold": [
+        "规格单"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "joint-release:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "北门"
+      ],
+      "arm": "ledger",
+      "case": "water-counts",
+      "correct": true,
+      "gold": [
+        "北门"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "water-counts:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "培训员带队训练"
+      ],
+      "arm": "prose",
+      "case": "pilot-guide",
+      "correct": true,
+      "gold": [
+        "培训员带队训练"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "pilot-guide:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "audio-edition",
+      "correct": false,
+      "gold": 30,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "audio-edition:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "audio-edition",
+      "correct": false,
+      "gold": 60,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "audio-edition:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-15",
+      "arm": "ledger",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "2026-11-15",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "dispatch-date:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "search-branch",
+      "correct": false,
+      "gold": 500,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "search-branch:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 30,
+      "arm": "prose",
+      "case": "audio-edition",
+      "correct": true,
+      "gold": 30,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "audio-edition:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-08",
+      "arm": "raw",
+      "case": "pilot-guide",
+      "correct": true,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "pilot-guide:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-07",
+      "arm": "prose",
+      "case": "water-counts",
+      "correct": true,
+      "gold": "2026-11-07",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "water-counts:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "前台",
+      "arm": "prose",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "前台",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "dispatch-date:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "micro-grants",
+      "correct": false,
+      "gold": 650,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "micro-grants:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "prose",
+      "case": "joint-release",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "joint-release:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "joint-release",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "joint-release:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "ledger",
+      "case": "audio-edition",
+      "correct": false,
+      "gold": 30,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "audio-edition:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 11,
+      "arm": "prose",
+      "case": "poster-set",
+      "correct": true,
+      "gold": 11,
+      "kind": "current-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "poster-set:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "规格单"
+      ],
+      "arm": "prose",
+      "case": "joint-release",
+      "correct": true,
+      "gold": [
+        "规格单"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "joint-release:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-08",
+      "arm": "raw",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "fair-delivery:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "普通预约",
+      "arm": "prose",
+      "case": "studio-room",
+      "correct": false,
+      "gold": "快通",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "wrong-value",
+      "question": "studio-room:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "poster-set",
+      "correct": false,
+      "gold": 11,
+      "kind": "current-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "poster-set:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "培训员带队训练"
+      ],
+      "arm": "ledger",
+      "case": "pilot-guide",
+      "correct": true,
+      "gold": [
+        "培训员带队训练"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "pilot-guide:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 75,
+      "arm": "prose",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 75,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "micro-grants:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-15",
+      "arm": "raw",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "2026-11-15",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "dispatch-date:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "收货台",
+      "arm": "ledger",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "收货台",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "fair-delivery:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "北门"
+      ],
+      "arm": "raw",
+      "case": "water-counts",
+      "correct": true,
+      "gold": [
+        "北门"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "water-counts:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "micro-grants",
+      "correct": false,
+      "gold": 75,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "micro-grants:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "pilot-guide",
+      "correct": false,
+      "gold": [
+        "培训员带队训练"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "pilot-guide:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "field-notes",
+      "correct": false,
+      "gold": [
+        "插画",
+        "路线"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "field-notes:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 75,
+      "arm": "raw",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 75,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "micro-grants:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "技术队",
+        "编辑队"
+      ],
+      "arm": "ledger",
+      "case": "support-routing",
+      "correct": true,
+      "gold": [
+        "技术队",
+        "编辑队"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "support-routing:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "培训员带队训练"
+      ],
+      "arm": "prose",
+      "case": "pilot-guide",
+      "correct": true,
+      "gold": [
+        "培训员带队训练"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "pilot-guide:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "field-notes",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "field-notes:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": 500,
+      "arm": "prose",
+      "case": "search-branch",
+      "correct": true,
+      "gold": 500,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "search-branch:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-08",
+      "arm": "prose",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "fair-delivery:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "prose",
+      "case": "support-routing",
+      "correct": false,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "support-routing:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "插画",
+        "路线"
+      ],
+      "arm": "ledger",
+      "case": "field-notes",
+      "correct": true,
+      "gold": [
+        "插画",
+        "路线"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "field-notes:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 60,
+      "arm": "ledger",
+      "case": "audio-edition",
+      "correct": true,
+      "gold": 60,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "audio-edition:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "收货台",
+      "arm": "prose",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "收货台",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "fair-delivery:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "ledger",
+      "case": "field-notes",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "field-notes:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "field-notes",
+      "correct": false,
+      "gold": [
+        "插画",
+        "路线"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "field-notes:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 2,
+      "arm": "raw",
+      "case": "studio-room",
+      "correct": true,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "studio-room:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "前台",
+      "arm": "ledger",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "前台",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "dispatch-date:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "prose",
+      "case": "audio-edition",
+      "correct": false,
+      "gold": 60,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "audio-edition:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 60,
+      "arm": "raw",
+      "case": "audio-edition",
+      "correct": true,
+      "gold": 60,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "audio-edition:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "poster-set",
+      "correct": false,
+      "gold": [
+        1,
+        4
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "poster-set:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 60,
+      "arm": "raw",
+      "case": "audio-edition",
+      "correct": true,
+      "gold": 60,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "audio-edition:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "收货台",
+      "arm": "raw",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "收货台",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "fair-delivery:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "收货台",
+      "arm": "raw",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "收货台",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "fair-delivery:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-07",
+      "arm": "ledger",
+      "case": "water-counts",
+      "correct": true,
+      "gold": "2026-11-07",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "water-counts:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "studio-room",
+      "correct": false,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "studio-room:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "ledger",
+      "case": "search-branch",
+      "correct": false,
+      "gold": 300,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "search-branch:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 500,
+      "arm": "raw",
+      "case": "search-branch",
+      "correct": true,
+      "gold": 500,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "search-branch:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "前台",
+      "arm": "raw",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "前台",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "dispatch-date:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "raw",
+      "case": "field-notes",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "field-notes:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": "前台",
+      "arm": "ledger",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "前台",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "dispatch-date:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 2,
+      "arm": "raw",
+      "case": "support-routing",
+      "correct": true,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "support-routing:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "prose",
+      "case": "joint-release",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "joint-release:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": 75,
+      "arm": "ledger",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 75,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "micro-grants:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 2,
+      "arm": "ledger",
+      "case": "studio-room",
+      "correct": true,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "studio-room:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 300,
+      "arm": "raw",
+      "case": "search-branch",
+      "correct": true,
+      "gold": 300,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "search-branch:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "规格单"
+      ],
+      "arm": "ledger",
+      "case": "joint-release",
+      "correct": true,
+      "gold": [
+        "规格单"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "joint-release:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 2,
+      "arm": "ledger",
+      "case": "studio-room",
+      "correct": true,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "studio-room:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "support-routing",
+      "correct": false,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "support-routing:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 500,
+      "arm": "ledger",
+      "case": "search-branch",
+      "correct": true,
+      "gold": 500,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "search-branch:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        1,
+        4
+      ],
+      "arm": "raw",
+      "case": "poster-set",
+      "correct": true,
+      "gold": [
+        1,
+        4
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "poster-set:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "raw",
+      "case": "joint-release",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "joint-release:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "pilot-guide",
+      "correct": false,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "pilot-guide:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "北门"
+      ],
+      "arm": "ledger",
+      "case": "water-counts",
+      "correct": true,
+      "gold": [
+        "北门"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "water-counts:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "joint-release",
+      "correct": false,
+      "gold": [
+        "规格单"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "joint-release:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "培训员带队训练"
+      ],
+      "arm": "ledger",
+      "case": "pilot-guide",
+      "correct": true,
+      "gold": [
+        "培训员带队训练"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "pilot-guide:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "培训员带队训练"
+      ],
+      "arm": "raw",
+      "case": "pilot-guide",
+      "correct": true,
+      "gold": [
+        "培训员带队训练"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "pilot-guide:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-07",
+      "arm": "raw",
+      "case": "water-counts",
+      "correct": true,
+      "gold": "2026-11-07",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "water-counts:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-08",
+      "arm": "prose",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "fair-delivery:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "北门"
+      ],
+      "arm": "prose",
+      "case": "water-counts",
+      "correct": true,
+      "gold": [
+        "北门"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "water-counts:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "prose",
+      "case": "field-notes",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "field-notes:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "规格单"
+      ],
+      "arm": "raw",
+      "case": "joint-release",
+      "correct": true,
+      "gold": [
+        "规格单"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "joint-release:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        1,
+        2
+      ],
+      "arm": "ledger",
+      "case": "poster-set",
+      "correct": false,
+      "gold": [
+        1,
+        4
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "wrong-value",
+      "question": "poster-set:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "raw",
+      "case": "field-notes",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "field-notes:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "water-counts",
+      "correct": false,
+      "gold": "2026-11-07",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "water-counts:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 11,
+      "arm": "raw",
+      "case": "poster-set",
+      "correct": true,
+      "gold": 11,
+      "kind": "current-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "poster-set:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-07",
+      "arm": "raw",
+      "case": "water-counts",
+      "correct": true,
+      "gold": "2026-11-07",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "water-counts:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-08",
+      "arm": "raw",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "fair-delivery:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-15",
+      "arm": "ledger",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "2026-11-15",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "dispatch-date:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "search-branch",
+      "correct": false,
+      "gold": 500,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "search-branch:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        1,
+        4
+      ],
+      "arm": "raw",
+      "case": "poster-set",
+      "correct": true,
+      "gold": [
+        1,
+        4
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "poster-set:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "技术队",
+        "编辑队"
+      ],
+      "arm": "prose",
+      "case": "support-routing",
+      "correct": true,
+      "gold": [
+        "技术队",
+        "编辑队"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "support-routing:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 30,
+      "arm": "ledger",
+      "case": "audio-edition",
+      "correct": true,
+      "gold": 30,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "audio-edition:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "studio-room",
+      "correct": false,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "studio-room:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 60,
+      "arm": "prose",
+      "case": "audio-edition",
+      "correct": true,
+      "gold": 60,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "audio-edition:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "micro-grants",
+      "correct": false,
+      "gold": 75,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "micro-grants:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        1,
+        2,
+        4
+      ],
+      "arm": "prose",
+      "case": "poster-set",
+      "correct": false,
+      "gold": [
+        1,
+        4
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "wrong-value",
+      "question": "poster-set:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "前台",
+      "arm": "raw",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "前台",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "dispatch-date:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-15",
+      "arm": "prose",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "2026-11-15",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "dispatch-date:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "field-notes",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "field-notes:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "pilot-guide",
+      "correct": false,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "pilot-guide:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-15",
+      "arm": "prose",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "2026-11-15",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "dispatch-date:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 650,
+      "arm": "prose",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 650,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "micro-grants:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "快通",
+      "arm": "raw",
+      "case": "studio-room",
+      "correct": true,
+      "gold": "快通",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "studio-room:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 11,
+      "arm": "ledger",
+      "case": "poster-set",
+      "correct": true,
+      "gold": 11,
+      "kind": "current-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "poster-set:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-07",
+      "arm": "prose",
+      "case": "water-counts",
+      "correct": true,
+      "gold": "2026-11-07",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "water-counts:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "dispatch-date",
+      "correct": false,
+      "gold": "2026-11-15",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "dispatch-date:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "audio-edition",
+      "correct": false,
+      "gold": 60,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "audio-edition:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "water-counts",
+      "correct": false,
+      "gold": [
+        "北门"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "water-counts:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-08",
+      "arm": "prose",
+      "case": "pilot-guide",
+      "correct": true,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "pilot-guide:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "search-branch",
+      "correct": false,
+      "gold": 300,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "search-branch:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "插画",
+        "路线"
+      ],
+      "arm": "raw",
+      "case": "field-notes",
+      "correct": true,
+      "gold": [
+        "插画",
+        "路线"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "field-notes:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "prose",
+      "case": "field-notes",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "field-notes:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "dispatch-date",
+      "correct": false,
+      "gold": "前台",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "dispatch-date:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "ledger",
+      "case": "pilot-guide",
+      "correct": false,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "pilot-guide:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 30,
+      "arm": "raw",
+      "case": "audio-edition",
+      "correct": true,
+      "gold": 30,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "audio-edition:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 2,
+      "arm": "prose",
+      "case": "studio-room",
+      "correct": true,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "studio-room:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 75,
+      "arm": "raw",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 75,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "micro-grants:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "规格单"
+      ],
+      "arm": "ledger",
+      "case": "joint-release",
+      "correct": true,
+      "gold": [
+        "规格单"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "joint-release:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 30,
+      "arm": "raw",
+      "case": "audio-edition",
+      "correct": true,
+      "gold": 30,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "audio-edition:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "插画",
+        "路线"
+      ],
+      "arm": "prose",
+      "case": "field-notes",
+      "correct": true,
+      "gold": [
+        "插画",
+        "路线"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "field-notes:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "water-counts",
+      "correct": false,
+      "gold": [
+        "北门"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "water-counts:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-08",
+      "arm": "raw",
+      "case": "pilot-guide",
+      "correct": true,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "pilot-guide:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "audio-edition",
+      "correct": false,
+      "gold": 30,
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "audio-edition:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "ledger",
+      "case": "field-notes",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "field-notes:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "prose",
+      "case": "search-branch",
+      "correct": false,
+      "gold": 300,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "search-branch:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "studio-room",
+      "correct": false,
+      "gold": "快通",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "studio-room:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "micro-grants",
+      "correct": false,
+      "gold": 650,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "micro-grants:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "规格单"
+      ],
+      "arm": "prose",
+      "case": "joint-release",
+      "correct": true,
+      "gold": [
+        "规格单"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "joint-release:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "prose",
+      "case": "support-routing",
+      "correct": false,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "support-routing:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "joint-release",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "joint-release:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "prose",
+      "case": "studio-room",
+      "correct": false,
+      "gold": "快通",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "studio-room:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "ledger",
+      "case": "pilot-guide",
+      "correct": false,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "pilot-guide:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        1,
+        2,
+        4
+      ],
+      "arm": "ledger",
+      "case": "poster-set",
+      "correct": false,
+      "gold": [
+        1,
+        4
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "wrong-value",
+      "question": "poster-set:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "support-routing",
+      "correct": false,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "support-routing:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 2,
+      "arm": "raw",
+      "case": "studio-room",
+      "correct": true,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "studio-room:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "poster-set",
+      "correct": false,
+      "gold": 11,
+      "kind": "current-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "poster-set:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "fair-delivery",
+      "correct": false,
+      "gold": "收货台",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "fair-delivery:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 2,
+      "arm": "raw",
+      "case": "support-routing",
+      "correct": true,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "support-routing:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "water-counts",
+      "correct": false,
+      "gold": "2026-11-07",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "water-counts:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 11,
+      "arm": "ledger",
+      "case": "poster-set",
+      "correct": true,
+      "gold": 11,
+      "kind": "current-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "poster-set:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "收货台",
+      "arm": "ledger",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "收货台",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "fair-delivery:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "fair-delivery",
+      "correct": false,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "fair-delivery:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "前台",
+      "arm": "prose",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "前台",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "dispatch-date:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 500,
+      "arm": "ledger",
+      "case": "search-branch",
+      "correct": true,
+      "gold": 500,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "search-branch:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "培训员带队训练"
+      ],
+      "arm": "raw",
+      "case": "pilot-guide",
+      "correct": true,
+      "gold": [
+        "培训员带队训练"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "pilot-guide:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 650,
+      "arm": "raw",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 650,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "micro-grants:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "技术队",
+        "编辑队"
+      ],
+      "arm": "raw",
+      "case": "support-routing",
+      "correct": true,
+      "gold": [
+        "技术队",
+        "编辑队"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "support-routing:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "技术队",
+        "编辑队"
+      ],
+      "arm": "ledger",
+      "case": "support-routing",
+      "correct": true,
+      "gold": [
+        "技术队",
+        "编辑队"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "support-routing:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "技术队",
+        "编辑队"
+      ],
+      "arm": "raw",
+      "case": "support-routing",
+      "correct": true,
+      "gold": [
+        "技术队",
+        "编辑队"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "support-routing:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 30,
+      "arm": "prose",
+      "case": "audio-edition",
+      "correct": true,
+      "gold": 30,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "audio-edition:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "快通",
+      "arm": "ledger",
+      "case": "studio-room",
+      "correct": true,
+      "gold": "快通",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "studio-room:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "poster-set",
+      "correct": false,
+      "gold": [
+        1,
+        4
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "poster-set:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "fair-delivery",
+      "correct": false,
+      "gold": "收货台",
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "fair-delivery:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "support-routing",
+      "correct": false,
+      "gold": [
+        "技术队",
+        "编辑队"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "support-routing:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "ledger",
+      "case": "support-routing",
+      "correct": false,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "support-routing:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "search-branch",
+      "correct": false,
+      "gold": 300,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "search-branch:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "插画",
+        "路线"
+      ],
+      "arm": "raw",
+      "case": "field-notes",
+      "correct": true,
+      "gold": [
+        "插画",
+        "路线"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "field-notes:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 2,
+      "arm": "prose",
+      "case": "studio-room",
+      "correct": true,
+      "gold": 2,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "studio-room:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "技术队",
+        "编辑队"
+      ],
+      "arm": "prose",
+      "case": "support-routing",
+      "correct": true,
+      "gold": [
+        "技术队",
+        "编辑队"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "support-routing:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "none",
+      "case": "support-routing",
+      "correct": false,
+      "gold": [
+        "技术队",
+        "编辑队"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "unknown",
+      "question": "support-routing:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "普通预约",
+      "arm": "ledger",
+      "case": "studio-room",
+      "correct": false,
+      "gold": "快通",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "wrong-value",
+      "question": "studio-room:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-08",
+      "arm": "ledger",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "2026-11-08",
+      "kind": "effective-date",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "fair-delivery:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 650,
+      "arm": "prose",
+      "case": "micro-grants",
+      "correct": true,
+      "gold": 650,
+      "kind": "historical-quantity",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "micro-grants:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "ledger",
+      "case": "joint-release",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "joint-release:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": [
+        "插画",
+        "路线"
+      ],
+      "arm": "prose",
+      "case": "field-notes",
+      "correct": true,
+      "gold": [
+        "插画",
+        "路线"
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "field-notes:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "ledger",
+      "case": "joint-release",
+      "correct": true,
+      "gold": null,
+      "kind": "unspecified-date-control",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "joint-release:f2",
+      "source_sufficient": false,
+      "status": "valid"
+    },
+    {
+      "answer": "收货台",
+      "arm": "prose",
+      "case": "fair-delivery",
+      "correct": true,
+      "gold": "收货台",
+      "kind": "scope-application",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "fair-delivery:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 60,
+      "arm": "ledger",
+      "case": "audio-edition",
+      "correct": true,
+      "gold": 60,
+      "kind": "historical-quantity",
+      "model": "gpt-6-luna",
+      "outcome": "correct",
+      "question": "audio-edition:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": "2026-11-15",
+      "arm": "raw",
+      "case": "dispatch-date",
+      "correct": true,
+      "gold": "2026-11-15",
+      "kind": "effective-date",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "dispatch-date:f2",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": null,
+      "arm": "prose",
+      "case": "poster-set",
+      "correct": false,
+      "gold": [
+        1,
+        4
+      ],
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "unknown",
+      "question": "poster-set:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    },
+    {
+      "answer": 500,
+      "arm": "prose",
+      "case": "search-branch",
+      "correct": true,
+      "gold": 500,
+      "kind": "scope-application",
+      "model": "gpt-6.1-sol",
+      "outcome": "correct",
+      "question": "search-branch:f1",
+      "source_sufficient": true,
+      "status": "valid"
+    }
+  ],
+  "schema": "ams-scope-factual-results/1",
+  "source_identity": {
+    "corpus.py": "0381222dd2772a3e3b8c4d098d3cf8bcd566909fedad1a95968faf73090cdd1b",
+    "natural-cases.json": "0ae45c5ec9808e1522fa59aa133cbb305295787c010a5cd91c0b425c5eb85a6f",
+    "natural-facts-protocol.md": "0aee3ffa8d732ba65ef80f5110dab1e81b63ff2f170f36c453d46b47bea5514e",
+    "natural-facts.json": "f43918401fb7655273c0444b2ec36eee9f568cc45a51c292ce153cf091ae3b34",
+    "natural-protocol.md": "041606ee6c4333c716af5c2ea1dac9861e83675077197bab52a345914d61a1dc",
+    "natural.py": "ff05ff47ed57a7bbba1c54dda74857ddc44749f691091f55efabc5815b87d1df",
+    "natural_api.py": "d2028baa16fdd21510d017e5c0a8f709539dc3e910cecd37761b37cb259e8b3a",
+    "natural_facts.py": "2c3da4a974f88a69dd76bf600937941de93426d1c278ced9502cbbf4d36ea2eb",
+    "study.py": "5510db5d2dd9d1fdc04cb31389300ab9545b1cf454497ab9a19a765c8f4aeec9"
+  },
+  "source_sufficient_questions": 22,
+  "status": "exploratory-redesign-after-option-cue-diagnostic",
+  "total_reserved_usd_including_prior": 7.37594025
+}

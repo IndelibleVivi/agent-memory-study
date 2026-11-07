@@ -3,9 +3,9 @@
   "title": "经验怎样长成判断习惯？",
   "question": "同一批经验保留为案例、规则或参数时，怎样改变未见情境中的选择；反馈被纠正之后，这种改变又怎样更新？",
   "intro": "我们沿着现有经验复用问题，继续追踪经历如何进入决策部件。论文、实现与本站实验在这里互相提问：看见一次更好的输出还不够，还要确认它从哪里学来、适用于哪里，又怎样改回来。",
-  "judgment": "在本站给定且训练支持内的结构化特征上，案例近邻与小分类器都预测对了原标签。仅对更正样本继续拟合改对了目标范围，却损伤了保留范围；完整重训也出现边界退化。这里的学习与纠正路径可复核，但没有证明新语义泛化、真实任务收益或来源影响的彻底遗忘。",
-  "byline": "Agent Memory Study editors",
-  "updated": "2026-09-22",
+  "judgment": "在本站给定且训练支持内的结构化特征上，案例近邻与小分类器都预测对了原标签。仅对更正样本继续拟合改对了目标范围，却损伤了保留范围；完整重训也出现边界退化。这里的学习与纠正路径可复核，但没有证明新语义泛化、真实任务收益或来源影响的彻底遗忘。 续论把原标签的 reader 状态／损失条件和技能库与 controller 的配对明确列出；没有改写上述已执行学习结果。",
+  "byline": "Agent Memory Study editors · 2026-11-05 additions: Cove, AI-assisted research",
+  "updated": "2026-11-05",
   "status": "open",
   "explanations": [
     {
@@ -23,6 +23,14 @@
     {
       "title": "也许只是输出被暂时挡住",
       "text": "运行时约束可以使当前选择合规，同时保留旧参数。要讨论学习或撤回，必须区分输出行为、参数更新和来源依赖。"
+    },
+    {
+      "title": "也许标签对应的读者状态变了",
+      "text": "同一候选在不同侧信息下可以有不同的增量价值；最优准确率不变也不等于没有新增信息。标签迁移前应说明共同的状态、渠道与损失。"
+    },
+    {
+      "title": "也许只回退了共同学习状态的一部分",
+      "text": "固定 MemSkill 源码的普通演化回退恢复库，不恢复历史 controller；完整 checkpoint 的恢复另有实现。旧库接到新 controller 的表现需要配对检验，不能从历史奖励继承。"
     }
   ],
   "evidence": [
@@ -37,6 +45,18 @@
       "url": "https://indeliblevivi.github.io/agent-memory-study/question/experience-to-capability/",
       "observation": "候选竞争、适用范围与来源撤回构成新研究线的相邻问题。",
       "limit": "已有 BM25、规则与 cache 证据不能替代 learned policy 的实测。"
+    },
+    {
+      "label": "用途标签的侧信息边界",
+      "url": "research/memory-side-information-study/README.md",
+      "observation": "精确有限见证分开条件信息、当前行动价值与固定用途次序。",
+      "limit": "规范性概率模型；不能替代自然语言标签学习和下游任务实验。"
+    },
+    {
+      "label": "MemSkill：共享技能与选择 controller 的固定源码研究",
+      "url": "research/memskill-state-pairing-study/memskill-mechanism-dossier.md",
+      "observation": "阶段 bank snapshot、普通 bank rollback、early stop 与完整 checkpoint 的恢复对象不同；附有库 × controller 四格协议。",
+      "limit": "静态源码与可检验假说；没有运行训练、ALFWorld 或负迁移实验。"
     }
   ],
   "materialIds": [
@@ -49,7 +69,9 @@
   "studyIds": [
     "experience-becomes-policy",
     "who-controls-memory",
-    "representation-and-use"
+    "representation-and-use",
+    "memory-value-side-information",
+    "memskill-state-pairing"
   ],
   "findingIds": [
     "correction-needs-retention-checks",

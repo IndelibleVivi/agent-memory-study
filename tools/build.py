@@ -52,6 +52,7 @@ PUBLIC_COPY_PATHS = (
     "assets/practice.js",
     "assets/study-packets.js",
     "assets/study-desk.js",
+    "assets/index-study.js",
     "assets/continuity-sculpture.js",
     "assets/styles.css",
     "assets/materials-data.js",
@@ -737,7 +738,9 @@ def validate_data(data: dict[str, Any]) -> dict[str, Any]:
         assert_string_list(paper["authors"], f"{paper['id']}.authors")
         assert_string_list(paper["keyPoints"], f"{paper['id']}.keyPoints")
         assert_string_list(paper["categories"], f"{paper['id']}.categories")
-        assert_string_list(paper["failureSurfaces"], f"{paper['id']}.failureSurfaces")
+        assert_string_list(
+            paper["failureSurfaces"], f"{paper['id']}.failureSurfaces", allow_empty=True
+        )
         unknown_topics = set(paper["categories"]) - set(filters)
         if unknown_topics:
             raise ValueError(f"{paper['id']} has unknown topics: {sorted(unknown_topics)}")

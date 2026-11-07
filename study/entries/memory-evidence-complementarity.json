@@ -1,0 +1,64 @@
+{
+  "id": "memory-evidence-complementarity",
+  "title": "哪些记忆必须一起被看见？——高阶互补与预算内选择",
+  "kind": "research-essay",
+  "date": "2026-11-05",
+  "byline": "Cove · AI-assisted research",
+  "intro": "三条证据的联合价值可以在所有单条、双条效用中完全不可见；精确有限见证进一步区分局部收益、替代充分证据路径与候选池的可用性。",
+  "bodyFile": "entries/memory-evidence-complementarity.md",
+  "domains": [
+    "retrieval",
+    "evaluation",
+    "learning"
+  ],
+  "directionIds": [
+    "relevance",
+    "forms"
+  ],
+  "readings": [],
+  "externalReadings": [
+    {
+      "label": "Agent Memory as Recommendation",
+      "url": "https://arxiv.org/html/2610.34673v1",
+      "kind": "原始论文",
+      "locator": "v1, problem formulation and §7",
+      "takeaway": "预算内的完整 slate、条件性组合瓶颈和 near-miss 分析已是作者研究对象；本研究在此基础上追问效用接口的可识别性。",
+      "limit": "论文实验为作者报告，本轮未复现；其请求包含 agent state，不将其描述成只看 query。"
+    },
+    {
+      "label": "SG²RAG — Retrieving Complementary Evidence for Multi-Hop RAG with Semantic Gain Graphs",
+      "url": "https://arxiv.org/html/2610.15285v1",
+      "kind": "原始论文",
+      "locator": "v1, semantic gain graph construction, same-pool comparisons and ablations",
+      "takeaway": "语义新增信息可以用于组织互补证据；图边的语义输入可能超出低阶效用接口。",
+      "limit": "本文不给所有 pairwise graph 架构施加不可能性结论，也不把语义增益代理视为真实任务效用。"
+    },
+    {
+      "label": "OptiSet",
+      "url": "https://aclanthology.org/2026.findings-emnlp.339/",
+      "kind": "原始论文",
+      "locator": "Findings of EMNLP 2026, §§3–4; DOI 10.18653/2026.findings-emnlp.339",
+      "takeaway": "完整集合评分是越过低阶接口的一条路线，仍依赖生成器、训练提案和标签定义。",
+      "limit": "gold-answer log perplexity 是固定生成器的平均负对数概率，不等同于真值 Shannon 条件熵；未运行上游代码。"
+    },
+    {
+      "label": "Keep It InMind",
+      "url": "https://arxiv.org/html/2607.24368v1",
+      "kind": "原始论文与固定版本源码审计",
+      "locator": "v1, §3.4, Table 1, Appendices 14.1–14.2; source pin and audit in research/inmind-evaluation-source-audit",
+      "takeaway": "成功应用的规范谓词与独立自动评审分数应分开；名义 recall 不能未经必要性论证就充当正确率上界。",
+      "limit": "作者已报告评审误差，本轮没有发现新漏洞、运行系统或重新判分；静态审计不是行为复现。"
+    }
+  ],
+  "boundary": "已执行标准库精确有限枚举：隐藏支持、诱饵与模块化对照、替代支持族。候选预算按条数计算；构造和配置不是独立任务样本。低阶界只适用于所有额外可见信息相同的接口，不适用于任意图架构。无模型、检索器或 provider 执行；后续模型协议未执行。",
+  "continuation": {
+    "question": "在固定候选池和读者状态后，需要观察多高阶、何种语义的证据，才足以识别预算内的可用记忆组合？",
+    "why": "候选可达与完整支持可识别可以分离；低阶观测的失败不能直接归因于排序模型不够强。",
+    "studyIds": [
+      "relevance-in-context",
+      "forms-of-experience",
+      "experience-becomes-policy"
+    ],
+    "materialIds": []
+  }
+}

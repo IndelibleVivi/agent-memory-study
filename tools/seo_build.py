@@ -34,12 +34,12 @@ def build(output: Path, executable: str | None = None):
     # Preserve tracked public research/docs referenced by reading notes, plus canonical PDFs.
     assets = subprocess.check_output(['git', 'ls-files', '-z', 'assets', 'research', 'docs'], cwd=ROOT).decode().split('\0')
     # seo.js may be untracked during authoring; it is an explicit source dependency.
-    files = set(filter(None, assets)) | {'assets/research-map.js', 'assets/constellation.js', 'assets/continuity-sculpture.js', 'assets/study-packets.js', 'assets/study-desk.js', 'assets/seo.js', 'site.webmanifest', 'NOTICE.md',
+    files = set(filter(None, assets)) | {'assets/research-map.js', 'assets/constellation.js', 'assets/continuity-sculpture.js', 'assets/study-packets.js', 'assets/study-desk.js', 'assets/index-study.js', 'assets/seo.js', 'site.webmanifest', 'NOTICE.md',
         'THIRD_PARTY_NOTICES.md', 'agent-memory-study.rdf',
         'publications/agent-memory-study-project-introduction.zh-CN.pdf'}
     files.update(item['pdf']['url'] for item in data['materials'] if item['pdf']['delivery'] == 'bundled')
     files.update(item['sourcePath'] for item in data['studies'])
-    files.add('docs/authoring.md')
+    files.update({'docs/authoring.md', 'docs/study-workspace.md', 'docs/research-system.md'})
     source = (ROOT / 'index.html').read_text()
     shell = source.split('<main id="main-content" tabindex="-1">', 1)[1].split('</main>', 1)[0]
     shell_script = 'window.AMS_READER_SHELL = ' + json.dumps(shell, ensure_ascii=False).replace('</', '<\\/') + ';\n'

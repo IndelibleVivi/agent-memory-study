@@ -1,0 +1,564 @@
+{
+  "study": "memory-side-information-study",
+  "edition": "2026-11-05",
+  "evidence_status": "executed-exact-finite-enumeration",
+  "independent_validation": false,
+  "scope": "Authored finite distributions and ideal Bayesian 0-1 decisions; no model, retrieval engine, training, latency, natural-language or human study.",
+  "rank_reversal": {
+    "world_rows": 8,
+    "measurements": [
+      {
+        "observed": [],
+        "bayes_accuracy_exact": "1/2",
+        "bayes_accuracy": 0.5,
+        "conditional_entropy_bits": 1.0
+      },
+      {
+        "observed": [
+          "C"
+        ],
+        "bayes_accuracy_exact": "1/2",
+        "bayes_accuracy": 0.5,
+        "conditional_entropy_bits": 1.0
+      },
+      {
+        "observed": [
+          "X"
+        ],
+        "bayes_accuracy_exact": "1/2",
+        "bayes_accuracy": 0.5,
+        "conditional_entropy_bits": 1.0
+      },
+      {
+        "observed": [
+          "Y"
+        ],
+        "bayes_accuracy_exact": "3/4",
+        "bayes_accuracy": 0.75,
+        "conditional_entropy_bits": 0.811278124459
+      },
+      {
+        "observed": [
+          "C",
+          "X"
+        ],
+        "bayes_accuracy_exact": "1",
+        "bayes_accuracy": 1.0,
+        "conditional_entropy_bits": 0.0
+      },
+      {
+        "observed": [
+          "C",
+          "Y"
+        ],
+        "bayes_accuracy_exact": "3/4",
+        "bayes_accuracy": 0.75,
+        "conditional_entropy_bits": 0.811278124459
+      }
+    ],
+    "incremental_accuracy_without_C": {
+      "X": "0",
+      "Y": "1/4"
+    },
+    "incremental_accuracy_with_C": {
+      "X": "1/2",
+      "Y": "1/4"
+    }
+  },
+  "marginally_indistinguishable_control": {
+    "world_rows": 16,
+    "equal_marginals": {
+      "theta": true,
+      "C": true,
+      "X": true,
+      "theta/C": true,
+      "theta/X": true,
+      "C/X": true
+    },
+    "joint_theta_C_X_equal": false,
+    "measurements": [
+      {
+        "observed": [
+          "X"
+        ],
+        "bayes_accuracy_exact": "1/2",
+        "bayes_accuracy": 0.5,
+        "conditional_entropy_bits": 1.0
+      },
+      {
+        "observed": [
+          "C",
+          "X"
+        ],
+        "bayes_accuracy_exact": "1/2",
+        "bayes_accuracy": 0.5,
+        "conditional_entropy_bits": 1.0
+      },
+      {
+        "observed": [
+          "C",
+          "Y"
+        ],
+        "bayes_accuracy_exact": "3/4",
+        "bayes_accuracy": 0.75,
+        "conditional_entropy_bits": 0.811278124459
+      }
+    ]
+  },
+  "information_without_action_accuracy_gain": {
+    "world_rows": 16,
+    "measurements": [
+      {
+        "observed": [],
+        "bayes_accuracy_exact": "1/2",
+        "bayes_accuracy": 0.5,
+        "conditional_entropy_bits": 1.0
+      },
+      {
+        "observed": [
+          "N1"
+        ],
+        "bayes_accuracy_exact": "3/4",
+        "bayes_accuracy": 0.75,
+        "conditional_entropy_bits": 0.811278124459
+      },
+      {
+        "observed": [
+          "N1",
+          "N2"
+        ],
+        "bayes_accuracy_exact": "3/4",
+        "bayes_accuracy": 0.75,
+        "conditional_entropy_bits": 0.668122245993
+      },
+      {
+        "observed": [
+          "N1",
+          "N2",
+          "N3"
+        ],
+        "bayes_accuracy_exact": "27/32",
+        "bayes_accuracy": 0.84375,
+        "conditional_entropy_bits": 0.553593558433
+      }
+    ],
+    "second_report_conditional_information_bits": 0.143155878466,
+    "duplicate_control": {
+      "observed": [
+        "N1",
+        "N2"
+      ],
+      "bayes_accuracy_exact": "3/4",
+      "bayes_accuracy": 0.75,
+      "conditional_entropy_bits": 0.811278124459
+    }
+  },
+  "controls": {
+    "probability_mass_exact": true,
+    "analytic_values_verified": true,
+    "variable_order_invariance": true,
+    "ideal_reader_information_monotonicity": true
+  },
+  "inputs": {
+    "coupled": [
+      {
+        "theta": 0,
+        "C": 0,
+        "X": 0,
+        "Y": 0,
+        "probability": "3/16"
+      },
+      {
+        "theta": 0,
+        "C": 0,
+        "X": 0,
+        "Y": 1,
+        "probability": "1/16"
+      },
+      {
+        "theta": 0,
+        "C": 1,
+        "X": 1,
+        "Y": 0,
+        "probability": "3/16"
+      },
+      {
+        "theta": 0,
+        "C": 1,
+        "X": 1,
+        "Y": 1,
+        "probability": "1/16"
+      },
+      {
+        "theta": 1,
+        "C": 0,
+        "X": 1,
+        "Y": 1,
+        "probability": "3/16"
+      },
+      {
+        "theta": 1,
+        "C": 0,
+        "X": 1,
+        "Y": 0,
+        "probability": "1/16"
+      },
+      {
+        "theta": 1,
+        "C": 1,
+        "X": 0,
+        "Y": 1,
+        "probability": "3/16"
+      },
+      {
+        "theta": 1,
+        "C": 1,
+        "X": 0,
+        "Y": 0,
+        "probability": "1/16"
+      }
+    ],
+    "independent": [
+      {
+        "theta": 0,
+        "C": 0,
+        "X": 0,
+        "Y": 0,
+        "probability": "3/32"
+      },
+      {
+        "theta": 0,
+        "C": 0,
+        "X": 1,
+        "Y": 0,
+        "probability": "3/32"
+      },
+      {
+        "theta": 0,
+        "C": 0,
+        "X": 0,
+        "Y": 1,
+        "probability": "1/32"
+      },
+      {
+        "theta": 0,
+        "C": 0,
+        "X": 1,
+        "Y": 1,
+        "probability": "1/32"
+      },
+      {
+        "theta": 0,
+        "C": 1,
+        "X": 0,
+        "Y": 0,
+        "probability": "3/32"
+      },
+      {
+        "theta": 0,
+        "C": 1,
+        "X": 1,
+        "Y": 0,
+        "probability": "3/32"
+      },
+      {
+        "theta": 0,
+        "C": 1,
+        "X": 0,
+        "Y": 1,
+        "probability": "1/32"
+      },
+      {
+        "theta": 0,
+        "C": 1,
+        "X": 1,
+        "Y": 1,
+        "probability": "1/32"
+      },
+      {
+        "theta": 1,
+        "C": 0,
+        "X": 0,
+        "Y": 1,
+        "probability": "3/32"
+      },
+      {
+        "theta": 1,
+        "C": 0,
+        "X": 1,
+        "Y": 1,
+        "probability": "3/32"
+      },
+      {
+        "theta": 1,
+        "C": 0,
+        "X": 0,
+        "Y": 0,
+        "probability": "1/32"
+      },
+      {
+        "theta": 1,
+        "C": 0,
+        "X": 1,
+        "Y": 0,
+        "probability": "1/32"
+      },
+      {
+        "theta": 1,
+        "C": 1,
+        "X": 0,
+        "Y": 1,
+        "probability": "3/32"
+      },
+      {
+        "theta": 1,
+        "C": 1,
+        "X": 1,
+        "Y": 1,
+        "probability": "3/32"
+      },
+      {
+        "theta": 1,
+        "C": 1,
+        "X": 0,
+        "Y": 0,
+        "probability": "1/32"
+      },
+      {
+        "theta": 1,
+        "C": 1,
+        "X": 1,
+        "Y": 0,
+        "probability": "1/32"
+      }
+    ],
+    "independent_reports": [
+      {
+        "theta": 0,
+        "N1": 0,
+        "N2": 0,
+        "N3": 0,
+        "probability": "27/128"
+      },
+      {
+        "theta": 0,
+        "N1": 0,
+        "N2": 0,
+        "N3": 1,
+        "probability": "9/128"
+      },
+      {
+        "theta": 0,
+        "N1": 0,
+        "N2": 1,
+        "N3": 0,
+        "probability": "9/128"
+      },
+      {
+        "theta": 0,
+        "N1": 0,
+        "N2": 1,
+        "N3": 1,
+        "probability": "3/128"
+      },
+      {
+        "theta": 0,
+        "N1": 1,
+        "N2": 0,
+        "N3": 0,
+        "probability": "9/128"
+      },
+      {
+        "theta": 0,
+        "N1": 1,
+        "N2": 0,
+        "N3": 1,
+        "probability": "3/128"
+      },
+      {
+        "theta": 0,
+        "N1": 1,
+        "N2": 1,
+        "N3": 0,
+        "probability": "3/128"
+      },
+      {
+        "theta": 0,
+        "N1": 1,
+        "N2": 1,
+        "N3": 1,
+        "probability": "1/128"
+      },
+      {
+        "theta": 1,
+        "N1": 1,
+        "N2": 1,
+        "N3": 1,
+        "probability": "27/128"
+      },
+      {
+        "theta": 1,
+        "N1": 1,
+        "N2": 1,
+        "N3": 0,
+        "probability": "9/128"
+      },
+      {
+        "theta": 1,
+        "N1": 1,
+        "N2": 0,
+        "N3": 1,
+        "probability": "9/128"
+      },
+      {
+        "theta": 1,
+        "N1": 1,
+        "N2": 0,
+        "N3": 0,
+        "probability": "3/128"
+      },
+      {
+        "theta": 1,
+        "N1": 0,
+        "N2": 1,
+        "N3": 1,
+        "probability": "9/128"
+      },
+      {
+        "theta": 1,
+        "N1": 0,
+        "N2": 1,
+        "N3": 0,
+        "probability": "3/128"
+      },
+      {
+        "theta": 1,
+        "N1": 0,
+        "N2": 0,
+        "N3": 1,
+        "probability": "3/128"
+      },
+      {
+        "theta": 1,
+        "N1": 0,
+        "N2": 0,
+        "N3": 0,
+        "probability": "1/128"
+      }
+    ],
+    "duplicate_reports": [
+      {
+        "theta": 0,
+        "N1": 0,
+        "N2": 0,
+        "N3": 0,
+        "probability": "27/128"
+      },
+      {
+        "theta": 0,
+        "N1": 0,
+        "N2": 0,
+        "N3": 1,
+        "probability": "9/128"
+      },
+      {
+        "theta": 0,
+        "N1": 0,
+        "N2": 0,
+        "N3": 0,
+        "probability": "9/128"
+      },
+      {
+        "theta": 0,
+        "N1": 0,
+        "N2": 0,
+        "N3": 1,
+        "probability": "3/128"
+      },
+      {
+        "theta": 0,
+        "N1": 1,
+        "N2": 1,
+        "N3": 0,
+        "probability": "9/128"
+      },
+      {
+        "theta": 0,
+        "N1": 1,
+        "N2": 1,
+        "N3": 1,
+        "probability": "3/128"
+      },
+      {
+        "theta": 0,
+        "N1": 1,
+        "N2": 1,
+        "N3": 0,
+        "probability": "3/128"
+      },
+      {
+        "theta": 0,
+        "N1": 1,
+        "N2": 1,
+        "N3": 1,
+        "probability": "1/128"
+      },
+      {
+        "theta": 1,
+        "N1": 1,
+        "N2": 1,
+        "N3": 1,
+        "probability": "27/128"
+      },
+      {
+        "theta": 1,
+        "N1": 1,
+        "N2": 1,
+        "N3": 0,
+        "probability": "9/128"
+      },
+      {
+        "theta": 1,
+        "N1": 1,
+        "N2": 1,
+        "N3": 1,
+        "probability": "9/128"
+      },
+      {
+        "theta": 1,
+        "N1": 1,
+        "N2": 1,
+        "N3": 0,
+        "probability": "3/128"
+      },
+      {
+        "theta": 1,
+        "N1": 0,
+        "N2": 0,
+        "N3": 1,
+        "probability": "9/128"
+      },
+      {
+        "theta": 1,
+        "N1": 0,
+        "N2": 0,
+        "N3": 0,
+        "probability": "3/128"
+      },
+      {
+        "theta": 1,
+        "N1": 0,
+        "N2": 0,
+        "N3": 1,
+        "probability": "3/128"
+      },
+      {
+        "theta": 1,
+        "N1": 0,
+        "N2": 0,
+        "N3": 0,
+        "probability": "1/128"
+      }
+    ]
+  }
+}

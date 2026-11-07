@@ -22,7 +22,15 @@ def main():
          'tools.test_practice_data'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s',
          'research/multilingual-use-policy', '-p', 'test_casebook.py'])
-    run(['node', '--test', 'tools/test_research_map.cjs', 'tools/test_research_sculpture.cjs', 'tools/test_study_packets.cjs', 'tools/test_study_desk.cjs', 'tools/test_revision_study.cjs',
+    run([python, '-B', '-m', 'unittest', 'discover', '-s',
+         'research/representation-use-study', '-p', 'test_*.py'])
+    run([python, '-B', 'research/representation-use-study/natural.py', 'check-saved'])
+    run([python, '-B', 'research/representation-use-study/natural_probe.py', 'check-saved'])
+    run([python, '-B', 'research/representation-use-study/natural_facts.py', 'check-saved'])
+    run([python, '-B', '-m', 'unittest', 'discover', '-s',
+         'research/revision-propagation-study', '-p', 'test_*.py'])
+    run([python, '-B', 'research/revision-propagation-study/study.py', 'check-sample'])
+    run(['node', '--test', 'tools/test_research_map.cjs', 'tools/test_research_sculpture.cjs', 'tools/test_study_packets.cjs', 'tools/test_study_desk.cjs', 'tools/test_index_study.cjs', 'tools/test_export_study.cjs', 'tools/test_revision_study.cjs',
          'tools/test_reading_search.cjs', 'tools/test_practice.cjs', 'tools/test_seo.cjs'])
     for study, runner in [('trustmem-transition-study', 'audit.py'),
                           ('experience-reuse-retrieval-study', 'study.py'),
@@ -32,6 +40,12 @@ def main():
         directory = f'research/{study}'
         run([python, '-B', f'{directory}/{runner}', '--check'])
         run([python, '-B', '-m', 'unittest', 'discover', '-s', directory, '-p', 'test_*.py'])
+    for study in ['memory-side-information-study', 'memory-evidence-complementarity-study']:
+        run([python, '-B', f'research/{study}/study.py', '--check'])
+    run([python, '-B', 'research/memory-side-information-study/selection.py', '--check'])
+    run([python, '-B', 'research/memory-side-information-study/reader.py', 'check-saved'])
+    run([python, '-B', '-m', 'unittest', 'discover', '-s',
+         'research/memory-side-information-study', '-p', 'test_*.py'])
     result = run(['node', 'research/correction-scope-study/run.js'], capture_output=True, text=True)
     if json.loads(result.stdout) != json.loads((ROOT / 'research/correction-scope-study/results.json').read_text()):
         raise SystemExit('Correction study outputs differ from the checked results.')
@@ -40,7 +54,7 @@ def main():
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/c2c-cache-retraction-study', '-p', 'test_*.py'])
     run([python, '-B', 'research/jev-memory-contract-study/study.py', '--verify-checked'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/jev-memory-contract-study', '-p', 'test_*.py'])
-    print('PASS: reader contracts, generated data, five deterministic studies, synthetic classifier refits and checked AgeMem/C2C/Jev receipts')
+    print('PASS: reader contracts, generated data, source-aware workspaces/public collections, shared references/author drafts, bound reviews, offline representation/revision controls, seven deterministic studies, synthetic classifier refits, saved language-reader summary and checked AgeMem/C2C/Jev receipts')
 
 
 if __name__ == '__main__':

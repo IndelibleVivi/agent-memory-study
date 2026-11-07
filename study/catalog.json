@@ -141,6 +141,10 @@
     "jev-mem-system-one-control"
   ],
   "entryOrder": [
+    "scope-memory-after-revision",
+    "memory-value-side-information",
+    "memory-evidence-complementarity",
+    "memskill-state-pairing",
     "after-a-correction",
     "experience-becomes-policy",
     "who-controls-memory",

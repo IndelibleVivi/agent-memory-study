@@ -317,8 +317,8 @@ def _validate_optional_study_fields(study: dict[str, Any], material_ids: set[str
         for index, change in enumerate(changes):
             if not DATE.fullmatch(change["date"]):
                 raise _error(f"{where}.changes[{index}].date", "must be YYYY-MM-DD")
-    if "exercise" in study and study["exercise"] != "retrieval-sets":
-        raise _error(f"{where}.exercise", "currently supports only 'retrieval-sets'")
+    if "exercise" in study and study["exercise"] not in ("retrieval-sets", "ordered-index"):
+        raise _error(f"{where}.exercise", "supports 'retrieval-sets' or 'ordered-index'")
 
 
 def _optionally_empty_list(study: dict[str, Any], field: str, where: str) -> list[Any]:

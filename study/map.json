@@ -1,5 +1,5 @@
 {
-  "edition": "2026.10 · 一个继续生长的研究体",
+  "edition": "2026.11 · 一个继续生长的研究体",
   "thesis": "经验如何成为可继承、也可改变的能力？",
   "intro": "从 agent memory 出发，研究信息、经验与智能的跨时间关系。基础学习、机制解释、理论追究与实验共同构成 AMS；新的知识也可以改变我们的问题。",
   "invitation": "从一个陌生的词开始，也从一个还没想通的地方继续。",
@@ -29,7 +29,9 @@
       "studyIds": [
         "forms-of-experience",
         "retrieval-and-relevance",
-        "representation-and-use"
+        "representation-and-use",
+        "memory-value-side-information",
+        "scope-memory-after-revision"
       ],
       "materialIds": [
         "a-tma-state-aware-memory",
@@ -61,7 +63,9 @@
       "question": "相似性怎样与相关性接上？",
       "studyIds": [
         "retrieval-and-relevance",
-        "relevance-in-context"
+        "relevance-in-context",
+        "memory-value-side-information",
+        "memory-evidence-complementarity"
       ],
       "materialIds": [
         "continual-learning-experience-reuse",
@@ -81,7 +85,8 @@
       "studyIds": [
         "records-representations-systems",
         "representation-and-use",
-        "who-controls-memory"
+        "who-controls-memory",
+        "memskill-state-pairing"
       ],
       "materialIds": [
         "coala-cognitive-architecture",
@@ -102,7 +107,10 @@
       "studyIds": [
         "experience-becomes-policy",
         "what-an-index-learns",
-        "change-and-continuity"
+        "change-and-continuity",
+        "memory-value-side-information",
+        "memory-evidence-complementarity",
+        "memskill-state-pairing"
       ],
       "materialIds": [
         "mistake-notebook-learning",
@@ -124,7 +132,8 @@
       "studyIds": [
         "who-controls-memory",
         "after-a-correction",
-        "relevance-in-context"
+        "relevance-in-context",
+        "memskill-state-pairing"
       ],
       "materialIds": [
         "midca-dual-cycle",
@@ -144,7 +153,11 @@
       "studyIds": [
         "how-we-study",
         "retrieval-and-relevance",
-        "change-and-continuity"
+        "change-and-continuity",
+        "memory-value-side-information",
+        "memory-evidence-complementarity",
+        "memskill-state-pairing",
+        "scope-memory-after-revision"
       ],
       "materialIds": [
         "longmemeval-v2-experienced-colleague",
@@ -168,7 +181,11 @@
         "forms-of-experience",
         "records-representations-systems",
         "representation-and-use",
-        "what-an-index-learns"
+        "what-an-index-learns",
+        "memory-value-side-information",
+        "memory-evidence-complementarity",
+        "memskill-state-pairing",
+        "scope-memory-after-revision"
       ],
       "materialIds": [
         "a-tma-state-aware-memory",
@@ -187,7 +204,9 @@
       "studyIds": [
         "relevance-in-context",
         "retrieval-and-relevance",
-        "who-controls-memory"
+        "who-controls-memory",
+        "memory-value-side-information",
+        "memory-evidence-complementarity"
       ],
       "materialIds": [
         "continual-learning-experience-reuse",
@@ -208,7 +227,9 @@
         "change-and-continuity",
         "after-a-correction",
         "experience-becomes-policy",
-        "what-an-index-learns"
+        "what-an-index-learns",
+        "memskill-state-pairing",
+        "scope-memory-after-revision"
       ],
       "materialIds": [
         "truth-maintenance-system",
@@ -244,9 +265,27 @@
   ],
   "changes": [
     {
-      "date": "2026-10-18",
-      "title": "从系统名字，走向映射目标",
-      "text": "两篇作者摘要把“学习索引”拆成不同的输入—输出关系，打开更新条件的新问题。",
+      "date": "2026-11-05",
+      "title": "同一条记忆，价值为何反转",
+      "text": "固定任务与候选，精确有限见证把 reader 侧信息、条件信息与当前行动价值分开。",
+      "studyId": "memory-value-side-information"
+    },
+    {
+      "date": "2026-11-05",
+      "title": "候选齐全以后，还需看见组合",
+      "text": "高阶互补、替代支持与可加正面控制，明确低阶选择观察的识别边界。",
+      "studyId": "memory-evidence-complementarity"
+    },
+    {
+      "date": "2026-11-05",
+      "title": "回退技能库，检查状态配对",
+      "text": "固定 MemSkill 源码，将训练阶段奖励、库回退与完整 checkpoint 分开；四格协议尚未执行。",
+      "studyId": "memskill-state-pairing"
+    },
+    {
+      "date": "2026-10-26",
+      "title": "预测出错以后，怎样仍然查对",
+      "text": "从指定章节走到原创推导与演算：插入记录，分开观察参数、误差界和最后的核对。",
       "studyId": "what-an-index-learns"
     },
     {

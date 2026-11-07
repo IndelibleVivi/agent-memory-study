@@ -1,0 +1,71 @@
+{
+  "study_id": "memory-evidence-complementarity",
+  "status": "executed",
+  "evidence_class": "Exact finite authored utility analysis; not a model or retrieval evaluation",
+  "authored_date": "2026-11-05",
+  "authored_date_timezone": "Asia/Singapore",
+  "execution_started_utc": "2026-11-04T20:33:58Z",
+  "execution_finished_utc": "2026-11-04T20:33:58Z",
+  "baseline_main": "196880924ae501dd8103bdcb4c03e5c27c7df8ed",
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "implementation": "CPython",
+    "operating_system": "Linux",
+    "machine": "x86_64",
+    "dependencies": "Python standard library only"
+  },
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "research/memory-evidence-complementarity-study/study.py",
+        "--write"
+      ],
+      "working_directory": "repository root",
+      "started_utc": "2026-11-04T20:33:58Z",
+      "finished_utc": "2026-11-04T20:33:58Z",
+      "exit_code": 0,
+      "stdout": "WROTE exact complementarity witnesses: [repository root]/research/memory-evidence-complementarity-study/results.json\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "research/memory-evidence-complementarity-study/study.py",
+        "--check"
+      ],
+      "working_directory": "repository root",
+      "started_utc": "2026-11-04T20:33:58Z",
+      "finished_utc": "2026-11-04T20:33:58Z",
+      "exit_code": 0,
+      "stdout": "PASS: exact hidden-support bound; decoy policies; additive control; alternative-support and budget nesting. No model calls.\n",
+      "stderr": ""
+    }
+  ],
+  "stdout_normalization": "The temporary absolute repository prefix in stdout is replaced by [repository root]; all remaining stdout and stderr are preserved.",
+  "sha256": {
+    "study.py": "5ba58b352b3a9e3c4f081034cef25417fbab3cd206e1c83db92d78109d9ef0e8",
+    "results.json": "d84c30be0830a7e27f6c74eee099f1b9e55df464a09f4c99b6262dac3d6c95ee"
+  },
+  "model_calls": 0,
+  "provider_calls": 0,
+  "independent_empirical_task_count": 0,
+  "checked_objects": {
+    "hidden_support_parameter_settings": 5,
+    "decoy_epsilon_values": 3,
+    "subsets_per_decoy_epsilon": 64,
+    "modular_positive_controls": 1,
+    "alternative_support_authored_rows": 7,
+    "exhaustive_pool_budget_slate_configurations": 1053
+  },
+  "limits": [
+    "All numbers are exact finite properties of authored utility functions, not independent empirical evidence.",
+    "Budget counts candidate slots, not tokens.",
+    "The observation bound requires every non-utility visible feature to be identical across hidden-support worlds.",
+    "This receipt does not claim upstream reproduction, provider execution, reader causal use, benchmark promotion, or whole-repository validation.",
+    "Hashes identify bytes; they are not an attestation of trusted execution.",
+    "protocol.md remains proposed and unexecuted."
+  ]
+}

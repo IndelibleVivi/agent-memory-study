@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Real offline casebook UI tests with original synthetic data; no private inputs."""
 import argparse
+import copy
 import json
 from pathlib import Path
 import sys
@@ -22,7 +23,7 @@ def main():
     checks = []
     errors = []
     network = []
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory(prefix='ams-casebook-browser-') as tmp:
         work = Path(tmp)
         out = args.output_dir or work
         out.mkdir(parents=True, exist_ok=True)
@@ -105,6 +106,44 @@ def main():
                     expect(page.locator('[data-review-status]')).to_have_text('confirmed')
                     expect(page.locator('#detail textarea')).to_have_value('Changed judgement; reconfirmation required.')
                     checks.append(f'{width}: reviewed sidecar reload preserved')
+
+                    # Same IDs with changed material may not silently reuse a confirmation.
+                    changed = copy.deepcopy(book)
+                    changed['cases'][0]['context']['text'] = 'Changed synthetic task; inspect again.'
+                    assert casebook.validate_reviews(reviewed, changed)
+                    rebound = casebook.rebind_reviews(reviewed, changed)
+                    assert rebound['reviews'][0]['history'][0]['review']['status'] == 'confirmed'
+                    stale_html = work / f'stale-{width}.html'
+                    stale_html.write_text(casebook.render_html(changed, rebound))
+                    page.goto(stale_html.as_uri())
+                    expect(page.locator('[data-review-status]')).to_have_text('stale')
+                    expect(page.locator('#detail')).to_contain_text('content-and/or-rubric-changed')
+                    with page.expect_download() as download:
+                        page.locator('#download').click()
+                    stale_download = json.loads(Path(download.value.path()).read_text())
+                    assert not casebook.validate_reviews(stale_download, changed)
+                    assert stale_download['reviews'][0]['status'] == 'stale'
+                    assert stale_download['reviews'][0]['history'] == rebound['reviews'][0]['history']
+                    page.locator('#detail textarea').fill('Reinspected changed task and current rubric.')
+                    expect(page.locator('#detail')).to_contain_text('需要重新审阅：')
+                    expect(page.locator('[data-review-status]')).to_have_text('draft')
+                    page.get_by_role('button', name='确认', exact=True).click()
+                    expect(page.locator('[data-review-status]')).to_have_text('confirmed')
+                    with page.expect_download() as download:
+                        page.locator('#download').click()
+                    reconfirmed = json.loads(Path(download.value.path()).read_text())
+                    assert not casebook.validate_reviews(reconfirmed, changed)
+                    r = reconfirmed['reviews'][0]
+                    expect(page.locator('#detail')).not_to_contain_text('需要重新审阅：')
+                    assert r['stale_reason'] is None and r['history'] == rebound['reviews'][0]['history']
+                    assert r['case_payload_digest'] == casebook.case_payload_digest(changed['cases'][0])
+                    assert r['rubric_version'] == casebook.RUBRIC_VERSION
+                    reconfirm_html = work / f'reconfirmed-{width}.html'
+                    reconfirm_html.write_text(casebook.render_html(changed, reconfirmed))
+                    page.goto(reconfirm_html.as_uri())
+                    expect(page.locator('[data-review-status]')).to_have_text('confirmed')
+                    checks.append(f'{width}: stale history/download, active reconfirmation and reload preserve binding')
+
                     context.close()
             finally:
                 browser.close()

@@ -83,6 +83,23 @@ def _fixture_catalog(root: Path) -> None:
     "markdown-it-py not installed in this isolated test environment",
 )
 class SparseAuthoringTests(unittest.TestCase):
+    def test_teaching_exercises_are_explicit_and_do_not_require_experiment_metadata(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            _fixture_catalog(root)
+            path = root / "entries/note-b.json"
+            record = json.loads(path.read_text())
+            for kind in ("retrieval-sets", "ordered-index"):
+                record["exercise"] = kind
+                path.write_text(json.dumps(record))
+                note = next(s for s in content.compile_content(root)["studies"] if s["id"] == "note-b")
+                self.assertEqual(note["exercise"], kind)
+                self.assertNotIn("resultsUrl", note)
+            record["exercise"] = "arbitrary-script"
+            path.write_text(json.dumps(record))
+            with self.assertRaisesRegex(content.ContentError, "exercise"):
+                content.compile_content(root)
+
     def test_external_output_paths_report_drift_and_can_be_written(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

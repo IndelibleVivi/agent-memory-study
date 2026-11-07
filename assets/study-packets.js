@@ -201,5 +201,21 @@
     return `${lines.join("\n")}\n`;
   }
 
-  return {SCHEMA, SITE, kind: normalizeKind, packet, markdown, publicUrl};
+  function collection(data, refs) {
+    if (!Array.isArray(refs) || refs.length > 24) throw new Error("Select at most 24 public objects.");
+    const seen = new Set(), objects = [];
+    refs.forEach(ref => {
+      // Deliberately project only known identities, never spread the input:
+      // workspace titles, questions, notes and snapshots are private.
+      const id = `${normalizeKind(ref.kind)}:${ref.id}`;
+      if (!seen.has(id)) {objects.push(packet(data, ref.kind, ref.id)); seen.add(id);}
+    });
+    return {schema: "ams-study-collection/1", title: "AMS 公开选材包", objects,
+      policy: "Only the selected current public objects. No private workspace text, recursive full texts or inferred relationships. Content dates are not immutable revisions."};
+  }
+  function collectionMarkdown(bundle) {
+    if (!bundle || bundle.schema !== "ams-study-collection/1") throw new Error("Unsupported study collection.");
+    return [`# ${bundle.title}`, "", bundle.policy, "", ...bundle.objects.map(item => markdown(item))].join("\n");
+  }
+  return {SCHEMA, SITE, kind: normalizeKind, packet, markdown, publicUrl, collection, collectionMarkdown};
 });

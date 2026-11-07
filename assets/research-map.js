@@ -8,7 +8,7 @@
   "use strict";
 
   const families = {study: "studies", material: "materials", question: "questions", finding: "findings"};
-  const references = [["materialIds", "material"], ["studyIds", "study"], ["questionIds", "question"], ["findingIds", "finding"]];
+  const referenceFields = [["materialIds", "material"], ["studyIds", "study"], ["questionIds", "question"], ["findingIds", "finding"]];
   const list = value => Array.isArray(value) ? value : [];
 
   function domainList(domains) {
@@ -20,7 +20,7 @@
     });
   }
 
-  function graph(data = {}) {
+  function referenceGraph(data = {}) {
     const domains = domainList(data?.room?.domains);
     const nodes = Object.entries(families).flatMap(([kind, family]) =>
       list(data?.[family]).map(item => {
@@ -33,33 +33,101 @@
           summary: typeof item.intro === "string" ? item.intro : typeof item.claim === "string" ? item.claim : ""
         };
       }));
-    const byKey = new Map(nodes.map((node, index) => [node.key, index]));
-    const edges = [], seen = new Set();
-    function connect(from, kind, id) {
+    const byKey = new Map(nodes.map(node => [node.key, node]));
+    const references = [], seen = new Set();
+    function connect(node, kind, id, relation, locator) {
       if (typeof id !== "string") return;
-      const to = byKey.get(`${kind}/${id}`);
-      if (to === undefined || from === to) return;
-      const key = `${Math.min(from, to)}:${Math.max(from, to)}`;
-      if (!seen.has(key)) { seen.add(key); edges.push([from, to]); }
-    }
-    nodes.forEach((node, index) => {
-      const item = node.item;
-      for (const [field, kind] of references) {
-        list(item[field]).forEach(id => connect(index, kind, id));
-        list(item.continuation?.[field]).forEach(id => connect(index, kind, id));
+      const to = `${kind}/${id}`;
+      if (!byKey.has(to) || node.key === to) return;
+      const key = `${node.key}\0${to}\0${relation}\0${locator}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        references.push({from: node.key, to, relation, locator});
       }
-      list(item.readings).forEach(reading => connect(index, "material", reading.materialId));
+    }
+    nodes.forEach(node => {
+      const item = node.item;
+      for (const [field, kind] of referenceFields) {
+        list(item[field]).forEach((id, position) =>
+          connect(node, kind, id, "related", `${field}[${position}]`));
+        list(item.continuation?.[field]).forEach((id, position) =>
+          connect(node, kind, id, "continuation", `continuation.${field}[${position}]`));
+      }
+      list(item.readings).forEach((reading, position) =>
+        connect(node, "material", reading?.materialId, "reading", `readings[${position}].materialId`));
       // The compiler emits double-quoted, query-relative anchors for known routes.
       // Do not scan prose, external URLs, tags, or shared domain membership for edges.
       const html = typeof item.bodyHtml === "string" ? item.bodyHtml : "";
+      let anchorIndex = 0;
       for (const match of html.matchAll(/<a\b[^>]*?\shref="(\?[^\"]*)"[^>]*>/g)) {
+        const locator = `bodyHtml[${anchorIndex++}]`;
         const query = new URLSearchParams(match[1].slice(1).split("#", 1)[0].replaceAll("&amp;", "&"));
         for (const kind of Object.keys(families)) {
-          if (query.has(kind)) connect(index, kind, query.get(kind));
+          if (query.has(kind)) connect(node, kind, query.get(kind), "body-link", locator);
         }
       }
     });
-    return {nodes, edges};
+    return {nodes, references};
+  }
+
+  function graph(data = {}) {
+    const model = referenceGraph(data);
+    const byKey = new Map(model.nodes.map((node, index) => [node.key, index]));
+    const edges = [], seen = new Set();
+    for (const reference of model.references) {
+      const from = byKey.get(reference.from), to = byKey.get(reference.to);
+      if (from === undefined || to === undefined || from === to) continue;
+      const key = `${Math.min(from, to)}:${Math.max(from, to)}`;
+      if (!seen.has(key)) {seen.add(key); edges.push([from, to]);}
+    }
+    return {nodes: model.nodes, edges};
+  }
+
+  function impact(data, kind, id) {
+    if (!Object.hasOwn(families, kind) || typeof id !== "string" || !id) {
+      throw new Error("impact requires a known kind and a non-empty id");
+    }
+    const model = referenceGraph(data);
+    const target = `${kind}/${id}`;
+    const targetNode = model.nodes.find(node => node.key === target);
+    if (!targetNode) throw new Error(`Unknown public object: ${target}`);
+    const incoming = new Map();
+    for (const reference of model.references) {
+      const rows = incoming.get(reference.to) || [];
+      rows.push(reference);
+      incoming.set(reference.to, rows);
+    }
+    const nodes = new Map(model.nodes.map(node => [node.key, node]));
+    const best = new Map([[target, {distance: 0, path: []}]]);
+    let frontier = [target];
+    while (frontier.length) {
+      const candidates = new Map();
+      for (const key of frontier) {
+        const found = best.get(key);
+        const rows = (incoming.get(key) || []).slice().sort((left, right) =>
+          left.from.localeCompare(right.from) || left.relation.localeCompare(right.relation) ||
+          left.locator.localeCompare(right.locator) || left.to.localeCompare(right.to));
+        for (const reference of rows) {
+          if (reference.from === target || best.has(reference.from)) continue;
+          const candidate = {distance: found.distance + 1, path: [reference, ...found.path]};
+          const previous = candidates.get(reference.from);
+          if (!previous || JSON.stringify(candidate.path) < JSON.stringify(previous.path)) {
+            candidates.set(reference.from, candidate);
+          }
+        }
+      }
+      frontier = [...candidates.keys()].sort();
+      for (const key of frontier) best.set(key, candidates.get(key));
+    }
+    const affected = [...best.entries()].filter(([key]) => key !== target).map(([key, found]) => {
+      const node = nodes.get(key);
+      return {
+        key, kind: node.kind, id: node.id, title: node.title,
+        distance: found.distance, path: found.path
+      };
+    }).sort((left, right) =>
+      left.distance - right.distance || left.key.localeCompare(right.key));
+    return {target, affected};
   }
 
   function neighbors(model, index) {
@@ -140,5 +208,5 @@
     return {width, height, groups: anchors, positions};
   }
 
-  return {graph, neighbors, clusterLayout};
+  return {referenceGraph, graph, impact, neighbors, clusterLayout};
 });

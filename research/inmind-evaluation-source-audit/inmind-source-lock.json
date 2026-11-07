@@ -1,0 +1,44 @@
+{
+  "source_repository": "https://github.com/imlrz/InMind",
+  "commit": "5a2ab2686d3d5b832575f0288d41ecc93eab358b",
+  "evidence_status": "observed-static-source",
+  "read_date": "2026-11-05 Asia/Singapore",
+  "worktree_clean": true,
+  "files": [
+    {
+      "path": "evaluation/README.md",
+      "sha256": "2abb19e113dc002d6147614721c83629d70f9769b3f69bf91f983b803f79c5e5",
+      "bytes": 7596
+    },
+    {
+      "path": "evaluation/prompts/judge_application.txt",
+      "sha256": "d45cc35770befb8b8526454a48b745fdd07e067234b1d98262177a9445b5f64c",
+      "bytes": 712
+    },
+    {
+      "path": "evaluation/prompts/judge_target_recall.txt",
+      "sha256": "af55e9eacb13adfc5163cb137509194b3fd8bfdfbade869d0c6afecb44158f1d",
+      "bytes": 971
+    },
+    {
+      "path": "evaluation/scripts/build_judge_payloads.py",
+      "sha256": "3ef58ca76dfb824b17909974055e25c5ec1e633b4257fb5f852b074e439f3584",
+      "bytes": 4054
+    },
+    {
+      "path": "evaluation/scripts/build_timeline.py",
+      "sha256": "b36d810148de0b0d5b49347d8582c7c991a4b8e9b786865ea98f530ad4720b46",
+      "bytes": 5656
+    },
+    {
+      "path": "evaluation/scripts/validate_submission.py",
+      "sha256": "e9b96b52bf3ece2ba7d30f6da875c6b1fc6179bbf474814ad0ef403779d32e1a",
+      "bytes": 3099
+    }
+  ],
+  "limits": [
+    "No model, judge or upstream memory adapter executed.",
+    "Prompt and documented frozen-state requirements are not proof of enforcement in reported runs.",
+    "Source hashes identify the recorded bytes; they do not authenticate provenance or verify paper claims."
+  ]
+}

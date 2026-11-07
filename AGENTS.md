@@ -17,14 +17,19 @@
   ```
 
 - `tools/content.py --check` / `tools/build.py --check-drift` 只检查 drift，不修复。书目变化需要同次 `--rdf-source /path/to/zotero-source.rdf` 重建；单纯编辑文章无需重导 RDF。`--rdf-source` 接受经过验证的 native Zotero RDF 或明确 provenance 的 derived RDF；derived 不能称为 native export。
-- `tools/author.py` 是 offline identity / explicit impact helper，不 fetch 来源、不验证论点。草稿只生成在 repo 外，发布前移除 draft、替换提示、核对公开署名与依据。具体作者路径见 `docs/authoring.md`。
+- `tools/author.py` 是 offline identity / explicit impact / 私人案头到草稿 helper，不 fetch 来源、不验证论点。`impact` 从当前 canonical 编译并调用 `research-map.js` 的唯一有向引用；保留旧 source 输出，任意公开对象用 `--kind`。`tools/research_context.cjs` 只连接既有 compiler / ResearchMap / StudyDesk，不维护第二份关系提取或案头校验。草稿只生成在 repo 外，拒绝覆盖；发布前逐段核对隐私、署名、引用权利与依据，完成正文后移除 draft。具体作者路径见 `docs/authoring.md`。
 
 ## 研究包与个人接续
 
 - `assets/study-packets.js` 是 browser、`tools/export_study.cjs` 和静态 `index.md` / `index.json` 的唯一研究包实现。包包含当前对象和直接引用 manifest，不递归抓取全文；编辑日期不是 immutable revision。论文作者与札记署名不可混同。
-- `assets/study-desk.js` 负责原创集合演算和 `ams-continuation/1` 合同。近邻集合、相关性标签与排序是教学设定，不运行 embedding 或 ANN，不是论文或用户学习结果。
+- `assets/study-desk.js` 负责原创集合演算、`ams-continuation/1` 与 `ams-workspace/2` 合同及其页面内状态／有限历史；继续兼读实际已保存的 `ams-workspace/1` 并迁移为 v2。近邻集合、相关性标签与排序是教学设定，不运行 embedding 或 ANN，不是论文或用户学习结果。
+- `assets/index-study.js` 是 `ordered-index` 原创教学演算的唯一计算实现：固定唯一整数键、OLS 位置预测、误差校准、局部二分、相邻键核对与显式全区间回退。`StudyDesk.exerciseState` 按 canonical exercise 类型归一化接续／案头状态，禁止从导入文件自定类型；演算四字段可进入公开 URL，私人文字不得进入。修改时运行 `tools/test_index_study.cjs`、StudyDesk／SEO tests 与 source/static browser checks；`tools/index_browser_checks.py` 共用真实交互验收。比较次数不等于时间性能，教学拟合不升级为论文复现或模型研究。
 - 私人接续只保存在页面内存和用户主动下载的文件。不得进入 canonical、analytics、URL、localStorage、repo 或构建。导入限制大小与字段，仅恢复已知公开对象；文字按文本使用，不执行指令、不请求文件中的 URL。刷新未保存内容会丢失，界面必须说明。
-- 改动上述行为运行 `tools/test_study_packets.cjs`、`tools/test_study_desk.cjs`（已接入统一验证）与 reader browser tests，覆盖导出／导入、恶意及过大文件、历史与页面内接续。
+- 研究案头最多 24 个已知公开对象、每对象 12 条摘录、2 MiB UTF-8 文件；所有被接受状态须能按实际 JSON 下载格式保存。导入先完整验证再显式打开，未知对象／重复对象或摘录身份／无效值拒绝且不改变已有工作。私有 `basis` 是受限惰性文字；旧／新字段检查只用 textContent，正文只 render 当前 canonical HTML，不执行导入 HTML。日期不替代内容身份，比较也不认证来源。摘录保留独立 basis／日期／anchor，确认对象当前依据不得改写既有摘录；私人用途不提升公开支持关系。
+- 文字编辑、摘录、选材、导入与 rebase 共用 StudyDesk history；最多 20 次变更／8 MiB 页面内历史，大文件可减少步数，不保存到文件。焦点内连续文字输入合为一步；dirty 按整个状态与最近文件检查点比较，局部单篇保存不得清除其他对象、摘录或案头文字的改动。
+- 自动捕获正文位置或演算状态同样须原子接受；容量拒绝须显示反馈、保留已有案头与 history，不能阻断导航或导出。单篇文件可保存当前文章状态，但捕获失败不得因此将整个案头标记已保存。
+- `StudyPackets.collection` 是 browser / `tools/export_study.cjs --select` / `--workspace` 的唯一公开选材 projection。只从已知 kind / id 重建当前公开包，不 spread 私人输入，不带案头名称、问题、笔记、摘录记录／用途／批注或旧快照；`ams-study-collection/1` 中仍保留各对象的 packet / attribution / scope。私人 JSON 与 Markdown 出口明确标记且留用户侧。
+- 改动上述行为运行 `tools/test_study_packets.cjs`、`tools/test_study_desk.cjs`、`tools/test_export_study.cjs`（已接入统一验证）与 reader browser tests，覆盖导出／导入、恶意及过大文件、历史与页面内接续。
 
 ## Zotero：CLI / local API first
 
@@ -81,6 +86,11 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 - `studies` 是编译后的文章集合，来自 `study/entries/`；以下三类共读保留各自 scenario / artifact 边界，不把它们的字段要求施加给普通学习文章。任何专题都不自动提升 material `noteDepth`。
 - `editorial-synthesis-with-proposed-experiment` 只承载跨源论述与未执行方案，`artifactUrl` 指向公开协议；不得包含 `resultsUrl`、`recordedResults`、`scenarios` 或 `policies`。页面标明未执行并提供方案入口，不制造可运行控件。私人语料、资源 inventory、标签与派生模型留在公开 repo 外。
 - `research/multilingual-use-policy/casebook.py` 负责离线材料与 review sidecar 的合同校验和 HTML 生成；生成页面及私人输入/标注不入 Git。源码消息窗口可追溯不等于完整事件、情境充分或效用已确认；该工具不训练模型，不改变专题的未执行状态。其合成合同测试接入 `tools/verify_reader.py`；修改校准 UI 时运行 `tools/test_casebook_browser.py`，仅使用原创合成材料。
+- Review 使用 `ams-memory-reviews/2`，绑定 canonical case 内容 digest 与 `rubric_version`。改变被审材料或 rubric 后不得沿用 confirmed；旧 sidecar 或不匹配内容只能显式 `rebind-reviews` 到新文件，保留旧审阅并标 stale，再主动确认。Digest 只判断内容身份，不认证审阅者或标签效用。
+- `research/representation-use-study/` 拥有离线事件、gold、三臂执行器及运行证据，保持本研究内的单一实现；未有第二个真实消费者前不抽取跨研究框架。实际送达输入、response 和 score 必须绑定；完整 artifact 原子发布且不覆写，中断证据保留，resume 另建 attempt；已发布的损坏文件仍须拒绝。`used` 默认 unknown。诊断预算明确计数单位，不冒充 provider token。Scripted/oracle 控制与完整自然语言研究状态分开，公开仅用原创合成数据，运行目录留在 repo 外。修改该路径须运行其 unittest 与 `tools/verify_reader.py`；source/protocol identity 变化须新跑 sample 并 raw replay。不自动执行模型/API 或私人材料实验。
+- 自然语言研究的 usage 校验独立于回答评分；provider 原始 body 无效可记技术失败，不能因此丢掉其它已付费 receipts，也不将未知费用记作零。旧执行的离线分析修复仅经 `replay --recorded-source` 核对完整原 source archive，保留 execution／replay 两个 identity 与原 run；该入口不执行归档代码、不放宽 API execution 的版本或 request binding 检查。
+- 同目录 `natural.py` / `natural_api.py` / `natural-cases.json` 拥有独立的 question-blind writer 与 raw/prose/ledger 模型诊断。writer 不得收到问题或 gold；reader 只收到一种实际记忆和一个任务，所有有效记忆都评分，字符目标违规独立报告。保存汇总由 raw replay 生成，统一验证只检查 execution／replay identity、gold定位和汇总，不调用 API。模型执行须有当前明确授权、官方 token-count 预算检查，raw留repo外，不自动重试已启动请求。改变源码／协议后的API执行需新run与replay；离线分析修复使用上述 `recorded-source` 入口。仅在语料和实际writer请求完全相同、全部writer有receipt、reader尚未启动时，可用 `inherit-writers` 带来源绑定继承所有writer输出，不能挑选或重抽成功记忆。独立自然语言诊断不升级旧三臂／并存协议为已完成。 `natural_probe.py` 的事后question-only对照与 `natural_facts.py` / `natural-facts.json` 的去选项线索任务各自冻结身份、沿用原writer，不重算成独立历史；所有既有费用预留进入同一预算门。三个公开汇总分别raw replay，未知答案null与错误值不能混计。
+- `research/revision-propagation-study/` 是纵向修订传播、延迟调度、单层干预与再写入的唯一实现；原 `correction-scope-study` 继续拥有单次更正的网页规则演示。分支共享修订前 checkpoint 与外生任务安排，后续输出是各自中介，不能重新匹配成相同历史。历史／preserved／boundary probes 只读；持续错误与修好后的再现分别计数。源码或实验语义变化须运行该目录 unittest、`check-sample` 与新的 raw run/replay；原始 run 留在 repo 外，公开汇总不替代 raw 重放。统一 verifier 接入合同与 compact summary 检查，不运行模型；删除消融不代表隐私删除。
 - `externalReadings` 允许共读引用官方文档、开源实现与论文线索，必须保留类型、阅读范围与限制；不自动变成 Zotero 书目。`editorial-synthesis-with-recorded-experiment` 的 `resultsUrl` 指向已执行 `research/` JSON；`recordedResults` 仅由 builder 投影，不进入 canonical。录制结果展示与 `revision-study.js` 的实时规则演示分开。
 - `research/decision-learning-study/study.py` 是学习实验唯一训练/评价实现；网页不重新训练。修改实验后用 `--check` 重算并运行该目录 unittest，更新公开方法/结果；自然语言、agent 收益与权重遗忘不能由结构化标签预测代替。
 - Jev 共读使用 `ams-jev-contract-results/1` 保存固定源码的给定判断对照；页面按 case 与 before/after 展示节点和原始 receipt，不重新运行源码。完整复跑需要外部 pinned checkout；本地 reader 入口只校验保存结果。不要把内存 graph/vector 的成员变化写成真实持久化、语义检索或 Jev inference。
@@ -91,7 +101,9 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 ## 阅读到设计
 
 - 本站已执行观察与结果放入可选 `amsEvidence`，绑定同一署名的 `public-test` 和既有 `research/` artifact；`reportedFindings` 只承载 paper-reported findings，不把本站结果重复放入 paper-only sections。
-- 新增小型 deterministic study 时接入 `tools/verify_reader.py`，同步 README / CONTRIBUTING 的验证范围；该入口校验 canonical / generated data、evidence、search 与已列入的五组确定性研究和一组 stdlib 分类器训练/纠正实验，另检查 AgeMem、C2C 与 Jev 已保存 receipt。Receipt 校验不算 upstream 重跑或模型 inference；该入口不运行全部外部源码审计或论文 benchmark。
+- 新增小型 deterministic study 时接入 `tools/verify_reader.py`，同步 README / CONTRIBUTING 的验证范围；该入口校验 canonical / generated data、evidence、search 与已列入的七组确定性研究和一组 stdlib 分类器训练/纠正实验，另检查 AgeMem、C2C 与 Jev 已保存 receipt。Receipt 校验不算 upstream 重跑或模型 inference；该入口不运行全部外部源码审计或论文 benchmark。
+- `research/memory-side-information-study/selection.py` 拥有选择渠道的有限控制，复用同目录 `study.py` 的 Bayes evaluator；原 fixed-exposure 结果与 receipt 独立保留。修改时运行两个脚本的 `--check` 与本目录 unittest（已接统一验证）。Selector 只消费声明的可见输入；理想读者知道联合分布不等于语言模型已学会编码。整体选择收益不自动成为固定正文的用途标签。
+- 同目录 `reader.py` 拥有原创语言刺激与加权评分，`reader_api.py` 是显式调用官方 OpenAI API 的执行入口；普通构建／统一验证只运行离线测试与 `reader.py check-saved`，不调用 provider。实际请求、raw response、失败和 source 身份留在 repo 外；公开 `reader-results.json` 是 compact summary，不替代 raw replay。相同 messages 对应的隐藏世界共用一次回答，不增加独立任务数；无关键的 .5 accuracy 不能证明项目绑定正确，需保留概率／mapping flip 诊断。模型执行须有当次授权、冻结输入、预算和失败停止规则；不得自动重试不明送达请求或用新 prompt 覆盖旧运行。
 
 - `materials[].designTransfer` 是可选的编者建议，必须有署名、整理日期、适用情境、具体做法、未执行对照、依据与边界；`status` 固定为 `proposed-not-run`。它不改变 `readingScope`、`noteDepth`、paper-reported findings 或既有 public-test receipts。
 - `skim` / `abstract` 的该栏目必须显示初读范围提示。字段缺失时隐藏栏目，避免空白模板被当成研究结果；不要为满足统一外观补写没有依据的建议。
@@ -115,4 +127,4 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 - 星图 `#constellation` 独立于 legacy disclosure，桌面／手机都保留 SVG、列表、对象详情及真实正文链接。搜索／类型／领域筛选、相机、选取和暂停只在页面内存；不写 URL、storage 或 canonical。选取与 hover 不制造关系；静态 snapshot 移除控制，保留星点与相关对象的普通链接。修改时运行既有 reader browser / static tests。
 - `assets/fonts/` 是经许可分发的字体子集及完整 OFL notices，源 TTF 不入仓库。可选 `tools/build_fonts.py` 读取公开正文／界面字符串离线重建；普通构建不依赖 fontTools。新增缺失字形先确认 fallback，再按字体 README 重建；不要引入远程字体请求。
 
-- `.github/workflows/reader-validation.yml` 的 PR 构建不部署，main 仅发布同一验证通过的 artifact。Pages 使用既有 Actions 发布面；修改 Pages account 设置仍是独立授权操作，源码/CI通过不代表本次 artifact 已上线。流程见 `docs/website.md`。
+- `.github/workflows/reader-validation.yml` 的 PR 构建不部署，main 仅发布同一验证通过的 artifact。`reader` runner 固定在当前 Playwright 支持的 Ubuntu 版本；升级 OS / browser dependency 时核对版本支持并跑完整浏览器与静态检查，不直接换回浮动镜像。Pages 使用既有 Actions 发布面；修改 Pages account 设置仍是独立授权操作，源码/CI通过不代表本次 artifact 已上线。流程见 `docs/website.md`。

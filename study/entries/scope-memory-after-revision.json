@@ -1,0 +1,30 @@
+{
+  "id": "scope-memory-after-revision",
+  "title": "压缩后的记忆，保住了哪些修订？",
+  "kind": "research-essay",
+  "date": "2026-11-07",
+  "byline": "Cove · AI-assisted research",
+  "intro": "一次实际模型研究先发现选择题线索过多，再以同一批writer记忆检验具体范围与历史事实。压缩保住多数任务，条件记录却没有跨reader稳定优于普通摘要；暂缓与错误值也应分开。",
+  "bodyFile": "entries/scope-memory-after-revision.md",
+  "domains": [
+    "representation",
+    "evaluation"
+  ],
+  "directionIds": [
+    "forms",
+    "change"
+  ],
+  "readings": [],
+  "externalReadings": [],
+  "boundary": "12段原创合成历史、共享一次模型writer输出、两个reader的探索性诊断。reader前修改字符超限处理，原选择题之后追加无记忆诊断与24个具体任务，全部披露；这些不是新独立历史或预注册复现。真实检索、自由工具行动和长期agent收益未测。",
+  "continuation": {
+    "question": "未来任务未知时，哪些历史区别值得在紧凑记忆中保留，何时应回到原始来源？",
+    "why": "当前范围、过去的生效时间和普通澄清可能需要不同证据。压缩工作流的损失必须按用途核对，不能只以结构整齐或摘要长度判断。",
+    "studyIds": [
+      "representation-and-use",
+      "after-a-correction",
+      "memory-value-side-information"
+    ],
+    "materialIds": []
+  }
+}
