@@ -1,0 +1,592 @@
+{
+  "schema": "ams-scope-factual-tasks/1",
+  "status": "exploratory-redesign-after-option-cue-diagnostic",
+  "questions": [
+    {
+      "id": "field-notes:f1",
+      "case": "field-notes",
+      "kind": "scope-application",
+      "text": "按截至2026年11月12日的决定，第一家合作书店的一名店员同时担任受邀审阅者。现在为他参加该店选品会生成新的校样附件，附件可以包含哪些章？",
+      "answer_schema": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "type": "string",
+          "enum": [
+            "路线",
+            "访谈练习",
+            "插画"
+          ]
+        },
+        "uniqueItems": true
+      },
+      "gold": [
+        "插画",
+        "路线"
+      ],
+      "support": [
+        "field-notes:e02",
+        "field-notes:e04",
+        "field-notes:e06",
+        "field-notes:e07",
+        "field-notes:e10",
+        "field-notes:e12"
+      ],
+      "rationale": "三章构成见e02。e06只撤回第一家书店选品用途的访谈练习章，e07明确双重身份仍按本次用途。e10/e12未恢复该章，故新附件包含路线和插画。"
+    },
+    {
+      "id": "field-notes:f2",
+      "case": "field-notes",
+      "kind": "unspecified-date-control",
+      "text": "截至2026年11月12日，主编为整本手册定稿确定的正式公开日期是哪一天？",
+      "answer_schema": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "description": "YYYY-MM-DD"
+      },
+      "gold": null,
+      "support": [
+        "field-notes:e01",
+        "field-notes:e10",
+        "field-notes:e12"
+      ],
+      "rationale": "整本只公开定稿，但e10说价格谈妥不意味着公开日期已定，e12仍不宣布定稿。完整记录没有确定整本正式公开的具体日期，不能从周末整理或报价推测日期。"
+    },
+    {
+      "id": "studio-room:f1",
+      "case": "studio-room",
+      "kind": "scope-application",
+      "text": "按截至2026年11月12日已接受的安排，修补小组拟于2026年11月28日白天在投影室办免费活动，由志愿者组织，十九人。判断该场预约所属通道。",
+      "answer_schema": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "enum": [
+          "普通预约",
+          "快通",
+          null
+        ]
+      },
+      "gold": "快通",
+      "support": [
+        "studio-room:e01",
+        "studio-room:e03",
+        "studio-room:e07",
+        "studio-room:e09",
+        "studio-room:e11"
+      ],
+      "rationale": "2026年11月28日是该月最后一个周六，满足e07对该修补小组该场的投影室例外。白天、免费、志愿组织及人数上限均满足，因此走快通；通道资格不代替场务接受。"
+    },
+    {
+      "id": "studio-room:f2",
+      "case": "studio-room",
+      "kind": "historical-quantity",
+      "text": "按2026年11月6日当天已接受的规则，一场周六夜间、免费、由志愿者组织、十二人的手工室活动，应至少提前几天办理普通预约确认人数？",
+      "answer_schema": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "gold": 2,
+      "support": [
+        "studio-room:e01",
+        "studio-room:e03",
+        "studio-room:e06",
+        "studio-room:e07"
+      ],
+      "rationale": "e01普通预约提前两天；e03快通仅周六白天。e06夜间放宽仍只是提案，e07也未接受，所以11月6日的夜场沿用普通两天。问题没有提供所求提前天数。"
+    },
+    {
+      "id": "water-counts:f1",
+      "case": "water-counts",
+      "kind": "scope-application",
+      "text": "截至2026年11月12日，分析员要把2026年11月6日与11月8日的数据画成同口径跨日趋势，不增加校准资料。南门和北门各自的独立序列中，哪些门可以用于这次比较？",
+      "answer_schema": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "type": "string",
+          "enum": [
+            "南门",
+            "北门"
+          ]
+        },
+        "uniqueItems": true
+      },
+      "gold": [
+        "北门"
+      ],
+      "support": [
+        "water-counts:e04",
+        "water-counts:e06",
+        "water-counts:e07",
+        "water-counts:e08",
+        "water-counts:e11",
+        "water-counts:e12"
+      ],
+      "rationale": "南门11月7日实际换机改变计数机制，6日和8日跨越断点；现有表尚不是有效校准。北门未换机，其跨周/跨日趋势被保留，故仅北门可做此同口径比较。"
+    },
+    {
+      "id": "water-counts:f2",
+      "case": "water-counts",
+      "kind": "effective-date",
+      "text": "按截至2026年11月12日的记录，南门趋势图的新旧计数口径分界应标在哪个数据日期？",
+      "answer_schema": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "description": "YYYY-MM-DD"
+      },
+      "gold": "2026-11-07",
+      "support": [
+        "water-counts:e04",
+        "water-counts:e06",
+        "water-counts:e07",
+        "water-counts:e08"
+      ],
+      "rationale": "原排期是下周三，但e07明确换机提前到当日，即事件时间11月7日；e08确认按数据日期在11月7日断开，不能用通知日11月8日或原排期。"
+    },
+    {
+      "id": "dispatch-date:f1",
+      "case": "dispatch-date",
+      "kind": "scope-application",
+      "text": "按截至2026年11月12日已批准的安排，一位已完成讲解的成员计划在11月14日新确认一张手工具借用单，11月17日领取、11月20日归还。该单归还时应指定哪个验收通道？",
+      "answer_schema": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "enum": [
+          "前台",
+          "柜机",
+          null
+        ]
+      },
+      "gold": "前台",
+      "support": [
+        "dispatch-date:e01",
+        "dispatch-date:e03",
+        "dispatch-date:e06",
+        "dispatch-date:e12",
+        "dispatch-date:e14"
+      ],
+      "rationale": "切换按确认时间，14日早于15日，整单属于旧单。取件及归还跨过生效日不迁移，e12要求旧单前台直至归还核验。"
+    },
+    {
+      "id": "dispatch-date:f2",
+      "case": "dispatch-date",
+      "kind": "effective-date",
+      "text": "按2026年11月12日已获批准的计划，柜机规则首次适用于新确认手工具借用单的起始日期是哪一天？",
+      "answer_schema": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "description": "YYYY-MM-DD"
+      },
+      "gold": "2026-11-15",
+      "support": [
+        "dispatch-date:e03",
+        "dispatch-date:e08",
+        "dispatch-date:e12"
+      ],
+      "rationale": "e03指定11月15日零点，e08测试通过没有提前启用，e12确认不再等待通知。日期是批准的将来生效时间，不是当前日期或测试日。"
+    },
+    {
+      "id": "audio-edition:f1",
+      "case": "audio-edition",
+      "kind": "scope-application",
+      "text": "按截至2026年11月12日的发布规则，为第六期新做试听，假设文字、完整录音和所截片段都已完成相应核对与总编确认。该期试听最多可以公开多少秒？",
+      "answer_schema": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "gold": 30,
+      "support": [
+        "audio-edition:e03",
+        "audio-edition:e04",
+        "audio-edition:e08",
+        "audio-edition:e09",
+        "audio-edition:e10"
+      ],
+      "rationale": "e04六十秒仅第四期，其他期仍三十秒；两分钟和九十秒都是未接受提案。第六期是新指定的相邻期，不能继承第四期特许，审核完成也不扩大时长。"
+    },
+    {
+      "id": "audio-edition:f2",
+      "case": "audio-edition",
+      "kind": "historical-quantity",
+      "text": "截至2026年11月5日，第四期试听已获总编接受的时长上限是多少秒？这里只问时长上限。",
+      "answer_schema": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "gold": 60,
+      "support": [
+        "audio-edition:e03",
+        "audio-edition:e04",
+        "audio-edition:e05"
+      ],
+      "rationale": "e04在11月4日接受第四期最多六十秒。11月5日完整录音未核完影响能否实际发布，不抹掉已接受的时长上限；不是提议两分钟，也不是后来具体发布片段五十五秒。"
+    },
+    {
+      "id": "search-branch:f1",
+      "case": "search-branch",
+      "kind": "scope-application",
+      "text": "按截至2026年11月12日的规则，培训演示用的文件简称为日常版，但构建说明明确来自建议分支。输入法合成刚结束，之后没有继续输入；自动查询前应等待多少毫秒？",
+      "answer_schema": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "gold": 500,
+      "support": [
+        "search-branch:e04",
+        "search-branch:e06",
+        "search-branch:e07",
+        "search-branch:e09",
+        "search-branch:e12"
+      ],
+      "rationale": "构建身份而非日常版简称决定规则；建议分支合成结束后计时五百毫秒。稳定版的提交机制和原建议分支三百毫秒都不适用。"
+    },
+    {
+      "id": "search-branch:f2",
+      "case": "search-branch",
+      "kind": "historical-quantity",
+      "text": "在2026年11月2日的建议分支实现里，输入停顿后触发本地查询的等待时间是多少毫秒？",
+      "answer_schema": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "gold": 300,
+      "support": [
+        "search-branch:e02",
+        "search-branch:e04"
+      ],
+      "rationale": "e02当时三百毫秒，e04才接受改成五百。要求第二日历史实现，不能用最新设置回填。"
+    },
+    {
+      "id": "fair-delivery:f1",
+      "case": "fair-delivery",
+      "kind": "scope-application",
+      "text": "按2026年11月8日有效安排，若原登记志愿者在当天17时30分送达清单内纸样，交接计划应把哪个位置写为签收地点？",
+      "answer_schema": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "enum": [
+          "收货台",
+          "临时台",
+          "展位",
+          null
+        ]
+      },
+      "gold": "收货台",
+      "support": [
+        "fair-delivery:e03",
+        "fair-delivery:e06",
+        "fair-delivery:e07",
+        "fair-delivery:e08"
+      ],
+      "rationale": "许可窗包含8日18点前，该人和物满足条件；临时台只在7日使用，8日回原收货台。签收后才进柜和取展位，不能直接写展位。"
+    },
+    {
+      "id": "fair-delivery:f2",
+      "case": "fair-delivery",
+      "kind": "effective-date",
+      "text": "按截至2026年11月12日的批准记录，原两位志愿者可以执行清单纸样外送的最后一个日期是哪一天？",
+      "answer_schema": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "description": "YYYY-MM-DD"
+      },
+      "gold": "2026-11-08",
+      "support": [
+        "fair-delivery:e03",
+        "fair-delivery:e05",
+        "fair-delivery:e06",
+        "fair-delivery:e09",
+        "fair-delivery:e12"
+      ],
+      "rationale": "e03截至8日18点前，e05延至12日只是建议，e06未批准延长，e09恢复常规。所求最后日期是8日，不是后来记录日期。"
+    },
+    {
+      "id": "poster-set:f1",
+      "case": "poster-set",
+      "kind": "scope-application",
+      "text": "在2026年11月6日晚，一家合作场馆新提出只展出时间线组里当时可对外使用的图版。以时间线组内第一至第四张编号，应选哪些张？",
+      "answer_schema": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "type": "integer",
+          "enum": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "uniqueItems": true
+      },
+      "gold": [
+        1,
+        4
+      ],
+      "support": [
+        "poster-set:e01",
+        "poster-set:e03",
+        "poster-set:e04",
+        "poster-set:e05",
+        "poster-set:e06",
+        "poster-set:e07"
+      ],
+      "rationale": "4日暂停第2和第3张；6日第2张虽已复核，负责人直到7日才批准恢复。6日晚第1和第4张仍可对外使用，生成二版或完成校对不能替代恢复批准。"
+    },
+    {
+      "id": "poster-set:f2",
+      "case": "poster-set",
+      "kind": "current-quantity",
+      "text": "截至2026年11月12日，合作场馆可以接收并向观众展出的图版总数是多少张？",
+      "answer_schema": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "gold": 11,
+      "support": [
+        "poster-set:e01",
+        "poster-set:e04",
+        "poster-set:e07",
+        "poster-set:e10",
+        "poster-set:e12"
+      ],
+      "rationale": "原十二张，4日暂停两张，7日恢复其中第二张，第三张到12日仍候选未通过。总数11；不是公众网页的4、4日至6日的10或内部包的12。"
+    },
+    {
+      "id": "joint-release:f1",
+      "case": "joint-release",
+      "kind": "scope-application",
+      "text": "按截至2026年11月12日的决定，秘书要为一次新的印刷询价准备附件。仅就这次询价用途，可向印刷店交付哪些类别的文件？",
+      "answer_schema": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "type": "string",
+          "enum": [
+            "规格单",
+            "文字版封面",
+            "图文版封面"
+          ]
+        },
+        "uniqueItems": true
+      },
+      "gold": [
+        "规格单"
+      ],
+      "support": [
+        "joint-release:e02",
+        "joint-release:e03",
+        "joint-release:e05",
+        "joint-release:e06",
+        "joint-release:e07",
+        "joint-release:e11",
+        "joint-release:e12"
+      ],
+      "rationale": "双方一致接受只发开本页数规格询价；两个封面各获单方选择，没有共同接受。新一轮同用途询价可继续发规格单，不附任何候选封面。"
+    },
+    {
+      "id": "joint-release:f2",
+      "case": "joint-release",
+      "kind": "unspecified-date-control",
+      "text": "截至2026年11月12日，两位联合负责人共同接受的展册公开日期是哪一天？",
+      "answer_schema": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "description": "YYYY-MM-DD"
+      },
+      "gold": null,
+      "support": [
+        "joint-release:e01",
+        "joint-release:e03",
+        "joint-release:e12",
+        "joint-release:e16"
+      ],
+      "rationale": "e01公开日期须两人一致确认，e03仍待共同确认，e12明确没有共同接受公开日期，e16也没有新接受决定。完整历史没有可输出的日期。"
+    },
+    {
+      "id": "pilot-guide:f1",
+      "case": "pilot-guide",
+      "kind": "scope-application",
+      "text": "按截至2026年11月12日的规则，新入职员工拟在捷径路线开展标识辨认练习。这次员工练习可采用哪些组织方式？",
+      "answer_schema": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "type": "string",
+          "enum": [
+            "独自训练",
+            "培训员带队训练"
+          ]
+        },
+        "uniqueItems": true
+      },
+      "gold": [
+        "培训员带队训练"
+      ],
+      "support": [
+        "pilot-guide:e01",
+        "pilot-guide:e04",
+        "pilot-guide:e08",
+        "pilot-guide:e09",
+        "pilot-guide:e11",
+        "pilot-guide:e12"
+      ],
+      "rationale": "员工练习属于训练用途而非公众导览。8日起员工独走暂停，培训员带队训练保留，11/12日未恢复独走。新员工参加也只能用保留方式。"
+    },
+    {
+      "id": "pilot-guide:f2",
+      "case": "pilot-guide",
+      "kind": "effective-date",
+      "text": "按截至2026年11月12日的记录，捷径的员工独自试走从哪一天起暂停？",
+      "answer_schema": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "description": "YYYY-MM-DD"
+      },
+      "gold": "2026-11-08",
+      "support": [
+        "pilot-guide:e08",
+        "pilot-guide:e09",
+        "pilot-guide:e11"
+      ],
+      "rationale": "e08负责人当日因转角误认暂停独自试走，事件日期为8日；9日取消次日计划是执行后果，不是暂停生效日。"
+    },
+    {
+      "id": "micro-grants:f1",
+      "case": "micro-grants",
+      "kind": "scope-application",
+      "text": "按截至2026年11月12日的本季规则，一份新申请已具备本季任一老师开放工坊的参与记录及本人原创计划，真实预算为875单位。为满足进入评审的金额条件，真实预算最少须减少多少单位？",
+      "answer_schema": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "gold": 75,
+      "support": [
+        "micro-grants:e01",
+        "micro-grants:e02",
+        "micro-grants:e06",
+        "micro-grants:e07",
+        "micro-grants:e14"
+      ],
+      "rationale": "上限是不超过800，任一本季老师工坊均可，875须至少实质减少75。这里求达到金额资格的差额，不是批准付款额；不能仅改表上数字，后续仍要评审。"
+    },
+    {
+      "id": "micro-grants:f2",
+      "case": "micro-grants",
+      "kind": "historical-quantity",
+      "text": "按2026年11月8日的评审决定，11月7日送评、申请预算750单位的那份计划，财务获准支付的金额是多少单位？",
+      "answer_schema": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "gold": 650,
+      "support": [
+        "micro-grants:e07",
+        "micro-grants:e08",
+        "micro-grants:e09",
+        "micro-grants:e15"
+      ],
+      "rationale": "7日送评预算750的计划在8日批准650。9日按650实付，15号事件仍强调付款依据批准金额。不能拿申请750或资格上限800代替批准650。"
+    },
+    {
+      "id": "support-routing:f1",
+      "case": "support-routing",
+      "kind": "scope-application",
+      "text": "按截至2026年11月12日的分流规则，新来信标题为模板排版，正文同时描述程序启动时报错无法打开，以及希望把目录移到末页。这封信应建立哪些支持队的工单？",
+      "answer_schema": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "type": "string",
+          "enum": [
+            "技术队",
+            "编辑队"
+          ]
+        },
+        "uniqueItems": true
+      },
+      "gold": [
+        "技术队",
+        "编辑队"
+      ],
+      "support": [
+        "support-routing:e01",
+        "support-routing:e04",
+        "support-routing:e06",
+        "support-routing:e07",
+        "support-routing:e12"
+      ],
+      "rationale": "启动失败交技术队，目录位置是模板使用交编辑队；同封混合问题拆单并互链。标题不能覆盖正文，也没有接受全信先技术队的统一入口。"
+    },
+    {
+      "id": "support-routing:f2",
+      "case": "support-routing",
+      "kind": "historical-quantity",
+      "text": "在2026年11月7日的实际回复中，给那位同时反馈封面标题拥挤及导出报错的来信人列出了几个工单编号？",
+      "answer_schema": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "gold": 2,
+      "support": [
+        "support-routing:e07",
+        "support-routing:e16"
+      ],
+      "rationale": "e07明确分别建立编辑和技术单、回信列两个编号。e16区分一封收件与两张关联工单；题目求回复编号数，不是收件计数。"
+    }
+  ]
+}

@@ -192,6 +192,14 @@ the saved compact summary, without new API calls or private raw traces. Fresh ex
 requires explicit authorization and the budget/input-boundary procedure in its
 [research guide](research/memory-side-information-study/README.md). The evidence-complementarity
 language protocol remains unexecuted. Static InMind and MemSkill source notes are not upstream runtime tests.
+The independent [scope/revision memory diagnostic](research/representation-use-study/natural-study.md)
+also has offline corpus/projection/scoring, request-binding and spending-gate tests, plus a saved-summary
+check. Its question-blind writers and raw/prose/ledger readers require explicit API authorization;
+the verifier never executes them. Keep its original writer-phase protocol and the disclosed pre-reader
+length-policy amendment distinguishable. Full raw replay validates the actual generated memories and
+reader inputs; a compact summary check alone does not. The question-only cue diagnostic and the revised factual/application tasks each have separate saved
+results and raw replay. Reusing the same histories and writer outputs does not create new independent
+families. The older full raw/summary/coexistence protocol remains a separate proposed study.
 The [Jev source experiment](research/jev-memory-contract-study/README.md) requires a
 pinned external checkout for fresh execution; the reader command verifies the saved receipt only.
 C2C receipt checks do not load model weights or perform inference; see its

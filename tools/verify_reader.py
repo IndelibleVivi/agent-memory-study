@@ -24,6 +24,9 @@ def main():
          'research/multilingual-use-policy', '-p', 'test_casebook.py'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s',
          'research/representation-use-study', '-p', 'test_*.py'])
+    run([python, '-B', 'research/representation-use-study/natural.py', 'check-saved'])
+    run([python, '-B', 'research/representation-use-study/natural_probe.py', 'check-saved'])
+    run([python, '-B', 'research/representation-use-study/natural_facts.py', 'check-saved'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s',
          'research/revision-propagation-study', '-p', 'test_*.py'])
     run([python, '-B', 'research/revision-propagation-study/study.py', 'check-sample'])

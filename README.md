@@ -17,6 +17,7 @@ AMS 从 agent memory 出发，研究信息、经验与智能的跨时间关系�
 | 新材料怎样改变已经形成的认识 | [索引也能学习——究竟学了什么？](study/entries/what-an-index-learns.md)：从指定章节追问监督与错误恢复；网页可插入记录，比较旧界、重新校准与重新拟合，并检查真实二分路径。 |
 | 继续一项已有研究 | [经验怎样长成判断习惯](https://indeliblevivi.github.io/agent-memory-study/study/experience-becomes-policy/)：跨源论述、已保存的分类器学习与纠正结果，以及仍未回答的问题。 |
 | 运行表示研究的离线控制 | [原事件／概括／并存执行器](research/representation-use-study/README.md)：原创事件、可执行真值、实际送达材料与绑定的运行证据；scripted/oracle 控制不等于模型效果。 |
+| 看模型压缩后的实际判断 | [范围与修订记忆](study/entries/scope-memory-after-revision.md)：question-blind writer、完整历史／普通摘要／条件记录，以及两种 reader 的逐题对照。 |
 | 检查更正怎样传到后续行动 | [修订传播与再写入实验](research/revision-propagation-study/README.md)：多层快照、延迟同步、单层干预与后续任务，区分持续错误和修好后的旧影响再现。 |
 | 看项目长期关心什么 | [经验的形式](study/programme/directions/forms-of-experience.md)、[当下的相关性](study/programme/directions/relevance-in-context.md)、[改变与继承](study/programme/directions/change-and-continuity.md)。 |
 
@@ -125,13 +126,15 @@ python3 -B tools/seo_build.py
 python3 -B tools/test_static_reader.py
 ```
 
-构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、原创索引演算的拟合／校准／查找与回退、星图与三维研究体共用的身份／引用关系、领域布局，以及七组确定性研究和一组 stdlib 分类器学习／纠正实验（包括侧信息决策值、选择渠道及高阶证据选择的精确枚举）；另检查表示与修订传播的离线执行合同、侧信息语言 reader 的保存汇总、casebook 的内容／rubric 绑定和 AgeMem、C2C、Jev 已保存 receipts。修订传播的完整运行与 raw replay 使用其目录命令；统一入口中的 compact summary 检查不能替代它。验证不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。侧信息研究的 `reader_api.py` 是另行授权才执行的官方 API 入口，发送原创合成刺激并消耗 API credits；raw 请求／响应留在 repo 外，网页与统一验证不会调用它。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
+构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、原创索引演算的拟合／校准／查找与回退、星图与三维研究体共用的身份／引用关系、领域布局，以及七组确定性研究和一组 stdlib 分类器学习／纠正实验（包括侧信息决策值、选择渠道及高阶证据选择的精确枚举）；另检查表示与修订传播的离线执行合同、侧信息语言 reader、范围／修订记忆与事后 question-only 对照的保存汇总、casebook 的内容／rubric 绑定和 AgeMem、C2C、Jev 已保存 receipts。修订传播的完整运行与 raw replay 使用其目录命令；统一入口中的 compact summary 检查不能替代它。验证不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。侧信息研究的 `reader_api.py` 与表示研究的 `natural_api.py` / `natural_probe.py` 是另行授权才执行的官方 API 入口，发送原创合成刺激并消耗 API credits；raw 请求／响应留在 repo 外，网页与统一验证不会调用它。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
 
 表示执行器保存实际请求、送达材料、原始回答与评分身份，支持 dry-run、续跑和离线重放检查。
 运行文件完整写入后才原子发布，已有文件不覆写；中断尝试保留证据，续跑另建 attempt。
 已正式发布的文件若损坏则拒绝验收，不能把损坏悄悄当作未执行。
 诊断预算的单位与 tokenizer 身份必须随结果保存；离线计数不能冒充实际模型 token。
-完整自然语言效果比较仍待执行。人工校准使用[离线 casebook](research/multilingual-use-policy/README.md)：
+原完整自然语言矩阵仍待执行；独立的[范围与修订诊断](research/representation-use-study/natural-study.md)
+已运行模型writer和reader；原选择题暴露线索后，具体任务显示条件记录未跨reader稳定优于普通摘要，暂缓与错误值须分开。
+原方案的并存、位置与跨事件推论不因此视为已完成。人工校准使用[离线 casebook](research/multilingual-use-policy/README.md)：
 `ams-memory-reviews/2` 将审阅绑定到材料内容和 rubric；旧 sidecar 或材料变更须显式
 `rebind-reviews` 到新文件，保留旧审阅并重新确认，不能凭同一 case ID 沿用 confirmed。
 

@@ -214,6 +214,19 @@ def main():
                                 expect(page.locator('#study-title')).to_have_text('概括之后，往事还记得准吗？')
                                 assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
                                 checks.append({'width':width,'proposed_study_status_protocol_reload':True})
+                                page.goto(base+'study/scope-memory-after-revision/',wait_until='load')
+                                expect(page.locator('#study-title')).to_have_text('压缩后的记忆，保住了哪些修订？')
+                                expect(page.locator('.study-essay')).to_contain_text('0/22')
+                                for filename, schema in (
+                                    ('natural-results.json','ams-natural-scope-results/1'),
+                                    ('natural-question-only-results.json','ams-question-only-results/1'),
+                                    ('natural-facts-results.json','ams-scope-factual-results/1'),
+                                ):
+                                    url=page.locator(f'.study-essay a[href*="{filename}"]').evaluate('(a) => a.href')
+                                    response=context.request.get(url)
+                                    assert response.status==200 and response.json()['schema']==schema
+                                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
+                                checks.append({'width':width,'scope_memory_essay_and_results':True})
                                 page.goto(base+'question/experience-to-capability/',wait_until='load')
                                 page.locator('#inquiry-practice a[data-route=finding]').first.click()
                                 expect(page.locator('#inquiry-title')).to_have_text(data['findings'][0]['title'])

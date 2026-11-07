@@ -1325,7 +1325,7 @@ def main():
                         expect(page.locator('#study-title')).to_have_text('概括之后，往事还记得准吗？')
                         expect(page.locator('#study-lab')).to_contain_text('研究方案尚未执行')
                         expect(page.locator('#study-lab select, #study-lab button, #study-lab table')).to_have_count(0)
-                        expect(page.locator('#study-lab a')).to_have_attribute('href', 'research/representation-use-study/README.md')
+                        expect(page.locator('#study-lab a')).to_have_attribute('href', 'research/representation-use-study/protocol.md')
                         expect(page.locator('.study-toc a[href="#study-lab"]')).to_contain_text('下一项研究')
                         layout('proposed representation study')
                         if not args.offline_render:
@@ -1344,6 +1344,21 @@ def main():
                         page.locator('#study-lab').scroll_into_view_if_needed()
                         page.screenshot(path=str(output/f'representation-plan-{width}.png'))
                         record('proposed study deep link, status, protocol, reload, history and no execution controls')
+                        go('?study=scope-memory-after-revision')
+                        expect(page.locator('#study-title')).to_have_text('压缩后的记忆，保住了哪些修订？')
+                        expect(page.locator('.study-essay')).to_contain_text('0/22')
+                        expect(page.locator('.study-essay')).to_contain_text('两个阶段的无记忆分数差距不能单独归因于')
+                        layout('scope memory research essay')
+                        if not args.offline_render:
+                            for filename, schema in (
+                                ('natural-results.json', 'ams-natural-scope-results/1'),
+                                ('natural-question-only-results.json', 'ams-question-only-results/1'),
+                                ('natural-facts-results.json', 'ams-scope-factual-results/1'),
+                            ):
+                                url = page.locator(f'.study-essay a[href*="{filename}"]').evaluate('(a) => a.href')
+                                response = context.request.get(url)
+                                assert response.status == 200 and response.json()['schema'] == schema
+                        record('scope memory essay, honest redesign boundary and three saved result links')
                         go('?material=continual-learning-experience-reuse')
                         page.locator('#material-inquiries a[data-route=question]').first.click()
                         expect(page.locator('#inquiry-title')).to_have_text(data['questions'][0]['title'])

@@ -2,8 +2,8 @@
   "id": "experience-to-capability",
   "title": "旧经验，怎样继续帮助当前任务？",
   "question": "经验在什么条件下能够提高当前能力？环境、版本或适用范围改变以后，怎样继续受益，又不被过去误导？",
-  "intro": "一条经验从被保存到参与行动，中间经过候选、选择、理解与适用判断。检索竞争、更正与范围、纵向修订传播提供了不同层次的已执行控制；cache 撤回则提醒我们，跨层借鉴必须重新建立依赖证据。本次续论加入读者侧信息、组合支持与技能库／控制器配对，分别定位用途标签和状态复用的适用条件。",
-  "judgment": "目前能说明的是：经验还在不保证取得到，较新的说明不保证适用于当前范围，派生状态的撤回还可能需要单独处理。我们尚未证明，把条件与修订关系加入 memory 就能提高真实 agent 的任务完成率。新的有限见证进一步说明：用途次序可能随读者侧信息反转，单条或双条用途不能穷尽三条互补支持；固定 MemSkill 源码还显示普通库回退与完整状态恢复不同。前两项是理论与精确枚举，后一项是静态源码观察，都不增加真实 agent 的性能证据。 侧信息另有一个已执行的自然语言短任务：固定 GPT-6.1 Sol 表现出用途次序反转，并未因无关项目编码册而错误调整概率。这补上了一个局部 reader 行为观察，仍没有回答真实 agent 的长期收益。",
+  "intro": "一条经验从被保存到参与行动，中间经过候选、选择、理解与适用判断。检索竞争、更正与范围、纵向修订传播提供了不同层次的已执行控制；cache 撤回则提醒我们，跨层借鉴必须重新建立依赖证据。本次续论加入读者侧信息、组合支持与技能库／控制器配对，分别定位用途标签和状态复用的适用条件。 独立范围／修订模型诊断进一步检查压缩记忆的实际使用，并把当前范围与历史时点分别观察。",
+  "judgment": "经验还在不保证取得到，较新的说明不保证适用于当前范围，派生状态撤回也可能需要单独处理。实际模型研究先发现原选择题无记忆也能高分，随后在同12段历史上固定24个具体任务：完整历史支持22个来源充分答案，压缩支持16至18个；条件记录没有跨reader稳定胜过普通摘要，且可能用更多错误值替代暂缓。这不是总体效果或真实agent收益。侧信息有限见证、组合支持枚举与MemSkill源码观察仍各守边界，不合并成长期任务完成率证据。",
   "byline": "Agent Memory Study editors · 2026-11-05/07 additions: Cove, AI-assisted research",
   "updated": "2026-11-07",
   "status": "open",
@@ -87,6 +87,12 @@
       "url": "research/memskill-state-pairing-study/memskill-mechanism-dossier.md",
       "observation": "固定 f65b797 的阶段 snapshot 保存技能库与阶段训练奖励；普通回退恢复库，完整 checkpoint 另有 controller/optimizer 保存与恢复。early-stop 与 final 导出按实际路径分别说明。",
       "limit": "源码 commit 晚于论文 v2；静态分支观察不证明该分支实际频率、性能伤害、测试泄漏或负迁移。四格模型实验未执行。"
+    },
+    {
+      "label": "范围与修订：实际writer、线索诊断与24个具体任务",
+      "limit": "同12段原创历史和一次共享writer，事后修正不是未见历史或预注册复现；共同字符目标不等于等实际长度。没有检索器、真实工具行动或长期收益结论。",
+      "url": "research/representation-use-study/natural-study.md",
+      "observation": "原题无记忆仍65/72与68/72。修正后22道来源充分任务，raw两模型22/22、none0/22，prose为18/17、ledger16/18；两个未定日期控制各条件均正确null。"
     }
   ],
   "materialIds": [
@@ -102,7 +108,8 @@
     "representation-and-use",
     "memory-value-side-information",
     "memory-evidence-complementarity",
-    "memskill-state-pairing"
+    "memskill-state-pairing",
+    "scope-memory-after-revision"
   ],
   "findingIds": [
     "retrieval-candidate-competition",

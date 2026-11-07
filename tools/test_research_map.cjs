@@ -194,9 +194,9 @@ test('impact chooses one stable shortest path in a true multi-level diamond', ()
 
 test('all current public objects retain their identity and representative explicit connections', () => {
   const model = researchMap.graph(data);
-  assert.equal(model.nodes.length, 49);
+  assert.equal(model.nodes.length, 50);
   assert.deepEqual(Object.fromEntries(['study', 'material', 'question', 'finding'].map(kind =>
-    [kind, model.nodes.filter(node => node.kind === kind).length])), {study: 15, material: 27, question: 2, finding: 5});
+    [kind, model.nodes.filter(node => node.kind === kind).length])), {study: 16, material: 27, question: 2, finding: 5});
   assert.equal(new Set(model.nodes.map(node => node.key)).size, model.nodes.length);
   assert.equal(new Set(edgeKeys(model)).size, model.edges.length);
   model.edges.forEach(([from, to]) => {
@@ -208,6 +208,8 @@ test('all current public objects retain their identity and representative explic
     ['study/ams-thesis', 'study/how-we-study'],
     ['study/after-a-correction', 'material/truth-maintenance-system'],
     ['study/retrieval-and-relevance', 'study/what-an-index-learns'],
+    ['study/scope-memory-after-revision', 'study/representation-and-use'],
+    ['question/experience-to-capability', 'study/scope-memory-after-revision'],
     ['question/experience-becomes-policy', 'study/experience-becomes-policy'],
     ['question/experience-to-capability', 'finding/revision-needs-scope'],
     ['finding/output-guard-is-not-unlearning', 'material/cache-to-cache']

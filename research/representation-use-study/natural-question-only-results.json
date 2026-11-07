@@ -1,0 +1,1347 @@
+{
+  "date": "2026-11-07",
+  "groups": [
+    {
+      "correct": 65,
+      "model": "gpt-6-luna",
+      "rows": [
+        {
+          "case": "field-notes",
+          "choice": "D",
+          "correct": false,
+          "gold": "A",
+          "kind": "current-action",
+          "question": "field-notes:q1",
+          "status": "valid"
+        },
+        {
+          "case": "field-notes",
+          "choice": "D",
+          "correct": false,
+          "gold": "B",
+          "kind": "preserved-boundary",
+          "question": "field-notes:q2",
+          "status": "valid"
+        },
+        {
+          "case": "field-notes",
+          "choice": "D",
+          "correct": false,
+          "gold": "C",
+          "kind": "historical-action",
+          "question": "field-notes:q3",
+          "status": "valid"
+        },
+        {
+          "case": "field-notes",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "conjunction-boundary",
+          "question": "field-notes:q4",
+          "status": "valid"
+        },
+        {
+          "case": "field-notes",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "targeted-clarification",
+          "question": "field-notes:q5",
+          "status": "valid"
+        },
+        {
+          "case": "field-notes",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "ordinary-action",
+          "question": "field-notes:q6",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "current-action",
+          "question": "studio-room:q1",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "preserved-boundary",
+          "question": "studio-room:q2",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "historical-action",
+          "question": "studio-room:q3",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "conjunction-boundary",
+          "question": "studio-room:q4",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "targeted-clarification",
+          "question": "studio-room:q5",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "ordinary-action",
+          "question": "studio-room:q6",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "current-action",
+          "question": "water-counts:q1",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "preserved-boundary",
+          "question": "water-counts:q2",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "historical-action",
+          "question": "water-counts:q3",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "conjunction-boundary",
+          "question": "water-counts:q4",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "targeted-clarification",
+          "question": "water-counts:q5",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "ordinary-action",
+          "question": "water-counts:q6",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "A",
+          "correct": false,
+          "gold": "D",
+          "kind": "current-action",
+          "question": "dispatch-date:q1",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "preserved-boundary",
+          "question": "dispatch-date:q2",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "historical-action",
+          "question": "dispatch-date:q3",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "conjunction-boundary",
+          "question": "dispatch-date:q4",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "targeted-clarification",
+          "question": "dispatch-date:q5",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "ordinary-action",
+          "question": "dispatch-date:q6",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "current-action",
+          "question": "audio-edition:q1",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "preserved-boundary",
+          "question": "audio-edition:q2",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "historical-action",
+          "question": "audio-edition:q3",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "conjunction-boundary",
+          "question": "audio-edition:q4",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "targeted-clarification",
+          "question": "audio-edition:q5",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "ordinary-action",
+          "question": "audio-edition:q6",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "A",
+          "correct": false,
+          "gold": "B",
+          "kind": "current-action",
+          "question": "search-branch:q1",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "preserved-boundary",
+          "question": "search-branch:q2",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "A",
+          "correct": false,
+          "gold": "D",
+          "kind": "historical-action",
+          "question": "search-branch:q3",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "conjunction-boundary",
+          "question": "search-branch:q4",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "targeted-clarification",
+          "question": "search-branch:q5",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "ordinary-action",
+          "question": "search-branch:q6",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "current-action",
+          "question": "fair-delivery:q1",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "preserved-boundary",
+          "question": "fair-delivery:q2",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "C",
+          "correct": false,
+          "gold": "A",
+          "kind": "historical-action",
+          "question": "fair-delivery:q3",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "conjunction-boundary",
+          "question": "fair-delivery:q4",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "targeted-clarification",
+          "question": "fair-delivery:q5",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "ordinary-action",
+          "question": "fair-delivery:q6",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "current-action",
+          "question": "poster-set:q1",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "preserved-boundary",
+          "question": "poster-set:q2",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "historical-action",
+          "question": "poster-set:q3",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "conjunction-boundary",
+          "question": "poster-set:q4",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "targeted-clarification",
+          "question": "poster-set:q5",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "ordinary-action",
+          "question": "poster-set:q6",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "current-action",
+          "question": "joint-release:q1",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "preserved-boundary",
+          "question": "joint-release:q2",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "historical-action",
+          "question": "joint-release:q3",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "conjunction-boundary",
+          "question": "joint-release:q4",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "targeted-clarification",
+          "question": "joint-release:q5",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "ordinary-action",
+          "question": "joint-release:q6",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "current-action",
+          "question": "pilot-guide:q1",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "preserved-boundary",
+          "question": "pilot-guide:q2",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "historical-action",
+          "question": "pilot-guide:q3",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "conjunction-boundary",
+          "question": "pilot-guide:q4",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "targeted-clarification",
+          "question": "pilot-guide:q5",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "ordinary-action",
+          "question": "pilot-guide:q6",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "current-action",
+          "question": "micro-grants:q1",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "preserved-boundary",
+          "question": "micro-grants:q2",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "historical-action",
+          "question": "micro-grants:q3",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "conjunction-boundary",
+          "question": "micro-grants:q4",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "targeted-clarification",
+          "question": "micro-grants:q5",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "ordinary-action",
+          "question": "micro-grants:q6",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "current-action",
+          "question": "support-routing:q1",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "preserved-boundary",
+          "question": "support-routing:q2",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "historical-action",
+          "question": "support-routing:q3",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "conjunction-boundary",
+          "question": "support-routing:q4",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "targeted-clarification",
+          "question": "support-routing:q5",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "ordinary-action",
+          "question": "support-routing:q6",
+          "status": "valid"
+        }
+      ],
+      "total": 72,
+      "usage": {
+        "cached_tokens": 0,
+        "input_tokens": 19487,
+        "output_tokens": 15180,
+        "reasoning_tokens": 11452
+      },
+      "usage_estimate_usd": 0.009539,
+      "valid": 72
+    },
+    {
+      "correct": 68,
+      "model": "gpt-6.1-sol",
+      "rows": [
+        {
+          "case": "field-notes",
+          "choice": "D",
+          "correct": false,
+          "gold": "A",
+          "kind": "current-action",
+          "question": "field-notes:q1",
+          "status": "valid"
+        },
+        {
+          "case": "field-notes",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "preserved-boundary",
+          "question": "field-notes:q2",
+          "status": "valid"
+        },
+        {
+          "case": "field-notes",
+          "choice": "B",
+          "correct": false,
+          "gold": "C",
+          "kind": "historical-action",
+          "question": "field-notes:q3",
+          "status": "valid"
+        },
+        {
+          "case": "field-notes",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "conjunction-boundary",
+          "question": "field-notes:q4",
+          "status": "valid"
+        },
+        {
+          "case": "field-notes",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "targeted-clarification",
+          "question": "field-notes:q5",
+          "status": "valid"
+        },
+        {
+          "case": "field-notes",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "ordinary-action",
+          "question": "field-notes:q6",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "current-action",
+          "question": "studio-room:q1",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "preserved-boundary",
+          "question": "studio-room:q2",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "historical-action",
+          "question": "studio-room:q3",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "conjunction-boundary",
+          "question": "studio-room:q4",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "targeted-clarification",
+          "question": "studio-room:q5",
+          "status": "valid"
+        },
+        {
+          "case": "studio-room",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "ordinary-action",
+          "question": "studio-room:q6",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "current-action",
+          "question": "water-counts:q1",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "preserved-boundary",
+          "question": "water-counts:q2",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "historical-action",
+          "question": "water-counts:q3",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "conjunction-boundary",
+          "question": "water-counts:q4",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "targeted-clarification",
+          "question": "water-counts:q5",
+          "status": "valid"
+        },
+        {
+          "case": "water-counts",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "ordinary-action",
+          "question": "water-counts:q6",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "current-action",
+          "question": "dispatch-date:q1",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "preserved-boundary",
+          "question": "dispatch-date:q2",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "historical-action",
+          "question": "dispatch-date:q3",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "conjunction-boundary",
+          "question": "dispatch-date:q4",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "targeted-clarification",
+          "question": "dispatch-date:q5",
+          "status": "valid"
+        },
+        {
+          "case": "dispatch-date",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "ordinary-action",
+          "question": "dispatch-date:q6",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "current-action",
+          "question": "audio-edition:q1",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "preserved-boundary",
+          "question": "audio-edition:q2",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "historical-action",
+          "question": "audio-edition:q3",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "conjunction-boundary",
+          "question": "audio-edition:q4",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "targeted-clarification",
+          "question": "audio-edition:q5",
+          "status": "valid"
+        },
+        {
+          "case": "audio-edition",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "ordinary-action",
+          "question": "audio-edition:q6",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "A",
+          "correct": false,
+          "gold": "B",
+          "kind": "current-action",
+          "question": "search-branch:q1",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "preserved-boundary",
+          "question": "search-branch:q2",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "A",
+          "correct": false,
+          "gold": "D",
+          "kind": "historical-action",
+          "question": "search-branch:q3",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "conjunction-boundary",
+          "question": "search-branch:q4",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "targeted-clarification",
+          "question": "search-branch:q5",
+          "status": "valid"
+        },
+        {
+          "case": "search-branch",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "ordinary-action",
+          "question": "search-branch:q6",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "current-action",
+          "question": "fair-delivery:q1",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "preserved-boundary",
+          "question": "fair-delivery:q2",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "historical-action",
+          "question": "fair-delivery:q3",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "conjunction-boundary",
+          "question": "fair-delivery:q4",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "targeted-clarification",
+          "question": "fair-delivery:q5",
+          "status": "valid"
+        },
+        {
+          "case": "fair-delivery",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "ordinary-action",
+          "question": "fair-delivery:q6",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "current-action",
+          "question": "poster-set:q1",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "preserved-boundary",
+          "question": "poster-set:q2",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "historical-action",
+          "question": "poster-set:q3",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "conjunction-boundary",
+          "question": "poster-set:q4",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "targeted-clarification",
+          "question": "poster-set:q5",
+          "status": "valid"
+        },
+        {
+          "case": "poster-set",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "ordinary-action",
+          "question": "poster-set:q6",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "current-action",
+          "question": "joint-release:q1",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "preserved-boundary",
+          "question": "joint-release:q2",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "historical-action",
+          "question": "joint-release:q3",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "conjunction-boundary",
+          "question": "joint-release:q4",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "targeted-clarification",
+          "question": "joint-release:q5",
+          "status": "valid"
+        },
+        {
+          "case": "joint-release",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "ordinary-action",
+          "question": "joint-release:q6",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "current-action",
+          "question": "pilot-guide:q1",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "preserved-boundary",
+          "question": "pilot-guide:q2",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "historical-action",
+          "question": "pilot-guide:q3",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "conjunction-boundary",
+          "question": "pilot-guide:q4",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "targeted-clarification",
+          "question": "pilot-guide:q5",
+          "status": "valid"
+        },
+        {
+          "case": "pilot-guide",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "ordinary-action",
+          "question": "pilot-guide:q6",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "current-action",
+          "question": "micro-grants:q1",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "preserved-boundary",
+          "question": "micro-grants:q2",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "historical-action",
+          "question": "micro-grants:q3",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "conjunction-boundary",
+          "question": "micro-grants:q4",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "targeted-clarification",
+          "question": "micro-grants:q5",
+          "status": "valid"
+        },
+        {
+          "case": "micro-grants",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "ordinary-action",
+          "question": "micro-grants:q6",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "current-action",
+          "question": "support-routing:q1",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "preserved-boundary",
+          "question": "support-routing:q2",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "B",
+          "correct": true,
+          "gold": "B",
+          "kind": "historical-action",
+          "question": "support-routing:q3",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "C",
+          "correct": true,
+          "gold": "C",
+          "kind": "conjunction-boundary",
+          "question": "support-routing:q4",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "D",
+          "correct": true,
+          "gold": "D",
+          "kind": "targeted-clarification",
+          "question": "support-routing:q5",
+          "status": "valid"
+        },
+        {
+          "case": "support-routing",
+          "choice": "A",
+          "correct": true,
+          "gold": "A",
+          "kind": "ordinary-action",
+          "question": "support-routing:q6",
+          "status": "valid"
+        }
+      ],
+      "total": 72,
+      "usage": {
+        "cached_tokens": 0,
+        "input_tokens": 19487,
+        "output_tokens": 6982,
+        "reasoning_tokens": 2791
+      },
+      "usage_estimate_usd": 0.108794,
+      "valid": 72
+    }
+  ],
+  "planned_calls": 144,
+  "raw_receipts_digest": "dabb8cdaf8d64fb7016a8ae1c8cca471017a0ec070c0e03881b2b2d01537726e",
+  "receipts": 144,
+  "schema": "ams-question-only-results/1",
+  "source_identity": {
+    "corpus.py": "0381222dd2772a3e3b8c4d098d3cf8bcd566909fedad1a95968faf73090cdd1b",
+    "natural-cases.json": "0ae45c5ec9808e1522fa59aa133cbb305295787c010a5cd91c0b425c5eb85a6f",
+    "natural-protocol.md": "041606ee6c4333c716af5c2ea1dac9861e83675077197bab52a345914d61a1dc",
+    "natural-question-only.md": "506bb1cc754dcd9c9edff3f845f35eba12980407d4e062d4e29c876cba2ec3e0",
+    "natural.py": "ff05ff47ed57a7bbba1c54dda74857ddc44749f691091f55efabc5815b87d1df",
+    "natural_api.py": "d2028baa16fdd21510d017e5c0a8f709539dc3e910cecd37761b37cb259e8b3a",
+    "natural_probe.py": "64b8246540750cba52003d5a8146e6bd2c130241f752f7838cc254f9f541c94d",
+    "study.py": "5510db5d2dd9d1fdc04cb31389300ab9545b1cf454497ab9a19a765c8f4aeec9"
+  },
+  "status": "post-result-diagnostic",
+  "total_reserved_usd_including_primary": 6.1379955
+}

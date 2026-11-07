@@ -1,13 +1,15 @@
 # 概括之后，往事还记得准吗？
 
-Agent Memory Study editors · 2026-09-25 · **离线控制已实现；自然语言比较：proposed-not-run**。
+Agent Memory Study editors · 2026-11-07 · **离线控制与独立自然语言范围诊断分别留证据**。
 
 [进入跨源共读](https://indeliblevivi.github.io/agent-memory-study/study/representation-and-use/) ·
 [原事件／概括／并存的比较协议](protocol.md) ·
 [双语记忆使用策略的独立问题](../multilingual-use-policy/README.md)
 
-这项研究追问：概括是否帮助新推论，同时保住历史来源和当前适用范围？目前交付论文串读、可检验协议与 stdlib 离线 scripted/oracle controls；
-没有生成模型输出、参与者数据或模型效果数字。文献的实际阅读范围
+这项研究追问：概括是否帮助新推论，同时保住历史来源和当前适用范围？本目录保留论文串读、
+原三臂协议与 stdlib 离线 scripted/oracle controls；另有[自然语言范围与修订诊断](natural-study.md)，
+比较完整历史、模型生成的普通摘要与条件记录。两项研究的协议、source identity 和结果分开，
+不把后者称为原方案的完整实现。文献的实际阅读范围
 与定位统一由 `study/entries/representation-and-use.json` 的 `externalReadings` 维护，页面展示同一来源。
 
 现有 [Jev 源码实验](../jev-memory-contract-study/README.md)看到了指定判断下原节点与派生
@@ -22,13 +24,13 @@ Agent Memory Study editors · 2026-09-25 · **离线控制已实现；自然语�
 既有材料的 `noteDepth`、paper findings 或历史 receipts。生物记忆和模型内部表示提供
 问题与评价方法，不直接证明某种 agent memory 设计有效。
 
-自然语言比较执行前仍需固定 answerer 的具体模型与版本、真实 tokenizer、输入预算及运行资源。
+原协议的完整自然语言矩阵（含并存、位置、跨事件推论）执行前仍需独立固定资源和参数。
 下方离线 fixture 已固定原创事件、gold、信息充分性与 diagnostic byte budget，验证工程链路；
 它不替代上述模型实验选择。开发结果后的协议修订保留为探索性记录。
 
 ## 离线 executable diagnostics（2026-10-23）
 
-现在新增 WP1–WP3 的 stdlib 离线 pipeline。上文关于自然语言 answerer 的未执行边界继续有效；
+现在新增 WP1–WP3 的 stdlib 离线 pipeline。原完整自然语言矩阵的未执行边界继续有效；
 这里的 `sample-results.json` 只报告原创 synthetic fixture 的 **scripted/oracle controls**，
 没有模型调用或私人材料。完整执行定义和限制见 [protocol 执行附录](protocol.md#2026-10-23-离线执行附录wp1wp3-development)。
 
