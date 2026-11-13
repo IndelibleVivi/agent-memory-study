@@ -169,11 +169,13 @@ python3 -B tools/verify_reader.py
 
 统一入口新增支持审计与递归见证的重算，以及 Utility compact receipt 检查。后者不是论文重跑。浏览器与 static 检查沿既有工具执行，页面没有新增模型调用路径。不要手工复制 `data/materials.json` 或 `assets/materials-data.js` 到另一个研究分支，必须在目标 canonical 上重建。
 
-本地已实际通过 canonical 构建、`tools/verify_reader.py` 全入口、两篇文章的 public collection 导出，以及 staged diff 格式检查。统一入口重算支持审计与递归见证，并检查 Utility 保存结果；它没有重跑原始模型推理。运行环境为 Python 3.12.14、Node 24.22.1。完整 PR 工作流另在其固定的 Python 3.13、Node 22 和 Chromium 环境验收。
+初轮 Chat 执行已通过 canonical 构建、`tools/verify_reader.py` 全入口、两篇文章的 public collection 导出，以及 staged diff 格式检查。统一入口重算支持审计与递归见证，并检查 Utility 保存结果；它没有重跑原始模型推理。该次运行环境为 Python 3.12.14、Node 24.22.1。完整 PR 工作流另在其固定的 Python 3.13、Node 22 和 Chromium 环境验收。
 
 新增两个研究对象暴露原地图的固定数量断言与网格裁切。对象数量现在从 canonical 集合计算；spread 按网格及环带外缘等比适配，关系视图缩小 5% 以避开临界倾角裁切。投影、拾取与交互结构未改，原视口边界断言保留，增加增长与临界倾角回归。这是内容集成所需的小修复。
 
-本地 Chromium 启动被运行环境的 socket 限制阻止（`Operation not permitted`），因此没有把本地浏览器／静态站点验收记为通过。其最终结果以 PR 的 Reading Room validation 记录为准。研究状态与发布状态分开：分支、commit、draft PR 的建立不表示已合入 main，也不表示 GitHub Pages 已部署。
+初轮 Chat 环境的 Chromium 启动被 socket 限制阻止（`Operation not permitted`），当时未声称本地浏览器／静态站点通过。后续本地 Codex 接续已实际通过 canonical 构建、统一验证（362 项 Python tests、105 项 Node tests）、202 项真实 HTTP browser checks（零 skip），以及静态构建和159项静态检查。静态产物有53个阅读页、404页与380个公开assets；新诊断报告及结果文件已核对进入产物。原学习／纠正、支持审计源码与 receipts 保持不变；新增诊断完整重算，未新增 LLM/API 调用。
+
+远端完整工作流的结果以对应 commit 的 Reading Room validation 为准。研究状态与发布状态分开：分支、commit、draft PR 的建立不表示已合入 main，也不表示 GitHub Pages 已部署。
 
 ## 7. 真正需要研究者决定的方向
 
