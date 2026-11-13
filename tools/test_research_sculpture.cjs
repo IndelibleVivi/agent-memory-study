@@ -49,10 +49,31 @@ test('the complete current geometry stays inside the stage at allowed viewing an
  const model=sculpture.graph(data),selected=model.nodes.findIndex(x=>x.id==='ams-thesis');
  for(const [width,height] of [[1440,420],[390,250],[320,250]]){
   for(const mode of ['field','spread','links']){
-   for(const yaw of [0,.8,1.6,2.4,3.2,4,4.8,5.6])for(const pitch of [-1.2,-.8,-.4,0,.4,.8,1.2]){
+   for(const yaw of [0,.8,1.6,2.4,3.2,4,4.8,5.6])for(const pitch of [-1.2,-.8,-Math.PI/6,-.4,0,.4,Math.PI/6,.8,1.2]){
     for(const pose of sculpture.layout(model,mode,selected))for(let angle=0;angle<Math.PI*2;angle+=.3){
      const [x,y]=sculpture.project(sculpture.ribbonPoint(pose,angle,1),yaw,pitch,width,height);
      assert.ok(x>=0&&x<=width&&y>=0&&y<=height,`${mode} clipped at ${width}×${height}, ${yaw}/${pitch}`);
+    }
+   }
+  }
+ }
+});
+
+test('spread geometry stays visible across corpus growth and transitions to other views',()=>{
+ for(const count of [1,51,128,257]){
+  const model=sculpture.graph({studies:Array.from({length:count},(_,i)=>({id:`growth-${i}`}))});
+  const spread=sculpture.layout(model,'spread',0);
+  const poses=[...spread];
+  for(const mode of ['field','links']){
+   const other=sculpture.layout(model,mode,0);
+   poses.push(...other);
+   for(const t of [.25,.5,.75])poses.push(...spread.map((pose,i)=>pose.map((v,j)=>v+(other[i][j]-v)*t)));
+  }
+  for(const [width,height] of [[1440,420],[390,250],[320,250]]){
+   for(const yaw of [0,Math.PI/2,Math.PI,Math.PI*1.5])for(const pitch of [-1.2,-Math.PI/6,0,Math.PI/6,1.2]){
+    for(const pose of poses)for(const side of [-1,1])for(let angle=0;angle<Math.PI*2;angle+=.3){
+     const [x,y]=sculpture.project(sculpture.ribbonPoint(pose,angle,side),yaw,pitch,width,height);
+     assert.ok(x>=0&&x<=width&&y>=0&&y<=height,`growth ${count} clipped at ${width}×${height}, ${yaw}/${pitch}`);
     }
    }
   }

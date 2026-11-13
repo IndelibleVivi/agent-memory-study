@@ -1,0 +1,107 @@
+{
+  "id": "experience-value-and-silence",
+  "title": "经验留下什么：事前价值、学习与保持沉默",
+  "kind": "research-essay",
+  "date": "2026-11-13",
+  "byline": "Cove · AI-assisted research",
+  "intro": "从公开效用结果复算、旧学习器的新组合反例与递归状态推导，研究当前有帮助的记忆怎样成为值得保留、仍可修订的能力。",
+  "bodyFile": "entries/experience-value-and-silence.md",
+  "domains": [
+    "memory",
+    "learning",
+    "control",
+    "evaluation"
+  ],
+  "directionIds": [
+    "forms",
+    "relevance",
+    "change"
+  ],
+  "readings": [],
+  "externalReadings": [
+    {
+      "label": "What Is This Memory Useful For?",
+      "kind": "论文正文与公开结果复算",
+      "url": "https://arxiv.org/html/2611.03930v1",
+      "locator": "v1；方法、结果、S1/S3/S7及fixed-context补充；官方源码386ac65与HF revision332cd04",
+      "takeaway": "将局部曝光效用、screen选择、机会条件化和表示成本分别核对；官方主结果与固定总长度分析已用归档输出复算。",
+      "limit": "没有新模型调用；gold screen不能部署，归档效应不能独自识别长期保留价值。"
+    },
+    {
+      "label": "Agent Memory as Rate-Limited Filtering",
+      "kind": "论文正文、理论与诊断对照",
+      "url": "https://arxiv.org/html/2611.02361v1",
+      "locator": "v1；§§2.1–2.4、4.5、4.9及附录理论证明",
+      "takeaway": "明确已知规则、依赖检索、解析校准和可解码状态的条件；memoryless控制改变了Bayes增益的解释。",
+      "limit": "未取得作者所述theory代码；本文的新数学见证为AMS独立实现。"
+    },
+    {
+      "label": "MemAgent: Heterogeneous Memory Providers",
+      "kind": "论文正文与附录",
+      "url": "https://arxiv.org/html/2609.32521v1",
+      "locator": "v1；§4、Eq.2、§5、Appendix A.2–A.4与B.2",
+      "takeaway": "路由、注入与存储的监督对象不同；复用成功奖励的因果含义与GAIA经验复用划分需要单独说明。",
+      "limit": "未运行其训练或benchmark；同名长上下文MemAgent不是这一工作。"
+    },
+    {
+      "label": "UMA: Learning to Remember",
+      "kind": "EMNLP论文正文与选读附录",
+      "url": "https://aclanthology.org/2026.emnlp-main.1299.pdf",
+      "locator": "2026出版PDF；§§2.2–2.3、主表／消融表、Limitations和raw-retrieval工具说明",
+      "takeaway": "共享问题的分叉回报将维护session连接到未来QA，但原文检索通道与单次CRUD归因仍需分开。",
+      "limit": "未运行训练或推理；Ledger-QA为合成状态追踪。PDF署名Wei Chen与网页metadata次序有差异。"
+    },
+    {
+      "label": "When to Remember, When to Abstain",
+      "kind": "论文全文与附录",
+      "url": "https://arxiv.org/pdf/2610.07100v1",
+      "locator": "v1，7页全文；§3、Table1及Appendices A–E",
+      "takeaway": "写入时的来源支持可以在未知未来问题时评价；类别条件化与分数校准的关系值得区分。",
+      "limit": "100个合成人设，judge依赖、估计coverage、各类独立extractor；未验证真实用户与下游行动收益。"
+    },
+    {
+      "label": "Latent learning: episodic and parametric experience",
+      "kind": "论文正文与关键消融",
+      "url": "https://arxiv.org/html/2509.16189v3",
+      "locator": "2025-12-23 v3；§§4–6，oracle retrieval与ICL-support ablations",
+      "takeaway": "当时非目标的信息可能支持后来目标；保留经历与学习如何使用经历相互补充。",
+      "limit": "理想检索、受控任务；不是自动admission或真实长期检索的验证。未把受限OpenReview版本冒充已全文阅读。"
+    },
+    {
+      "label": "MemoryArena",
+      "kind": "论文正文、附录与固定源码阅读",
+      "url": "https://arxiv.org/html/2602.16313v2",
+      "locator": "2026-09-17 v2；§§3–4、Appendices B/C；官方仓库6cd9de14b71915e39ac742a20dc33785e14b6aab",
+      "takeaway": "跨session任务将过去产物与行动相连；各域成功率、部分进度和feedback合同需分开。",
+      "limit": "只读源码；未重跑benchmark，也不能以依赖任务连续性代替稳定技能迁移。"
+    },
+    {
+      "label": "Memory-Centric Continual Learning for AI Agents",
+      "kind": "论文正文与评价／scaling部分精读",
+      "url": "https://arxiv.org/html/2610.29357v1",
+      "locator": "2026-10-21 v1；§§3–4、Table3及相关实验附录",
+      "takeaway": "持续学习需要获得、保留与迁移的分离；资源最优边界与某算法的实际曲线是不同对象。",
+      "limit": "Scaling law为带条件的假说，部分图为合成示意；未运行其模型实验。"
+    },
+    {
+      "label": "RoutePrism: Tracing Construction Order Effects",
+      "kind": "论文PDF方法与附录精读",
+      "url": "https://arxiv.org/pdf/2609.34160v1",
+      "locator": "v1；§§3–4、Tables3/4/49、Appendix A.5及F.3",
+      "takeaway": "区分构建来源、实际上下文、随机回答分布与正确性；恢复支持的四条件对照具有明确资格范围。",
+      "limit": "未取得文中官方代码仓库链接，未运行上游；33个eligible queries的恢复估计不外推至全部63个primary queries或五种reader。"
+    }
+  ],
+  "boundary": "公开归档输出的二次分析、已有结构化学习器的有限输入干预、独立数学见证与跨源论述；本轮没有新增LLM inference、私人用户数据或上游benchmark重跑。部署门控与长期保留协议尚未执行。",
+  "continuation": {
+    "question": "怎样识别当前无收益、却会改变后续学习的经验区别，并在有限成本下保留它们？",
+    "why": "静态用途分数不能直接评价未来更新能力；需要同时限定未来分布、允许续串与实际读者。",
+    "studyIds": [
+      "history-and-update-sufficiency",
+      "experience-becomes-policy",
+      "memory-value-side-information",
+      "scope-memory-after-revision"
+    ],
+    "materialIds": []
+  }
+}

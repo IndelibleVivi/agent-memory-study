@@ -1,0 +1,77 @@
+{
+  "id": "history-and-update-sufficiency",
+  "title": "历史怎样留下继续更新的能力",
+  "kind": "research-essay",
+  "date": "2026-11-13",
+  "byline": "Cove · AI-assisted research",
+  "intro": "当前答案相同，未必允许相同的未来更新。递归等价、固定任务的增长状态与预测过度保存的反例，界定经验需要留下怎样的反应能力。",
+  "bodyFile": "entries/history-and-update-sufficiency.md",
+  "domains": ["representation", "learning", "evaluation", "memory"],
+  "directionIds": ["forms", "relevance"],
+  "readings": [],
+  "externalReadings": [
+    {
+      "label": "Guo & Guo — Agent Memory as Rate-Limited Filtering",
+      "url": "https://arxiv.org/html/2611.02361v1",
+      "kind": "原始理论与实验论文",
+      "locator": "arXiv:2611.02361v1, 2026-11-02; §§2.1–2.4, 4.5–4.11, 6, Appendix E and parser/retrieval diagnostics",
+      "takeaway": "已知规则的递归状态、读者相关失效长度、解析校准和查询时依赖检索需要分别归因。",
+      "limit": "未运行作者实现；在论文链接及标题、编号检索中未定位到公开代码仓库。论文报告的注册时间线未经独立时间戳审计。本文的随机学习反例为独立构造。"
+    },
+    {
+      "label": "Shalizi & Crutchfield — Computational Mechanics: Pattern and Prediction, Structure and Simplicity",
+      "url": "https://csc.ucdavis.edu/~cmg/papers/cmppss.pdf",
+      "kind": "原始理论论文",
+      "locator": "Journal of Statistical Physics 104 (2001), §§III–V and §VII.B; sufficient/minimal predictive state definitions and assumptions",
+      "takeaway": "未来条件分布给出预测等价；平稳过程、完整未来与有限数据学习必须区分。",
+      "limit": "阅读指定理论及假设章节，未复现全文证明或状态发现算法；causal-state 术语不等于向 LLM 展示记忆的因果效应。"
+    },
+    {
+      "label": "Littman, Sutton & Singh — Predictive Representations of State",
+      "url": "https://papers.neurips.cc/paper_files/paper/2001/file/1e4d36177d71bbb3558e43af9577d70e-Paper.pdf",
+      "kind": "原始理论论文",
+      "locator": "NIPS 2001, Advances in Neural Information Processing Systems 14; action–observation tests, equation 3, Theorem 1 and proof",
+      "takeaway": "受控预测状态需要指定未来动作；有限 POMDP 的 PSR 维度存在性不自动解决发现、估计与数值精度。",
+      "limit": "未运行 PSR 学习或控制实验；本文 wait/probe 见证为独立说明。"
+    },
+    {
+      "label": "Barnett & Crutchfield — Computational Mechanics of Input-Output Processes",
+      "url": "https://arxiv.org/pdf/1412.2690v3",
+      "kind": "原始理论论文",
+      "locator": "arXiv:1412.2690v3, revised 2016-01-26; channel definition and §§VIII–IX ε-transducer construction",
+      "takeaway": "交互过程的状态需要相对于未来输入描述；被动观察等价不能替代受控通道等价。",
+      "limit": "阅读定义及指定构造，未复现全文证明或实验；采用 arXiv 版本身份，不以 PDF 排版日期作为发表日期。"
+    },
+    {
+      "label": "Bialek & Tishby — Predictive Information",
+      "url": "https://arxiv.org/pdf/cond-mat/9902341",
+      "kind": "原始理论论文",
+      "locator": "arXiv:cond-mat/9902341v1 (1999), full four-page note; equations 8–9 for unknown-parameter model learning",
+      "takeaway": "学习未知参数时，与未来相关的信息可以随历史增长；固定参数维度不保证固定比特容量。",
+      "limit": "其渐近结论有模型正则性条件。本文 Beta–Bernoulli 与两状态含噪模型的有限计数和固定损失证明是独立推导，不是该文实验复现。"
+    },
+    {
+      "label": "Still, Crutchfield & Ellison — Optimal Causal Inference",
+      "url": "https://arxiv.org/pdf/0708.1580v2",
+      "kind": "原始理论论文",
+      "locator": "arXiv:0708.1580v2, revised 2010-08-19; equations 7–10 and §IV causal-state connection",
+      "takeaway": "保留成本与预测失真可以共同定义优化目标，但依赖指定过程、未来变量与失真准则。",
+      "limit": "阅读指定目标与理论连接，未运行有限样本估计或预测压缩算法；本文不把信息比特换算为 token 或 API 成本。"
+    },
+    {
+      "label": "AMS — 未来问题与记忆（既有研究固定版本）",
+      "url": "https://github.com/IndelibleVivi/agent-memory-study/blob/a618ecde843774442773577e318b776f9c63d417/study/entries/future-questions-and-memory.md",
+      "kind": "既有 AMS 研究文章",
+      "locator": "next/ams commit a618ecde843774442773577e318b776f9c63d417; full article",
+      "takeaway": "查询族扩大、合并后的不可拆分、来源重访条件与多答案全交集是本轮继承的已有结果。",
+      "limit": "该固定版本位于独立研究分支，本文通过公开版本链接归属其贡献；其有限确定性见证不证明本文的随机学习下界。"
+    }
+  ],
+  "boundary": "执行了精确有限数学见证及源码、输入、协议 receipt 重算，没有经验样本、模型调用或上游 benchmark 重跑。任意时长的下界来自正文证明，有限枚举只核对实例；全部结论依赖声明的任务、观察通道、损失和更新语义。",
+  "continuation": {
+    "question": "在当前决策相同的历史之间，哪些关于不确定性与规则的区别仍需保存，才能达到指定的未来更新风险？",
+    "why": "当前答案充分、递归决策充分与完整预测充分的要求可以不同；保留成本需要相对于更新范围与损失来评价。",
+    "studyIds": ["experience-becomes-policy", "representation-and-use", "memory-value-side-information"],
+    "materialIds": []
+  }
+}

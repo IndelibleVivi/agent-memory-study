@@ -1,0 +1,1738 @@
+{
+  "schema": "ams-recursive-sufficiency-results/1",
+  "status": "executed-exact-constructions",
+  "empirical_sample_count": 0,
+  "model_calls": 0,
+  "source_identity": {
+    "study.py": "52e8cad9946a60a9f69977119d0ee536775fde80b526ef734ab19997bfc1b398",
+    "inputs.json": "fd26910ddb2821db2e2925a09fee313c9945dd39c3b13c0d6803d63c1b4fc656",
+    "protocol.md": "b99e7e86a3ad49e2d0a9bb9e3fedc22fe63aa2443574b58abc2f8d052cf914fd"
+  },
+  "runtime": {
+    "python": "3.12.14"
+  },
+  "current_action_collision": {
+    "rows": [
+      {
+        "history": 0,
+        "prior": {
+          "exact": "1/10",
+          "decimal": 0.1
+        },
+        "old_action": 0,
+        "posterior_positive": {
+          "exact": "8/17",
+          "decimal": 0.47058823529411764
+        },
+        "posterior_negative": {
+          "exact": "2/83",
+          "decimal": 0.024096385542168676
+        },
+        "positive_action": 0
+      },
+      {
+        "history": 1,
+        "prior": {
+          "exact": "1/5",
+          "decimal": 0.2
+        },
+        "old_action": 0,
+        "posterior_positive": {
+          "exact": "2/3",
+          "decimal": 0.6666666666666666
+        },
+        "posterior_negative": {
+          "exact": "1/19",
+          "decimal": 0.05263157894736842
+        },
+        "positive_action": 1
+      }
+    ],
+    "full_history_bayes_risk": {
+      "exact": "11/100",
+      "decimal": 0.11
+    },
+    "old_action_only_bayes_risk": {
+      "exact": "23/200",
+      "decimal": 0.115
+    },
+    "irrecoverable_risk_gap": {
+      "exact": "1/200",
+      "decimal": 0.005
+    },
+    "best_compressed_actions": {
+      "False": 0,
+      "True": 1
+    },
+    "enumerated_joint_cells": 8,
+    "joint_distribution": [
+      {
+        "history": 0,
+        "hidden_bit": 0,
+        "positive": false,
+        "mass": {
+          "exact": "81/200",
+          "decimal": 0.405
+        }
+      },
+      {
+        "history": 0,
+        "hidden_bit": 0,
+        "positive": true,
+        "mass": {
+          "exact": "9/200",
+          "decimal": 0.045
+        }
+      },
+      {
+        "history": 0,
+        "hidden_bit": 1,
+        "positive": false,
+        "mass": {
+          "exact": "1/100",
+          "decimal": 0.01
+        }
+      },
+      {
+        "history": 0,
+        "hidden_bit": 1,
+        "positive": true,
+        "mass": {
+          "exact": "1/25",
+          "decimal": 0.04
+        }
+      },
+      {
+        "history": 1,
+        "hidden_bit": 0,
+        "positive": false,
+        "mass": {
+          "exact": "9/25",
+          "decimal": 0.36
+        }
+      },
+      {
+        "history": 1,
+        "hidden_bit": 0,
+        "positive": true,
+        "mass": {
+          "exact": "1/25",
+          "decimal": 0.04
+        }
+      },
+      {
+        "history": 1,
+        "hidden_bit": 1,
+        "positive": false,
+        "mass": {
+          "exact": "1/50",
+          "decimal": 0.02
+        }
+      },
+      {
+        "history": 1,
+        "hidden_bit": 1,
+        "positive": true,
+        "mass": {
+          "exact": "2/25",
+          "decimal": 0.08
+        }
+      }
+    ]
+  },
+  "learning_state": {
+    "same_one_step_different_continuation": [
+      {
+        "alpha": 1,
+        "beta": 1,
+        "one_step_success": {
+          "exact": "1/2",
+          "decimal": 0.5
+        },
+        "two_successes": {
+          "exact": "1/3",
+          "decimal": 0.3333333333333333
+        },
+        "success_after_success": {
+          "exact": "2/3",
+          "decimal": 0.6666666666666666
+        },
+        "after_success_action_at_changed_threshold": 1
+      },
+      {
+        "alpha": 2,
+        "beta": 2,
+        "one_step_success": {
+          "exact": "1/2",
+          "decimal": 0.5
+        },
+        "two_successes": {
+          "exact": "3/10",
+          "decimal": 0.3
+        },
+        "success_after_success": {
+          "exact": "3/5",
+          "decimal": 0.6
+        },
+        "after_success_action_at_changed_threshold": 0
+      }
+    ],
+    "exact_mean_state_counts": [
+      {
+        "observations": 0,
+        "distinct_posterior_means": 1,
+        "fixed_width_bits_lower_bound": 0
+      },
+      {
+        "observations": 1,
+        "distinct_posterior_means": 2,
+        "fixed_width_bits_lower_bound": 1
+      },
+      {
+        "observations": 2,
+        "distinct_posterior_means": 3,
+        "fixed_width_bits_lower_bound": 2
+      },
+      {
+        "observations": 4,
+        "distinct_posterior_means": 5,
+        "fixed_width_bits_lower_bound": 3
+      },
+      {
+        "observations": 8,
+        "distinct_posterior_means": 9,
+        "fixed_width_bits_lower_bound": 4
+      },
+      {
+        "observations": 16,
+        "distinct_posterior_means": 17,
+        "fixed_width_bits_lower_bound": 5
+      },
+      {
+        "observations": 32,
+        "distinct_posterior_means": 33,
+        "fixed_width_bits_lower_bound": 6
+      },
+      {
+        "observations": 64,
+        "distinct_posterior_means": 65,
+        "fixed_width_bits_lower_bound": 7
+      },
+      {
+        "observations": 128,
+        "distinct_posterior_means": 129,
+        "fixed_width_bits_lower_bound": 8
+      }
+    ],
+    "changed_decision_threshold": {
+      "exact": "63/100",
+      "decimal": 0.63
+    },
+    "fixed_loss_continuation_classes": [
+      {
+        "T": 1,
+        "current_action_classes": 2,
+        "pair_count": 1,
+        "pairs_with_common_suffix_witness": 1,
+        "longest_selected_suffix": 0,
+        "recursive_decision_classes_lower_bound": 2
+      },
+      {
+        "T": 2,
+        "current_action_classes": 2,
+        "pair_count": 3,
+        "pairs_with_common_suffix_witness": 3,
+        "longest_selected_suffix": 1,
+        "recursive_decision_classes_lower_bound": 3
+      },
+      {
+        "T": 4,
+        "current_action_classes": 2,
+        "pair_count": 10,
+        "pairs_with_common_suffix_witness": 10,
+        "longest_selected_suffix": 3,
+        "recursive_decision_classes_lower_bound": 5
+      },
+      {
+        "T": 8,
+        "current_action_classes": 2,
+        "pair_count": 36,
+        "pairs_with_common_suffix_witness": 36,
+        "longest_selected_suffix": 7,
+        "recursive_decision_classes_lower_bound": 9
+      },
+      {
+        "T": 16,
+        "current_action_classes": 2,
+        "pair_count": 136,
+        "pairs_with_common_suffix_witness": 136,
+        "longest_selected_suffix": 15,
+        "recursive_decision_classes_lower_bound": 17
+      },
+      {
+        "T": 32,
+        "current_action_classes": 2,
+        "pair_count": 528,
+        "pairs_with_common_suffix_witness": 528,
+        "longest_selected_suffix": 31,
+        "recursive_decision_classes_lower_bound": 33
+      }
+    ],
+    "fixed_loss_T8_pair_witnesses": [
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          1
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 7,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          2
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 5,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          3
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 3,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          4
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 1,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          5
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          2
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 5,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          3
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 3,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          4
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 1,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          5
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          3
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 3,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          4
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 1,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          5
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          3,
+          4
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 1,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          3,
+          5
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          3,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          3,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          3,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          4,
+          5
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          4,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          4,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          4,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          5,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 2,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          5,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 2,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          5,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 2,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          6,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 4,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          6,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 4,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          7,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 6,
+        "resulting_actions": [
+          0,
+          1
+        ]
+      }
+    ],
+    "known_two_state_noisy_model": [
+      {
+        "success_minus_failure": -2,
+        "posterior_high_coin_odds": {
+          "exact": "1/9",
+          "decimal": 0.1111111111111111
+        },
+        "next_success_probability": {
+          "exact": "3/10",
+          "decimal": 0.3
+        },
+        "symmetric_loss_action": 0
+      },
+      {
+        "success_minus_failure": -1,
+        "posterior_high_coin_odds": {
+          "exact": "1/3",
+          "decimal": 0.3333333333333333
+        },
+        "next_success_probability": {
+          "exact": "3/8",
+          "decimal": 0.375
+        },
+        "symmetric_loss_action": 0
+      },
+      {
+        "success_minus_failure": 0,
+        "posterior_high_coin_odds": {
+          "exact": "1",
+          "decimal": 1.0
+        },
+        "next_success_probability": {
+          "exact": "1/2",
+          "decimal": 0.5
+        },
+        "symmetric_loss_action": 0
+      },
+      {
+        "success_minus_failure": 1,
+        "posterior_high_coin_odds": {
+          "exact": "3",
+          "decimal": 3.0
+        },
+        "next_success_probability": {
+          "exact": "5/8",
+          "decimal": 0.625
+        },
+        "symmetric_loss_action": 1
+      },
+      {
+        "success_minus_failure": 2,
+        "posterior_high_coin_odds": {
+          "exact": "9",
+          "decimal": 9.0
+        },
+        "next_success_probability": {
+          "exact": "7/10",
+          "decimal": 0.7
+        },
+        "symmetric_loss_action": 1
+      }
+    ],
+    "known_two_state_continuation_classes": [
+      {
+        "T": 1,
+        "pair_count": 1,
+        "pairs_separated_using_emission_likelihoods": 1,
+        "recursive_decision_classes_lower_bound": 2
+      },
+      {
+        "T": 2,
+        "pair_count": 3,
+        "pairs_separated_using_emission_likelihoods": 3,
+        "recursive_decision_classes_lower_bound": 3
+      },
+      {
+        "T": 4,
+        "pair_count": 10,
+        "pairs_separated_using_emission_likelihoods": 10,
+        "recursive_decision_classes_lower_bound": 5
+      },
+      {
+        "T": 8,
+        "pair_count": 36,
+        "pairs_separated_using_emission_likelihoods": 36,
+        "recursive_decision_classes_lower_bound": 9
+      },
+      {
+        "T": 16,
+        "pair_count": 136,
+        "pairs_separated_using_emission_likelihoods": 136,
+        "recursive_decision_classes_lower_bound": 17
+      },
+      {
+        "T": 32,
+        "pair_count": 528,
+        "pairs_separated_using_emission_likelihoods": 528,
+        "recursive_decision_classes_lower_bound": 33
+      }
+    ],
+    "known_two_state_T8_pair_witnesses": [
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          1
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 7,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "3/8",
+            "decimal": 0.375
+          },
+          {
+            "exact": "5/8",
+            "decimal": 0.625
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          2
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 5,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "15/56",
+            "decimal": 0.26785714285714285
+          },
+          {
+            "exact": "5/8",
+            "decimal": 0.625
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          3
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 3,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "123/488",
+            "decimal": 0.2520491803278688
+          },
+          {
+            "exact": "5/8",
+            "decimal": 0.625
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          4
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 1,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1095/4376",
+            "decimal": 0.25022851919561245
+          },
+          {
+            "exact": "5/8",
+            "decimal": 0.625
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          5
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1641/6562",
+            "decimal": 0.2500761962816215
+          },
+          {
+            "exact": "7/10",
+            "decimal": 0.7
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1641/6562",
+            "decimal": 0.2500761962816215
+          },
+          {
+            "exact": "61/82",
+            "decimal": 0.7439024390243902
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1641/6562",
+            "decimal": 0.2500761962816215
+          },
+          {
+            "exact": "547/730",
+            "decimal": 0.7493150684931507
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          0,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1641/6562",
+            "decimal": 0.2500761962816215
+          },
+          {
+            "exact": "4921/6562",
+            "decimal": 0.7499238037183785
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          2
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 5,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "3/8",
+            "decimal": 0.375
+          },
+          {
+            "exact": "5/8",
+            "decimal": 0.625
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          3
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 3,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "15/56",
+            "decimal": 0.26785714285714285
+          },
+          {
+            "exact": "5/8",
+            "decimal": 0.625
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          4
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 1,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "123/488",
+            "decimal": 0.2520491803278688
+          },
+          {
+            "exact": "5/8",
+            "decimal": 0.625
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          5
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "183/730",
+            "decimal": 0.25068493150684934
+          },
+          {
+            "exact": "7/10",
+            "decimal": 0.7
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "183/730",
+            "decimal": 0.25068493150684934
+          },
+          {
+            "exact": "61/82",
+            "decimal": 0.7439024390243902
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "183/730",
+            "decimal": 0.25068493150684934
+          },
+          {
+            "exact": "547/730",
+            "decimal": 0.7493150684931507
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          1,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "183/730",
+            "decimal": 0.25068493150684934
+          },
+          {
+            "exact": "4921/6562",
+            "decimal": 0.7499238037183785
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          3
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 3,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "3/8",
+            "decimal": 0.375
+          },
+          {
+            "exact": "5/8",
+            "decimal": 0.625
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          4
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 1,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "15/56",
+            "decimal": 0.26785714285714285
+          },
+          {
+            "exact": "5/8",
+            "decimal": 0.625
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          5
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "21/82",
+            "decimal": 0.25609756097560976
+          },
+          {
+            "exact": "7/10",
+            "decimal": 0.7
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "21/82",
+            "decimal": 0.25609756097560976
+          },
+          {
+            "exact": "61/82",
+            "decimal": 0.7439024390243902
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "21/82",
+            "decimal": 0.25609756097560976
+          },
+          {
+            "exact": "547/730",
+            "decimal": 0.7493150684931507
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          2,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "21/82",
+            "decimal": 0.25609756097560976
+          },
+          {
+            "exact": "4921/6562",
+            "decimal": 0.7499238037183785
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          3,
+          4
+        ],
+        "suffix_bit": 1,
+        "suffix_length": 1,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "3/8",
+            "decimal": 0.375
+          },
+          {
+            "exact": "5/8",
+            "decimal": 0.625
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          3,
+          5
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "3/10",
+            "decimal": 0.3
+          },
+          {
+            "exact": "7/10",
+            "decimal": 0.7
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          3,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "3/10",
+            "decimal": 0.3
+          },
+          {
+            "exact": "61/82",
+            "decimal": 0.7439024390243902
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          3,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "3/10",
+            "decimal": 0.3
+          },
+          {
+            "exact": "547/730",
+            "decimal": 0.7493150684931507
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          3,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "3/10",
+            "decimal": 0.3
+          },
+          {
+            "exact": "4921/6562",
+            "decimal": 0.7499238037183785
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          4,
+          5
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1/2",
+            "decimal": 0.5
+          },
+          {
+            "exact": "7/10",
+            "decimal": 0.7
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          4,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1/2",
+            "decimal": 0.5
+          },
+          {
+            "exact": "61/82",
+            "decimal": 0.7439024390243902
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          4,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1/2",
+            "decimal": 0.5
+          },
+          {
+            "exact": "547/730",
+            "decimal": 0.7493150684931507
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          4,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 0,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1/2",
+            "decimal": 0.5
+          },
+          {
+            "exact": "4921/6562",
+            "decimal": 0.7499238037183785
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          5,
+          6
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 2,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1/2",
+            "decimal": 0.5
+          },
+          {
+            "exact": "7/10",
+            "decimal": 0.7
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          5,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 2,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1/2",
+            "decimal": 0.5
+          },
+          {
+            "exact": "61/82",
+            "decimal": 0.7439024390243902
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          5,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 2,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1/2",
+            "decimal": 0.5
+          },
+          {
+            "exact": "547/730",
+            "decimal": 0.7493150684931507
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          6,
+          7
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 4,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1/2",
+            "decimal": 0.5
+          },
+          {
+            "exact": "7/10",
+            "decimal": 0.7
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          6,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 4,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1/2",
+            "decimal": 0.5
+          },
+          {
+            "exact": "61/82",
+            "decimal": 0.7439024390243902
+          }
+        ]
+      },
+      {
+        "T": 8,
+        "success_counts": [
+          7,
+          8
+        ],
+        "suffix_bit": 0,
+        "suffix_length": 6,
+        "resulting_actions": [
+          0,
+          1
+        ],
+        "next_success_probabilities_after_suffix": [
+          {
+            "exact": "1/2",
+            "decimal": 0.5
+          },
+          {
+            "exact": "7/10",
+            "decimal": 0.7
+          }
+        ]
+      }
+    ],
+    "information_scope_caveat": "The static binary hidden mode has at most one bit of mutual information with history. This does not bound the number of exactly distinct posterior beliefs or continuation-decision classes. Each fixed horizon still has finitely many classes.",
+    "decision_scope_caveat": "Beta(1,1) and Beta(2,2) remain action-equivalent for the fixed symmetric-loss task under all common Bernoulli continuations; their differing predictive distributions matter for an expanded loss/threshold family.",
+    "event_clock_control": "Both histories use one batch event; batch sample counts are omitted from mean-only memory."
+  },
+  "restoration_cost": {
+    "history_count": 16,
+    "old_memory_classes": 2,
+    "full_target_fiber_sizes": [
+      8,
+      8
+    ],
+    "parity_target_fiber_sizes": [
+      2,
+      2
+    ],
+    "uniform_missing_full_information_bits": 3.0,
+    "uniform_missing_parity_information_bits": 1.0,
+    "one_noisy_read_remaining_entropy_bits": 1.406986780768,
+    "noise_channel": [
+      {
+        "independent_observations_per_bit": 1,
+        "bit_error": {
+          "exact": "1/10",
+          "decimal": 0.1
+        },
+        "three_bit_exact_recovery_probability": {
+          "exact": "729/1000",
+          "decimal": 0.729
+        },
+        "observed_channel_bits": 3
+      },
+      {
+        "independent_observations_per_bit": 3,
+        "bit_error": {
+          "exact": "7/250",
+          "decimal": 0.028
+        },
+        "three_bit_exact_recovery_probability": {
+          "exact": "14348907/15625000",
+          "decimal": 0.918330048
+        },
+        "observed_channel_bits": 9
+      },
+      {
+        "independent_observations_per_bit": 5,
+        "bit_error": {
+          "exact": "107/12500",
+          "decimal": 0.00856
+        },
+        "three_bit_exact_recovery_probability": {
+          "exact": "1903396862457/1953125000000",
+          "decimal": 0.974539193577984
+        },
+        "observed_channel_bits": 15
+      }
+    ]
+  }
+}

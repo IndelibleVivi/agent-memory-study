@@ -11,10 +11,15 @@
   function layout(model,mode,selected) {
     const count=model.nodes.length, linked=neighbors(model,selected), related=[...linked];
     const cols=Math.ceil(Math.sqrt(count)*1.35), rows=Math.ceil(count/cols);
+    // Fit the complete grid, including ribbon thickness, as the corpus grows.
+    // A radius below 7 / hypot(1, 3.8) stays in frame at every rotation with
+    // the current camera. Scale spacing and rings together to retain separation.
+    const spreadExtent=Math.hypot((cols-1)*.39/2,(rows-1)*.34/2)+.13*Math.hypot(1,.037);
+    const spreadScale=Math.min(1,1.75/spreadExtent);
     const domains=[...new Set(model.nodes.map(n=>n.primaryDomain))];
     const members=domains.map(d=>model.nodes.map((n,i)=>n.primaryDomain===d?i:-1).filter(i=>i>=0));
-    return model.nodes.map((node,i)=>{
-      if(mode==="spread") return [(i%cols-(cols-1)/2)*.39, ((rows-1)/2-Math.floor(i/cols))*.34, 0, .13, 0, 0, 1];
+    const poses=model.nodes.map((node,i)=>{
+      if(mode==="spread") return [(i%cols-(cols-1)/2)*.39*spreadScale, ((rows-1)/2-Math.floor(i/cols))*.34*spreadScale, 0, .13*spreadScale, 0, 0, 1];
       if(mode==="links") {
         if(i===selected)return [0,0,.65,.43,0,0,1];
         const k=related.indexOf(i), angle=(k<0?i/count:k/Math.max(1,related.length))*Math.PI*2;
@@ -25,6 +30,9 @@
       const angle=-Math.PI/2+(sector+.08+.84*(group.indexOf(i)+.5)/group.length)*Math.PI*2/domains.length;
       return [Math.cos(angle)*1.65,0,Math.sin(angle)*1.65,.57,0,-angle,1];
     });
+    // Keep the background ellipse inside the stage at the camera's pitch
+    // transition as growing collections fill previously unsampled angles.
+    return mode==="links"?poses.map(pose=>pose.map((v,j)=>j<4?v*.95:v)):poses;
   }
   // Each loop is one object; the cross-section angle groups its primary domain.
   function ribbonPoint(pose,angle,side=0) {

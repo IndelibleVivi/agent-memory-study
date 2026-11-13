@@ -178,14 +178,27 @@ The first command uses only local public/synthetic data, including actual fittin
 small stdlib classifier; it downloads no pretrained models or external data. It
 checks both generated projections without rewriting them, validates authoring and private draft boundaries, study packets, public selected collections, local continuation, workspace migration/excerpts/history, shared directed references and reverse impact, constellation/sculpture projections and domain layout and question/finding
 references, lexical query and portable brief contracts, and the existing
-RDF, freshly reruns the seven small deterministic studies and the decision-learning
-experiment (including classifier fitting and correction), and checks the saved
+RDF, freshly reruns the eight small deterministic studies and the decision-learning
+experiment (including classifier fitting, correction, support/invariance audit and fixed-split combination transfer), and checks the saved
 AgeMem reward, C2C cache-retraction and Jev source-contract receipts for fixture binding and internal consistency.
 The two new exact studies check conditional memory value and higher-order evidence
 selection through their own finite distributions, enumerations and analytic
 controls. Conditional-memory checks also recompute selection-channel controls and
 test selector/reader observation boundaries, payload projection, independent
 selection and the complete-source bound. These finite controls use no model/provider.
+The recursive-sufficiency study recomputes exact constructed probabilities and continuation
+witnesses; finite checks do not prove the infinite-horizon statements, which are derived in
+the canonical article. The classifier support audit imports the existing learner and keeps
+the historical result untouched; label-priority disagreement is not automatically an action error.
+The fixed-split transfer diagnostic matches added label counts and class histograms,
+checks unseen full-vector positives and negative neighbors, and keeps v2 frozen-policy
+mismatch separate from correction learning. Its v1 positive vectors share one relevant
+core; it tests nuisance-value transfer, not new task-relevant positive rules. The depth-four
+tree remains capacity limited. All these checks are offline and retain earlier receipts.
+The task-conditioned utility package checks saved compact results, algebra and artifact hashes
+offline. Full archived-output reanalysis requires the pinned public inputs documented in that
+package; neither path performs new model inference, and the offline check does not replay raw
+rows or recompute confidence intervals.
 The side-information natural-language reader experiment has separately run through the
 official OpenAI API; this verifier only tests its authored renderer/scorer and checks
 the saved compact summary, without new API calls or private raw traces. Fresh execution

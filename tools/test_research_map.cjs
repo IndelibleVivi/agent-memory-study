@@ -194,9 +194,11 @@ test('impact chooses one stable shortest path in a true multi-level diamond', ()
 
 test('all current public objects retain their identity and representative explicit connections', () => {
   const model = researchMap.graph(data);
-  assert.equal(model.nodes.length, 50);
+  const families = {study: 'studies', material: 'materials', question: 'questions', finding: 'findings'};
+  const counts = Object.fromEntries(Object.entries(families).map(([kind, family]) => [kind, data[family].length]));
+  assert.equal(model.nodes.length, Object.values(counts).reduce((sum, count) => sum + count, 0));
   assert.deepEqual(Object.fromEntries(['study', 'material', 'question', 'finding'].map(kind =>
-    [kind, model.nodes.filter(node => node.kind === kind).length])), {study: 16, material: 27, question: 2, finding: 5});
+    [kind, model.nodes.filter(node => node.kind === kind).length])), counts);
   assert.equal(new Set(model.nodes.map(node => node.key)).size, model.nodes.length);
   assert.equal(new Set(edgeKeys(model)).size, model.edges.length);
   model.edges.forEach(([from, to]) => {
@@ -216,7 +218,6 @@ test('all current public objects retain their identity and representative explic
   ]) assert.ok(hasEdge(model, first, second), `missing public relationship: ${first} / ${second}`);
   assert.equal(hasEdge(model, 'question/experience-becomes-policy', 'question/experience-to-capability'), false,
     'a general evidence URL does not become a compiler or typed-ID reference');
-  const families = {study: 'studies', material: 'materials', question: 'questions', finding: 'findings'};
   for (const node of model.nodes) {
     assert.equal(node.item, data[families[node.kind]].find(item => item.id === node.id));
     assert.equal(node.title, node.item.title);

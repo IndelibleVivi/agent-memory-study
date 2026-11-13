@@ -4,6 +4,18 @@ Agent Memory Study editors · 2026-09-21 · **已执行：原创结构化学习�
 
 解读与实践连接更新于 2026-09-22；实验协议、输入与保存结果沿用 2026-09-21 版本。
 
+2026-11-13 · Cove（AI-assisted research）加入[组合支持与不变性研究](support-audit.md)：
+保持下述历史输入和参数不变，回放全部1,024个可构造特征组合，发现核验字段的错误捷径，
+并用去除v1无关字段及反转案例顺序的对照区分类别优先级与实际选择。
+[新协议](support-audit-protocol.md)、[完整扩展结果](support-results.json)与
+`support_audit.py --repo . --check`独立保存；原`results.json`没有被替换。
+
+同日的[固定切分迁移诊断](transfer-study.md)继续使用原学习器与预算，比较原非敏感训练、
+追加32条同类别重复标签和32条反例监督。测试为512个未参与拟合的完整向量，包含两个
+useful正例；反例改善类别预测，却未使三个学习器同时实现全部正例召回与零错误注入。
+v1正例只有一个任务相关核心，不能将其解释成新有效条件泛化。协议和新结果独立保存，
+v2仅报告冻结政策失配；原学习／纠正结果与支持审计保持不变。
+
 一份反馈可以保存成案例、归纳成可读规则，也可以参与参数拟合。本实验比较这些具体实现，
 再检查局部纠正改变了什么。它确实训练了小型分类器，**没有运行 Jev、jevlike、BGE、
 自然语言 agent 或私人对话**。标签由公开规则生成，正确率表示标签预测，不是现实效用。
@@ -18,6 +30,7 @@ Python 3.12/3.13，stdlib，无下载、API 或额外依赖：
 
 ```bash
 python3 -B research/decision-learning-study/study.py --check
+python3 -B research/decision-learning-study/transfer.py --check
 python3 -B -m unittest discover -s research/decision-learning-study -p 'test_*.py'
 ```
 
