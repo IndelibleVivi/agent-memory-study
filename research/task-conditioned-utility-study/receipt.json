@@ -1,0 +1,263 @@
+{
+  "schema": "ams-task-conditioned-utility-receipt/1",
+  "created_date_utc": "2026-11-13",
+  "evidence_kind": "secondary_analysis_of_archived_model_outputs",
+  "new_model_inference": false,
+  "new_empirical_natural_world_sampling": false,
+  "upstream_repository": {
+    "url": "https://github.com/ChihHsuan-Yang/AAMAS2027-ConditionalMemory",
+    "commit": "386ac65a8b5fc46414abdd2755375f2a52d4d3b8",
+    "root_licence_file_present": false
+  },
+  "upstream_input_sha256": {
+    "primary": "7433b7806e5d9373ef4fe5c6653f284e82a7114114dca41b4f8520796c3aa951",
+    "gptoss": "e7d6307404f6881ea6e5cac0120a0ae96ab5c8e711e978f9fa2ec6a9192e1cb9",
+    "gemma": "f3223aee68d9ba673f8461fedfba9d5f9b5f5fed6c2585cf2d262824e5d3407e"
+  },
+  "upstream_source_sha256": {
+    "scripts/reproduce_headline.py": "8b3d9d04d0ff2b15e1299bebb6e90b8f07cd75b1f133fc70e5feebe16c001978",
+    "scripts/x2_analyze_fixed_context.py": "41a0cdad25ab2eb6f1978c741566bfc8ac8a7c3f46e8cdc90ddbbbcaef46a430",
+    "scripts/k2_run_screened.py": "9612e13803866ca65540d234fb8abfd50dae0d11c064a1cdc58c137a8019d3a2",
+    "scripts/x2_fixed_context.py": "65c8fcbbb0a1b1b0e9448e4bee9f7c43eafbc089252d515271fb0678f9414d0c",
+    "scripts/r1_write_representations.py": "7935d5c5c53dcc45ed8be28263ada7c3bf10b55afb1f838bb86d60be24183e82",
+    "src/p1mem/memory/representations.py": "4124e4e5992a869b8a4897ecf56f0cb0f378889a2e6f604b5093b0115c4bd1fb",
+    "src/p1mem/memory/prompts.py": "883b29303a06496a271b79e06cf79a32ef29179a12c5b07d4a7a2e27113f2225",
+    "configs/prompts/summary_v1.txt": "1d1ffdf9ff90141a1c099472ce05035f1f6616b524b57ea32041dd5d762d8035",
+    "configs/prompts/structured_v1.txt": "1bfae006b490892734cdfe48f88592fed863b5c891a8e704fa09198aa2569bde"
+  },
+  "fixed_context_input": {
+    "url": "https://huggingface.co/datasets/AgentsSci/AAMAS2027-ConditionalMemory/resolve/332cd047e9093a948606c4251bf5b294b0664762/followups_package/x2/cells.jsonl",
+    "revision": "332cd047e9093a948606c4251bf5b294b0664762",
+    "sha256": "d7a7309044ffb02aed7ddb786359939c51de12bf910a5825f3a6933ef651b033",
+    "bytes": 29915382,
+    "rows": 2216,
+    "included_in_package": false
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "matplotlib": "3.10.8"
+  },
+  "executed_analyses": [
+    {
+      "id": "official_headline",
+      "command_template": [
+        "python",
+        "scripts/reproduce_headline.py",
+        "--bootstrap",
+        "10000"
+      ],
+      "cwd": "<UPSTREAM>",
+      "exit_code": 0,
+      "stdout": "official-headline-output.txt",
+      "stdout_normalisation": "Only the local upstream directory in the first source line was replaced by <UPSTREAM>; numerical text is unchanged.",
+      "seed": 20261008,
+      "resamples": 10000
+    },
+    {
+      "id": "official_fixed_context",
+      "command_template": [
+        "python",
+        "scripts/x2_analyze_fixed_context.py",
+        "<FIXED_CONTEXT_CELLS>",
+        "--out",
+        "<PACKAGE>/official_fixed_context.json"
+      ],
+      "cwd": "<UPSTREAM>",
+      "exit_code": 0,
+      "stdout": "official-fixed-context-output.txt",
+      "output": "official_fixed_context.json",
+      "seed": 20261008,
+      "resamples": 10000
+    },
+    {
+      "id": "ams_independent_reanalysis",
+      "command_template": [
+        "python",
+        "-B",
+        "reanalyze.py",
+        "--upstream",
+        "<UPSTREAM>",
+        "--out",
+        "results.json"
+      ],
+      "cwd": "<PACKAGE>",
+      "exit_code": 0,
+      "output": "results.json",
+      "seed": 20261113,
+      "resamples": 10000
+    },
+    {
+      "id": "figure_data",
+      "command_template": [
+        "python",
+        "-B",
+        "figure_data.py"
+      ],
+      "cwd": "<PACKAGE>",
+      "exit_code": 0,
+      "output": "figure-data.json"
+    },
+    {
+      "id": "figure_render",
+      "command_template": [
+        "python",
+        "-B",
+        "plot_results.py"
+      ],
+      "cwd": "<PACKAGE>",
+      "exit_code": 0,
+      "output": [
+        "utility-opportunities.svg",
+        "utility-opportunities.png"
+      ],
+      "visual_inspection": "Rendered PNG inspected; no clipped labels or numerical mismatch observed.",
+      "svg_normalisation": "Each SVG line has trailing whitespace stripped; newline token separators and drawing are preserved."
+    },
+    {
+      "id": "writer_signature_and_prompt_load",
+      "command_template": [
+        "python",
+        "-B",
+        "-c",
+        "import sys; sys.path.insert(0,'src'); from p1mem.memory.representations import assert_all_writers_blind; from p1mem.memory.prompts import load_prompt; assert_all_writers_blind(); print([(n,load_prompt(n).version,load_prompt(n).sha256) for n in ['summary_v1','structured_v1']])"
+      ],
+      "cwd": "<UPSTREAM>",
+      "exit_code": 0,
+      "scope": "Public function signature assertions and prompt loading only; not an inference replay or complete upstream test suite."
+    }
+  ],
+  "writer_boundary_audit": {
+    "source_information_path": "_LLMWriter._call renders segment.text; r1 write pass receives SourceSegment; x2 consumes existing representations.",
+    "original_inference_code_sha": {
+      "unknown": 2216
+    },
+    "row_prompt_version_counts": {
+      "page_visit_segmentation_v1": 1108,
+      "summary_v1@1.0.0+6ee16b28b818": 554,
+      "structured_v1@1.0.0+163d4cd3eb70": 554
+    },
+    "source_loader_normalised_prompt_sha256": {
+      "summary_v1": "6ee16b28b818ed476246b4b9c6a607fb24cee7cce6f2ba3c0d3015a7b7dac58b",
+      "structured_v1": "163d4cd3eb7088ee61027f3f2d84e946152b3b8fc110b3c3e708253272847a2d"
+    },
+    "normalised_prompt_hash_is_raw_file_hash": false,
+    "historic_writer_code_authenticated": false,
+    "limit": "Matching prompt-version identifiers and source signatures support the stated information boundary but do not authenticate which code every archived inference executed."
+  },
+  "confidence_interval_provenance": {
+    "official_headline_output": "Executed upstream reproduce_headline.py, seed 20261008.",
+    "official_fixed_context_json": "Executed upstream x2_analyze_fixed_context.py, seed 20261008; no independent reimplementation of this estimator.",
+    "results_json": "Independent AMS cluster-bootstrap computations, seed 20261113; conditional harm records undefined resamples.",
+    "offline_gate": "Checks artifact identity and interval bounds only; no bootstrap rerun."
+  },
+  "offline_check": {
+    "command": [
+      "python3",
+      "-B",
+      "research/task-conditioned-utility-study/check_saved.py",
+      "--check"
+    ],
+    "network_access": false,
+    "third_party_dependencies": false,
+    "new_model_inference": false,
+    "upstream_row_replay": false,
+    "confidence_intervals_recomputed": false,
+    "figures_rerendered": false,
+    "scope": [
+      "artifact_sha256",
+      "source_and_input_identity_bindings",
+      "transition_denominators",
+      "opportunity_identity",
+      "per_memory_headline_mean",
+      "paired_reader_contrast",
+      "graph_accounting_and_witness",
+      "fixed_context_contrast_algebra",
+      "figure_data_derivation"
+    ],
+    "security_limit": "Hashes detect changes against this receipt, not against a jointly modified receipt; no author authentication or original-execution attestation."
+  },
+  "reading_only_sources": [
+    {
+      "url": "https://arxiv.org/pdf/2609.34160v1",
+      "sha256": "b054634ad1ca82fcbdd0852643364e287aee6889c269e42a035791971f057f82",
+      "pages": 55,
+      "included_in_package": false,
+      "execution": "not run",
+      "locator": "source-notes.md"
+    }
+  ],
+  "release_boundary": {
+    "original_upstream_records_included": false,
+    "original_pdfs_included": false,
+    "upstream_code_included": false,
+    "large_inputs_required_for_raw_replay": true
+  },
+  "artifacts": {
+    "README.md": "c0bafb061c49e46ab0f7436a32c8552b93d25de9cb8e31f1811b45e7e0ed17ed",
+    "check_saved.py": "76646b469db27375a7014794c486dd9c650f0e79c12b49bcc5df6b83f0eb1f41",
+    "fetch_fixed_context.py": "604b506c715910d22c2192e2f79d9f31496329c0b2da140ea014828769e92893",
+    "figure-data.json": "2624477a9a03a52186cf15dab9055df6318934d74843c49f9b33dd7a0d44c9b6",
+    "figure_data.py": "53915db923cd04ae27a6bc6d5f9b79c3a94cf42f294323cb67d34860aed61ccd",
+    "official_fixed_context.json": "76ce58dfee343b794a912b4d7cb7428f8eaffd7431c84dca63d7a7a636a73a7d",
+    "official-fixed-context-output.txt": "1434f70177719cdd499d6e2d8fa3dd40eb7034b2b827c452ab4a13daf4696190",
+    "official-headline-output.txt": "d81ce932b034c9f1f7b5c3e2ff5be57b101f0263a575a80eed196ea2194c51be",
+    "plot_results.py": "a8b50e1d47794119fa8696d3cf699894558196d53d024cd0a79ff5d8e28b86e2",
+    "reanalyze.py": "7c7746e475ef868c306890cfecb7707391a3a5f6c1d29b174159d48e3a1c5394",
+    "research-note.md": "e9971e952e2e88a4c5a9f921a070a75f8a50e27d27dbc3953f741b19512df347",
+    "results.json": "2aa21bb54c84a3490c159f98d9ccecfb3ca25a91eeead8e02899ff50cc80f27b",
+    "source-notes.md": "ee4270df794de782c78981eec945d74114795c0ca0c5642e0a688414d4caa411",
+    "test_saved.py": "52ea09d26592b5291b1b548ae98f9409aa99ea976a6a102ab1b4caeb8509d7e6",
+    "utility-opportunities.png": "2bc30ffb9086d719ef1fe0d99839625a29a43256c6d6c42e616d4e7f6977997d",
+    "utility-opportunities.svg": "b9ba00ea9c2004bd1f894cd76b787e1675c50eb0791791ea62975705fd969137"
+  },
+  "verification_runs": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "research/task-conditioned-utility-study/check_saved.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "status": "passed",
+      "artifacts_checked": 16,
+      "upstream_rows_replayed": false,
+      "confidence_intervals_recomputed": false
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "research/task-conditioned-utility-study",
+        "-p",
+        "test_saved.py"
+      ],
+      "exit_code": 0,
+      "tests": 6,
+      "result": "OK",
+      "scope": "Saved-contract positive case and five negative controls; no inference or upstream replay."
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "research/task-conditioned-utility-study"
+      ],
+      "exit_code": 0
+    },
+    {
+      "check": "git diff --no-index --check /dev/null for all 16 new text files",
+      "status": "passed",
+      "expected_exit_code": 1,
+      "diagnostics": ""
+    }
+  ],
+  "evidence_filename_convention": "Official stdout evidence is stored in named .txt artifacts; no .log build residue is shipped."
+}

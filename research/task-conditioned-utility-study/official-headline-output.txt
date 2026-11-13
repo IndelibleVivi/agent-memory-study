@@ -1,0 +1,14 @@
+source           : <UPSTREAM>/results/ledgers/repro/screened_cells_slim.jsonl
+rows             : 2599
+cells            : 1157
+  BEARING          cells=139  mean dU=+0.345
+  MATCHED_CONTROL  cells=146  mean dU=+0.027
+  RANDOM           cells=872  mean dU=+0.064
+  BEARING          both-arms-fail share of rows=0.525
+  MATCHED_CONTROL  both-arms-fail share of rows=0.788
+  RANDOM           both-arms-fail share of rows=0.701
+memories (both)  : 60
+contrast         : +0.334861   (expected +0.334861)
+95% CI memories  : [+0.209, +0.463]   (10000 resamples, seed 20261008)
+95% CI episodes  : [+0.196, +0.475]
+VERDICT: REPRODUCED

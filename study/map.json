@@ -31,7 +31,8 @@
         "retrieval-and-relevance",
         "representation-and-use",
         "memory-value-side-information",
-        "scope-memory-after-revision"
+        "scope-memory-after-revision",
+        "history-and-update-sufficiency"
       ],
       "materialIds": [
         "a-tma-state-aware-memory",
@@ -86,7 +87,8 @@
         "records-representations-systems",
         "representation-and-use",
         "who-controls-memory",
-        "memskill-state-pairing"
+        "memskill-state-pairing",
+        "experience-value-and-silence"
       ],
       "materialIds": [
         "coala-cognitive-architecture",
@@ -110,7 +112,9 @@
         "change-and-continuity",
         "memory-value-side-information",
         "memory-evidence-complementarity",
-        "memskill-state-pairing"
+        "memskill-state-pairing",
+        "experience-value-and-silence",
+        "history-and-update-sufficiency"
       ],
       "materialIds": [
         "mistake-notebook-learning",
@@ -133,7 +137,9 @@
         "who-controls-memory",
         "after-a-correction",
         "relevance-in-context",
-        "memskill-state-pairing"
+        "memskill-state-pairing",
+        "experience-value-and-silence",
+        "history-and-update-sufficiency"
       ],
       "materialIds": [
         "midca-dual-cycle",
@@ -157,7 +163,8 @@
         "memory-value-side-information",
         "memory-evidence-complementarity",
         "memskill-state-pairing",
-        "scope-memory-after-revision"
+        "scope-memory-after-revision",
+        "experience-value-and-silence"
       ],
       "materialIds": [
         "longmemeval-v2-experienced-colleague",
@@ -185,7 +192,9 @@
         "memory-value-side-information",
         "memory-evidence-complementarity",
         "memskill-state-pairing",
-        "scope-memory-after-revision"
+        "scope-memory-after-revision",
+        "experience-value-and-silence",
+        "history-and-update-sufficiency"
       ],
       "materialIds": [
         "a-tma-state-aware-memory",
@@ -206,7 +215,8 @@
         "retrieval-and-relevance",
         "who-controls-memory",
         "memory-value-side-information",
-        "memory-evidence-complementarity"
+        "memory-evidence-complementarity",
+        "experience-value-and-silence"
       ],
       "materialIds": [
         "continual-learning-experience-reuse",
@@ -229,7 +239,9 @@
         "experience-becomes-policy",
         "what-an-index-learns",
         "memskill-state-pairing",
-        "scope-memory-after-revision"
+        "scope-memory-after-revision",
+        "experience-value-and-silence",
+        "history-and-update-sufficiency"
       ],
       "materialIds": [
         "truth-maintenance-system",
@@ -264,6 +276,18 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-13",
+      "title": "当前有用，是否仍能学会改变",
+      "text": "公开效用结果复算、原学习器新组合反例与递归充分性推导，修订保留价值和学习迁移的解释。",
+      "studyId": "experience-value-and-silence"
+    },
+    {
+      "date": "2026-11-13",
+      "title": "今天同答，明天能否同更新",
+      "text": "将历史等价延伸到共同事件续串；精确见证区分当前动作、预测状态与未来更新能力。",
+      "studyId": "history-and-update-sufficiency"
+    },
     {
       "date": "2026-11-05",
       "title": "同一条记忆，价值为何反转",
