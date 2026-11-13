@@ -107,7 +107,7 @@ python3 -B research/task-conditioned-utility-study/check_saved.py --check
 
 ## 5. 可以直接继续的研究协议
 
-以下未执行。它们各自回答一个尚未被本轮结果识别的问题；无须同时启动。
+协议一随后按下述边界执行了固定切分的离线诊断；协议二、三仍未执行。它们各自回答不同问题，无须同时启动。
 
 ### 协议一：先识别规则，再测试语言识别
 
@@ -115,9 +115,15 @@ python3 -B research/task-conditioned-utility-study/check_saved.py --check
 
 **输入与划分。** 继续使用原 feature 函数。先冻结 gold 规则、冲突优先级和成本；按特征组合划分，不按新名称或文本表面划分。至少留出一组 useful 向量及与它相邻的 expired/missing-precondition/harmful 向量。对 v1 的 irrelevant verified/sensitive 做配对；v2 中这些字段有作用，需另定义适用不变性。不要把全体未见向量都放在负类。
 
-**比较。** 原案例、原规则学习器、原小头，外加显式 oracle rule 和恒定拒绝。预算按原 train/validation 预先指定；测试只用一次。若增加 counterexamples，要设 equal-count 标签数据控制，并保留增加前模型。
+**当前域的限制。** v1 的四个 useful 向量具有完全相同的前八位任务相关条件，仅 verified/sensitive 两位不同。留出十维正例只能测试 nuisance 取值及支持迁移，不能证明学会新的有效条件组合。若把整个 nuisance 等价轨道留出，训练就没有正例；真正的新正向核心需要另行声明任务合同。原 depth=4 树也不能完整表达八个必要条件的合取：正例叶最多确认四位，总有未确认位可翻成同叶的负例。补充反例不能自动解除这个容量限制。
 
-**验收。** 分开 action utility 与四类解释标签；报告 positive recall、false injection、verified invariance、冲突组合和纠正后 preserved/boundary。对案例顺序变化报告最差与最好结果。任何常数拒绝可取得的高分都不能作为学习成功；标签不一致但动作一致也不能全计为行动损害。
+**已执行的接续。** [固定切分诊断](../research/decision-learning-study/transfer-study.md)保持十个特征和原学习预算，以 sensitive=0 的原训练行拟合，以 sensitive=1 的全部512个向量评价；其中包含两个未见正例及相邻负例。补充32条反馈的两臂保持条数与类别直方图一致，比较原标签重复与规则选取的反例。协议在本次拟合前固定，但既有全域审计已公开全部向量的结果，因此不是独立盲测或预注册确认。v2 分组仅检查冻结 v1 政策面对新规则的失配，不冒充已经学会新规则。
+
+小头的类别正确从171/512升至312/512，两个正例均召回，错误选入仍为4条harmful加15条其它无用候选；verified翻转仍使19/256对改变选择。最近案例和树也未同时满足全正例召回、零错误注入。后续不能把分类解释改善当成选择规则已经修好；同数量、同类别控制只固定这些监督计数，不固定信息覆盖或逐向量权重。运行 `python3 -B research/decision-learning-study/transfer.py --check` 重算独立结果；该入口已接统一验证。
+
+**比较。** 原案例、原规则学习器、原小头，外加显式 oracle rule 和恒定拒绝。预算与选材在拟合前固定，不从测试结果挑选参数或追加材料；确定性重放与修复偏离协议的实现须单独说明。若增加 counterexamples，要设 equal-count 标签数据控制，并保留增加前模型。
+
+**验收。** 分开 action utility 与四类解释标签；报告 positive recall、false injection、verified invariance、冲突组合和纠正后 preserved/boundary。顺序的全局最好／最差需要证明或精确求界；本次逐案例独立 tie envelope 与两种实际全局顺序分列，不假装各案例的极值可由同一顺序同时达到。任何常数拒绝可取得的高分都不能作为学习成功；标签不一致但动作一致也不能全计为行动损害。
 
 **再接语言。** 冻结通过结构探针的决策器，比较 gold features、从文本抽取的 features 和端到端方法。若只有文本抽取版退化，才有证据将差距定位到识别；如果 gold-feature 版已失败，应继续解决决策规则。
 

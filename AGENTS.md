@@ -94,6 +94,7 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 - `externalReadings` 允许共读引用官方文档、开源实现与论文线索，必须保留类型、阅读范围与限制；不自动变成 Zotero 书目。`editorial-synthesis-with-recorded-experiment` 的 `resultsUrl` 指向已执行 `research/` JSON；`recordedResults` 仅由 builder 投影，不进入 canonical。录制结果展示与 `revision-study.js` 的实时规则演示分开。
 - `research/decision-learning-study/study.py` 是学习实验唯一训练/评价实现；网页不重新训练。修改实验后用 `--check` 重算并运行该目录 unittest，更新公开方法/结果；自然语言、agent 收益与权重遗忘不能由结构化标签预测代替。
 - 同目录 `support_audit.py` 导入原实现，拥有1024向量支持枚举、verified不变性与案例顺序控制。保留历史 `results.json`，新结果独立绑定原源码／fixtures与审计runner；类别变化和是否选入分别报告，未见集合全负不能作为新有用经验迁移证据。运行其 `--repo . --check` 和目录 unittest，不复制学习器。
+- 同目录 `transfer.py` 继续导入既有学习器与构造器，拥有固定 sensitive 切分、同数量／同类别标签控制及反例监督对照；运行其 `--check` 和目录 unittest，保留原结果与支持审计。v1 正例只有一个任务相关核心，十维正例留出只检验 nuisance 取值迁移；v2 的 frozen-policy 分组不等于学会纠正规则。固定深度四树保留为容量受限比较，不因补反例而默认其能表达八条件合取。
 - `research/recursive-sufficiency-study/` 拥有递归充分性的精确概率见证；一般无限时域结论由正文证明，有限枚举不冒充经验样本。`study.py --check` 重算输入、结果和身份；允许近似、有限时域与不同损失时必须重述保证。
 - `research/task-conditioned-utility-study/` 保存外部公开输出的固定版本二次分析。`check_saved.py --check` 校验compact结果、公式和artifact身份，不重算缺失原始行或bootstrap；完整复算按README取固定输入，不能把两种验证混称论文复现。该路径不调用模型；修改绑定文件需审查并更新receipt，输入漂移必须拒绝。
 - Jev 共读使用 `ams-jev-contract-results/1` 保存固定源码的给定判断对照；页面按 case 与 before/after 展示节点和原始 receipt，不重新运行源码。完整复跑需要外部 pinned checkout；本地 reader 入口只校验保存结果。不要把内存 graph/vector 的成员变化写成真实持久化、语义检索或 Jev inference。
@@ -104,7 +105,7 @@ python3 <plugin-root>/skills/zotero/scripts/zotero.py enable --restart
 ## 阅读到设计
 
 - 本站已执行观察与结果放入可选 `amsEvidence`，绑定同一署名的 `public-test` 和既有 `research/` artifact；`reportedFindings` 只承载 paper-reported findings，不把本站结果重复放入 paper-only sections。
-- 新增小型 deterministic study 时接入 `tools/verify_reader.py`，同步 README / CONTRIBUTING 的验证范围；该入口校验 canonical / generated data、evidence、search 与已列入的八组确定性研究和一组 stdlib 分类器训练/纠正及支持审计，另检查 Utility二次分析、AgeMem、C2C 与 Jev 已保存 receipt。Receipt 校验不算 upstream 重跑或模型 inference；该入口不运行全部外部源码审计或论文 benchmark。
+- 新增小型 deterministic study 时接入 `tools/verify_reader.py`，同步 README / CONTRIBUTING 的验证范围；该入口校验 canonical / generated data、evidence、search 与已列入的八组确定性研究和一组 stdlib 分类器训练/纠正、支持审计及固定切分迁移诊断，另检查 Utility二次分析、AgeMem、C2C 与 Jev 已保存 receipt。Receipt 校验不算 upstream 重跑或模型 inference；该入口不运行全部外部源码审计或论文 benchmark。
 - `research/memory-side-information-study/selection.py` 拥有选择渠道的有限控制，复用同目录 `study.py` 的 Bayes evaluator；原 fixed-exposure 结果与 receipt 独立保留。修改时运行两个脚本的 `--check` 与本目录 unittest（已接统一验证）。Selector 只消费声明的可见输入；理想读者知道联合分布不等于语言模型已学会编码。整体选择收益不自动成为固定正文的用途标签。
 - 同目录 `reader.py` 拥有原创语言刺激与加权评分，`reader_api.py` 是显式调用官方 OpenAI API 的执行入口；普通构建／统一验证只运行离线测试与 `reader.py check-saved`，不调用 provider。实际请求、raw response、失败和 source 身份留在 repo 外；公开 `reader-results.json` 是 compact summary，不替代 raw replay。相同 messages 对应的隐藏世界共用一次回答，不增加独立任务数；无关键的 .5 accuracy 不能证明项目绑定正确，需保留概率／mapping flip 诊断。模型执行须有当次授权、冻结输入、预算和失败停止规则；不得自动重试不明送达请求或用新 prompt 覆盖旧运行。
 

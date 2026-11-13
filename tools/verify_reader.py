@@ -43,6 +43,7 @@ def main():
     for study in ['memory-side-information-study', 'memory-evidence-complementarity-study']:
         run([python, '-B', f'research/{study}/study.py', '--check'])
     run([python, '-B', 'research/decision-learning-study/support_audit.py', '--repo', '.', '--check'])
+    run([python, '-B', 'research/decision-learning-study/transfer.py', '--check'])
     run([python, '-B', 'research/recursive-sufficiency-study/study.py', '--check'])
     run([python, '-B', 'research/task-conditioned-utility-study/check_saved.py', '--check'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s',
@@ -59,7 +60,7 @@ def main():
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/c2c-cache-retraction-study', '-p', 'test_*.py'])
     run([python, '-B', 'research/jev-memory-contract-study/study.py', '--verify-checked'])
     run([python, '-B', '-m', 'unittest', 'discover', '-s', 'research/jev-memory-contract-study', '-p', 'test_*.py'])
-    print('PASS: reader contracts, generated data, source-aware workspaces/public collections, shared references/author drafts, bound reviews, offline representation/revision controls, eight deterministic studies, synthetic classifier refits and support audit, saved utility analysis and language-reader summaries, checked AgeMem/C2C/Jev receipts')
+    print('PASS: reader contracts, generated data, source-aware workspaces/public collections, shared references/author drafts, bound reviews, offline representation/revision controls, eight deterministic studies, synthetic classifier refits, support audit and combination transfer, saved utility analysis and language-reader summaries, checked AgeMem/C2C/Jev receipts')
 
 
 if __name__ == '__main__':

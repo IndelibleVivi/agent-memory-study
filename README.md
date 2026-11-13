@@ -38,6 +38,7 @@ AMS 从 agent memory 出发，研究信息、经验与智能的跨时间关系�
 - [经验留下什么：事前价值、学习与保持沉默](study/entries/experience-value-and-silence.md)：公开任务效用结果复算、未来保留价值、学习反馈与构建顺序的机制比较。
 - [历史怎样留下继续更新的能力](study/entries/history-and-update-sufficiency.md)：右同余、精确贝叶斯反例、增长状态、任务所需精度与来源恢复的独立推导。
 - [原学习器的支持审计](research/decision-learning-study/support-audit.md)：保持旧训练与结果，1024向量枚举发现verified捷径与案例顺序补入的规则优先级；已据此修订原文章和inquiry。
+- [固定切分的组合迁移诊断](research/decision-learning-study/transfer-study.md)：保留原学习器与预算，以512个未参与拟合的完整向量比较原训练、同数量／同类别重复标签和反例监督；正例只测试无关字段取值迁移，不能证明新的有效条件组合。
 
 [完整来源、复现与后续研究交接](docs/research-renewal-2026-11.md)记录main／next／研究分支的基线差异。本轮没有新增模型API执行；确定性见证、上游归档输出二次分析与未执行协议分别保存。工作纲领的核心段落增加未来任务、共同事件续串和更新要求，没有建立新的研究组织体系。
 
@@ -134,7 +135,7 @@ python3 -B tools/seo_build.py
 python3 -B tools/test_static_reader.py
 ```
 
-构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、原创索引演算的拟合／校准／查找与回退、星图与三维研究体共用的身份／引用关系、领域布局，以及八组确定性研究和一组 stdlib 分类器学习／纠正与支持审计（包括侧信息决策值、选择渠道、高阶证据选择及递归充分性见证的精确枚举）；另检查表示与修订传播的离线执行合同、侧信息语言 reader、范围／修订记忆与事后 question-only 对照的保存汇总、casebook 的内容／rubric 绑定、Utility归档输出二次分析以及 AgeMem、C2C、Jev 已保存 receipts。修订传播的完整运行与 raw replay 使用其目录命令；统一入口中的 compact summary 检查不能替代它。Utility保存检查也不重新下载输入或重算bootstrap。验证不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。侧信息研究的 `reader_api.py` 与表示研究的 `natural_api.py` / `natural_probe.py` 是另行授权才执行的官方 API 入口，发送原创合成刺激并消耗 API credits；raw 请求／响应留在 repo 外，网页与统一验证不会调用它。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
+构建拒绝覆盖旧输出；重复运行用新的 `--output`，对应测试传 `--site-root`。`dist/` 不进 Git。统一验证覆盖作者内容／generated drift、来源与 evidence 合同、搜索、研究包、接续格式、原创索引演算的拟合／校准／查找与回退、星图与三维研究体共用的身份／引用关系、领域布局，以及八组确定性研究和一组 stdlib 分类器学习／纠正、支持审计与固定切分迁移诊断（包括侧信息决策值、选择渠道、高阶证据选择及递归充分性见证的精确枚举）；另检查表示与修订传播的离线执行合同、侧信息语言 reader、范围／修订记忆与事后 question-only 对照的保存汇总、casebook 的内容／rubric 绑定、Utility归档输出二次分析以及 AgeMem、C2C、Jev 已保存 receipts。修订传播的完整运行与 raw replay 使用其目录命令；统一入口中的 compact summary 检查不能替代它。Utility保存检查也不重新下载输入或重算bootstrap。验证不做 pretrained inference、不重跑所有 upstream 审计，也不复现论文 benchmark。侧信息研究的 `reader_api.py` 与表示研究的 `natural_api.py` / `natural_probe.py` 是另行授权才执行的官方 API 入口，发送原创合成刺激并消耗 API credits；raw 请求／响应留在 repo 外，网页与统一验证不会调用它。各研究的完整方法与额外依赖仍以对应 `research/*/README.md` 为准。
 
 表示执行器保存实际请求、送达材料、原始回答与评分身份，支持 dry-run、续跑和离线重放检查。
 运行文件完整写入后才原子发布，已有文件不覆写；中断尝试保留证据，续跑另建 attempt。
